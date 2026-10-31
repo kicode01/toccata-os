@@ -1,0 +1,59 @@
+# Toccata OS - Core Package Manifest (Arch Linux Base)
+
+# 1. Base Kernel & Hardware Drivers
+base
+base-devel
+linux
+linux-firmware
+linux-headers
+btrfs-progs
+e2fsprogs
+dosfstools
+networkmanager
+pipewire
+pipewire-alsa
+pipewire-pulse
+pipewire-jack
+wireplumber
+mesa
+vulkan-intel
+vulkan-radeon
+nvidia-prime
+
+# 2. Wayland & Graphics Server
+plasma-wayland-session
+plasma-desktop
+kwin
+wayland
+xorg-xwayland
+qt6-wayland
+qt5-wayland
+
+# 3. macOS Experience Subsystems (Global Menu, Dock, Blur)
+appmenu-gtk-module
+libdbusmenu-glib
+libdbusmenu-gtk3
+plasma-systemmonitor
+krunner
+dolphin
+konsole
+sushi
+kquickimageeditor
+kio-admin
+
+# 4. Utilities, Fonts & Multimedia
+git
+curl
+wget
+nano
+vim
+python
+python-pip
+ttf-dejavu
+noto-fonts
+noto-fonts-emoji
+firefox
+htop
+neofetch
+pciutils
+usbutils

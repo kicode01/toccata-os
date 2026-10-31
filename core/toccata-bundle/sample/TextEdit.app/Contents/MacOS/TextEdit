@@ -1,0 +1,12 @@
+#!/bin/sh
+echo "========================================="
+echo "  Welcome to TextEdit for Toccata OS!   "
+echo "  Running from: $TOCCATA_BUNDLE_PATH     "
+echo "========================================="
+if command -v nano >/dev/null 2>&1; then
+    exec nano "$@"
+elif command -v vi >/dev/null 2>&1; then
+    exec vi "$@"
+else
+    echo "Opened TextEdit with args: $@"
+fi
