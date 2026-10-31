@@ -1,6 +1,9 @@
+@import url('cursors/cursors.css');
+
 /* ==========================================================================
    TOCCATA OS - macOS Sequoia / Sonoma Authentic Color & Material System
    Clean, vibrant, high-contrast, pure frosted glass.
+   Bespoke Porcelain & Sapphire Cursor Engine & 120Hz Spring Dynamics
    ========================================================================== */
 
 :root {
@@ -62,12 +65,59 @@ body.light-mode {
   --sidebar-bg: rgba(238, 238, 242, 0.65);
 }
 
-* {
+/* ==========================================================================
+   GLOBAL RESET & SIGNATURE TOCCATA CURSORS
+   ========================================================================== */
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   user-select: none;
   -webkit-user-drag: none;
+  cursor: var(--cursor-default), default;
+}
+
+/* Interactive Pointer Cursor */
+a, button, [role="button"], 
+.menu-item, .dock-item, .tl-btn, .btn, .desktop-item,
+.cc-toggle, .cc-row, .slider-pill, .result-item, 
+.tab, .tag-pill, .tool-pill, .action-item, .theme-card, 
+.sidebar-row, .maestro-badge, .settings-nav-item, 
+.accent-dot, .switch, .switch input, .installer-actions button,
+.view-btn, .action-pill, .vault-btn, .btn-primary, .btn-secondary,
+.seg-btn, .toolbar-icon-btn, .app-card, .status-icon-item {
+  cursor: var(--cursor-pointer), pointer !important;
+}
+
+/* Acoustic Text I-Beam Cursor */
+input, textarea, .scribe-editor, .notes-content, [contenteditable="true"] {
+  cursor: var(--cursor-text), text !important;
+}
+
+/* Titlebar Grabbing Cursors */
+.window-titlebar {
+  cursor: var(--cursor-grab), grab !important;
+}
+
+body.is-window-dragging,
+body.is-window-dragging *,
+.window.is-dragging,
+.window.is-dragging .window-titlebar {
+  cursor: var(--cursor-grabbing), grabbing !important;
+}
+
+/* Edge & Corner Resizer Cursors */
+.window-resizer-r, .window-resizer-l {
+  cursor: var(--cursor-resize-ew), ew-resize !important;
+}
+.window-resizer-b, .window-resizer-t {
+  cursor: var(--cursor-resize-ns), ns-resize !important;
+}
+.window-resizer-rb {
+  cursor: var(--cursor-resize-nwse), nwse-resize !important;
+}
+.window-resizer-lb {
+  cursor: var(--cursor-resize-nesw), nesw-resize !important;
 }
 
 body {
@@ -129,7 +179,6 @@ body {
 }
 
 .menu-item {
-  cursor: pointer;
   padding: 2px 7px;
   border-radius: 5px;
   display: flex;
@@ -275,7 +324,7 @@ body {
 }
 
 /* ==========================================================================
-   AUTHENTIC APPLE TRAFFIC LIGHTS & WINDOW CHROME
+   AUTHENTIC APPLE TRAFFIC LIGHTS, RESIZERS & WINDOW PHYSICS
    ========================================================================== */
 .window {
   position: absolute;
@@ -284,12 +333,48 @@ body {
   overflow: hidden;
   min-width: 420px;
   min-height: 260px;
-  transition: box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center center;
+  transition: box-shadow 0.25s ease, border-radius 0.25s ease;
+  will-change: transform, opacity, left, top;
 }
 
 .window.active-window {
   box-shadow: 0 32px 80px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.25), var(--glass-rim-light);
   z-index: 100;
+}
+
+/* Dynamic Window Dragging Physics Elevation */
+.window.is-dragging {
+  box-shadow: 0 42px 95px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(0, 122, 255, 0.4), var(--glass-rim-light);
+  transition: box-shadow 0.15s ease !important;
+}
+
+/* Window Resizers */
+.window-resizer {
+  position: absolute;
+  z-index: 100;
+}
+
+.window-resizer-r {
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 100%;
+}
+
+.window-resizer-b {
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 8px;
+}
+
+.window-resizer-rb {
+  right: 0;
+  bottom: 0;
+  width: 18px;
+  height: 18px;
+  background: radial-gradient(circle at 13px 13px, rgba(255, 255, 255, 0.35) 2px, transparent 2.5px);
 }
 
 .window-titlebar {
@@ -300,11 +385,10 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 0 14px;
-  cursor: move;
   gap: 16px;
 }
 
-/* Iconic Apple Inset Traffic Lights */
+/* Iconic Apple Inset Traffic Lights with Authentic Hover Symbols */
 .traffic-lights {
   display: flex;
   align-items: center;
@@ -316,12 +400,17 @@ body {
   height: 12px;
   border-radius: 50%;
   border: none;
-  cursor: pointer;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.25);
+  transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), filter 0.12s ease;
+}
+
+.tl-btn:active {
+  transform: scale(0.85) !important;
+  filter: brightness(0.85);
 }
 
 .tl-close {
@@ -337,6 +426,16 @@ body {
 .tl-maximize {
   background: #27c93f;
   border: 0.5px solid #1aab29;
+}
+
+.tl-btn::after {
+  opacity: 0;
+  transition: opacity 0.12s ease;
+  pointer-events: none;
+}
+
+.traffic-lights:hover .tl-btn::after {
+  opacity: 1;
 }
 
 .traffic-lights:hover .tl-close::after {
@@ -766,18 +865,40 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  cursor: pointer;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .dock-item .mac-app-icon {
   width: 50px;
   height: 50px;
   border-radius: 12px;
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.dock-item:hover {
-  transform: scale(1.4) translateY(-14px);
+/* Authentic macOS Dock Launch Bounce with 3 Decaying Oscillations */
+@keyframes dockBounce {
+  0% { transform: translateY(0) scale(1); }
+  22% { transform: translateY(-24px) scale(1.08, 0.94); }
+  45% { transform: translateY(0) scale(0.96, 1.05); }
+  68% { transform: translateY(-11px) scale(1.03, 0.98); }
+  85% { transform: translateY(0) scale(0.99, 1.01); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+.dock-bounce-icon {
+  animation: dockBounce 0.65s cubic-bezier(0.28, 0.84, 0.42, 1) !important;
+}
+
+/* Dock absorption pulse when window minimizes into icon */
+@keyframes dockAbsorb {
+  0% { transform: scale(1); }
+  40% { transform: scale(0.88); filter: brightness(1.25); }
+  75% { transform: scale(1.06); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+.dock-absorbed .mac-app-icon {
+  animation: dockAbsorb 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .dock-dot {
@@ -1186,6 +1307,13 @@ input:checked + .slider.round:before {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  transform-origin: top right;
+  animation: controlCenterSlide 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes controlCenterSlide {
+  0% { opacity: 0; transform: translateY(-12px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .cc-header {
@@ -1348,6 +1476,12 @@ body.light-mode .slider-leading-icon {
   border-radius: 18px;
   overflow: hidden;
   box-shadow: 0 35px 90px rgba(0, 0, 0, 0.65);
+  animation: spotlightDrop 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes spotlightDrop {
+  0% { opacity: 0; transform: translateY(-24px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .spotlight-input-row {
@@ -1426,4 +1560,32 @@ body.light-mode .slider-leading-icon {
 @keyframes fadeInDown {
   from { opacity: 0; transform: translate(-50%, -12px); }
   to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* ==========================================================================
+   ACOUSTIC TOUCH RESONANCE RIPPLE ("TO TOUCH")
+   ========================================================================== */
+.acoustic-touch-ripple {
+  position: fixed;
+  pointer-events: none;
+  z-index: 999999;
+  border-radius: 50%;
+  border: 1.5px solid rgba(56, 189, 248, 0.75);
+  box-shadow: 0 0 14px rgba(0, 122, 255, 0.5), inset 0 0 8px rgba(56, 189, 248, 0.35);
+  transform: translate(-50%, -50%) scale(0.15);
+  animation: acousticTouchExpand 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes acousticTouchExpand {
+  0% {
+    transform: translate(-50%, -50%) scale(0.15);
+    opacity: 0.95;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.4);
+    opacity: 0;
+  }
 }

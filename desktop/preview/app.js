@@ -1,5 +1,5 @@
 // Toccata OS - Optimized High-Performance Desktop Engine
-// Hardware-accelerated 120Hz/144Hz physics, zero layout thrashing, and low-latency audio.
+// Hardware-accelerated 120Hz/144Hz physics, bespoke cursor engine, and low-latency audio.
 
 (function () {
   'use strict';
@@ -8,6 +8,9 @@
   let isSpotlightOpen = false;
   let isControlCenterOpen = false;
   let audioFeedbackEnabled = true;
+  let touchRippleEnabled = true;
+  let tiltEnabled = true;
+  let customCursorEnabled = true;
 
   // ==========================================================================
   // 1. HIGH-EFFICIENCY WEB AUDIO ENGINE (Zero Memory Leaks & Audio Limiter)
@@ -65,10 +68,9 @@
         osc.stop(now + duration + idx * 0.03 + 0.04);
       });
     } catch (e) {
-      // Audio autoplay gracefully suppressed until first interaction
+      // Audio autoplay gracefully suppressed until first user gesture
     }
   }
-
   window.playHarmonicChime = playHarmonicChime;
 
   function toggleAudioFeedback(enabled) {
@@ -102,9 +104,25 @@
   updateClock();
 
   // ==========================================================================
-  // 3. WINDOW MANAGEMENT & HARDWARE ACCELERATION
+  // 3. WINDOW DOCK MAPPING & LIFE CYCLE
   // ==========================================================================
   const activeAppTitle = document.getElementById('active-app-title');
+
+  const windowDockMap = {
+    'win-cadence': document.querySelector('.dock-item[data-app="Cadence"]'),
+    'win-scribe': document.querySelector('.dock-item[data-app="Scribe"]'),
+    'win-tempo': document.querySelector('.dock-item[data-app="Tempo"]'),
+    'win-settings': document.querySelector('.dock-item[data-app="System Settings"]'),
+    'win-installer': document.querySelector('.dock-item[data-app="Gallery"]')
+  };
+
+  const windowDotMap = {
+    'win-cadence': document.getElementById('dot-cadence'),
+    'win-scribe': document.getElementById('dot-scribe'),
+    'win-tempo': document.getElementById('dot-tempo'),
+    'win-settings': document.getElementById('dot-settings'),
+    'win-installer': document.getElementById('dot-installer')
+  };
 
   function getActiveWindow() {
     return document.querySelector('.window.active-window:not(.hidden)');
@@ -129,57 +147,175 @@
   }
   window.bringToFront = bringToFront;
 
+  function triggerDockBounce(dockItem) {
+    if (!dockItem) return;
+    const icon = dockItem.querySelector('.mac-app-icon');
+    if (!icon) return;
+    icon.classList.remove('dock-bounce-icon');
+    void icon.offsetWidth; // Force reflow to immediately restart animation
+    icon.classList.add('dock-bounce-icon');
+    setTimeout(() => {
+      icon.classList.remove('dock-bounce-icon');
+    }, 650);
+  }
+
   function openWindow(id) {
     const win = document.getElementById(id);
     if (!win) return;
-    win.classList.remove('hidden');
-    bringToFront(win);
+    const dockItem = windowDockMap[id];
+    triggerDockBounce(dockItem);
 
-    if (id === 'win-scribe') document.getElementById('dot-scribe')?.classList.remove('hidden');
-    if (id === 'win-settings') document.getElementById('dot-settings')?.classList.remove('hidden');
-    if (id === 'win-tempo') document.getElementById('dot-tempo')?.classList.remove('hidden');
-    if (id === 'win-installer') document.getElementById('dot-installer')?.classList.remove('hidden');
+    const dot = windowDotMap[id];
+    if (dot) dot.classList.remove('hidden');
+
+    // Case A: Window was minimized -> Restore smoothly from dock item
+    if (win.dataset.minimized === 'true') {
+      let fromX = 0, fromY = 320;
+      if (dockItem) {
+        const dockRect = dockItem.getBoundingClientRect();
+        const winLeft = parseInt(win.style.left, 10) || win.offsetLeft;
+        const winTop = parseInt(win.style.top, 10) || win.offsetTop;
+        const winW = win.offsetWidth || 600;
+        const winH = win.offsetHeight || 400;
+        fromX = (dockRect.left + dockRect.width / 2) - (winLeft + winW / 2);
+        fromY = (dockRect.top + dockRect.height / 2) - (winTop + winH / 2);
+      }
+
+      win.style.transition = 'none';
+      win.style.transform = `translate3d(${fromX}px, ${fromY}px, 0) scale(0.06)`;
+      win.style.opacity = '0';
+      win.style.filter = 'blur(8px)';
+      win.classList.remove('hidden');
+      void win.offsetWidth; // Force layout
+
+      win.style.transition = 'transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), filter 0.28s ease';
+      win.style.transform = 'translate3d(0, 0, 0) scale(1)';
+      win.style.opacity = '1';
+      win.style.filter = 'blur(0px)';
+      win.dataset.minimized = 'false';
+
+      setTimeout(() => {
+        win.style.transition = '';
+        win.style.transform = '';
+        win.style.opacity = '';
+        win.style.filter = '';
+      }, 340);
+
+      bringToFront(win);
+      return;
+    }
+
+    // Case B: Window was closed -> Spring pop in from center
+    if (win.classList.contains('hidden')) {
+      win.style.transition = 'none';
+      win.style.transform = 'scale(0.88) translateY(18px)';
+      win.style.opacity = '0';
+      win.style.filter = 'blur(10px)';
+      win.classList.remove('hidden');
+      void win.offsetWidth; // Force layout
+
+      win.style.transition = 'transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, filter 0.25s ease';
+      win.style.transform = 'scale(1) translateY(0)';
+      win.style.opacity = '1';
+      win.style.filter = 'blur(0px)';
+      win.dataset.minimized = 'false';
+
+      setTimeout(() => {
+        win.style.transition = '';
+        win.style.transform = '';
+        win.style.opacity = '';
+        win.style.filter = '';
+      }, 300);
+
+      bringToFront(win);
+      return;
+    }
+
+    // Case C: Already open -> Bring to front with focus pulse
+    bringToFront(win);
   }
   window.openWindow = openWindow;
 
   function closeWindow(id) {
     const win = document.getElementById(id);
-    if (!win) return;
-    win.classList.add('hidden');
+    if (!win || win.classList.contains('hidden')) return;
 
-    if (id === 'win-scribe') document.getElementById('dot-scribe')?.classList.add('hidden');
-    if (id === 'win-settings') document.getElementById('dot-settings')?.classList.add('hidden');
-    if (id === 'win-tempo') document.getElementById('dot-tempo')?.classList.add('hidden');
-    if (id === 'win-installer') document.getElementById('dot-installer')?.classList.add('hidden');
+    win.style.transition = 'transform 0.18s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.18s ease, filter 0.18s ease';
+    win.style.transform = 'scale(0.92) translateY(12px)';
+    win.style.opacity = '0';
+    win.style.filter = 'blur(6px)';
 
-    // Switch active title to next visible window
-    const visibleWindows = Array.from(document.querySelectorAll('.window:not(.hidden)'));
-    if (visibleWindows.length > 0) {
-      visibleWindows.sort((a, b) => (parseInt(b.style.zIndex, 10) || 0) - (parseInt(a.style.zIndex, 10) || 0));
-      bringToFront(visibleWindows[0]);
-    } else if (activeAppTitle) {
-      activeAppTitle.textContent = 'Cadence';
-    }
+    setTimeout(() => {
+      win.classList.add('hidden');
+      win.dataset.minimized = 'false';
+      win.style.transition = '';
+      win.style.transform = '';
+      win.style.opacity = '';
+      win.style.filter = '';
+
+      const dot = windowDotMap[id];
+      if (dot) dot.classList.add('hidden');
+
+      // Re-assign active window title
+      const visibleWindows = Array.from(document.querySelectorAll('.window:not(.hidden)'));
+      if (visibleWindows.length > 0) {
+        visibleWindows.sort((a, b) => (parseInt(b.style.zIndex, 10) || 0) - (parseInt(a.style.zIndex, 10) || 0));
+        bringToFront(visibleWindows[0]);
+      } else if (activeAppTitle) {
+        activeAppTitle.textContent = 'Cadence';
+      }
+    }, 180);
   }
   window.closeWindow = closeWindow;
 
   function minimizeWindow(id) {
     const win = document.getElementById(id);
-    if (!win) return;
-    win.style.transform = 'translate3d(0, 600px, 0) scale(0.2)';
+    if (!win || win.classList.contains('hidden') || win.dataset.minimized === 'true') return;
+
+    const dockItem = windowDockMap[id];
+    let toX = 0, toY = 400;
+    if (dockItem) {
+      const dockRect = dockItem.getBoundingClientRect();
+      const winRect = win.getBoundingClientRect();
+      toX = (dockRect.left + dockRect.width / 2) - (winRect.left + winRect.width / 2);
+      toY = (dockRect.top + dockRect.height / 2) - (winRect.top + winRect.height / 2);
+    }
+
+    win.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.28s ease, filter 0.28s ease';
+    win.style.transform = `translate3d(${toX}px, ${toY}px, 0) scale(0.06)`;
     win.style.opacity = '0';
+    win.style.filter = 'blur(6px)';
+
     setTimeout(() => {
       win.classList.add('hidden');
+      win.dataset.minimized = 'true';
+      win.style.transition = '';
       win.style.transform = '';
       win.style.opacity = '';
-      closeWindow(id);
-    }, 200);
+      win.style.filter = '';
+
+      if (dockItem) {
+        dockItem.classList.add('dock-absorbed');
+        setTimeout(() => dockItem.classList.remove('dock-absorbed'), 350);
+      }
+
+      // Re-assign active window title
+      const visibleWindows = Array.from(document.querySelectorAll('.window:not(.hidden)'));
+      if (visibleWindows.length > 0) {
+        visibleWindows.sort((a, b) => (parseInt(b.style.zIndex, 10) || 0) - (parseInt(a.style.zIndex, 10) || 0));
+        bringToFront(visibleWindows[0]);
+      } else if (activeAppTitle) {
+        activeAppTitle.textContent = 'Cadence';
+      }
+    }, 300);
   }
   window.minimizeWindow = minimizeWindow;
 
   function maximizeWindow(id) {
     const win = document.getElementById(id);
     if (!win) return;
+
+    win.style.transition = 'top 0.25s cubic-bezier(0.16, 1, 0.3, 1), left 0.25s cubic-bezier(0.16, 1, 0.3, 1), width 0.25s cubic-bezier(0.16, 1, 0.3, 1), height 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-radius 0.25s ease';
 
     if (win.dataset.maximized === 'true') {
       win.style.top = win.dataset.origTop;
@@ -189,10 +325,10 @@
       win.style.borderRadius = '14px';
       win.dataset.maximized = 'false';
     } else {
-      win.dataset.origTop = win.style.top;
-      win.dataset.origLeft = win.style.left;
-      win.dataset.origWidth = win.style.width;
-      win.dataset.origHeight = win.style.height;
+      win.dataset.origTop = win.style.top || `${win.offsetTop}px`;
+      win.dataset.origLeft = win.style.left || `${win.offsetLeft}px`;
+      win.dataset.origWidth = win.style.width || `${win.offsetWidth}px`;
+      win.dataset.origHeight = win.style.height || `${win.offsetHeight}px`;
 
       win.style.top = '28px';
       win.style.left = '0';
@@ -201,23 +337,26 @@
       win.style.borderRadius = '0';
       win.dataset.maximized = 'true';
     }
+
+    setTimeout(() => {
+      win.style.transition = '';
+    }, 260);
   }
   window.maximizeWindow = maximizeWindow;
 
   // ==========================================================================
-  // 4. REQUEST-ANIMATION-FRAME WINDOW DRAGGING (120Hz/144Hz Smoothened)
+  // 4. REQUEST-ANIMATION-FRAME WINDOW DRAGGING WITH INERTIAL TILT
   // ==========================================================================
   document.querySelectorAll('.window').forEach(win => {
     const titlebar = win.querySelector('.window-titlebar');
     if (!titlebar) return;
 
     let isDragging = false;
-    let startX = 0;
-    let startY = 0;
-    let initialLeft = 0;
-    let initialTop = 0;
-    let currentX = 0;
-    let currentY = 0;
+    let startX = 0, startY = 0;
+    let initialLeft = 0, initialTop = 0;
+    let currentX = 0, currentY = 0;
+    let lastClientX = 0;
+    let smoothedVx = 0;
     let rafId = null;
 
     win.addEventListener('mousedown', () => bringToFront(win), { passive: true });
@@ -234,20 +373,27 @@
       isDragging = true;
       startX = e.clientX;
       startY = e.clientY;
+      lastClientX = e.clientX;
+      smoothedVx = 0;
       initialLeft = win.offsetLeft;
       initialTop = win.offsetTop;
       currentX = initialLeft;
       currentY = initialTop;
 
       bringToFront(win);
-      document.body.style.cursor = 'move';
-      win.style.willChange = 'left, top';
+      document.body.classList.add('is-window-dragging');
+      win.classList.add('is-dragging');
+      win.style.willChange = 'left, top, transform';
     });
 
     function updateWindowPos() {
       if (!isDragging) return;
       win.style.left = `${currentX}px`;
       win.style.top = `${currentY}px`;
+      if (tiltEnabled) {
+        const tilt = Math.max(-2.5, Math.min(2.5, smoothedVx * 0.16));
+        win.style.transform = `translate3d(0, 0, 0) rotate(${tilt}deg) scale(1.008)`;
+      }
       rafId = null;
     }
 
@@ -255,6 +401,10 @@
       if (!isDragging) return;
       const dx = e.clientX - startX;
       const dy = e.clientY - startY;
+      const instantVx = e.clientX - lastClientX;
+      lastClientX = e.clientX;
+      smoothedVx = smoothedVx * 0.65 + instantVx * 0.35;
+
       currentX = initialLeft + dx;
       currentY = Math.max(28, initialTop + dy); // Clamp below top bar
 
@@ -266,18 +416,89 @@
     window.addEventListener('mouseup', () => {
       if (isDragging) {
         isDragging = false;
-        document.body.style.cursor = '';
+        document.body.classList.remove('is-window-dragging');
+        win.classList.remove('is-dragging');
         win.style.willChange = '';
         if (rafId) {
           cancelAnimationFrame(rafId);
           rafId = null;
         }
+
+        win.style.transition = 'transform 0.24s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        win.style.transform = 'translate3d(0, 0, 0) rotate(0deg) scale(1)';
+        setTimeout(() => {
+          if (!isDragging) {
+            win.style.transition = '';
+            win.style.transform = '';
+          }
+        }, 250);
       }
     });
   });
 
   // ==========================================================================
-  // 5. CACHED ZERO-THRASHING DOCK MAGNIFICATION
+  // 5. HARDWARE-ACCELERATED WINDOW RESIZING ENGINE
+  // ==========================================================================
+  document.querySelectorAll('.window').forEach(win => {
+    const resizerR = win.querySelector('.window-resizer-r');
+    const resizerB = win.querySelector('.window-resizer-b');
+    const resizerRB = win.querySelector('.window-resizer-rb');
+
+    function initResizer(resizerEl, resizeWidth, resizeHeight) {
+      if (!resizerEl) return;
+      let isResizing = false;
+      let startX = 0, startY = 0;
+      let startW = 0, startH = 0;
+      let curW = 0, curH = 0;
+      let rRaf = null;
+
+      resizerEl.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        isResizing = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        startW = win.offsetWidth;
+        startH = win.offsetHeight;
+        curW = startW;
+        curH = startH;
+        bringToFront(win);
+        win.style.willChange = 'width, height';
+      });
+
+      function updateSize() {
+        if (!isResizing) return;
+        if (resizeWidth) win.style.width = `${curW}px`;
+        if (resizeHeight) win.style.height = `${curH}px`;
+        rRaf = null;
+      }
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isResizing) return;
+        if (resizeWidth) curW = Math.max(380, startW + (e.clientX - startX));
+        if (resizeHeight) curH = Math.max(220, startH + (e.clientY - startY));
+        if (!rRaf) rRaf = requestAnimationFrame(updateSize);
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (isResizing) {
+          isResizing = false;
+          win.style.willChange = '';
+          if (rRaf) {
+            cancelAnimationFrame(rRaf);
+            rRaf = null;
+          }
+        }
+      });
+    }
+
+    initResizer(resizerR, true, false);
+    initResizer(resizerB, false, true);
+    initResizer(resizerRB, true, true);
+  });
+
+  // ==========================================================================
+  // 6. CACHED ZERO-THRASHING DOCK MAGNIFICATION (Continuous Parabolic Fisheye)
   // ==========================================================================
   const dock = document.getElementById('dock');
   const dockItems = Array.from(document.querySelectorAll('.dock-item'));
@@ -329,7 +550,50 @@
   });
 
   // ==========================================================================
-  // 6. SPOTLIGHT SEARCH (Debounced Math & Instant Keyboard Navigation)
+  // 7. ACOUSTIC TOUCH RESONANCE RIPPLE ("TO TOUCH")
+  // ==========================================================================
+  document.addEventListener('pointerdown', (e) => {
+    if (!touchRippleEnabled) return;
+    // Don't spawn on window titlebars during drag start or resizers
+    if (e.target.closest('.window-titlebar') || e.target.closest('.window-resizer')) return;
+
+    const ripple = document.createElement('div');
+    ripple.className = 'acoustic-touch-ripple';
+    ripple.style.left = `${e.clientX}px`;
+    ripple.style.top = `${e.clientY}px`;
+    document.body.appendChild(ripple);
+
+    setTimeout(() => {
+      ripple.remove();
+    }, 380);
+  }, { passive: true });
+
+  function toggleTouchRipple(enabled) {
+    touchRippleEnabled = enabled;
+    triggerNotification(enabled ? 'Acoustic Touch Feedback Enabled' : 'Touch Feedback Disabled');
+  }
+  window.toggleTouchRipple = toggleTouchRipple;
+
+  function toggleTilt(enabled) {
+    tiltEnabled = enabled;
+    triggerNotification(enabled ? 'Window Inertial Tilt Enabled' : 'Inertial Tilt Disabled');
+  }
+  window.toggleTilt = toggleTilt;
+
+  function toggleCustomCursor(enabled) {
+    customCursorEnabled = enabled;
+    if (enabled) {
+      document.body.style.cursor = '';
+      triggerNotification('Toccata Signature Cursors Active');
+    } else {
+      document.body.style.cursor = 'auto';
+      triggerNotification('Default Native Cursors Active');
+    }
+  }
+  window.toggleCustomCursor = toggleCustomCursor;
+
+  // ==========================================================================
+  // 8. SPOTLIGHT SEARCH (Debounced Math & Instant Keyboard Navigation)
   // ==========================================================================
   const spotlightOverlay = document.getElementById('spotlight-overlay');
   const spotlightInput = document.getElementById('spotlight-input');
@@ -432,7 +696,7 @@
   });
 
   // ==========================================================================
-  // 7. KEYBOARD SHORTCUTS SUITE (macOS Ergonomics)
+  // 9. KEYBOARD SHORTCUTS SUITE (macOS Ergonomics)
   // ==========================================================================
   document.addEventListener('keydown', (e) => {
     const isCmd = e.metaKey || e.ctrlKey;
@@ -472,7 +736,7 @@
   });
 
   // ==========================================================================
-  // 8. CONTROL CENTER POPUP
+  // 10. CONTROL CENTER POPUP
   // ==========================================================================
   const controlCenter = document.getElementById('control-center');
   document.getElementById('control-center-btn')?.addEventListener('click', () => {
@@ -507,7 +771,7 @@
   });
 
   // ==========================================================================
-  // 9. THEME & ACCENT SYSTEM
+  // 11. THEME & ACCENT SYSTEM
   // ==========================================================================
   function setTheme(theme) {
     document.body.className = theme === 'light' ? 'light-mode' : 'dark-mode';
@@ -529,14 +793,14 @@
     document.documentElement.style.setProperty('--accent-color', color);
     document.documentElement.style.setProperty('--accent-glow', `${color}66`);
     document.querySelectorAll('.accent-dot').forEach(d => d.classList.remove('active'));
-    if (event?.target?.classList?.contains('accent-dot')) {
-      event.target.classList.add('active');
+    if (window.event?.target?.classList?.contains('accent-dot')) {
+      window.event.target.classList.add('active');
     }
   }
   window.setAccent = setAccent;
 
   // ==========================================================================
-  // 10. NOTIFICATION TOASTS
+  // 12. NOTIFICATION TOASTS
   // ==========================================================================
   let toastTimer = null;
   const toast = document.getElementById('toast');

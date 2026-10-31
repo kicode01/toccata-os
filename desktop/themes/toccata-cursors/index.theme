@@ -1,0 +1,8 @@
+[Icon Theme]
+Name=Toccata
+Comment=Toccata OS Signature Acoustic Cursor Theme - Precision Porcelain with Sapphire Resonator
+Inherits=Adwaita,breeze_cursors,core
+Directories=cursors
+
+[cursors]
+Size=24,32,48

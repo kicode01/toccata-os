@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+  <defs>
+    <filter id="fist-shadow" x="-20%" y="-20%" width="160%" height="160%">
+      <feDropShadow dx="0.8" dy="1.6" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.45" />
+      <feDropShadow dx="0" dy="0.5" stdDeviation="0.6" flood-color="#007aff" flood-opacity="0.35" />
+    </filter>
+    <linearGradient id="fist-grad" x1="8" y1="8" x2="24" y2="26" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f0f4f8" />
+    </linearGradient>
+  </defs>
+
+  <g filter="url(#fist-shadow)">
+    <!-- Obsidian Contour -->
+    <path d="M 10 9 C 9 9 8 10 8 11.5 L 8 16 C 8 18 9 20 11 22 C 13 24 15 25 18 25 C 22 25 24 22 24 18 L 24 14 C 24 12.5 23 11.5 21.5 11.5 C 20.8 11.5 20.2 11.8 19.8 12.3 C 19.4 11.2 18.2 10.5 17 10.5 C 16.5 10.5 16 10.7 15.6 11 C 15.2 10 14.2 9.3 13 9.3 C 12.5 9.3 12 9.5 11.6 9.8 C 11.2 9.3 10.6 9 10 9 Z"
+          fill="#0c101d"
+          stroke="#0c101d"
+          stroke-width="1.8"
+          stroke-linejoin="round" />
+
+    <!-- Pure Porcelain Clenched Fist Fill -->
+    <path d="M 10 9 C 9 9 8 10 8 11.5 L 8 16 C 8 18 9 20 11 22 C 13 24 15 25 18 25 C 22 25 24 22 24 18 L 24 14 C 24 12.5 23 11.5 21.5 11.5 C 20.8 11.5 20.2 11.8 19.8 12.3 C 19.4 11.2 18.2 10.5 17 10.5 C 16.5 10.5 16 10.7 15.6 11 C 15.2 10 14.2 9.3 13 9.3 C 12.5 9.3 12 9.5 11.6 9.8 C 11.2 9.3 10.6 9 10 9 Z"
+          fill="url(#fist-grad)" />
+
+    <!-- Dynamic Grip Accent -->
+    <circle cx="16" cy="17" r="1.5" fill="#007aff" />
+  </g>
+</svg>

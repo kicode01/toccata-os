@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+  <defs>
+    <filter id="res-shadow" x="-20%" y="-20%" width="160%" height="160%">
+      <feDropShadow dx="0.6" dy="1.2" stdDeviation="1.2" flood-color="#000000" flood-opacity="0.45" />
+    </filter>
+  </defs>
+  <g filter="url(#res-shadow)">
+    <!-- Contour -->
+    <path d="M 4 16 L 10 11 L 10 14 L 22 14 L 22 11 L 28 16 L 22 21 L 22 18 L 10 18 L 10 21 Z" 
+          fill="#0c101d" stroke="#0c101d" stroke-width="1.8" stroke-linejoin="round" />
+    <!-- Core Fill -->
+    <path d="M 4 16 L 10 11 L 10 14 L 22 14 L 22 11 L 28 16 L 22 21 L 22 18 L 10 18 L 10 21 Z" 
+          fill="#ffffff" />
+    <!-- Central Sapphire Node -->
+    <circle cx="16" cy="16" r="1.4" fill="#007aff" />
+  </g>
+</svg>

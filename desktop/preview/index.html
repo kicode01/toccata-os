@@ -318,6 +318,11 @@
       <footer class="finder-statusbar">
         <span>6 items &bull; 418.5 GB available on Toccata Core</span>
       </footer>
+
+      <!-- Window Resizer Handles -->
+      <div class="window-resizer window-resizer-r"></div>
+      <div class="window-resizer window-resizer-b"></div>
+      <div class="window-resizer window-resizer-rb" title="Drag to Resize"></div>
     </div>
 
     <!-- ====================================================================
@@ -358,6 +363,10 @@ Every administrative task is accessible visually:
 * Restoring Btrfs system snapshots with a single click.
 * Connecting displays, networks, and audio through intuitive sliders.</textarea>
       </div>
+      <!-- Window Resizer Handles -->
+      <div class="window-resizer window-resizer-r"></div>
+      <div class="window-resizer window-resizer-b"></div>
+      <div class="window-resizer window-resizer-rb" title="Drag to Resize"></div>
     </div>
 
     <!-- ====================================================================
@@ -423,6 +432,39 @@ Every administrative task is accessible visually:
 
           <div class="settings-row">
             <div>
+              <div class="row-title">Toccata Signature Porcelain Cursor</div>
+              <div class="row-desc">Bespoke aerodynamic arrow with inset sapphire resonator node</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="setting-cursor-toggle" checked onchange="toggleCustomCursor(this.checked)">
+              <span class="slider round"></span>
+            </label>
+          </div>
+
+          <div class="settings-row">
+            <div>
+              <div class="row-title">Acoustic Touch Feedback ("To Touch")</div>
+              <div class="row-desc">Displays a subtle harmonic resonance ring at the pointer tip when clicking</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="setting-touch-toggle" checked onchange="toggleTouchRipple(this.checked)">
+              <span class="slider round"></span>
+            </label>
+          </div>
+
+          <div class="settings-row">
+            <div>
+              <div class="row-title">Window Inertial Tilt Physics</div>
+              <div class="row-desc">Simulates physical weight and aerodynamic lean when dragging windows</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="setting-tilt-toggle" checked onchange="toggleTilt(this.checked)">
+              <span class="slider round"></span>
+            </label>
+          </div>
+
+          <div class="settings-row">
+            <div>
               <div class="row-title">Wallpaper Tinting in Windows</div>
               <div class="row-desc">Blends desktop wallpaper colors into window materials and sidebars</div>
             </div>
@@ -441,6 +483,10 @@ Every administrative task is accessible visually:
           </div>
         </div>
       </div>
+      <!-- Window Resizer Handles -->
+      <div class="window-resizer window-resizer-r"></div>
+      <div class="window-resizer window-resizer-b"></div>
+      <div class="window-resizer window-resizer-rb" title="Drag to Resize"></div>
     </div>
 
     <!-- ====================================================================
@@ -482,6 +528,10 @@ Every administrative task is accessible visually:
           <span>GPU Pipeline: 120Hz V-Sync Synchronized</span>
         </div>
       </div>
+      <!-- Window Resizer Handles -->
+      <div class="window-resizer window-resizer-r"></div>
+      <div class="window-resizer window-resizer-b"></div>
+      <div class="window-resizer window-resizer-rb" title="Drag to Resize"></div>
     </div>
 
     <!-- ====================================================================
@@ -516,6 +566,10 @@ Every administrative task is accessible visually:
           <button class="btn btn-primary" onclick="playHarmonicChime([440, 554, 659, 880]); triggerNotification('Ableton Live installed to /Applications!')">Install to Applications</button>
         </div>
       </div>
+      <!-- Window Resizer Handles -->
+      <div class="window-resizer window-resizer-r"></div>
+      <div class="window-resizer window-resizer-b"></div>
+      <div class="window-resizer window-resizer-rb" title="Drag to Resize"></div>
     </div>
 
     <!-- ====================================================================
@@ -528,7 +582,7 @@ Every administrative task is accessible visually:
           <div class="mac-app-icon icon-cadence">
             <div class="cadence-wave"></div>
           </div>
-          <div class="dock-dot"></div>
+          <div class="dock-dot" id="dot-cadence"></div>
           <span class="dock-tooltip">Cadence</span>
         </div>
 

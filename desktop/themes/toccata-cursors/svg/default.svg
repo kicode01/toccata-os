@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+  <defs>
+    <filter id="cursor-shadow" x="-20%" y="-20%" width="160%" height="160%">
+      <feDropShadow dx="0.8" dy="1.6" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.45" />
+      <feDropShadow dx="0" dy="0.5" stdDeviation="0.6" flood-color="#007aff" flood-opacity="0.3" />
+    </filter>
+    <linearGradient id="cursor-fill" x1="2" y1="2" x2="16" y2="24" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f0f4f8" />
+    </linearGradient>
+    <linearGradient id="resonance-accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#007aff" />
+    </linearGradient>
+  </defs>
+
+  <g filter="url(#cursor-shadow)">
+    <!-- Outer Obsidian Border -->
+    <path d="M 3 2 L 3 22 L 7.8 17.5 L 12.8 25.8 L 16.4 23.6 L 11.4 15.5 L 18 15.5 Z" 
+          fill="#0c101d" 
+          stroke="#0c101d" 
+          stroke-width="1.8" 
+          stroke-linejoin="round" />
+    
+    <!-- Inner Pure Porcelain/White Body -->
+    <path d="M 3 2 L 3 22 L 7.8 17.5 L 12.8 25.8 L 16.4 23.6 L 11.4 15.5 L 18 15.5 Z" 
+          fill="url(#cursor-fill)" />
+
+    <!-- Toccata Signature Resonance Micro-Accent (Subtle Sapphire Inset) -->
+    <circle cx="6.5" cy="11.5" r="1.4" fill="url(#resonance-accent)" />
+  </g>
+</svg>
