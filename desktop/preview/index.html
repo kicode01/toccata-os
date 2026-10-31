@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Toccata OS - Harmonic Desktop</title>
+  <title>Toccata OS - High Fidelity Desktop</title>
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,54 +16,35 @@
     <!-- Top Global Menu Bar -->
     <header id="menu-bar">
       <div class="menu-left">
-        <!-- Toccata Tuning Fork Monogram -->
+        <!-- Toccata Signature Tuning Fork Emblem -->
         <div class="menu-item logo-item" id="toccata-menu-btn" title="Toccata System Menu">
           <svg class="toccata-tuning-logo" viewBox="0 0 100 100" fill="none">
-            <!-- Architectural T fused with a classical acoustic tuning fork -->
-            <path d="M28 20V50C28 62 38 72 50 72C62 72 72 62 72 50V20" stroke="url(#gold-toccata)" stroke-width="8" stroke-linecap="round"/>
-            <path d="M50 72V90" stroke="url(#gold-toccata)" stroke-width="8" stroke-linecap="round"/>
-            <path d="M16 20H84" stroke="url(#gold-toccata)" stroke-width="8" stroke-linecap="round"/>
-            <circle cx="50" cy="46" r="6" fill="#38bdf8"/>
+            <path d="M28 20V50C28 62 38 72 50 72C62 72 72 62 72 50V20" stroke="url(#blue-toccata)" stroke-width="8" stroke-linecap="round"/>
+            <path d="M50 72V90" stroke="url(#blue-toccata)" stroke-width="8" stroke-linecap="round"/>
+            <path d="M16 20H84" stroke="url(#blue-toccata)" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="50" cy="46" r="6" fill="#007aff"/>
             <defs>
-              <linearGradient id="gold-toccata" x1="16" y1="20" x2="84" y2="90" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#f59e0b"/>
-                <stop offset="0.5" stop-color="#fbbf24"/>
-                <stop offset="1" stop-color="#d97706"/>
+              <linearGradient id="blue-toccata" x1="16" y1="20" x2="84" y2="90" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#38bdf8"/>
+                <stop offset="0.5" stop-color="#007aff"/>
+                <stop offset="1" stop-color="#6366f1"/>
               </linearGradient>
             </defs>
           </svg>
         </div>
 
         <div class="menu-item active-app-name" id="active-app-title">Cadence</div>
-        <div class="menu-item">Movement</div>
-        <div class="menu-item">Harmony</div>
-        <div class="menu-item">Composition</div>
-        <div class="menu-item">Tempo</div>
+        <div class="menu-item">File</div>
+        <div class="menu-item">Edit</div>
+        <div class="menu-item">View</div>
+        <div class="menu-item">Go</div>
         <div class="menu-item">Window</div>
         <div class="menu-item">Help</div>
       </div>
 
       <div class="menu-right">
-        <!-- Realtime Harmonic Frequency Visualizer -->
-        <div class="menu-item freq-visualizer" title="System Acoustic Resonance">
-          <span class="freq-bar f1"></span>
-          <span class="freq-bar f2"></span>
-          <span class="freq-bar f3"></span>
-          <span class="freq-bar f4"></span>
-          <span class="freq-bar f5"></span>
-        </div>
-
-        <!-- Acoustic Touch Mute/Unmute Chimes -->
-        <div class="menu-item icon-btn" id="acoustic-sound-toggle" title="Acoustic Touch Synthesizer: Active (Click to toggle sound)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="audio-wave-glyph">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"/>
-            <path d="M15.54 8.46a5 5 0 010 7.07"/>
-            <path d="M19.07 4.93a10 10 0 010 14.14"/>
-          </svg>
-        </div>
-
         <!-- Battery with Percentage -->
-        <div class="menu-item status-icon-item" title="Battery: 100% • Sustained Resonance">
+        <div class="menu-item status-icon-item" title="Battery: 100% • Power Connected">
           <span class="status-text">100%</span>
           <svg class="battery-icon" viewBox="0 0 24 24" fill="currentColor">
             <rect x="2" y="6" width="18" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>
@@ -72,74 +53,68 @@
           </svg>
         </div>
 
-        <!-- Prelude Search Launcher -->
-        <div class="menu-item status-icon-item" id="spotlight-btn" title="Prelude Search (Cmd + Space)">
+        <!-- Wi-Fi Waves -->
+        <div class="menu-item status-icon-item" title="Wi-Fi: Connected">
+          <svg class="wifi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M5 12.55a11 11 0 0114.08 0"/>
+            <path d="M1.42 9a16 16 0 0121.16 0"/>
+            <path d="M8.53 16.11a6 6 0 016.95 0"/>
+            <circle cx="12" cy="20" r="1.2" fill="currentColor"/>
+          </svg>
+        </div>
+
+        <!-- Spotlight Search Icon -->
+        <div class="menu-item status-icon-item" id="spotlight-btn" title="Spotlight Search (Cmd + Space)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
             <circle cx="11" cy="11" r="7"/>
             <path d="m20 20-3.8-3.8"/>
           </svg>
         </div>
 
-        <!-- Sonata Control Center -->
-        <div class="menu-item status-icon-item" id="control-center-btn" title="Sonata Calibration Center">
+        <!-- Control Center Switch Icon -->
+        <div class="menu-item status-icon-item" id="control-center-btn" title="Control Center">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="4" y1="21" x2="4" y2="14"/>
-            <line x1="4" y1="10" x2="4" y2="3"/>
-            <line x1="12" y1="21" x2="12" y2="12"/>
-            <line x1="12" y1="8" x2="12" y2="3"/>
-            <line x1="20" y1="21" x2="20" y2="16"/>
-            <line x1="20" y1="12" x2="20" y2="3"/>
-            <circle cx="4" cy="12" r="2.5" fill="currentColor"/>
-            <circle cx="12" cy="16" r="2.5" fill="currentColor"/>
-            <circle cx="20" cy="8" r="2.5" fill="currentColor"/>
+            <rect x="3" y="4" width="18" height="6" rx="3"/>
+            <circle cx="7" cy="7" r="1.5" fill="currentColor"/>
+            <rect x="3" y="14" width="18" height="6" rx="3"/>
+            <circle cx="17" cy="17" r="1.5" fill="currentColor"/>
           </svg>
         </div>
 
-        <!-- Maestro System Conductor -->
-        <div class="menu-item maestro-badge" onclick="playHarmonicChime([523.25, 659.25, 783.99, 1046.50]); triggerNotification('Maestro: Synthesizing workspace harmony...')" title="Maestro Conductor">
+        <!-- Maestro Copilot Badge -->
+        <div class="menu-item maestro-badge" onclick="playHarmonicChime([523.25, 659.25, 783.99]); triggerNotification('Maestro AI ready to assist')" title="Maestro Copilot">
           <div class="maestro-spark"></div>
           <span>Maestro</span>
         </div>
 
-        <div class="menu-item clock" id="clock-display">Sun Nov 1 1:45 AM</div>
+        <div class="menu-item clock" id="clock-display">Sun Nov 1 1:50 AM</div>
       </div>
     </header>
 
-    <!-- Desktop Mounted Volumes -->
+    <!-- Desktop Mounted Volumes (Top-Right) -->
     <div id="desktop-icons">
       <div class="desktop-item" ondblclick="openWindow('win-cadence')">
         <div class="toccata-disk-art">
-          <div class="acoustic-soundboard">
-            <div class="sound-hole"></div>
-            <div class="brass-strings">
-              <span></span><span></span><span></span>
-            </div>
-          </div>
+          <div class="disk-plate"></div>
+          <div class="disk-notch"></div>
         </div>
-        <span class="desktop-label">Resonance Core</span>
+        <span class="desktop-label">Toccata Core</span>
       </div>
 
-      <div class="desktop-item" ondblclick="playHarmonicChime([440, 554.37, 659.25]); triggerNotification('Opus Archive: 18 Timelines Cached')">
+      <div class="desktop-item" ondblclick="playHarmonicChime([440, 554.37, 659.25]); triggerNotification('Opus Vault: 14 snapshots cached')">
         <div class="toccata-disk-art">
-          <div class="acoustic-soundboard gold">
-            <div class="sound-hole gold-rim"></div>
-            <div class="brass-strings">
-              <span></span><span></span><span></span>
-            </div>
-          </div>
+          <div class="disk-plate vault"></div>
+          <div class="disk-notch"></div>
         </div>
         <span class="desktop-label">Opus Vault</span>
       </div>
     </div>
 
-    <!-- Sonata Calibration & Control Center -->
+    <!-- Control Center Popup -->
     <div id="control-center" class="glass-panel hidden">
       <div class="cc-header">
-        <div class="cc-header-title">
-          <span class="brass-dot"></span>
-          <span>Sonata Calibration</span>
-        </div>
-        <span class="hertz-tag">432 Hz Chamber</span>
+        <span>Control Center</span>
+        <span class="cc-status-dot"></span>
       </div>
 
       <div class="cc-modules-grid">
@@ -149,8 +124,8 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12.55a11 11 0 0114.08 0M1.42 9a16 16 0 0121.16 0M8.53 16.11a6 6 0 016.95 0"/><circle cx="12" cy="20" r="1.2" fill="currentColor"/></svg>
             </div>
             <div class="cc-meta">
-              <div class="cc-title">Harmonic Mesh</div>
-              <div class="cc-desc">Toccata-Fiber (Zero Jitter)</div>
+              <div class="cc-title">Wi-Fi</div>
+              <div class="cc-desc">Toccata-5G Fiber</div>
             </div>
           </div>
           <div class="cc-row cc-toggle active" id="bt-toggle">
@@ -158,17 +133,17 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m7 7 10 10-5 5V2l5 5L7 17"/></svg>
             </div>
             <div class="cc-meta">
-              <div class="cc-title">Hi-Res Audio Stream</div>
-              <div class="cc-desc">Spatial DAC (24-bit/192kHz)</div>
+              <div class="cc-title">Bluetooth</div>
+              <div class="cc-desc">AirPods Pro (88%)</div>
             </div>
           </div>
-          <div class="cc-row cc-toggle" onclick="playHarmonicChime([392, 587.33]); triggerNotification('Acoustic Touch: Pure Sine Tone Active')">
+          <div class="cc-row cc-toggle" onclick="playHarmonicChime([392, 587.33]); triggerNotification('Toccata Beam: Contacts Only')">
             <div class="cc-icon-bubble">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M7 16a7 7 0 0110 0M4 19a11 11 0 0116 0"/></svg>
             </div>
             <div class="cc-meta">
-              <div class="cc-title">Acoustic Feedback</div>
-              <div class="cc-desc">Synthesized Haptics</div>
+              <div class="cc-title">Toccata Beam</div>
+              <div class="cc-desc">Contacts Only</div>
             </div>
           </div>
         </div>
@@ -178,7 +153,7 @@
             <div class="cc-icon-bubble">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
             </div>
-            <span>Ebony / Ivory</span>
+            <span>Dark Glass</span>
           </div>
           <div class="cc-card-btn" onclick="openWindow('win-tempo')">
             <div class="cc-icon-bubble">
@@ -189,9 +164,9 @@
         </div>
       </div>
 
-      <!-- Realtime Sliders for Acoustic Volume & Luminescence -->
+      <!-- Realtime Sliders for Display & Sound -->
       <div class="cc-slider-card">
-        <div class="slider-title">Luminescence (Display)</div>
+        <div class="slider-title">Display Brightness</div>
         <div class="slider-pill">
           <svg class="slider-leading-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
           <div class="slider-track-fill" id="display-track-fill" style="width: 85%;"></div>
@@ -199,22 +174,23 @@
       </div>
 
       <div class="cc-slider-card">
-        <div class="slider-title">Master Acoustic Resonance</div>
+        <div class="slider-title">Sound Volume</div>
         <div class="slider-pill">
           <svg class="slider-leading-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>
-          <div class="slider-track-fill" id="sound-track-fill" style="width: 72%;"></div>
+          <div class="slider-track-fill" id="sound-track-fill" style="width: 70%;"></div>
         </div>
       </div>
     </div>
 
-    <!-- Prelude Search & Overture Overlay -->
+    <!-- Spotlight Search Overlay -->
     <div id="spotlight-overlay" class="hidden">
       <div class="spotlight-card glass-panel">
         <div class="spotlight-input-row">
-          <div class="prelude-emblem">
-            <span>&para;</span>
-          </div>
-          <input type="text" id="spotlight-input" placeholder="Prelude: Search compositions, apps, or calculate frequencies..." autofocus>
+          <svg class="spotlight-lens" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+            <circle cx="11" cy="11" r="7"/>
+            <path d="m20 20-3.8-3.8"/>
+          </svg>
+          <input type="text" id="spotlight-input" placeholder="Spotlight Search or math..." autofocus>
           <span class="spotlight-esc-pill">ESC</span>
         </div>
         <div id="spotlight-results"></div>
@@ -222,111 +198,117 @@
     </div>
 
     <!-- ====================================================================
-         WINDOW 1: CADENCE (The File & Workspace Conductor)
+         WINDOW 1: CADENCE (The Unified File Browser)
          ==================================================================== -->
     <div class="window glass-panel" id="win-cadence" style="top: 70px; left: 80px; width: 880px; height: 520px;">
       <div class="window-titlebar">
-        <!-- Harmonic Tuning Nodes (Window Controls) -->
-        <div class="harmonic-tuning-nodes">
-          <button class="node-btn node-staccato" onclick="playHarmonicChime([300]); closeWindow('win-cadence')" title="Staccato (Close)"></button>
-          <button class="node-btn node-fermata" onclick="playHarmonicChime([400]); minimizeWindow('win-cadence')" title="Fermata (Rest to Dock)"></button>
-          <button class="node-btn node-crescendo" onclick="playHarmonicChime([600]); maximizeWindow('win-cadence')" title="Crescendo (Expand Full)"></button>
+        <!-- Iconic Apple Traffic Lights -->
+        <div class="traffic-lights">
+          <button class="tl-btn tl-close" onclick="playHarmonicChime([300]); closeWindow('win-cadence')" title="Close"></button>
+          <button class="tl-btn tl-minimize" onclick="playHarmonicChime([400]); minimizeWindow('win-cadence')" title="Minimize"></button>
+          <button class="tl-btn tl-maximize" onclick="playHarmonicChime([600]); maximizeWindow('win-cadence')" title="Maximize"></button>
         </div>
 
         <div class="toolbar-nav-group">
           <button class="toolbar-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg></button>
           <button class="toolbar-icon-btn" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></button>
-          <span class="toolbar-title">Cadence &mdash; Workspace Conductor</span>
+          <span class="toolbar-title">Cadence &mdash; Applications</span>
         </div>
 
         <div class="segmented-control">
-          <button class="seg-btn active" title="Harmonic Grid"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="5" height="5" rx="1.5"/><rect x="10" y="1" width="5" height="5" rx="1.5"/><rect x="1" y="10" width="5" height="5" rx="1.5"/><rect x="10" y="10" width="5" height="5" rx="1.5"/></svg></button>
-          <button class="seg-btn" title="Scores List"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 3h12v2H2zm0 4h12v2H2zm0 4h12v2H2z"/></svg></button>
-          <button class="seg-btn" title="Harmonic Columns"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="3.5" height="14" rx="1"/><rect x="6.2" y="1" width="3.5" height="14" rx="1"/><rect x="11.5" y="1" width="3.5" height="14" rx="1"/></svg></button>
+          <button class="seg-btn active" title="Icons View"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="5" height="5" rx="1.5"/><rect x="10" y="1" width="5" height="5" rx="1.5"/><rect x="1" y="10" width="5" height="5" rx="1.5"/><rect x="10" y="10" width="5" height="5" rx="1.5"/></svg></button>
+          <button class="seg-btn" title="List View"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 3h12v2H2zm0 4h12v2H2zm0 4h12v2H2z"/></svg></button>
+          <button class="seg-btn" title="Columns View"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="3.5" height="14" rx="1"/><rect x="6.2" y="1" width="3.5" height="14" rx="1"/><rect x="11.5" y="1" width="3.5" height="14" rx="1"/></svg></button>
         </div>
 
         <div class="toolbar-search">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
-          <input type="text" placeholder="Search compositions">
+          <input type="text" placeholder="Search">
         </div>
       </div>
 
       <div class="window-body finder-body">
         <aside class="finder-sidebar">
-          <div class="sidebar-category">Movements</div>
+          <div class="sidebar-category">Favorites</div>
           <div class="sidebar-row active">
             <svg class="sb-icon" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
             <span>Applications</span>
           </div>
           <div class="sidebar-row">
             <svg class="sb-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-            <span>Opus Compositions</span>
+            <span>Documents</span>
           </div>
           <div class="sidebar-row">
             <svg class="sb-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l5.59-5.59L19 10l-7 7z"/></svg>
-            <span>Incoming Inflow</span>
+            <span>Downloads</span>
+          </div>
+          <div class="sidebar-row">
+            <svg class="sb-icon" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+            <span>Desktop</span>
           </div>
 
-          <div class="sidebar-category">Acoustics</div>
+          <div class="sidebar-category">Locations</div>
           <div class="sidebar-row">
             <svg class="sb-icon" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="4" width="20" height="12" rx="2"/><circle cx="12" cy="19" r="1"/></svg>
-            <span>Resonance Core</span>
+            <span>Toccata Core</span>
           </div>
           <div class="sidebar-row">
             <svg class="sb-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
-            <span>Harmonic Cloud</span>
+            <span>Cloud Sync</span>
           </div>
         </aside>
 
-        <!-- Toccata Harmonic App Tiles -->
+        <!-- Vibrant 3D Squircle App Grid -->
         <main class="finder-grid-view">
           <!-- Scribe -->
           <div class="app-card" ondblclick="openWindow('win-scribe')">
-            <div class="toccata-harmonic-tile tile-scribe-acoustic">
-              <div class="gold-staff-lines"><span></span><span></span><span></span><span></span><span></span></div>
-              <div class="ebony-quill"></div>
+            <div class="mac-app-icon icon-scribe">
+              <div class="scribe-lines"><span></span><span></span><span></span></div>
+              <div class="scribe-pen"></div>
             </div>
             <span class="app-title">Scribe.app</span>
           </div>
 
-          <!-- Sonata (Tuning) -->
+          <!-- Sonata / Settings -->
           <div class="app-card" ondblclick="openWindow('win-settings')">
-            <div class="toccata-harmonic-tile tile-sonata-acoustic">
-              <div class="resonance-circles">
-                <div class="gold-pin"></div>
+            <div class="mac-app-icon icon-sonata">
+              <div class="gear-outer">
+                <div class="gear-center"></div>
               </div>
             </div>
-            <span class="app-title">Sonata.app</span>
+            <span class="app-title">System Settings.app</span>
           </div>
 
           <!-- Gallery (Software Hub) -->
           <div class="app-card" ondblclick="openWindow('win-installer')">
-            <div class="toccata-harmonic-tile tile-gallery-acoustic">
-              <div class="acoustic-prism"></div>
+            <div class="mac-app-icon icon-gallery">
+              <div class="gallery-prism"></div>
             </div>
             <span class="app-title">Gallery.app</span>
           </div>
 
-          <!-- Tempo (Acoustic Activity Monitor) -->
+          <!-- Tempo (Performance) -->
           <div class="app-card" ondblclick="openWindow('win-tempo')">
-            <div class="toccata-harmonic-tile tile-tempo-acoustic">
-              <div class="metronome-pendulum"></div>
+            <div class="mac-app-icon icon-tempo">
+              <div class="tempo-pulse"></div>
             </div>
             <span class="app-title">Tempo.app</span>
           </div>
 
           <!-- Horizon (Browser) -->
           <div class="app-card" onclick="playHarmonicChime([587.33, 739.99]); triggerNotification('Horizon Engine connected')">
-            <div class="toccata-harmonic-tile tile-horizon-acoustic">
-              <div class="acoustic-orbit"></div>
+            <div class="mac-app-icon icon-horizon">
+              <div class="compass-dial">
+                <div class="compass-needle"></div>
+              </div>
             </div>
             <span class="app-title">Horizon.app</span>
           </div>
 
-          <!-- Shell (CLI) -->
+          <!-- Shell (Terminal) -->
           <div class="app-card" onclick="playHarmonicChime([329.63, 493.88]); triggerNotification('Shell session opened')">
-            <div class="toccata-harmonic-tile tile-shell-acoustic">
-              <span class="t-prompt">&fnof;</span>
+            <div class="mac-app-icon icon-shell">
+              <span class="term-prompt">&gt;_</span>
             </div>
             <span class="app-title">Shell.app</span>
           </div>
@@ -334,57 +316,61 @@
       </div>
 
       <footer class="finder-statusbar">
-        <span>6 movements &bull; 432 Hz Chamber &bull; Zero Acoustic Jitter</span>
+        <span>6 items &bull; 418.5 GB available on Toccata Core</span>
       </footer>
     </div>
 
     <!-- ====================================================================
-         WINDOW 2: SCRIBE (Musical Composition & Prose Canvas)
+         WINDOW 2: SCRIBE (Prose & Code Canvas)
          ==================================================================== -->
     <div class="window glass-panel hidden" id="win-scribe" style="top: 130px; left: 340px; width: 680px; height: 450px;">
       <div class="window-titlebar">
-        <div class="harmonic-tuning-nodes">
-          <button class="node-btn node-staccato" onclick="closeWindow('win-scribe')"></button>
-          <button class="node-btn node-fermata" onclick="minimizeWindow('win-scribe')"></button>
-          <button class="node-btn node-crescendo" onclick="maximizeWindow('win-scribe')"></button>
+        <div class="traffic-lights">
+          <button class="tl-btn tl-close" onclick="closeWindow('win-scribe')"></button>
+          <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-scribe')"></button>
+          <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-scribe')"></button>
         </div>
-        <div class="window-title">Scribe &mdash; Toccata Symphony No. 1.md</div>
+        <div class="window-title">Scribe &mdash; Toccata Manifesto.md</div>
         <div class="titlebar-placeholder"></div>
       </div>
       <div class="window-body textedit-body">
         <div class="textedit-toolbar">
           <div class="tb-segmented">
-            <button class="tb-btn active">Score Mode</button>
-            <button class="tb-btn">Acoustic Preview</button>
+            <button class="tb-btn active">Markdown</button>
+            <button class="tb-btn">Preview</button>
           </div>
           <span class="tb-divider"></span>
-          <span class="tb-font-picker">Plus Jakarta Sans &bull; 15pt</span>
-          <span class="tb-tag">Concert Pitch: A = 432Hz</span>
+          <span class="tb-font-picker">SF Pro Text &bull; 15pt</span>
+          <span class="tb-tag">Autosaved to Core</span>
         </div>
-        <textarea class="editor-area"># Toccata: The Art of Acoustic Computing
+        <textarea class="editor-area"># Toccata Operating System
 
-Movement I &mdash; Touch and Resonance:
-Like Bach's Toccata in D minor, an operating system is not merely a tool. It is an instrument of intellectual agility.
+### 1. The Visual Standard
+Pure, crisp macOS aesthetics:
+* Vibrant topographical wallpaper depth.
+* Authentic red, yellow, and green inset traffic lights.
+* Clean frosted glass vibrancy without muddy tones.
+* Smooth 120Hz window physics and parabolic dock magnification.
 
-Movement II &mdash; Zero Forced Commands:
-In an orchestra, no musician speaks in machine code. The conductor shapes music through gesture, timing, and harmonic dials. Toccata replaces all terminal mandates with visual, tactile buttons and harmonic feedback.
-
-Movement III &mdash; Precision Without Noise:
-Every pixel adheres to acoustic proportion. Frosted ebony glass, champagne brass accents, and zero digital clutter.</textarea>
+### 2. Zero-Terminal Rule
+Every administrative task is accessible visually:
+* Installing apps via simple double-click.
+* Restoring Btrfs system snapshots with a single click.
+* Connecting displays, networks, and audio through intuitive sliders.</textarea>
       </div>
     </div>
 
     <!-- ====================================================================
-         WINDOW 3: SONATA (System Calibration & Tuning)
+         WINDOW 3: SYSTEM SETTINGS (The Control Center)
          ==================================================================== -->
     <div class="window glass-panel hidden" id="win-settings" style="top: 100px; left: 220px; width: 780px; height: 490px;">
       <div class="window-titlebar">
-        <div class="harmonic-tuning-nodes">
-          <button class="node-btn node-staccato" onclick="closeWindow('win-settings')"></button>
-          <button class="node-btn node-fermata" onclick="minimizeWindow('win-settings')"></button>
-          <button class="node-btn node-crescendo" onclick="maximizeWindow('win-settings')"></button>
+        <div class="traffic-lights">
+          <button class="tl-btn tl-close" onclick="closeWindow('win-settings')"></button>
+          <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-settings')"></button>
+          <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-settings')"></button>
         </div>
-        <div class="window-title">Sonata &mdash; System Calibration</div>
+        <div class="window-title">System Settings</div>
         <div class="titlebar-placeholder"></div>
       </div>
       <div class="window-body settings-body">
@@ -392,92 +378,93 @@ Every pixel adheres to acoustic proportion. Frosted ebony glass, champagne brass
           <div class="settings-user-card">
             <div class="user-avatar">TO</div>
             <div class="user-info">
-              <div class="user-name">Maestro John</div>
-              <div class="user-sub">Lead Conductor</div>
+              <div class="user-name">Toccata User</div>
+              <div class="user-sub">Administrator</div>
             </div>
           </div>
           <div class="settings-nav-group">
-            <div class="settings-nav-item active">🎨 Ebony & Ivory Materials</div>
-            <div class="settings-nav-item">🔊 Acoustic Touch (Audio Synthesizer)</div>
-            <div class="settings-nav-item">🖥️ Luminescence & Display</div>
-            <div class="settings-nav-item">🌐 Harmonic Network Mesh</div>
-            <div class="settings-nav-item">🕒 Opus Vault (Btrfs Timelines)</div>
+            <div class="settings-nav-item active">🎨 Appearance</div>
+            <div class="settings-nav-item">🖥️ Displays & Retina</div>
+            <div class="settings-nav-item">🔊 Sound & Audio Engine</div>
+            <div class="settings-nav-item">🌐 Network & Wi-Fi</div>
+            <div class="settings-nav-item">⚡ Bluetooth Peripherals</div>
+            <div class="settings-nav-item">🕒 Time Capsule Snapshots</div>
             <div class="settings-nav-item">🔒 Security & Permissions</div>
           </div>
         </div>
         <div class="settings-content">
-          <h3>Ebony & Ivory Materials</h3>
-          <p class="settings-desc">Calibrate Toccata's visual resonance, acoustic glass translucency, and brass accents.</p>
+          <h3>Appearance</h3>
+          <p class="settings-desc">Select how buttons, controls, and frosted glass vibrancy render.</p>
 
           <div class="theme-picker-row">
-            <div class="theme-card dark-theme-preview active" onclick="setTheme('dark'); playHarmonicChime([220, 277.18, 329.63])">
-              <div class="theme-box ebony-box"></div>
-              <span>Polished Ebony</span>
+            <div class="theme-card dark-theme-preview active" onclick="setTheme('dark'); playHarmonicChime([300, 450])">
+              <div class="theme-box"></div>
+              <span>Dark</span>
             </div>
-            <div class="theme-card light-theme-preview" onclick="setTheme('light'); playHarmonicChime([440, 554.37, 659.25])">
-              <div class="theme-box ivory-box"></div>
-              <span>Resonant Ivory</span>
+            <div class="theme-card light-theme-preview" onclick="setTheme('light'); playHarmonicChime([500, 650])">
+              <div class="theme-box"></div>
+              <span>Light</span>
             </div>
           </div>
 
           <div class="settings-row">
             <div>
-              <div class="row-title">Harmonic Resonance Accent</div>
-              <div class="row-desc">The resonant highlight hue for controls, tuning nodes, and dock active pulses</div>
+              <div class="row-title">Accent Color</div>
+              <div class="row-desc">System highlight color for buttons, focus rings, and dock active dots</div>
             </div>
             <div class="accent-dots">
-              <span class="accent-dot gold active" onclick="setAccent('#f59e0b'); playHarmonicChime([523.25])" title="Champagne Gold"></span>
-              <span class="accent-dot sapphire" onclick="setAccent('#38bdf8'); playHarmonicChime([587.33])" title="Acoustic Sapphire"></span>
-              <span class="accent-dot amethyst" onclick="setAccent('#a855f7'); playHarmonicChime([659.25])" title="Deep Amethyst"></span>
-              <span class="accent-dot jade" onclick="setAccent('#10b981'); playHarmonicChime([698.46])" title="Resonance Jade"></span>
-              <span class="accent-dot ruby" onclick="setAccent('#f43f5e'); playHarmonicChime([783.99])" title="Velvet Ruby"></span>
+              <span class="accent-dot blue active" onclick="setAccent('#007aff')" title="System Blue"></span>
+              <span class="accent-dot purple" onclick="setAccent('#af52de')" title="System Purple"></span>
+              <span class="accent-dot pink" onclick="setAccent('#ff2d55')" title="System Pink"></span>
+              <span class="accent-dot green" onclick="setAccent('#34c759')" title="System Green"></span>
+              <span class="accent-dot orange" onclick="setAccent('#ff9500')" title="System Orange"></span>
             </div>
           </div>
 
           <div class="settings-row">
             <div>
-              <div class="row-title">Acoustic Touch Synthesizer</div>
-              <div class="row-desc">Synthesize pure harmonic micro-chimes on window actions and key gestures</div>
+              <div class="row-title">Wallpaper Tinting in Windows</div>
+              <div class="row-desc">Blends desktop wallpaper colors into window materials and sidebars</div>
             </div>
             <label class="switch">
-              <input type="checkbox" id="chime-switch" checked onchange="toggleAudioFeedback(this.checked)">
+              <input type="checkbox" checked>
               <span class="slider round"></span>
             </label>
           </div>
 
           <div class="settings-row">
             <div>
-              <div class="row-title">Opus Vault: Undo OS State</div>
+              <div class="row-title">Time Capsule Instant Rollback</div>
               <div class="row-desc">Create a zero-latency Btrfs snapshot to restore system harmony at any moment</div>
             </div>
-            <button class="btn btn-secondary" onclick="playHarmonicChime([261.63, 329.63, 392, 523.25]); triggerNotification('Opus Snapshot saved: Ready to restore harmony anytime')">Create Snapshot</button>
+            <button class="btn btn-secondary" onclick="playHarmonicChime([261.63, 329.63, 392, 523.25]); triggerNotification('Snapshot saved: Ready to restore anytime')">Create Snapshot</button>
           </div>
         </div>
       </div>
     </div>
 
     <!-- ====================================================================
-         WINDOW 4: TEMPO (Harmonic Activity & Frequency Monitor)
+         WINDOW 4: TEMPO (Performance Monitor)
          ==================================================================== -->
     <div class="window glass-panel hidden" id="win-tempo" style="top: 150px; left: 300px; width: 620px; height: 380px;">
       <div class="window-titlebar">
-        <div class="harmonic-tuning-nodes">
-          <button class="node-btn node-staccato" onclick="closeWindow('win-tempo')"></button>
-          <button class="node-btn node-fermata" onclick="minimizeWindow('win-tempo')"></button>
-          <button class="node-btn node-crescendo" onclick="maximizeWindow('win-tempo')"></button>
+        <div class="traffic-lights">
+          <button class="tl-btn tl-close" onclick="closeWindow('win-tempo')"></button>
+          <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-tempo')"></button>
+          <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-tempo')"></button>
         </div>
-        <div class="window-title">Tempo &mdash; Harmonic Hardware Monitor</div>
+        <div class="window-title">Tempo &mdash; Activity Monitor</div>
         <div class="titlebar-placeholder"></div>
       </div>
       <div class="window-body tempo-body">
         <div class="tempo-grid">
           <div class="tempo-card">
             <div class="tc-header">
-              <span>CPU Resonance</span>
+              <span>CPU Usage</span>
               <span class="tc-metric">14% Load</span>
             </div>
             <div class="tempo-wave-box">
-              <div class="oscilloscope-line cpu-wave"></div>
+              <div class="oscilloscope-line"></div>
             </div>
           </div>
           <div class="tempo-card">
@@ -486,7 +473,7 @@ Every pixel adheres to acoustic proportion. Frosted ebony glass, champagne brass
               <span class="tc-metric">4.2 / 32 GB</span>
             </div>
             <div class="tempo-wave-box">
-              <div class="oscilloscope-line ram-wave"></div>
+              <div class="oscilloscope-line"></div>
             </div>
           </div>
         </div>
@@ -502,18 +489,18 @@ Every pixel adheres to acoustic proportion. Frosted ebony glass, champagne brass
          ==================================================================== -->
     <div class="window glass-panel hidden" id="win-installer" style="top: 170px; left: 380px; width: 500px; height: 320px;">
       <div class="window-titlebar">
-        <div class="harmonic-tuning-nodes">
-          <button class="node-btn node-staccato" onclick="closeWindow('win-installer')"></button>
-          <button class="node-btn node-fermata" onclick="minimizeWindow('win-installer')"></button>
-          <button class="node-btn node-crescendo" onclick="maximizeWindow('win-installer')"></button>
+        <div class="traffic-lights">
+          <button class="tl-btn tl-close" onclick="closeWindow('win-installer')"></button>
+          <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-installer')"></button>
+          <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-installer')"></button>
         </div>
-        <div class="window-title">Gallery &mdash; Install Movement</div>
+        <div class="window-title">App Installer &mdash; Ableton Live.app</div>
         <div class="titlebar-placeholder"></div>
       </div>
       <div class="window-body installer-body">
         <div class="installer-header">
-          <div class="toccata-harmonic-tile tile-gallery-acoustic" style="width: 58px; height: 58px;">
-            <div class="acoustic-prism"></div>
+          <div class="mac-app-icon icon-gallery" style="width: 58px; height: 58px;">
+            <div class="gallery-prism"></div>
           </div>
           <div>
             <div class="installer-app-name">Ableton Live 12.app</div>
@@ -521,7 +508,7 @@ Every pixel adheres to acoustic proportion. Frosted ebony glass, champagne brass
           </div>
         </div>
         <p class="installer-desc">
-          Ready to install into your <strong>/Applications</strong> movement directory. No terminal or packaging commands required.
+          Ready to install into your <strong>/Applications</strong> directory. No terminal or packaging commands required.
         </p>
         <div class="installer-actions">
           <button class="btn btn-secondary" onclick="closeWindow('win-installer')">Cancel</button>
@@ -532,66 +519,77 @@ Every pixel adheres to acoustic proportion. Frosted ebony glass, champagne brass
     </div>
 
     <!-- ====================================================================
-         CENTERED FLOATING ACOUSTIC SOUNDBOARD DOCK
+         CENTERED FLOATING DOCK WITH MACOS-STYLE ICONS
          ==================================================================== -->
     <footer id="dock-container">
       <div id="dock" class="glass-panel">
         <!-- Cadence -->
         <div class="dock-item" data-app="Cadence" onclick="playHarmonicChime([440]); openWindow('win-cadence')">
-          <div class="toccata-harmonic-tile tile-cadence-acoustic">
-            <div class="acoustic-soundwave-arch"></div>
+          <div class="mac-app-icon icon-cadence">
+            <div class="cadence-wave"></div>
           </div>
           <div class="dock-dot"></div>
-          <span class="dock-tooltip">Cadence (Workspaces)</span>
+          <span class="dock-tooltip">Cadence</span>
         </div>
 
         <!-- Scribe -->
         <div class="dock-item" data-app="Scribe" onclick="playHarmonicChime([554.37]); openWindow('win-scribe')">
-          <div class="toccata-harmonic-tile tile-scribe-acoustic">
-            <div class="gold-staff-lines"><span></span><span></span></div>
-            <div class="ebony-quill"></div>
+          <div class="mac-app-icon icon-scribe">
+            <div class="scribe-lines"><span></span><span></span></div>
+            <div class="scribe-pen"></div>
           </div>
           <div class="dock-dot hidden" id="dot-scribe"></div>
-          <span class="dock-tooltip">Scribe (Composition)</span>
+          <span class="dock-tooltip">Scribe</span>
         </div>
 
         <!-- Tempo -->
         <div class="dock-item" data-app="Tempo" onclick="playHarmonicChime([659.25]); openWindow('win-tempo')">
-          <div class="toccata-harmonic-tile tile-tempo-acoustic">
-            <div class="metronome-pendulum"></div>
+          <div class="mac-app-icon icon-tempo">
+            <div class="tempo-pulse"></div>
           </div>
           <div class="dock-dot hidden" id="dot-tempo"></div>
-          <span class="dock-tooltip">Tempo (Hardware Resonance)</span>
+          <span class="dock-tooltip">Tempo</span>
         </div>
 
-        <!-- Sonata (Settings) -->
-        <div class="dock-item" data-app="Sonata" onclick="playHarmonicChime([783.99]); openWindow('win-settings')">
-          <div class="toccata-harmonic-tile tile-sonata-acoustic">
-            <div class="resonance-circles">
-              <div class="gold-pin"></div>
+        <!-- System Settings -->
+        <div class="dock-item" data-app="System Settings" onclick="playHarmonicChime([783.99]); openWindow('win-settings')">
+          <div class="mac-app-icon icon-sonata">
+            <div class="gear-outer">
+              <div class="gear-center"></div>
             </div>
           </div>
           <div class="dock-dot hidden" id="dot-settings"></div>
-          <span class="dock-tooltip">Sonata (Calibration)</span>
+          <span class="dock-tooltip">System Settings</span>
         </div>
 
         <!-- Gallery -->
         <div class="dock-item" data-app="Gallery" onclick="playHarmonicChime([880]); openWindow('win-installer')">
-          <div class="toccata-harmonic-tile tile-gallery-acoustic">
-            <div class="acoustic-prism"></div>
+          <div class="mac-app-icon icon-gallery">
+            <div class="gallery-prism"></div>
           </div>
           <div class="dock-dot hidden" id="dot-installer"></div>
-          <span class="dock-tooltip">Gallery (Software)</span>
+          <span class="dock-tooltip">Gallery</span>
+        </div>
+
+        <!-- Horizon Browser -->
+        <div class="dock-item" data-app="Horizon" onclick="playHarmonicChime([587.33]); triggerNotification('Horizon Browser launched')">
+          <div class="mac-app-icon icon-horizon">
+            <div class="compass-dial">
+              <div class="compass-needle"></div>
+            </div>
+          </div>
+          <span class="dock-tooltip">Horizon</span>
         </div>
 
         <div class="dock-divider"></div>
 
-        <!-- Mute Bin -->
-        <div class="dock-item" data-app="Dampener" onclick="playHarmonicChime([220]); triggerNotification('Dampener: All discarded files cleared')">
-          <div class="toccata-harmonic-tile tile-dampener">
-            <div class="mute-pad"></div>
+        <!-- Dampener / Trash -->
+        <div class="dock-item" data-app="Trash" onclick="playHarmonicChime([220]); triggerNotification('Trash is empty')">
+          <div class="mac-app-icon icon-dampener">
+            <div class="trash-rim"></div>
+            <div class="trash-mesh"></div>
           </div>
-          <span class="dock-tooltip">Dampener</span>
+          <span class="dock-tooltip">Trash</span>
         </div>
       </div>
     </footer>

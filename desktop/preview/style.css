@@ -1,55 +1,65 @@
 /* ==========================================================================
-   TOCCATA OS - The Harmonic Design System
-   Materials: Polished Ebony, Resonant Ivory, Champagne Brass & Acoustic Glass
+   TOCCATA OS - macOS Sequoia / Sonoma Authentic Color & Material System
+   Clean, vibrant, high-contrast, pure frosted glass.
    ========================================================================== */
 
 :root {
-  --brass-accent: #f59e0b;
-  --brass-glow: rgba(245, 158, 11, 0.45);
-  --sapphire-accent: #38bdf8;
-  --font-system: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  /* Apple Official System Colors */
+  --system-blue: #007aff;
+  --system-blue-hover: #0062cc;
+  --system-purple: #af52de;
+  --system-pink: #ff2d55;
+  --system-green: #34c759;
+  --system-orange: #ff9500;
+  --system-yellow: #ffcc00;
+  --system-gray: #8e8e93;
 
-  /* The Harmonic Overture Wallpaper: Resonant soundwaves across deep ebony space */
+  --accent-color: var(--system-blue);
+  --accent-glow: rgba(0, 122, 255, 0.4);
+  --font-system: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", 'Plus Jakarta Sans', "Segoe UI", Roboto, sans-serif;
+  --font-mono: "SF Mono", 'JetBrains Mono', Menlo, Monaco, monospace;
+
+  /* macOS Sequoia / Sonoma Dynamic Topographical Wallpaper */
   --bg-wallpaper: 
-    radial-gradient(circle at 15% 20%, rgba(245, 158, 11, 0.28) 0%, transparent 45%),
-    radial-gradient(circle at 85% 80%, rgba(168, 85, 247, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.22) 0%, transparent 60%),
-    linear-gradient(135deg, #07080c 0%, #0d0f17 35%, #12141f 70%, #06070a 100%);
+    radial-gradient(circle at 12% 18%, rgba(0, 122, 255, 0.5) 0%, transparent 50%),
+    radial-gradient(circle at 85% 82%, rgba(175, 82, 222, 0.45) 0%, transparent 50%),
+    radial-gradient(circle at 55% 45%, rgba(255, 45, 85, 0.35) 0%, transparent 60%),
+    radial-gradient(circle at 80% 15%, rgba(56, 189, 248, 0.45) 0%, transparent 45%),
+    linear-gradient(135deg, #050814 0%, #0c1228 35%, #181133 70%, #030408 100%);
 
-  /* Polished Ebony Acoustic Glass */
-  --glass-bg: rgba(18, 20, 29, 0.78);
-  --glass-border: rgba(245, 158, 11, 0.18);
-  --glass-rim-light: inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 0 20px rgba(245, 158, 11, 0.05);
-  --glass-shadow: 0 28px 80px rgba(0, 0, 0, 0.75), 0 2px 6px rgba(0, 0, 0, 0.4);
+  /* Dark Vibrancy Materials (Clean Slate, Zero Muddy Brown) */
+  --glass-bg: rgba(30, 30, 36, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.16);
+  --glass-rim-light: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  --glass-shadow: 0 28px 75px rgba(0, 0, 0, 0.65), 0 2px 6px rgba(0, 0, 0, 0.35);
   --text-primary: #ffffff;
   --text-secondary: rgba(255, 255, 255, 0.65);
-  --titlebar-bg: rgba(24, 26, 38, 0.9);
-  --menubar-bg: rgba(12, 14, 20, 0.78);
-  --dock-bg: rgba(22, 25, 36, 0.68);
-  --active-card: rgba(255, 255, 255, 0.1);
-  --sidebar-bg: rgba(14, 16, 24, 0.72);
+  --titlebar-bg: rgba(38, 38, 44, 0.85);
+  --menubar-bg: rgba(20, 20, 24, 0.65);
+  --dock-bg: rgba(36, 36, 42, 0.55);
+  --active-card: rgba(255, 255, 255, 0.12);
+  --sidebar-bg: rgba(24, 24, 28, 0.65);
 }
 
 body.light-mode {
   --bg-wallpaper: 
-    radial-gradient(circle at 20% 20%, rgba(254, 215, 170, 0.4) 0%, transparent 45%),
-    radial-gradient(circle at 80% 80%, rgba(216, 180, 254, 0.35) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(186, 230, 253, 0.3) 0%, transparent 60%),
-    linear-gradient(135deg, #fafaf9 0%, #f5f5f4 40%, #e7e5e4 100%);
+    radial-gradient(circle at 15% 20%, rgba(147, 197, 253, 0.6) 0%, transparent 50%),
+    radial-gradient(circle at 85% 80%, rgba(233, 213, 255, 0.6) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(254, 205, 211, 0.45) 0%, transparent 60%),
+    linear-gradient(135deg, #eff6ff 0%, #faf5ff 45%, #fff1f2 100%);
 
-  /* Resonant Ivory Glass */
-  --glass-bg: rgba(255, 255, 255, 0.82);
-  --glass-border: rgba(217, 119, 6, 0.25);
+  /* Light Vibrancy Materials */
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.55);
   --glass-rim-light: inset 0 1px 0 rgba(255, 255, 255, 0.95);
-  --glass-shadow: 0 22px 55px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.04);
-  --text-primary: #1c1917;
-  --text-secondary: rgba(28, 25, 23, 0.62);
-  --titlebar-bg: rgba(250, 250, 249, 0.92);
-  --menubar-bg: rgba(255, 255, 255, 0.8);
-  --dock-bg: rgba(255, 255, 255, 0.72);
-  --active-card: rgba(28, 25, 23, 0.06);
-  --sidebar-bg: rgba(245, 245, 244, 0.75);
+  --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);
+  --text-primary: #1d1d1f;
+  --text-secondary: rgba(0, 0, 0, 0.55);
+  --titlebar-bg: rgba(246, 246, 248, 0.88);
+  --menubar-bg: rgba(255, 255, 255, 0.72);
+  --dock-bg: rgba(255, 255, 255, 0.58);
+  --active-card: rgba(0, 0, 0, 0.08);
+  --sidebar-bg: rgba(238, 238, 242, 0.65);
 }
 
 * {
@@ -78,29 +88,30 @@ body {
 
 .glass-panel {
   background: var(--glass-bg);
-  backdrop-filter: blur(42px) saturate(220%);
-  -webkit-backdrop-filter: blur(42px) saturate(220%);
+  backdrop-filter: blur(40px) saturate(210%);
+  -webkit-backdrop-filter: blur(40px) saturate(210%);
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow), var(--glass-rim-light);
-  border-radius: 16px;
+  border-radius: 14px;
 }
 
 /* ==========================================================================
-   TOP MENU BAR & TUNING FORK LOGO
+   TOP GLOBAL MENU BAR
    ========================================================================== */
 #menu-bar {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 30px;
+  height: 28px;
   background: var(--menubar-bg);
-  backdrop-filter: blur(32px);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
   border-bottom: 1px solid var(--glass-border);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 14px;
+  padding: 0 12px;
   font-size: 13px;
   font-weight: 500;
   z-index: 1000;
@@ -114,61 +125,34 @@ body {
 
 .menu-item {
   cursor: pointer;
-  padding: 3px 8px;
-  border-radius: 6px;
+  padding: 2px 7px;
+  border-radius: 5px;
   display: flex;
   align-items: center;
   gap: 6px;
-  transition: all 0.12s ease;
+  transition: background 0.12s ease;
 }
 
 .menu-item:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.14);
 }
 
-/* Toccata Tuning Fork Monogram */
+/* The Toccata Tuning Logo in Apple Cyan/Sapphire */
 .toccata-tuning-logo {
-  width: 16px;
-  height: 16px;
-  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.7));
+  width: 15px;
+  height: 15px;
+  filter: drop-shadow(0 0 6px rgba(0, 122, 255, 0.7));
 }
 
 .active-app-name {
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.2px;
-}
-
-/* Realtime Harmonic Frequency Visualizer */
-.freq-visualizer {
-  display: flex;
-  align-items: flex-end;
-  gap: 2.5px;
-  height: 14px;
-  padding: 0 4px;
-}
-
-.freq-bar {
-  width: 2.5px;
-  background: linear-gradient(180deg, #38bdf8 0%, #f59e0b 100%);
-  border-radius: 1px;
-  animation: freqPulse 1.2s infinite ease-in-out;
-}
-
-.f1 { height: 6px; animation-delay: 0.1s; }
-.f2 { height: 12px; animation-delay: 0.3s; }
-.f3 { height: 8px; animation-delay: 0.2s; }
-.f4 { height: 14px; animation-delay: 0.4s; }
-.f5 { height: 9px; animation-delay: 0.25s; }
-
-@keyframes freqPulse {
-  0%, 100% { transform: scaleY(0.4); opacity: 0.7; }
-  50% { transform: scaleY(1); opacity: 1; }
 }
 
 .audio-wave-glyph {
   width: 15px;
   height: 15px;
-  color: var(--brass-accent);
+  color: var(--accent-color);
 }
 
 .status-icon-item svg {
@@ -178,7 +162,8 @@ body {
 
 .status-text {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
+  letter-spacing: -0.2px;
 }
 
 .clock {
@@ -186,45 +171,44 @@ body {
   font-weight: 600;
 }
 
-/* Maestro System Conductor */
+/* Maestro Copilot Badge */
 .maestro-badge {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(56, 189, 248, 0.2));
-  border: 1px solid rgba(245, 158, 11, 0.4);
-  padding: 2px 10px;
+  background: rgba(0, 122, 255, 0.18);
+  border: 1px solid rgba(0, 122, 255, 0.35);
+  padding: 2px 9px;
   border-radius: 12px;
   font-size: 11px;
   font-weight: 700;
-  color: var(--brass-accent);
+  color: #38bdf8;
   display: flex;
   align-items: center;
   gap: 6px;
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
 }
 
 .maestro-spark {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #f59e0b;
-  box-shadow: 0 0 8px #f59e0b;
-  animation: sparkDance 2s infinite ease-in-out;
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8;
+  animation: sparkPulse 2s infinite ease-in-out;
 }
 
-@keyframes sparkDance {
+@keyframes sparkPulse {
   0%, 100% { transform: scale(0.9); opacity: 0.8; }
   50% { transform: scale(1.3); opacity: 1; }
 }
 
 /* ==========================================================================
-   DESKTOP ACOUSTIC SOUNDBOARDS (VOLUMES)
+   DESKTOP MOUNTED VOLUMES (TOP-RIGHT)
    ========================================================================== */
 #desktop-icons {
   position: absolute;
-  top: 44px;
+  top: 40px;
   right: 18px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 22px;
   z-index: 10;
 }
 
@@ -233,166 +217,143 @@ body {
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  width: 90px;
+  width: 86px;
   text-align: center;
 }
 
 .desktop-item:hover .desktop-label {
-  background: var(--brass-accent);
-  color: #000;
-  box-shadow: 0 0 12px var(--brass-glow);
+  background: var(--accent-color);
+  color: white;
 }
 
 .toccata-disk-art {
-  width: 54px;
-  height: 50px;
-  background: linear-gradient(180deg, #1c1917 0%, #0c0a09 100%);
-  border: 1px solid rgba(245, 158, 11, 0.35);
-  border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  width: 52px;
+  height: 44px;
+  background: linear-gradient(180deg, #d8d8d8 0%, #999999 100%);
+  border-radius: 6px;
+  position: relative;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.acoustic-soundboard {
-  width: 46px;
-  height: 40px;
-  background: linear-gradient(135deg, #292524 0%, #1c1917 100%);
-  border-radius: 6px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding: 4px 8px;
-}
-
-.soundboard.gold {
-  border: 1px solid rgba(245, 158, 11, 0.5);
-}
-
-.sound-hole {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #000000;
-  border: 1.5px solid #f59e0b;
-  box-shadow: 0 0 6px rgba(245, 158, 11, 0.5);
-}
-
-.brass-strings {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+.disk-plate {
+  width: 44px;
   height: 28px;
+  background: linear-gradient(135deg, #eaeaea 0%, #bfbfbf 100%);
+  border-radius: 4px;
+  border: 1px solid #777;
 }
 
-.brass-strings span {
-  width: 16px;
-  height: 1px;
-  background: linear-gradient(90deg, #f59e0b, #fbbf24);
-  box-shadow: 0 0 3px #f59e0b;
+.disk-plate.vault {
+  background: linear-gradient(135deg, #dcfce7 0%, #86efac 100%);
+}
+
+.disk-notch {
+  position: absolute;
+  bottom: 4px;
+  width: 14px;
+  height: 3px;
+  background: #333;
+  border-radius: 1px;
 }
 
 .desktop-label {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   margin-top: 6px;
-  padding: 2px 7px;
-  border-radius: 5px;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
   transition: all 0.12s ease;
 }
 
 /* ==========================================================================
-   WINDOW CHROME & HARMONIC TUNING NODES
+   AUTHENTIC APPLE TRAFFIC LIGHTS & WINDOW CHROME
    ========================================================================== */
 .window {
   position: absolute;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  min-width: 440px;
-  min-height: 280px;
+  min-width: 420px;
+  min-height: 260px;
   transition: box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .window.active-window {
-  box-shadow: 0 35px 90px rgba(0, 0, 0, 0.75), 0 0 0 1px var(--brass-accent), var(--glass-rim-light);
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.25), var(--glass-rim-light);
   z-index: 100;
 }
 
 .window-titlebar {
-  height: 44px;
+  height: 42px;
   background: var(--titlebar-bg);
   border-bottom: 1px solid var(--glass-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
+  padding: 0 14px;
   cursor: move;
   gap: 16px;
 }
 
-/* Harmonic Tuning Nodes (Staccato, Fermata, Crescendo) */
-.harmonic-tuning-nodes {
+/* Iconic Apple Inset Traffic Lights */
+.traffic-lights {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
 }
 
-.node-btn {
-  width: 13px;
-  height: 13px;
+.tl-btn {
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  border: 1px solid rgba(245, 158, 11, 0.3);
-  background: rgba(245, 158, 11, 0.15);
+  border: none;
   cursor: pointer;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.25);
 }
 
-/* Hover: Micro-engraved musical tuning feedback */
-.window-titlebar:hover .node-staccato {
-  background: #ef4444;
-  border-color: #dc2626;
-  box-shadow: 0 0 8px rgba(239, 68, 68, 0.7);
+.tl-close {
+  background: #ff5f56;
+  border: 0.5px solid #e0443e;
 }
 
-.window-titlebar:hover .node-fermata {
-  background: #f59e0b;
-  border-color: #d97706;
-  box-shadow: 0 0 8px rgba(245, 158, 11, 0.7);
+.tl-minimize {
+  background: #ffbd2e;
+  border: 0.5px solid #dea123;
 }
 
-.window-titlebar:hover .node-crescendo {
-  background: #10b981;
-  border-color: #059669;
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.7);
+.tl-maximize {
+  background: #27c93f;
+  border: 0.5px solid #1aab29;
 }
 
-.window-titlebar:hover .node-staccato::after {
-  content: '•';
-  font-size: 14px;
-  color: white;
-  line-height: 1;
-}
-
-.window-titlebar:hover .node-fermata::after {
-  content: '—';
-  font-size: 10px;
-  color: white;
+.traffic-lights:hover .tl-close::after {
+  content: '×';
+  font-size: 11px;
+  color: #4a0002;
   font-weight: 800;
   line-height: 1;
 }
 
-.window-titlebar:hover .node-crescendo::after {
-  content: '⤢';
-  font-size: 9px;
-  color: white;
+.traffic-lights:hover .tl-minimize::after {
+  content: '–';
+  font-size: 10px;
+  color: #553300;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.traffic-lights:hover .tl-maximize::after {
+  content: '+';
+  font-size: 10px;
+  color: #00380a;
   font-weight: 800;
   line-height: 1;
 }
@@ -406,8 +367,8 @@ body {
 .toolbar-icon-btn {
   background: none;
   border: none;
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -432,15 +393,16 @@ body {
 
 .toolbar-title {
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   margin-left: 8px;
 }
 
+/* Segmented Control Pills */
 .segmented-control {
   display: flex;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.12);
   padding: 2px;
-  border-radius: 8px;
+  border-radius: 7px;
   border: 1px solid var(--glass-border);
 }
 
@@ -448,8 +410,8 @@ body {
   background: none;
   border: none;
   color: var(--text-secondary);
-  padding: 4px 10px;
-  border-radius: 6px;
+  padding: 4px 8px;
+  border-radius: 5px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -464,19 +426,19 @@ body {
 
 .seg-btn.active {
   background: var(--glass-bg);
-  color: var(--brass-accent);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  color: var(--text-primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .toolbar-search {
   display: flex;
   align-items: center;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.12);
   border: 1px solid var(--glass-border);
-  border-radius: 8px;
-  padding: 4px 10px;
-  gap: 8px;
-  width: 160px;
+  border-radius: 7px;
+  padding: 4px 8px;
+  gap: 6px;
+  width: 140px;
 }
 
 .toolbar-search svg {
@@ -495,7 +457,7 @@ body {
 }
 
 /* ==========================================================================
-   CADENCE WORKSPACES & HARMONIC APP TILES
+   CADENCE (FINDER) & CRISP APP SQUIRCLES
    ========================================================================== */
 .finder-body {
   flex: 1;
@@ -503,18 +465,18 @@ body {
 }
 
 .finder-sidebar {
-  width: 200px;
+  width: 190px;
   background: var(--sidebar-bg);
   border-right: 1px solid var(--glass-border);
-  padding: 14px 10px;
+  padding: 12px 8px;
 }
 
 .sidebar-category {
   font-size: 11px;
-  font-weight: 800;
-  color: var(--brass-accent);
+  font-weight: 700;
+  color: var(--text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.5px;
   padding: 10px 8px 4px 8px;
 }
 
@@ -522,12 +484,12 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 7px 10px;
-  border-radius: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.1s ease;
+  transition: background 0.1s ease;
 }
 
 .sidebar-row:hover {
@@ -535,22 +497,22 @@ body {
 }
 
 .sidebar-row.active {
-  background: var(--brass-accent);
-  color: #000000;
-  box-shadow: 0 0 12px var(--brass-glow);
+  background: var(--accent-color);
+  color: white;
 }
 
 .sb-icon {
   width: 16px;
   height: 16px;
+  opacity: 0.85;
 }
 
 .finder-grid-view {
   flex: 1;
-  padding: 28px;
+  padding: 24px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-  gap: 28px 18px;
+  grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+  gap: 24px 16px;
   overflow-y: auto;
 }
 
@@ -559,207 +521,221 @@ body {
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  padding: 10px 6px;
-  border-radius: 12px;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 8px;
+  border-radius: 10px;
+  transition: all 0.15s ease;
 }
 
 .app-card:hover {
   background: var(--active-card);
-  transform: translateY(-4px);
+  transform: translateY(-2px);
 }
 
 .app-title {
   font-size: 12px;
-  font-weight: 600;
-  margin-top: 10px;
+  font-weight: 500;
+  margin-top: 8px;
   text-align: center;
   word-break: break-word;
 }
 
 .finder-statusbar {
-  height: 26px;
+  height: 24px;
   background: var(--titlebar-bg);
   border-top: 1px solid var(--glass-border);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 11px;
-  font-weight: 600;
-  color: var(--brass-accent);
+  color: var(--text-secondary);
 }
 
 /* ==========================================================================
-   TOCCATA HARMONIC APP TILES (ACOUSTIC ARTIFACTS)
+   VIBRANT 3D MACOS-STYLE SQUIRCLE APP ICONS
    ========================================================================== */
-.toccata-harmonic-tile {
-  width: 62px;
-  height: 62px;
-  border-radius: 16px;
+.mac-app-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
   position: relative;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* 1. Cadence: Soundwave arch */
-.tile-cadence-acoustic {
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  border: 1px solid rgba(56, 189, 248, 0.4);
+/* 1. Cadence (Vibrant Royal Azure Flow) */
+.icon-cadence {
+  background: linear-gradient(135deg, #0ea5e9 0%, #007aff 50%, #4338ca 100%);
 }
 
-.acoustic-soundwave-arch {
+.cadence-wave {
   width: 36px;
   height: 36px;
-  border: 3px solid #38bdf8;
+  border: 3px solid #ffffff;
   border-radius: 50%;
   border-bottom-color: transparent;
   transform: rotate(-45deg);
-  box-shadow: 0 0 10px #38bdf8;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
 }
 
-/* 2. Scribe: 5 Gold staff lines with ebony quill */
-.tile-scribe-acoustic {
-  background: linear-gradient(180deg, #18181b 0%, #09090b 100%);
-  border: 1px solid rgba(245, 158, 11, 0.3);
+/* 2. Scribe (Luminous Gold Pad with Stylus) */
+.icon-scribe {
+  background: linear-gradient(180deg, #fef08a 0%, #facc15 100%);
+  border: 1px solid #eab308;
 }
 
-.gold-staff-lines {
+.scribe-lines {
   position: absolute;
   top: 14px;
   left: 12px;
   right: 12px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 7px;
 }
 
-.gold-staff-lines span {
-  height: 1px;
-  background: #f59e0b;
-  box-shadow: 0 0 3px rgba(245, 158, 11, 0.5);
+.scribe-lines span {
+  height: 2px;
+  background: rgba(180, 83, 9, 0.4);
+  border-radius: 1px;
 }
 
-.ebony-quill {
+.scribe-pen {
   position: absolute;
-  right: 10px;
+  right: 8px;
   bottom: 8px;
-  width: 6px;
-  height: 32px;
-  background: linear-gradient(180deg, #fef08a 0%, #f59e0b 50%, #78350f 100%);
-  border-radius: 2px;
-  transform: rotate(35deg);
-  box-shadow: -2px 2px 6px rgba(0, 0, 0, 0.6);
+  width: 14px;
+  height: 24px;
+  background: linear-gradient(135deg, #1c1917 0%, #78716c 100%);
+  clip-path: polygon(50% 0%, 100% 70%, 100% 100%, 0% 100%, 0% 70%);
+  box-shadow: -2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* 3. Sonata: Tuning Pins & Resonance Circles */
-.tile-sonata-acoustic {
-  background: linear-gradient(135deg, #292524 0%, #1c1917 100%);
-  border: 1px solid rgba(245, 158, 11, 0.4);
+/* 3. Sonata / Settings (Brushed Metallic Gear) */
+.icon-sonata {
+  background: linear-gradient(180deg, #6c6c70 0%, #48484a 100%);
 }
 
-.resonance-circles {
+.gear-outer {
   width: 38px;
   height: 38px;
-  border: 2px dashed #f59e0b;
+  background: repeating-conic-gradient(#8e8e93 0% 12.5%, #48484a 12.5% 25%);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 }
 
-.gold-pin {
-  width: 14px;
-  height: 14px;
-  background: radial-gradient(circle, #fde047 30%, #d97706 100%);
+.gear-center {
+  width: 22px;
+  height: 22px;
+  background: radial-gradient(circle, #e5e5ea 30%, #8e8e93 100%);
   border-radius: 50%;
-  box-shadow: 0 0 10px #f59e0b;
+  border: 4px solid #3a3a3c;
 }
 
-/* 4. Tempo: Oscillating Metronome */
-.tile-tempo-acoustic {
-  background: linear-gradient(180deg, #0f172a 0%, #020617 100%);
-  border: 1px solid rgba(56, 189, 248, 0.3);
+/* 4. Tempo (Electric Cyan Pulse) */
+.icon-tempo {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+  border: 1px solid #38bdf8;
 }
 
-.metronome-pendulum {
-  width: 3px;
-  height: 38px;
-  background: #38bdf8;
-  border-radius: 2px;
-  transform-origin: bottom center;
-  animation: metronomeTick 1.4s infinite ease-in-out alternate;
-  box-shadow: 0 0 8px #38bdf8;
-}
-
-@keyframes metronomeTick {
-  from { transform: rotate(-25deg); }
-  to { transform: rotate(25deg); }
-}
-
-/* 5. Gallery: Acoustic Prism */
-.tile-gallery-acoustic {
-  background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 50%, #0284c7 100%);
-}
-
-.acoustic-prism {
-  width: 30px;
-  height: 30px;
-  background: rgba(255, 255, 255, 0.95);
-  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-  box-shadow: 0 0 16px rgba(255, 255, 255, 0.9);
-}
-
-/* 6. Horizon */
-.tile-horizon-acoustic {
-  background: #090a0f;
-  border: 1px solid rgba(245, 158, 11, 0.3);
-}
-
-.acoustic-orbit {
+.tempo-pulse {
   width: 36px;
-  height: 36px;
-  border: 2px solid #f59e0b;
-  border-radius: 50%;
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+  height: 18px;
+  border-bottom: 2px solid #38bdf8;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(56, 189, 248, 0.5);
 }
 
-/* 7. Shell */
-.tile-shell-acoustic {
-  background: #000000;
-  border: 1px solid rgba(245, 158, 11, 0.4);
+/* 5. Gallery (Vibrant Prismatic Indigo/Sky) */
+.icon-gallery {
+  background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
 }
 
-.tile-shell-acoustic .t-prompt {
-  font-family: var(--font-mono);
-  font-size: 26px;
-  font-weight: 700;
-  color: #f59e0b;
-  text-shadow: 0 0 10px rgba(245, 158, 11, 0.8);
-}
-
-/* 8. Dampener */
-.tile-dampener {
-  background: linear-gradient(180deg, #44403c 0%, #292524 100%);
-}
-
-.mute-pad {
+.gallery-prism {
   width: 28px;
   height: 28px;
-  background: #1c1917;
-  border: 2px solid #a8a29e;
-  border-radius: 4px;
+  background: #ffffff;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.8);
+}
+
+/* 6. Horizon Browser (Ocean Compass) */
+.icon-horizon {
+  background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+}
+
+.compass-dial {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #0284c7 0%, #0369a1 100%);
+  border: 2px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.compass-needle {
+  width: 6px;
+  height: 32px;
+  background: linear-gradient(180deg, #ef4444 50%, #ffffff 50%);
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  transform: rotate(45deg);
+}
+
+/* 7. Shell / Terminal (Dark Slate with Cyan Prompt) */
+.icon-shell {
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid #334155;
+}
+
+.term-prompt {
+  font-family: monospace;
+  font-size: 20px;
+  font-weight: 700;
+  color: #38bdf8;
+}
+
+/* 8. Dampener / Trash */
+.icon-dampener {
+  background: linear-gradient(180deg, #94a3b8 0%, #64748b 100%);
+  width: 44px;
+  height: 48px;
+  border-radius: 6px 6px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.trash-rim {
+  width: 46px;
+  height: 6px;
+  background: #cbd5e1;
+  border-radius: 3px;
+  position: absolute;
+  top: 4px;
+}
+
+.trash-mesh {
+  width: 34px;
+  height: 26px;
+  background: repeating-linear-gradient(45deg, rgba(255,255,255,0.2) 0 2px, transparent 2px 6px);
 }
 
 /* ==========================================================================
-   CENTERED FLOATING DOCK (HIGH-END SYNTHESIZER / SOUNDBOARD STRIP)
+   CENTERED FLOATING DOCK WITH MAGNIFICATION
    ========================================================================== */
 #dock-container {
   position: absolute;
-  bottom: 14px;
+  bottom: 12px;
   left: 0;
   right: 0;
   display: flex;
@@ -770,14 +746,14 @@ body {
 
 #dock {
   pointer-events: auto;
-  height: 76px;
-  padding: 0 20px;
+  height: 74px;
+  padding: 0 16px;
   display: flex;
   align-items: center;
-  gap: 15px;
-  border-radius: 26px;
+  gap: 14px;
+  border-radius: 24px;
   background: var(--dock-bg);
-  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.65), var(--glass-rim-light);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45), var(--glass-rim-light);
 }
 
 .dock-item {
@@ -789,10 +765,10 @@ body {
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.dock-item .toccata-harmonic-tile {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
+.dock-item .mac-app-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
 }
 
 .dock-item:hover {
@@ -803,14 +779,14 @@ body {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: var(--brass-accent);
+  background: var(--text-primary);
   margin-top: 4px;
-  box-shadow: 0 0 6px var(--brass-accent);
+  box-shadow: 0 0 4px var(--text-primary);
 }
 
 .dock-divider {
   width: 1px;
-  height: 44px;
+  height: 42px;
   background: var(--glass-border);
   margin: 0 6px;
 }
@@ -818,18 +794,17 @@ body {
 .dock-tooltip {
   position: absolute;
   top: -38px;
-  background: rgba(12, 10, 9, 0.94);
+  background: rgba(24, 24, 27, 0.88);
   backdrop-filter: blur(14px);
-  color: #f59e0b;
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: white;
   font-size: 11px;
-  font-weight: 700;
-  padding: 5px 12px;
-  border-radius: 8px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   transition: opacity 0.15s ease;
 }
 
@@ -838,13 +813,79 @@ body {
 }
 
 /* ==========================================================================
-   TEMPO OSCILLOSCOPE WINDOW
+   SCRIBE, TEMPO, SETTINGS & CONTROLS
    ========================================================================== */
+.textedit-toolbar {
+  height: 38px;
+  background: rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 12px;
+}
+
+.tb-segmented {
+  display: flex;
+  background: rgba(0, 0, 0, 0.14);
+  border-radius: 6px;
+  padding: 2px;
+}
+
+.tb-btn {
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.tb-btn.active {
+  background: var(--glass-bg);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.tb-divider {
+  width: 1px;
+  height: 16px;
+  background: var(--glass-border);
+}
+
+.tb-font-picker {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.tb-tag {
+  font-size: 11px;
+  margin-left: auto;
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+.editor-area {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 20px;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 1.7;
+  resize: none;
+}
+
+/* Tempo Window */
 .tempo-body {
   padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
 }
 
 .tempo-grid {
@@ -854,7 +895,7 @@ body {
 }
 
 .tempo-card {
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.2);
   border: 1px solid var(--glass-border);
   border-radius: 12px;
   padding: 14px;
@@ -871,14 +912,14 @@ body {
 }
 
 .tc-metric {
-  color: var(--brass-accent);
+  color: var(--accent-color);
 }
 
 .tempo-wave-box {
-  height: 100px;
-  background: #000000;
+  height: 80px;
+  background: #0f172a;
   border-radius: 8px;
-  border: 1px solid rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(0, 122, 255, 0.3);
   position: relative;
   overflow: hidden;
   display: flex;
@@ -888,19 +929,9 @@ body {
 .oscilloscope-line {
   width: 100%;
   height: 2px;
-  position: relative;
-}
-
-.cpu-wave {
-  background: repeating-linear-gradient(90deg, #38bdf8 0 8px, transparent 8px 16px);
-  animation: waveShift 1s infinite linear;
-  box-shadow: 0 0 10px #38bdf8;
-}
-
-.ram-wave {
-  background: repeating-linear-gradient(90deg, #f59e0b 0 12px, transparent 12px 24px);
-  animation: waveShift 2s infinite linear;
-  box-shadow: 0 0 10px #f59e0b;
+  background: repeating-linear-gradient(90deg, #007aff 0 8px, transparent 8px 16px);
+  animation: waveShift 1.2s infinite linear;
+  box-shadow: 0 0 10px #007aff;
 }
 
 @keyframes waveShift {
@@ -912,191 +943,260 @@ body {
   display: flex;
   justify-content: space-between;
   font-size: 12px;
-  font-weight: 600;
   color: var(--text-secondary);
+}
+
+/* Settings Window */
+.settings-body {
+  display: flex;
+}
+
+.settings-sidebar {
+  width: 210px;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--glass-border);
+  padding: 14px 10px;
+}
+
+.settings-user-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 10px;
+  background: var(--active-card);
+  margin-bottom: 14px;
+}
+
+.user-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #007aff, #5856d6);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.user-name {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.user-sub {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.settings-nav-item {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 3px;
+}
+
+.settings-nav-item.active {
+  background: var(--accent-color);
+  color: white;
+}
+
+.settings-content {
+  flex: 1;
+  padding: 28px;
+  overflow-y: auto;
+}
+
+.settings-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 6px 0 24px 0;
+}
+
+.theme-picker-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.theme-card {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.theme-box {
+  width: 110px;
+  height: 68px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+}
+
+.light-theme-preview .theme-box {
+  background: #f4f4f5;
+  box-shadow: inset 0 0 0 1px #d4d4d8;
+}
+
+.dark-theme-preview .theme-box {
+  background: #18181b;
+  box-shadow: inset 0 0 0 1px #3f3f46;
+}
+
+.theme-card.active .theme-box {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+.settings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.row-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.row-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 3px;
+}
+
+.accent-dots {
+  display: flex;
+  gap: 10px;
+}
+
+.accent-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.accent-dot.active {
+  border-color: var(--text-primary);
+  transform: scale(1.15);
+}
+
+.accent-dot.blue { background: #007aff; }
+.accent-dot.purple { background: #af52de; }
+.accent-dot.pink { background: #ff2d55; }
+.accent-dot.green { background: #34c759; }
+.accent-dot.orange { background: #ff9500; }
+
+/* Real Apple Toggle Switches */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider.round {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.2);
+  transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 24px;
+}
+
+.slider.round:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+input:checked + .slider.round {
+  background-color: var(--accent-color);
+}
+
+input:checked + .slider.round:before {
+  transform: translateX(20px);
+}
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s ease;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-primary {
+  background: var(--accent-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--system-blue-hover);
 }
 
 /* ==========================================================================
-   SCRIBE, PRELUDE & SETTINGS DETAILS
+   CONTROL CENTER POPUP
    ========================================================================== */
-.textedit-toolbar {
-  height: 40px;
-  background: rgba(0, 0, 0, 0.12);
-  border-bottom: 1px solid var(--glass-border);
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
-  gap: 14px;
-}
-
-.tb-segmented {
-  display: flex;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 7px;
-  padding: 2px;
-}
-
-.tb-btn {
-  background: none;
-  border: none;
-  color: var(--text-primary);
-  padding: 3px 10px;
-  border-radius: 5px;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.tb-btn.active {
-  background: var(--glass-bg);
-  color: var(--brass-accent);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-}
-
-.tb-divider {
-  width: 1px;
-  height: 16px;
-  background: var(--glass-border);
-}
-
-.tb-font-picker {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-.tb-tag {
-  font-size: 11px;
-  margin-left: auto;
-  color: var(--brass-accent);
-  font-weight: 700;
-}
-
-.editor-area {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  padding: 24px;
-  font-family: inherit;
-  font-size: 14px;
-  color: var(--text-primary);
-  line-height: 1.8;
-  resize: none;
-}
-
-/* Prelude Search Overlay */
-#spotlight-overlay {
+#control-center {
   position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(12px);
+  top: 36px;
+  right: 14px;
+  width: 330px;
+  padding: 16px;
+  z-index: 1500;
   display: flex;
-  justify-content: center;
-  padding-top: 15vh;
-  z-index: 2000;
-}
-
-.spotlight-card {
-  width: 660px;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8), 0 0 20px rgba(245, 158, 11, 0.2);
-}
-
-.spotlight-input-row {
-  display: flex;
-  align-items: center;
-  padding: 18px 24px;
-  border-bottom: 1px solid var(--glass-border);
+  flex-direction: column;
   gap: 14px;
 }
 
-.prelude-emblem {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: rgba(245, 158, 11, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--brass-accent);
-  font-size: 18px;
-  font-weight: 800;
-}
-
-#spotlight-input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  font-family: inherit;
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.spotlight-esc-pill {
-  font-size: 11px;
-  font-weight: 700;
-  background: rgba(255, 255, 255, 0.14);
-  padding: 3px 8px;
-  border-radius: 6px;
-  color: var(--text-secondary);
-}
-
-#spotlight-results {
-  max-height: 320px;
-  overflow-y: auto;
-  padding: 12px;
-}
-
-.result-item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 12px 16px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.12s ease;
-}
-
-.result-item:hover, .result-item.selected {
-  background: var(--brass-accent);
-  color: #000000;
-  font-weight: 700;
-}
-
-/* Control Center Header & Sliders */
 .cc-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 700;
 }
 
-.cc-header-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.brass-dot {
+.cc-status-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--brass-accent);
-  box-shadow: 0 0 8px var(--brass-accent);
-}
-
-.hertz-tag {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--brass-accent);
-  background: rgba(245, 158, 11, 0.15);
-  padding: 2px 6px;
-  border-radius: 4px;
+  background: #34c759;
+  box-shadow: 0 0 6px #34c759;
 }
 
 .cc-modules-grid {
@@ -1106,7 +1206,7 @@ body {
 }
 
 .cc-large-module {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 14px;
   padding: 10px;
   display: flex;
@@ -1124,23 +1224,23 @@ body {
 }
 
 .cc-icon-bubble {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .cc-icon-bubble.active {
-  background: var(--brass-accent);
-  color: #000000;
+  background: var(--accent-color);
+  color: white;
 }
 
 .cc-icon-bubble svg {
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
 }
 
 .cc-title {
@@ -1160,20 +1260,20 @@ body {
 }
 
 .cc-card-btn {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 14px;
   padding: 12px;
   display: flex;
   align-items: center;
   gap: 10px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.15s ease;
 }
 
 .cc-card-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.14);
 }
 
 .cc-slider-card {
@@ -1184,19 +1284,19 @@ body {
 
 .slider-title {
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .slider-pill {
-  height: 30px;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 15px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
   position: relative;
   overflow: hidden;
   cursor: pointer;
   display: flex;
   align-items: center;
-  padding-left: 12px;
+  padding-left: 10px;
 }
 
 .slider-leading-icon {
@@ -1211,91 +1311,106 @@ body {
   top: 0;
   left: 0;
   bottom: 0;
-  background: linear-gradient(90deg, #f59e0b, #fbbf24);
-  border-radius: 15px;
+  background: #ffffff;
+  border-radius: 14px;
   transition: width 0.1s ease;
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
 }
 
-/* Ebony & Ivory Theme Boxes */
-.theme-picker-row {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 28px;
+body.light-mode .slider-track-fill {
+  background: var(--text-primary);
 }
 
-.theme-card {
-  cursor: pointer;
+body.light-mode .slider-leading-icon {
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   SPOTLIGHT OVERLAY
+   ========================================================================== */
+#spotlight-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  padding-top: 15vh;
+  z-index: 2000;
+}
+
+.spotlight-card {
+  width: 640px;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 35px 90px rgba(0, 0, 0, 0.65);
+}
+
+.spotlight-input-row {
+  display: flex;
   align-items: center;
-  gap: 8px;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--glass-border);
+  gap: 14px;
 }
 
-.theme-box {
-  width: 120px;
-  height: 72px;
-  border-radius: 12px;
-  border: 2px solid transparent;
-  transition: all 0.15s ease;
+.spotlight-lens {
+  width: 22px;
+  height: 22px;
+  color: var(--text-secondary);
 }
 
-.ebony-box {
-  background: #090a0f;
-  box-shadow: inset 0 0 0 1px #292524;
+#spotlight-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--text-primary);
 }
 
-.ivory-box {
-  background: #fbfbfa;
-  box-shadow: inset 0 0 0 1px #d6d3d1;
+.spotlight-esc-pill {
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.14);
+  padding: 3px 8px;
+  border-radius: 6px;
+  color: var(--text-secondary);
 }
 
-.theme-card.active .theme-box {
-  border-color: var(--brass-accent);
-  box-shadow: 0 0 0 2px var(--brass-glow);
+#spotlight-results {
+  max-height: 320px;
+  overflow-y: auto;
+  padding: 12px;
 }
 
-.accent-dots {
+.result-item {
   display: flex;
-  gap: 12px;
-}
-
-.accent-dot {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  border-radius: 10px;
   cursor: pointer;
-  border: 2px solid transparent;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-  transition: transform 0.15s ease;
+  transition: background 0.1s ease;
 }
 
-.accent-dot.active {
-  border-color: var(--text-primary);
-  transform: scale(1.15);
+.result-item:hover, .result-item.selected {
+  background: var(--accent-color);
+  color: white;
 }
-
-.accent-dot.gold { background: #f59e0b; }
-.accent-dot.sapphire { background: #38bdf8; }
-.accent-dot.amethyst { background: #a855f7; }
-.accent-dot.jade { background: #10b981; }
-.accent-dot.ruby { background: #f43f5e; }
 
 /* Notification Toast */
 #toast {
   position: absolute;
-  top: 42px;
+  top: 40px;
   left: 50%;
   transform: translateX(-50%);
-  padding: 10px 24px;
+  padding: 10px 22px;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   z-index: 3000;
   border-radius: 24px;
-  background: rgba(18, 20, 29, 0.92);
-  border: 1px solid var(--brass-accent);
-  color: var(--brass-accent);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(245, 158, 11, 0.3);
   animation: fadeInDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -1304,6 +1419,6 @@ body {
 }
 
 @keyframes fadeInDown {
-  from { opacity: 0; transform: translate(-50%, -14px); }
+  from { opacity: 0; transform: translate(-50%, -12px); }
   to { opacity: 1; transform: translate(-50%, 0); }
 }
