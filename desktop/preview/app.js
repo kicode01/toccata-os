@@ -1,10 +1,74 @@
-// Toccata OS - Signature Desktop Engine
+// Toccata OS - Harmonic Desktop Engine & Acoustic Synthesizer
 
 let topZIndex = 100;
 let isSpotlightOpen = false;
 let isControlCenterOpen = false;
+let audioFeedbackEnabled = true;
 
-// 1. Clock Update
+// 1. Web Audio API Harmonic Synthesizer
+let audioCtx = null;
+
+function getAudioContext() {
+  if (!audioCtx) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (AudioContextClass) {
+      audioCtx = new AudioContextClass();
+    }
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+function playHarmonicChime(frequencies = [440, 554.37, 659.25], duration = 0.45) {
+  if (!audioFeedbackEnabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+    frequencies.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      // Warm pure sine waves with exponential acoustic decay
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now);
+
+      // Volume envelope (Steinway/Marimba style pluck)
+      const baseGain = 0.08 / frequencies.length;
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(baseGain, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration + idx * 0.04);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + duration + idx * 0.04 + 0.05);
+    });
+  } catch (e) {
+    console.warn('[Toccata Audio] Acoustic touch feedback muted:', e);
+  }
+}
+
+function toggleAudioFeedback(enabled) {
+  audioFeedbackEnabled = enabled;
+  if (enabled) {
+    playHarmonicChime([523.25, 659.25, 783.99]);
+    triggerNotification('Acoustic Touch Synthesizer: Active');
+  } else {
+    triggerNotification('Acoustic Touch: Muted');
+  }
+}
+
+document.getElementById('acoustic-sound-toggle')?.addEventListener('click', () => {
+  audioFeedbackEnabled = !audioFeedbackEnabled;
+  toggleAudioFeedback(audioFeedbackEnabled);
+});
+
+// 2. Realtime Clock
 function updateClock() {
   const clockEl = document.getElementById('clock-display');
   const now = new Date();
@@ -14,14 +78,13 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// 2. Window Management
+// 3. Window Management
 function bringToFront(windowEl) {
   topZIndex += 1;
   windowEl.style.zIndex = topZIndex;
   document.querySelectorAll('.window').forEach(w => w.classList.remove('active-window'));
   windowEl.classList.add('active-window');
 
-  // Update top bar active app title
   const rawTitle = windowEl.querySelector('.window-title').textContent;
   const title = rawTitle.includes('—') ? rawTitle.split('—')[0].trim() : rawTitle.trim();
   document.getElementById('active-app-title').textContent = title;
@@ -33,9 +96,16 @@ function openWindow(id) {
   win.classList.remove('hidden');
   bringToFront(win);
 
+  // Play harmonic chord on window movement
+  if (id === 'win-cadence') playHarmonicChime([440, 554.37]);
+  if (id === 'win-scribe') playHarmonicChime([523.25, 659.25]);
+  if (id === 'win-tempo') playHarmonicChime([392, 587.33]);
+  if (id === 'win-settings') playHarmonicChime([440, 659.25]);
+
   // Mark dock dot as active
   if (id === 'win-scribe') document.getElementById('dot-scribe')?.classList.remove('hidden');
   if (id === 'win-settings') document.getElementById('dot-settings')?.classList.remove('hidden');
+  if (id === 'win-tempo') document.getElementById('dot-tempo')?.classList.remove('hidden');
   if (id === 'win-installer') document.getElementById('dot-installer')?.classList.remove('hidden');
 }
 
@@ -45,6 +115,7 @@ function closeWindow(id) {
     win.classList.add('hidden');
     if (id === 'win-scribe') document.getElementById('dot-scribe')?.classList.add('hidden');
     if (id === 'win-settings') document.getElementById('dot-settings')?.classList.add('hidden');
+    if (id === 'win-tempo') document.getElementById('dot-tempo')?.classList.add('hidden');
     if (id === 'win-installer') document.getElementById('dot-installer')?.classList.add('hidden');
   }
 }
@@ -88,7 +159,7 @@ function maximizeWindow(id) {
   }
 }
 
-// 3. Window Dragging Logic
+// 4. Window Dragging Logic
 document.querySelectorAll('.window').forEach(win => {
   const titlebar = win.querySelector('.window-titlebar');
   let isDragging = false;
@@ -98,7 +169,7 @@ document.querySelectorAll('.window').forEach(win => {
   win.addEventListener('mousedown', () => bringToFront(win));
 
   titlebar.addEventListener('mousedown', (e) => {
-    if (e.target.classList.contains('t-btn')) return; // Ignore gem controls
+    if (e.target.classList.contains('node-btn')) return;
     if (win.dataset.maximized === 'true') return;
 
     isDragging = true;
@@ -120,7 +191,7 @@ document.querySelectorAll('.window').forEach(win => {
   });
 });
 
-// 4. Parabolic Dock Magnification
+// 5. Parabolic Dock Magnification
 const dock = document.getElementById('dock');
 const dockItems = document.querySelectorAll('.dock-item');
 
@@ -146,7 +217,7 @@ dock.addEventListener('mouseleave', () => {
   });
 });
 
-// 5. Spotlight Search & Instant Math
+// 6. Prelude Search Launcher
 const spotlightOverlay = document.getElementById('spotlight-overlay');
 const spotlightInput = document.getElementById('spotlight-input');
 const spotlightResults = document.getElementById('spotlight-results');
@@ -154,20 +225,21 @@ const spotlightResults = document.getElementById('spotlight-results');
 function toggleSpotlight() {
   isSpotlightOpen = !isSpotlightOpen;
   if (isSpotlightOpen) {
+    playHarmonicChime([659.25, 783.99]);
     spotlightOverlay.classList.remove('hidden');
     spotlightInput.value = '';
     spotlightResults.innerHTML = `
       <div class="result-item" onclick="openWindow('win-cadence'); toggleSpotlight();">
-        <span style="font-size: 20px;">📂</span> <span>Cadence (File Workspaces)</span>
+        <span style="font-size: 20px;">🎵</span> <span>Cadence (Movement Conductor)</span>
       </div>
       <div class="result-item" onclick="openWindow('win-scribe'); toggleSpotlight();">
-        <span style="font-size: 20px;">📝</span> <span>Scribe (Notes & Code)</span>
+        <span style="font-size: 20px;">🎼</span> <span>Scribe (Score & Composition)</span>
+      </div>
+      <div class="result-item" onclick="openWindow('win-tempo'); toggleSpotlight();">
+        <span style="font-size: 20px;">⏱️</span> <span>Tempo (Hardware Oscilloscope)</span>
       </div>
       <div class="result-item" onclick="openWindow('win-settings'); toggleSpotlight();">
-        <span style="font-size: 20px;">⚙️</span> <span>System Settings</span>
-      </div>
-      <div class="result-item" onclick="openWindow('win-installer'); toggleSpotlight();">
-        <span style="font-size: 20px;">💎</span> <span>Toccata Gallery & Installer</span>
+        <span style="font-size: 20px;">🎛️</span> <span>Sonata (Calibration & Tuning)</span>
       </div>
     `;
     setTimeout(() => spotlightInput.focus(), 50);
@@ -206,15 +278,16 @@ spotlightInput.addEventListener('input', (e) => {
   if (mathResult !== null && !isNaN(mathResult)) {
     spotlightResults.innerHTML = `
       <div class="result-item selected">
-        <span style="font-size: 22px;">🔢</span>
-        <div style="font-size: 20px; font-weight: 700;">= ${mathResult.toLocaleString()}</div>
+        <span style="font-size: 22px;">🎹</span>
+        <div style="font-size: 20px; font-weight: 700;">= ${mathResult.toLocaleString()} Hz</div>
       </div>
     `;
   } else {
     const apps = [
-      { name: 'Cadence', icon: '📂', id: 'win-cadence' },
-      { name: 'Scribe', icon: '📝', id: 'win-scribe' },
-      { name: 'Settings', icon: '⚙️', id: 'win-settings' },
+      { name: 'Cadence', icon: '🎵', id: 'win-cadence' },
+      { name: 'Scribe', icon: '🎼', id: 'win-scribe' },
+      { name: 'Tempo', icon: '⏱️', id: 'win-tempo' },
+      { name: 'Sonata', icon: '🎛️', id: 'win-settings' },
       { name: 'Gallery', icon: '💎', id: 'win-installer' }
     ];
     const filtered = apps.filter(a => a.name.toLowerCase().includes(query.toLowerCase()));
@@ -234,26 +307,28 @@ spotlightInput.addEventListener('input', (e) => {
   }
 });
 
-// 6. Control Center & Apple Sliders
+// 7. Control Center & Interactive Sliders
 const controlCenter = document.getElementById('control-center');
 document.getElementById('control-center-btn').addEventListener('click', () => {
   isControlCenterOpen = !isControlCenterOpen;
+  playHarmonicChime([523.25]);
   controlCenter.classList.toggle('hidden', !isControlCenterOpen);
 });
 
 document.getElementById('wifi-toggle').addEventListener('click', function() {
   const bubble = this.querySelector('.cc-icon-bubble');
   bubble.classList.toggle('active');
-  triggerNotification(bubble.classList.contains('active') ? 'Wi-Fi: Connected to Toccata-Fiber' : 'Wi-Fi: Off');
+  playHarmonicChime([587.33, 783.99]);
+  triggerNotification(bubble.classList.contains('active') ? 'Harmonic Mesh: Connected (Zero Jitter)' : 'Harmonic Mesh: Disconnected');
 });
 
 document.getElementById('bt-toggle').addEventListener('click', function() {
   const bubble = this.querySelector('.cc-icon-bubble');
   bubble.classList.toggle('active');
-  triggerNotification(bubble.classList.contains('active') ? 'Bluetooth: Connected to AirPods Max' : 'Bluetooth: Off');
+  playHarmonicChime([659.25, 880]);
+  triggerNotification(bubble.classList.contains('active') ? 'Hi-Res Audio Stream: Connected' : 'Hi-Res Stream: Standby');
 });
 
-// Interactive slider pills in Control Center
 document.querySelectorAll('.slider-pill').forEach(pill => {
   pill.addEventListener('click', (e) => {
     const rect = pill.getBoundingClientRect();
@@ -261,10 +336,11 @@ document.querySelectorAll('.slider-pill').forEach(pill => {
     const percentage = Math.max(10, Math.min(100, Math.round((clickX / rect.width) * 100)));
     const fill = pill.querySelector('.slider-track-fill');
     fill.style.width = `${percentage}%`;
+    playHarmonicChime([300 + percentage * 6]);
   });
 });
 
-// 7. Theme Switching & Customization
+// 8. Theme Switching & Customization
 function setTheme(theme) {
   document.body.className = theme === 'light' ? 'light-mode' : 'dark-mode';
   document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('active'));
@@ -281,13 +357,13 @@ document.getElementById('theme-toggle-btn').addEventListener('click', () => {
 });
 
 function setAccent(color) {
-  document.documentElement.style.setProperty('--accent-color', color);
-  document.documentElement.style.setProperty('--accent-glow', `${color}66`);
+  document.documentElement.style.setProperty('--brass-accent', color);
+  document.documentElement.style.setProperty('--brass-glow', `${color}66`);
   document.querySelectorAll('.accent-dot').forEach(d => d.classList.remove('active'));
   event.target.classList.add('active');
 }
 
-// 8. Notification Toasts
+// 9. Notification Toasts
 function triggerNotification(msg) {
   const toast = document.getElementById('toast');
   const toastMsg = document.getElementById('toast-msg');
