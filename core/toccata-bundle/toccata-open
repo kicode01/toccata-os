@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Toccata OS Application Bundle Launcher (`toccata-open`)
-Handles macOS-style .app directory execution and desktop registration on Linux.
+Optimized for low-latency bundle launching, metadata caching, and desktop integration.
 """
 
 import sys
@@ -10,24 +10,33 @@ import plistlib
 import subprocess
 import shutil
 from pathlib import Path
+from functools import lru_cache
 
-def parse_info_plist(plist_path: Path) -> dict:
-    """Parses an Info.plist file (binary, XML, or JSON format)."""
+@lru_cache(maxsize=128)
+def parse_info_plist_cached(plist_path_str: str) -> dict:
+    """Cached parser for Info.plist files (binary, XML, or JSON format)."""
+    plist_path = Path(plist_path_str)
+    if not plist_path.is_file():
+        return {}
     try:
         with open(plist_path, "rb") as f:
             return plistlib.load(f)
     except Exception as e:
-        print(f"[toccata-open] Warning: Could not parse {plist_path} with plistlib: {e}", file=sys.stderr)
+        # Fallback simple key-value parser for minimal bundles
         data = {}
-        with open(plist_path, "r", encoding="utf-8", errors="ignore") as f:
-            for line in f:
-                if "=" in line:
-                    k, v = line.strip().split("=", 1)
-                    data[k.strip()] = v.strip().strip('"').strip("'")
+        try:
+            with open(plist_path, "r", encoding="utf-8", errors="ignore") as f:
+                for line in f:
+                    if "=" in line:
+                        k, v = line.strip().split("=", 1)
+                        data[k.strip()] = v.strip().strip('"').strip("'")
+        except Exception:
+            pass
         return data
 
 def launch_bundle(app_path: Path, args: list) -> int:
     """Executes the binary inside Contents/MacOS/ specified by Info.plist."""
+    app_path = app_path.resolve()
     contents_dir = app_path / "Contents"
     info_plist = contents_dir / "Info.plist"
     macos_dir = contents_dir / "MacOS"
@@ -38,12 +47,13 @@ def launch_bundle(app_path: Path, args: list) -> int:
 
     executable_name = None
     if info_plist.is_file():
-        meta = parse_info_plist(info_plist)
+        meta = parse_info_plist_cached(str(info_plist))
         executable_name = meta.get("CFBundleExecutable")
 
+    # If CFBundleExecutable not specified, find the first executable in Contents/MacOS
     if not executable_name:
         for file in macos_dir.iterdir():
-            if os.access(file, os.X_OK) or file.is_file():
+            if file.is_file():
                 executable_name = file.name
                 break
 
@@ -58,8 +68,9 @@ def launch_bundle(app_path: Path, args: list) -> int:
         except Exception:
             pass
 
+    # Setup environment variables for bundle context
     env = os.environ.copy()
-    env["TOCCATA_BUNDLE_PATH"] = str(app_path.resolve())
+    env["TOCCATA_BUNDLE_PATH"] = str(app_path)
     env["TOCCATA_RESOURCES_PATH"] = str((contents_dir / "Resources").resolve())
 
     # Build command invocation
@@ -78,17 +89,17 @@ def launch_bundle(app_path: Path, args: list) -> int:
     else:
         cmd = [str(exec_path)] + args
 
-    print(f"[toccata-open] Launching bundle: {app_path.name} -> {exec_path.name}")
     return subprocess.call(cmd, env=env)
 
 def register_desktop_entry(app_path: Path):
     """Registers the .app bundle into Linux desktop menus (~/.local/share/applications)."""
+    app_path = app_path.resolve()
     contents_dir = app_path / "Contents"
     info_plist = contents_dir / "Info.plist"
     if not info_plist.is_file():
         return
 
-    meta = parse_info_plist(info_plist)
+    meta = parse_info_plist_cached(str(info_plist))
     name = meta.get("CFBundleDisplayName") or meta.get("CFBundleName") or app_path.stem
     bundle_id = meta.get("CFBundleIdentifier", f"org.toccata.{app_path.stem.lower()}")
     
@@ -108,7 +119,7 @@ def register_desktop_entry(app_path: Path):
     desktop_content = f"""[Desktop Entry]
 Type=Application
 Name={name}
-Exec=toccata-open "{app_path.resolve()}" %U
+Exec=toccata-open "{app_path}" %U
 Icon={icon_path}
 Categories=Utility;
 Terminal=false

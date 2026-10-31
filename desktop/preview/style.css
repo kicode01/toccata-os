@@ -67,6 +67,7 @@ body.light-mode {
   margin: 0;
   padding: 0;
   user-select: none;
+  -webkit-user-drag: none;
 }
 
 body {
@@ -78,12 +79,15 @@ body {
   overflow: hidden;
   transition: background 0.4s ease;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 #desktop {
   position: relative;
   width: 100%;
   height: 100%;
+  contain: strict;
 }
 
 .glass-panel {
@@ -93,6 +97,7 @@ body {
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow), var(--glass-rim-light);
   border-radius: 14px;
+  transform: translate3d(0, 0, 0);
 }
 
 /* ==========================================================================

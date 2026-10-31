@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Toccata OS - Archiso Profile Definition
+# Toccata OS - Optimized Archiso Profile Definition
+# Configured for fast decompression and compact bootable footprint.
 
 iso_name="toccata-os"
 iso_label="TOCCATA_$(date +%Y%m)"
@@ -13,7 +14,8 @@ bootmodes=('bios.syslinux.mbr' 'bios.syslinux.eltorito'
 arch="x86_64"
 pacman_conf="pacman.conf"
 airootfs_image_type="squashfs"
-airootfs_image_tool_options=('-comp' 'zstd')
+# Optimized Zstandard squashfs compression for maximum boot speed & minimal disk footprint
+airootfs_image_tool_options=('-comp' 'zstd' '-Xcompression-level' '15' '-b' '1M')
 file_permissions=(
   ["/etc/shadow"]="0:0:400"
   ["/root"]="0:0:750"
