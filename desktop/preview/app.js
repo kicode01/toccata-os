@@ -42,7 +42,6 @@ function closeWindow(id) {
   const win = document.getElementById(id);
   if (win) {
     win.classList.add('hidden');
-    // Hide dock dot
     if (id === 'win-textedit') document.getElementById('dot-textedit')?.classList.add('hidden');
     if (id === 'win-settings') document.getElementById('dot-settings')?.classList.add('hidden');
     if (id === 'win-installer') document.getElementById('dot-installer')?.classList.add('hidden');
@@ -52,13 +51,13 @@ function closeWindow(id) {
 function minimizeWindow(id) {
   const win = document.getElementById(id);
   if (win) {
-    win.style.transform = 'scale(0.2) translateY(600px)';
+    win.style.transform = 'scale(0.15) translateY(700px)';
     win.style.opacity = '0';
     setTimeout(() => {
       win.classList.add('hidden');
       win.style.transform = '';
       win.style.opacity = '';
-    }, 200);
+    }, 220);
   }
 }
 
@@ -79,10 +78,10 @@ function maximizeWindow(id) {
     win.dataset.origWidth = win.style.width;
     win.dataset.origHeight = win.style.height;
 
-    win.style.top = '30px';
+    win.style.top = '28px';
     win.style.left = '0';
     win.style.width = '100vw';
-    win.style.height = 'calc(100vh - 30px)';
+    win.style.height = 'calc(100vh - 28px)';
     win.style.borderRadius = '0';
     win.dataset.maximized = 'true';
   }
@@ -98,7 +97,7 @@ document.querySelectorAll('.window').forEach(win => {
   win.addEventListener('mousedown', () => bringToFront(win));
 
   titlebar.addEventListener('mousedown', (e) => {
-    if (e.target.classList.contains('tl-btn')) return; // Ignore traffic lights
+    if (e.target.classList.contains('tl-btn')) return;
     if (win.dataset.maximized === 'true') return;
 
     isDragging = true;
@@ -110,7 +109,7 @@ document.querySelectorAll('.window').forEach(win => {
   document.addEventListener('mousemove', (e) => {
     if (!isDragging) return;
     let newX = e.clientX - offsetX;
-    let newY = Math.max(30, e.clientY - offsetY); // Don't go above top menu bar
+    let newY = Math.max(28, e.clientY - offsetY);
     win.style.left = `${newX}px`;
     win.style.top = `${newY}px`;
   });
@@ -120,7 +119,34 @@ document.querySelectorAll('.window').forEach(win => {
   });
 });
 
-// 4. Spotlight Search & Instant Math Evaluation
+// 4. Parabolic Dock Magnification
+const dock = document.getElementById('dock');
+const dockItems = document.querySelectorAll('.dock-item');
+
+dock.addEventListener('mousemove', (e) => {
+  const mouseX = e.clientX;
+  dockItems.forEach(item => {
+    const rect = item.getBoundingClientRect();
+    const itemCenterX = rect.left + rect.width / 2;
+    const distance = Math.abs(mouseX - itemCenterX);
+    
+    // Parabolic scale falloff
+    let scale = 1;
+    if (distance < 140) {
+      scale = 1 + 0.38 * Math.cos((distance / 140) * (Math.PI / 2));
+    }
+    const translateY = (scale - 1) * -22;
+    item.style.transform = `scale(${scale}) translateY(${translateY}px)`;
+  });
+});
+
+dock.addEventListener('mouseleave', () => {
+  dockItems.forEach(item => {
+    item.style.transform = '';
+  });
+});
+
+// 5. Spotlight Search & Instant Math
 const spotlightOverlay = document.getElementById('spotlight-overlay');
 const spotlightInput = document.getElementById('spotlight-input');
 const spotlightResults = document.getElementById('spotlight-results');
@@ -132,16 +158,16 @@ function toggleSpotlight() {
     spotlightInput.value = '';
     spotlightResults.innerHTML = `
       <div class="result-item" onclick="openWindow('win-finder'); toggleSpotlight();">
-        <span>📂</span> <span>Finder</span>
+        <span style="font-size: 20px;">📂</span> <span>Finder</span>
       </div>
       <div class="result-item" onclick="openWindow('win-textedit'); toggleSpotlight();">
-        <span>📝</span> <span>TextEdit</span>
+        <span style="font-size: 20px;">📝</span> <span>TextEdit</span>
       </div>
       <div class="result-item" onclick="openWindow('win-settings'); toggleSpotlight();">
-        <span>⚙️</span> <span>System Settings</span>
+        <span style="font-size: 20px;">⚙️</span> <span>System Settings</span>
       </div>
       <div class="result-item" onclick="openWindow('win-installer'); toggleSpotlight();">
-        <span>📦</span> <span>App Installer</span>
+        <span style="font-size: 20px;">📦</span> <span>App Installer</span>
       </div>
     `;
     setTimeout(() => spotlightInput.focus(), 50);
@@ -152,7 +178,6 @@ function toggleSpotlight() {
 
 document.getElementById('spotlight-btn').addEventListener('click', toggleSpotlight);
 
-// Keyboard Shortcut: Cmd+Space or Ctrl+Space
 document.addEventListener('keydown', (e) => {
   if ((e.metaKey || e.ctrlKey) && e.code === 'Space') {
     e.preventDefault();
@@ -167,14 +192,12 @@ spotlightOverlay.addEventListener('click', (e) => {
   if (e.target === spotlightOverlay) toggleSpotlight();
 });
 
-// Spotlight input search / math calculator
 spotlightInput.addEventListener('input', (e) => {
   const query = e.target.value.trim();
   if (!query) return;
 
   let mathResult = null;
   try {
-    // Safe math calculation evaluation
     if (/^[0-9+\-*/().^\s]+$/.test(query)) {
       mathResult = Function(`"use strict"; return (${query})`)();
     }
@@ -183,14 +206,14 @@ spotlightInput.addEventListener('input', (e) => {
   if (mathResult !== null && !isNaN(mathResult)) {
     spotlightResults.innerHTML = `
       <div class="result-item selected">
-        <span style="font-size: 20px;">🔢</span>
-        <div style="font-size: 18px; font-weight: 700;">= ${mathResult.toLocaleString()}</div>
+        <span style="font-size: 22px;">🔢</span>
+        <div style="font-size: 20px; font-weight: 700;">= ${mathResult.toLocaleString()}</div>
       </div>
     `;
   } else {
     const apps = [
       { name: 'TextEdit', icon: '📝', id: 'win-textedit' },
-      { name: 'Settings', icon: '⚙️', id: 'win-settings' },
+      { name: 'System Settings', icon: '⚙️', id: 'win-settings' },
       { name: 'Finder', icon: '📂', id: 'win-finder' },
       { name: 'App Installer', icon: '📦', id: 'win-installer' }
     ];
@@ -198,12 +221,12 @@ spotlightInput.addEventListener('input', (e) => {
     if (filtered.length > 0) {
       spotlightResults.innerHTML = filtered.map(a => `
         <div class="result-item" onclick="openWindow('${a.id}'); toggleSpotlight();">
-          <span>${a.icon}</span> <span>${a.name}</span>
+          <span style="font-size: 20px;">${a.icon}</span> <span>${a.name}</span>
         </div>
       `).join('');
     } else {
       spotlightResults.innerHTML = `
-        <div style="padding: 12px; color: var(--text-secondary); font-size: 13px;">
+        <div style="padding: 14px; color: var(--text-secondary); font-size: 13px;">
           Search Google or Web for "${query}"
         </div>
       `;
@@ -211,7 +234,7 @@ spotlightInput.addEventListener('input', (e) => {
   }
 });
 
-// 5. Control Center
+// 6. Control Center & Apple Sliders
 const controlCenter = document.getElementById('control-center');
 document.getElementById('control-center-btn').addEventListener('click', () => {
   isControlCenterOpen = !isControlCenterOpen;
@@ -219,16 +242,29 @@ document.getElementById('control-center-btn').addEventListener('click', () => {
 });
 
 document.getElementById('wifi-toggle').addEventListener('click', function() {
-  this.classList.toggle('active');
-  triggerNotification(this.classList.contains('active') ? 'Wi-Fi Connected' : 'Wi-Fi Disabled');
+  const bubble = this.querySelector('.cc-icon-bubble');
+  bubble.classList.toggle('active');
+  triggerNotification(bubble.classList.contains('active') ? 'Wi-Fi: Connected to Toccata-5G' : 'Wi-Fi: Off');
 });
 
 document.getElementById('bt-toggle').addEventListener('click', function() {
-  this.classList.toggle('active');
-  triggerNotification(this.classList.contains('active') ? 'Bluetooth Enabled' : 'Bluetooth Disabled');
+  const bubble = this.querySelector('.cc-icon-bubble');
+  bubble.classList.toggle('active');
+  triggerNotification(bubble.classList.contains('active') ? 'Bluetooth: Connected to AirPods Pro' : 'Bluetooth: Off');
 });
 
-// 6. Theme Switching & Customization
+// Interactive slider pills in Control Center
+document.querySelectorAll('.slider-pill').forEach(pill => {
+  pill.addEventListener('click', (e) => {
+    const rect = pill.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const percentage = Math.max(10, Math.min(100, Math.round((clickX / rect.width) * 100)));
+    const fill = pill.querySelector('.slider-track-fill');
+    fill.style.width = `${percentage}%`;
+  });
+});
+
+// 7. Theme Switching & Customization
 function setTheme(theme) {
   document.body.className = theme === 'light' ? 'light-mode' : 'dark-mode';
   document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('active'));
@@ -250,13 +286,13 @@ function setAccent(color) {
   event.target.classList.add('active');
 }
 
-// 7. Notification Toasts
+// 8. Notification Toasts
 function triggerNotification(msg) {
   const toast = document.getElementById('toast');
   const toastMsg = document.getElementById('toast-msg');
   toastMsg.textContent = msg;
   toast.classList.remove('hidden');
-  setTimeout(() => toast.classList.add('hidden'), 2500);
+  setTimeout(() => toast.classList.add('hidden'), 2600);
 }
 
 // Focus initial window
