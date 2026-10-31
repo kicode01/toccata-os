@@ -1,4 +1,4 @@
-// Toccata OS - Interactive Desktop Engine
+// Toccata OS - Signature Desktop Engine
 
 let topZIndex = 100;
 let isSpotlightOpen = false;
@@ -21,8 +21,9 @@ function bringToFront(windowEl) {
   document.querySelectorAll('.window').forEach(w => w.classList.remove('active-window'));
   windowEl.classList.add('active-window');
 
-  // Update top bar app title
-  const title = windowEl.querySelector('.window-title').textContent.split('—')[0].trim();
+  // Update top bar active app title
+  const rawTitle = windowEl.querySelector('.window-title').textContent;
+  const title = rawTitle.includes('—') ? rawTitle.split('—')[0].trim() : rawTitle.trim();
   document.getElementById('active-app-title').textContent = title;
 }
 
@@ -33,7 +34,7 @@ function openWindow(id) {
   bringToFront(win);
 
   // Mark dock dot as active
-  if (id === 'win-textedit') document.getElementById('dot-textedit')?.classList.remove('hidden');
+  if (id === 'win-scribe') document.getElementById('dot-scribe')?.classList.remove('hidden');
   if (id === 'win-settings') document.getElementById('dot-settings')?.classList.remove('hidden');
   if (id === 'win-installer') document.getElementById('dot-installer')?.classList.remove('hidden');
 }
@@ -42,7 +43,7 @@ function closeWindow(id) {
   const win = document.getElementById(id);
   if (win) {
     win.classList.add('hidden');
-    if (id === 'win-textedit') document.getElementById('dot-textedit')?.classList.add('hidden');
+    if (id === 'win-scribe') document.getElementById('dot-scribe')?.classList.add('hidden');
     if (id === 'win-settings') document.getElementById('dot-settings')?.classList.add('hidden');
     if (id === 'win-installer') document.getElementById('dot-installer')?.classList.add('hidden');
   }
@@ -51,7 +52,7 @@ function closeWindow(id) {
 function minimizeWindow(id) {
   const win = document.getElementById(id);
   if (win) {
-    win.style.transform = 'scale(0.15) translateY(700px)';
+    win.style.transform = 'scale(0.18) translateY(680px)';
     win.style.opacity = '0';
     setTimeout(() => {
       win.classList.add('hidden');
@@ -70,7 +71,7 @@ function maximizeWindow(id) {
     win.style.left = win.dataset.origLeft;
     win.style.width = win.dataset.origWidth;
     win.style.height = win.dataset.origHeight;
-    win.style.borderRadius = '14px';
+    win.style.borderRadius = '16px';
     win.dataset.maximized = 'false';
   } else {
     win.dataset.origTop = win.style.top;
@@ -78,10 +79,10 @@ function maximizeWindow(id) {
     win.dataset.origWidth = win.style.width;
     win.dataset.origHeight = win.style.height;
 
-    win.style.top = '28px';
+    win.style.top = '30px';
     win.style.left = '0';
     win.style.width = '100vw';
-    win.style.height = 'calc(100vh - 28px)';
+    win.style.height = 'calc(100vh - 30px)';
     win.style.borderRadius = '0';
     win.dataset.maximized = 'true';
   }
@@ -97,7 +98,7 @@ document.querySelectorAll('.window').forEach(win => {
   win.addEventListener('mousedown', () => bringToFront(win));
 
   titlebar.addEventListener('mousedown', (e) => {
-    if (e.target.classList.contains('tl-btn')) return;
+    if (e.target.classList.contains('t-btn')) return; // Ignore gem controls
     if (win.dataset.maximized === 'true') return;
 
     isDragging = true;
@@ -109,7 +110,7 @@ document.querySelectorAll('.window').forEach(win => {
   document.addEventListener('mousemove', (e) => {
     if (!isDragging) return;
     let newX = e.clientX - offsetX;
-    let newY = Math.max(28, e.clientY - offsetY);
+    let newY = Math.max(30, e.clientY - offsetY);
     win.style.left = `${newX}px`;
     win.style.top = `${newY}px`;
   });
@@ -130,7 +131,6 @@ dock.addEventListener('mousemove', (e) => {
     const itemCenterX = rect.left + rect.width / 2;
     const distance = Math.abs(mouseX - itemCenterX);
     
-    // Parabolic scale falloff
     let scale = 1;
     if (distance < 140) {
       scale = 1 + 0.38 * Math.cos((distance / 140) * (Math.PI / 2));
@@ -157,17 +157,17 @@ function toggleSpotlight() {
     spotlightOverlay.classList.remove('hidden');
     spotlightInput.value = '';
     spotlightResults.innerHTML = `
-      <div class="result-item" onclick="openWindow('win-finder'); toggleSpotlight();">
-        <span style="font-size: 20px;">📂</span> <span>Finder</span>
+      <div class="result-item" onclick="openWindow('win-cadence'); toggleSpotlight();">
+        <span style="font-size: 20px;">📂</span> <span>Cadence (File Workspaces)</span>
       </div>
-      <div class="result-item" onclick="openWindow('win-textedit'); toggleSpotlight();">
-        <span style="font-size: 20px;">📝</span> <span>TextEdit</span>
+      <div class="result-item" onclick="openWindow('win-scribe'); toggleSpotlight();">
+        <span style="font-size: 20px;">📝</span> <span>Scribe (Notes & Code)</span>
       </div>
       <div class="result-item" onclick="openWindow('win-settings'); toggleSpotlight();">
         <span style="font-size: 20px;">⚙️</span> <span>System Settings</span>
       </div>
       <div class="result-item" onclick="openWindow('win-installer'); toggleSpotlight();">
-        <span style="font-size: 20px;">📦</span> <span>App Installer</span>
+        <span style="font-size: 20px;">💎</span> <span>Toccata Gallery & Installer</span>
       </div>
     `;
     setTimeout(() => spotlightInput.focus(), 50);
@@ -212,10 +212,10 @@ spotlightInput.addEventListener('input', (e) => {
     `;
   } else {
     const apps = [
-      { name: 'TextEdit', icon: '📝', id: 'win-textedit' },
-      { name: 'System Settings', icon: '⚙️', id: 'win-settings' },
-      { name: 'Finder', icon: '📂', id: 'win-finder' },
-      { name: 'App Installer', icon: '📦', id: 'win-installer' }
+      { name: 'Cadence', icon: '📂', id: 'win-cadence' },
+      { name: 'Scribe', icon: '📝', id: 'win-scribe' },
+      { name: 'Settings', icon: '⚙️', id: 'win-settings' },
+      { name: 'Gallery', icon: '💎', id: 'win-installer' }
     ];
     const filtered = apps.filter(a => a.name.toLowerCase().includes(query.toLowerCase()));
     if (filtered.length > 0) {
@@ -227,7 +227,7 @@ spotlightInput.addEventListener('input', (e) => {
     } else {
       spotlightResults.innerHTML = `
         <div style="padding: 14px; color: var(--text-secondary); font-size: 13px;">
-          Search Google or Web for "${query}"
+          Ask Maestro or Search Web for "${query}"
         </div>
       `;
     }
@@ -244,13 +244,13 @@ document.getElementById('control-center-btn').addEventListener('click', () => {
 document.getElementById('wifi-toggle').addEventListener('click', function() {
   const bubble = this.querySelector('.cc-icon-bubble');
   bubble.classList.toggle('active');
-  triggerNotification(bubble.classList.contains('active') ? 'Wi-Fi: Connected to Toccata-5G' : 'Wi-Fi: Off');
+  triggerNotification(bubble.classList.contains('active') ? 'Wi-Fi: Connected to Toccata-Fiber' : 'Wi-Fi: Off');
 });
 
 document.getElementById('bt-toggle').addEventListener('click', function() {
   const bubble = this.querySelector('.cc-icon-bubble');
   bubble.classList.toggle('active');
-  triggerNotification(bubble.classList.contains('active') ? 'Bluetooth: Connected to AirPods Pro' : 'Bluetooth: Off');
+  triggerNotification(bubble.classList.contains('active') ? 'Bluetooth: Connected to AirPods Max' : 'Bluetooth: Off');
 });
 
 // Interactive slider pills in Control Center
@@ -282,6 +282,7 @@ document.getElementById('theme-toggle-btn').addEventListener('click', () => {
 
 function setAccent(color) {
   document.documentElement.style.setProperty('--accent-color', color);
+  document.documentElement.style.setProperty('--accent-glow', `${color}66`);
   document.querySelectorAll('.accent-dot').forEach(d => d.classList.remove('active'));
   event.target.classList.add('active');
 }
@@ -296,4 +297,4 @@ function triggerNotification(msg) {
 }
 
 // Focus initial window
-bringToFront(document.getElementById('win-finder'));
+bringToFront(document.getElementById('win-cadence'));

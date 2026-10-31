@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Toccata OS - High Fidelity Desktop</title>
+  <title>Toccata OS - Signature Desktop</title>
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body class="dark-mode">
 
@@ -16,47 +16,64 @@
     <!-- Top Global Menu Bar -->
     <header id="menu-bar">
       <div class="menu-left">
-        <div class="menu-item apple-logo-item" id="apple-menu-btn">
-          <!-- Stylized Apple/Toccata Emblem -->
-          <svg class="apple-glyph" viewBox="0 0 170 170" fill="currentColor">
-            <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.07-7.6-7.89-11.7-14.45-6.32-10.08-11.41-21.57-15.26-34.48-3.86-12.9-5.78-25.07-5.78-36.49 0-14.54 3.73-26.65 11.2-36.33 7.46-9.68 16.92-14.6 28.37-14.76 4.9.11 10.15 1.37 15.75 3.78 5.6 2.42 9.4 3.7 11.4 3.86 1.74-.16 5.66-1.49 11.77-3.99 6.1-2.5 11.51-3.69 16.22-3.56 12.06.63 21.6 4.96 28.61 12.98-10.43 6.33-15.54 15.13-15.34 26.4.21 8.84 3.65 16.22 10.32 22.14 6.66 5.92 14.58 9.38 23.75 10.38-2.12 6.54-4.54 13.04-7.27 19.5zM119.22 31.84c0-7.72 2.76-14.98 8.28-21.77 5.53-6.79 12.44-10.96 20.75-12.51.52 7.61-2.02 14.77-7.61 21.48-5.59 6.72-12.72 10.98-21.42 12.8z"/>
+        <!-- The Toccata Signature Monogram Logo -->
+        <div class="menu-item logo-item" id="toccata-menu-btn" title="Toccata Menu">
+          <svg class="toccata-signature-logo" viewBox="0 0 100 100" fill="none">
+            <!-- Interlocking geometric T with harmonic soundwave arch -->
+            <path d="M15 25C15 20 20 16 26 16H74C80 16 85 20 85 25C85 30 80 34 74 34H58V78C58 84 53 88 47 88C41 88 36 84 36 78V34H26C20 34 15 30 15 25Z" fill="url(#toccata-grad)"/>
+            <circle cx="78" cy="62" r="7" fill="url(#accent-orb)"/>
+            <defs>
+              <linearGradient id="toccata-grad" x1="15" y1="16" x2="85" y2="88" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#38bdf8"/>
+                <stop offset="0.5" stop-color="#818cf8"/>
+                <stop offset="1" stop-color="#c084fc"/>
+              </linearGradient>
+              <linearGradient id="accent-orb" x1="71" y1="55" x2="85" y2="69" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#38bdf8"/>
+                <stop offset="1" stop-color="#0284c7"/>
+              </linearGradient>
+            </defs>
           </svg>
         </div>
-        <div class="menu-item active-app-name" id="active-app-title">Finder</div>
+
+        <div class="menu-item active-app-name" id="active-app-title">Cadence</div>
         <div class="menu-item">File</div>
         <div class="menu-item">Edit</div>
         <div class="menu-item">View</div>
-        <div class="menu-item">Go</div>
+        <div class="menu-item">Navigate</div>
         <div class="menu-item">Window</div>
         <div class="menu-item">Help</div>
       </div>
 
       <div class="menu-right">
         <!-- Battery with Percentage -->
-        <div class="menu-item status-icon-item" title="Battery: 98%">
-          <span class="status-text">98%</span>
+        <div class="menu-item status-icon-item" title="Battery: 99% • Power Adapter Connected">
+          <span class="status-text">99%</span>
           <svg class="battery-icon" viewBox="0 0 24 24" fill="currentColor">
             <rect x="2" y="6" width="18" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>
-            <rect x="4" y="8" width="13" height="8" rx="1.5"/>
+            <rect x="4" y="8" width="14" height="8" rx="1.5" fill="currentColor"/>
             <path d="M21 10h1a1 1 0 011 1v2a1 1 0 01-1 1h-1v-4z"/>
           </svg>
         </div>
+
         <!-- Wi-Fi Waves -->
-        <div class="menu-item status-icon-item" title="Wi-Fi: Connected">
-          <svg class="wifi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="menu-item status-icon-item" title="Wi-Fi: Connected to Toccata-Fiber">
+          <svg class="wifi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
             <path d="M5 12.55a11 11 0 0114.08 0"/>
             <path d="M1.42 9a16 16 0 0121.16 0"/>
             <path d="M8.53 16.11a6 6 0 016.95 0"/>
-            <circle cx="12" cy="20" r="1" fill="currentColor"/>
+            <circle cx="12" cy="20" r="1.2" fill="currentColor"/>
           </svg>
         </div>
+
         <!-- Spotlight Search Icon -->
-        <div class="menu-item status-icon-item" id="spotlight-btn" title="Spotlight Search (Cmd + Space)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <div class="menu-item status-icon-item" id="spotlight-btn" title="Search Spotlight (Cmd + Space)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
             <circle cx="11" cy="11" r="7"/>
             <path d="m20 20-3.8-3.8"/>
           </svg>
         </div>
+
         <!-- Control Center Switch Icon -->
         <div class="menu-item status-icon-item" id="control-center-btn" title="Control Center">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -66,44 +83,56 @@
             <circle cx="17" cy="17" r="1.5" fill="currentColor"/>
           </svg>
         </div>
-        <!-- Siri / AI Orb -->
-        <div class="menu-item siri-btn" onclick="triggerNotification('Toccata Intelligence activated')">
-          <div class="siri-orb"></div>
+
+        <!-- Maestro AI System Copilot -->
+        <div class="menu-item maestro-badge" onclick="triggerNotification('Maestro AI ready to assist with your workspace')" title="Maestro AI Copilot">
+          <div class="maestro-spark"></div>
+          <span>Maestro</span>
         </div>
+
         <!-- System Clock -->
-        <div class="menu-item clock" id="clock-display">Sun Nov 1 1:30 AM</div>
+        <div class="menu-item clock" id="clock-display">Sun Nov 1 1:40 AM</div>
       </div>
     </header>
 
-    <!-- Desktop Mounted Disks (Top-Right) -->
+    <!-- Desktop Mounted Volumes (Top-Right) -->
     <div id="desktop-icons">
-      <div class="desktop-item" ondblclick="openWindow('win-finder')">
-        <div class="disk-icon-art macintosh-hd">
-          <div class="disk-metal-plate"></div>
-          <div class="disk-notch"></div>
+      <div class="desktop-item" ondblclick="openWindow('win-cadence')">
+        <div class="toccata-disk-art">
+          <div class="disk-face">
+            <div class="disk-accent-band"></div>
+            <div class="disk-chip"></div>
+          </div>
         </div>
-        <span class="desktop-label">Macintosh HD</span>
+        <span class="desktop-label">Toccata Core</span>
       </div>
-      <div class="desktop-item" ondblclick="triggerNotification('Mounted Toccata Backup volume')">
-        <div class="disk-icon-art time-machine-hd">
-          <div class="disk-metal-plate green-tint"></div>
-          <div class="tm-clock-ring"></div>
+
+      <div class="desktop-item" ondblclick="triggerNotification('Time Capsule: 12 snapshots available')">
+        <div class="toccata-disk-art">
+          <div class="disk-face green-accent">
+            <div class="disk-accent-band green"></div>
+            <div class="disk-chip"></div>
+          </div>
         </div>
-        <span class="desktop-label">Toccata Backup</span>
+        <span class="desktop-label">Time Capsule</span>
       </div>
     </div>
 
     <!-- Control Center Popup -->
     <div id="control-center" class="glass-panel hidden">
+      <div class="cc-header">
+        <span>Control Center</span>
+        <span class="cc-status-dot"></span>
+      </div>
       <div class="cc-modules-grid">
         <div class="cc-large-module">
           <div class="cc-row cc-toggle active" id="wifi-toggle">
             <div class="cc-icon-bubble active">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12.55a11 11 0 0114.08 0M1.42 9a16 16 0 0121.16 0M8.53 16.11a6 6 0 016.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12.55a11 11 0 0114.08 0M1.42 9a16 16 0 0121.16 0M8.53 16.11a6 6 0 016.95 0"/><circle cx="12" cy="20" r="1.2" fill="currentColor"/></svg>
             </div>
             <div class="cc-meta">
               <div class="cc-title">Wi-Fi</div>
-              <div class="cc-desc">Toccata-5G Fiber</div>
+              <div class="cc-desc">Toccata-Fiber (1.2 Gbps)</div>
             </div>
           </div>
           <div class="cc-row cc-toggle active" id="bt-toggle">
@@ -112,16 +141,16 @@
             </div>
             <div class="cc-meta">
               <div class="cc-title">Bluetooth</div>
-              <div class="cc-desc">AirPods Pro (84%)</div>
+              <div class="cc-desc">AirPods Max (92%)</div>
             </div>
           </div>
-          <div class="cc-row cc-toggle" onclick="triggerNotification('AirDrop set to Contacts Only')">
+          <div class="cc-row cc-toggle" onclick="triggerNotification('Beam Sharing active for nearby devices')">
             <div class="cc-icon-bubble">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M7 16a7 7 0 0110 0M4 19a11 11 0 0116 0"/></svg>
             </div>
             <div class="cc-meta">
-              <div class="cc-title">AirDrop</div>
-              <div class="cc-desc">Contacts Only</div>
+              <div class="cc-title">Toccata Beam</div>
+              <div class="cc-desc">Ready to Share</div>
             </div>
           </div>
         </div>
@@ -131,31 +160,31 @@
             <div class="cc-icon-bubble">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
             </div>
-            <span>Dark Mode</span>
+            <span>Dark Glass</span>
           </div>
-          <div class="cc-card-btn" onclick="triggerNotification('Stage Manager toggled')">
+          <div class="cc-card-btn" onclick="triggerNotification('Fluid Spaces Overview activated')">
             <div class="cc-icon-bubble">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 7h2v10H7zM11 7h6v10h-6z"/></svg>
             </div>
-            <span>Stage Manager</span>
+            <span>Spaces</span>
           </div>
         </div>
       </div>
 
-      <!-- Sliders for Display & Sound with Authentic Apple Style -->
+      <!-- Sliders for Display & Sound -->
       <div class="cc-slider-card">
-        <div class="slider-title">Display</div>
+        <div class="slider-title">Display Brightness</div>
         <div class="slider-pill">
           <svg class="slider-leading-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
-          <div class="slider-track-fill" id="display-track-fill" style="width: 82%;"></div>
+          <div class="slider-track-fill" id="display-track-fill" style="width: 80%;"></div>
         </div>
       </div>
 
       <div class="cc-slider-card">
-        <div class="slider-title">Sound</div>
+        <div class="slider-title">Master Output</div>
         <div class="slider-pill">
           <svg class="slider-leading-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>
-          <div class="slider-track-fill" id="sound-track-fill" style="width: 65%;"></div>
+          <div class="slider-track-fill" id="sound-track-fill" style="width: 68%;"></div>
         </div>
       </div>
     </div>
@@ -164,201 +193,188 @@
     <div id="spotlight-overlay" class="hidden">
       <div class="spotlight-card glass-panel">
         <div class="spotlight-input-row">
-          <svg class="spotlight-lens" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <circle cx="11" cy="11" r="7"/>
-            <path d="m20 20-3.8-3.8"/>
-          </svg>
-          <input type="text" id="spotlight-input" placeholder="Spotlight Search or math..." autofocus>
+          <div class="spotlight-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
+          </div>
+          <input type="text" id="spotlight-input" placeholder="Search apps, files, or calculate (e.g. 520 * 14)..." autofocus>
+          <span class="spotlight-esc-pill">ESC</span>
         </div>
         <div id="spotlight-results"></div>
       </div>
     </div>
 
     <!-- ====================================================================
-         WINDOW 1: FINDER (Unified Titlebar + Segmented Controls + Miller Columns)
+         WINDOW 1: CADENCE (Toccata's Signature File Browser)
          ==================================================================== -->
-    <div class="window glass-panel" id="win-finder" style="top: 70px; left: 80px; width: 880px; height: 520px;">
-      <!-- Unified Modern macOS Titlebar & Toolbar -->
-      <div class="window-titlebar unified-toolbar">
-        <div class="traffic-lights">
-          <button class="tl-btn tl-close" onclick="closeWindow('win-finder')"></button>
-          <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-finder')"></button>
-          <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-finder')"></button>
+    <div class="window glass-panel" id="win-cadence" style="top: 70px; left: 80px; width: 880px; height: 520px;">
+      <div class="window-titlebar">
+        <!-- Toccata Signature Precision Gem Controls -->
+        <div class="toccata-window-controls">
+          <button class="t-btn t-close" onclick="closeWindow('win-cadence')" title="Close"></button>
+          <button class="t-btn t-min" onclick="minimizeWindow('win-cadence')" title="Minimize"></button>
+          <button class="t-btn t-max" onclick="maximizeWindow('win-cadence')" title="Expand"></button>
         </div>
 
-        <!-- Navigation History & Segmented View Controller -->
         <div class="toolbar-nav-group">
           <button class="toolbar-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg></button>
           <button class="toolbar-icon-btn" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></button>
-          <span class="toolbar-title">Applications</span>
+          <span class="toolbar-title">Cadence — System Applications</span>
         </div>
 
         <div class="segmented-control">
-          <button class="seg-btn active" title="Icons View"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="10" y="1" width="5" height="5" rx="1"/><rect x="1" y="10" width="5" height="5" rx="1"/><rect x="10" y="10" width="5" height="5" rx="1"/></svg></button>
-          <button class="seg-btn" title="List View"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 3h12v2H2zm0 4h12v2H2zm0 4h12v2H2z"/></svg></button>
-          <button class="seg-btn" title="Columns View"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="3.5" height="14" rx="0.5"/><rect x="6.2" y="1" width="3.5" height="14" rx="0.5"/><rect x="11.5" y="1" width="3.5" height="14" rx="0.5"/></svg></button>
+          <button class="seg-btn active" title="Grid View"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="5" height="5" rx="1.5"/><rect x="10" y="1" width="5" height="5" rx="1.5"/><rect x="1" y="10" width="5" height="5" rx="1.5"/><rect x="10" y="10" width="5" height="5" rx="1.5"/></svg></button>
+          <button class="seg-btn" title="Flow View"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 3h12v2H2zm0 4h12v2H2zm0 4h12v2H2z"/></svg></button>
+          <button class="seg-btn" title="Columns View"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="3.5" height="14" rx="1"/><rect x="6.2" y="1" width="3.5" height="14" rx="1"/><rect x="11.5" y="1" width="3.5" height="14" rx="1"/></svg></button>
         </div>
 
         <div class="toolbar-search">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
-          <input type="text" placeholder="Search">
+          <input type="text" placeholder="Search files">
         </div>
       </div>
 
-      <!-- Finder Split Body -->
       <div class="window-body finder-body">
         <aside class="finder-sidebar">
-          <div class="sidebar-category">Favorites</div>
+          <div class="sidebar-category">Workspaces</div>
           <div class="sidebar-row active">
-            <svg class="sb-icon" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+            <svg class="sb-icon" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
             <span>Applications</span>
+          </div>
+          <div class="sidebar-row">
+            <svg class="sb-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+            <span>Projects & Code</span>
           </div>
           <div class="sidebar-row">
             <svg class="sb-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l5.59-5.59L19 10l-7 7z"/></svg>
             <span>Downloads</span>
           </div>
           <div class="sidebar-row">
-            <svg class="sb-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-            <span>Documents</span>
-          </div>
-          <div class="sidebar-row">
             <svg class="sb-icon" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
             <span>Desktop</span>
           </div>
 
-          <div class="sidebar-category">Locations</div>
+          <div class="sidebar-category">Storage</div>
           <div class="sidebar-row">
             <svg class="sb-icon" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="4" width="20" height="12" rx="2"/><circle cx="12" cy="19" r="1"/></svg>
-            <span>Macintosh HD</span>
+            <span>Toccata Core</span>
           </div>
           <div class="sidebar-row">
             <svg class="sb-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
-            <span>iCloud Drive</span>
+            <span>Cloud Sync</span>
           </div>
         </aside>
 
-        <!-- Applications Grid with 3D Squircle Icons -->
+        <!-- Toccata Signature 3D App Cards -->
         <main class="finder-grid-view">
-          <!-- TextEdit App -->
-          <div class="app-card" ondblclick="openWindow('win-textedit')">
-            <div class="mac-app-icon textedit-art">
-              <div class="notepad-lines">
-                <span></span><span></span><span></span><span></span>
-              </div>
-              <div class="fountain-pen"></div>
+          <!-- Scribe App -->
+          <div class="app-card" ondblclick="openWindow('win-scribe')">
+            <div class="toccata-app-tile tile-scribe">
+              <div class="scribe-lines"><span></span><span></span><span></span></div>
+              <div class="scribe-stylus"></div>
             </div>
-            <span class="app-title">TextEdit.app</span>
+            <span class="app-title">Scribe.app</span>
           </div>
 
           <!-- Settings App -->
           <div class="app-card" ondblclick="openWindow('win-settings')">
-            <div class="mac-app-icon settings-art">
-              <div class="gear-outer">
-                <div class="gear-center"></div>
+            <div class="toccata-app-tile tile-settings">
+              <div class="precision-rings">
+                <div class="ring-core"></div>
               </div>
             </div>
-            <span class="app-title">System Settings.app</span>
+            <span class="app-title">Settings.app</span>
           </div>
 
-          <!-- Installer App -->
+          <!-- Gallery (Software Hub) -->
           <div class="app-card" ondblclick="openWindow('win-installer')">
-            <div class="mac-app-icon appstore-art">
-              <div class="appstore-a-pencil"></div>
-              <div class="appstore-a-ruler"></div>
-              <div class="appstore-a-brush"></div>
+            <div class="toccata-app-tile tile-gallery">
+              <div class="prism-diamond"></div>
             </div>
-            <span class="app-title">Installer.app</span>
+            <span class="app-title">Gallery.app</span>
           </div>
 
-          <!-- Safari App -->
-          <div class="app-card" onclick="triggerNotification('Safari 18 launched')">
-            <div class="mac-app-icon safari-art">
-              <div class="compass-dial">
-                <div class="compass-needle"></div>
+          <!-- Browser: Horizon -->
+          <div class="app-card" onclick="triggerNotification('Horizon Web Engine launched')">
+            <div class="toccata-app-tile tile-horizon">
+              <div class="horizon-orbit">
+                <div class="orbit-particle"></div>
               </div>
             </div>
-            <span class="app-title">Safari.app</span>
+            <span class="app-title">Horizon.app</span>
           </div>
 
-          <!-- Terminal App -->
-          <div class="app-card" onclick="triggerNotification('Terminal launched')">
-            <div class="mac-app-icon terminal-art">
-              <div class="term-prompt">&gt;_</div>
+          <!-- Terminal: Shell -->
+          <div class="app-card" onclick="triggerNotification('Toccata Shell launched')">
+            <div class="toccata-app-tile tile-terminal">
+              <span class="t-prompt">&lambda;</span>
             </div>
-            <span class="app-title">Terminal.app</span>
+            <span class="app-title">Shell.app</span>
           </div>
 
-          <!-- Photos App -->
-          <div class="app-card" onclick="triggerNotification('Photos library launched')">
-            <div class="mac-app-icon photos-art">
-              <div class="flower-petals">
-                <span class="p1"></span><span class="p2"></span><span class="p3"></span><span class="p4"></span>
-                <span class="p5"></span><span class="p6"></span><span class="p7"></span><span class="p8"></span>
-              </div>
+          <!-- Studio: 3D / Creative -->
+          <div class="app-card" onclick="triggerNotification('Creative Studio launched')">
+            <div class="toccata-app-tile tile-creative">
+              <div class="color-core"></div>
             </div>
-            <span class="app-title">Photos.app</span>
+            <span class="app-title">Studio.app</span>
           </div>
         </main>
       </div>
 
-      <!-- Finder Status Bar -->
       <footer class="finder-statusbar">
-        <span>6 items, 412.8 GB available on Macintosh HD</span>
+        <span>6 applications • 482.4 GB free on Toccata Core</span>
       </footer>
     </div>
 
     <!-- ====================================================================
-         WINDOW 2: TEXTEDIT (Clean Typography & Formatting)
+         WINDOW 2: SCRIBE (Toccata's Signature Note & Code Canvas)
          ==================================================================== -->
-    <div class="window glass-panel hidden" id="win-textedit" style="top: 130px; left: 340px; width: 660px; height: 440px;">
+    <div class="window glass-panel hidden" id="win-scribe" style="top: 130px; left: 340px; width: 680px; height: 450px;">
       <div class="window-titlebar">
-        <div class="traffic-lights">
-          <button class="tl-btn tl-close" onclick="closeWindow('win-textedit')"></button>
-          <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-textedit')"></button>
-          <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-textedit')"></button>
+        <div class="toccata-window-controls">
+          <button class="t-btn t-close" onclick="closeWindow('win-scribe')"></button>
+          <button class="t-btn t-min" onclick="minimizeWindow('win-scribe')"></button>
+          <button class="t-btn t-max" onclick="maximizeWindow('win-scribe')"></button>
         </div>
-        <div class="window-title">Toccata Manifesto.txt — Edited</div>
+        <div class="window-title">Scribe — Toccata Manifesto.md</div>
         <div class="titlebar-placeholder"></div>
       </div>
       <div class="window-body textedit-body">
         <div class="textedit-toolbar">
           <div class="tb-segmented">
-            <button class="tb-btn active">B</button>
-            <button class="tb-btn">I</button>
-            <button class="tb-btn">U</button>
+            <button class="tb-btn active">Markdown</button>
+            <button class="tb-btn">Preview</button>
           </div>
           <span class="tb-divider"></span>
-          <span class="tb-font-picker">SF Pro Text • 15pt</span>
-          <span class="tb-divider"></span>
-          <span class="tb-tag">Plain Text Document</span>
+          <span class="tb-font-picker">Plus Jakarta Sans &bull; 15pt</span>
+          <span class="tb-tag">Autosaved to Core</span>
         </div>
-        <textarea class="editor-area">TOCCATA OPERATING SYSTEM
-========================
-Design Specification & Core Manifesto
+        <textarea class="editor-area"># Toccata OS Architecture & Design
 
-1. Tactile Precision:
-   Inspired by Italian "toccare" (to touch), every surface responds with fluid 120Hz physics.
-   
-2. Zero-Terminal Rule:
-   No forced CLI. Any task can be accomplished with beautiful, deliberate buttons and sliders.
+### 1. The Signature Philosophy
+We are not macOS. We do not clone Apple.
+Toccata is an agile, gesture-driven operating system built on Linux that adopts macOS's fluid human interface principles while carrying its own distinct soul.
 
-3. Self-Contained Application Bundles:
-   Applications are single drag-and-drop .app folders containing executable binary, Info.plist metadata, and resources.
+### 2. Zero-Terminal Rule
+Everything in Toccata can be controlled visually through deliberate buttons, sliders, and inspectors:
+* Installing an app? Double-click .app and click [Add to Applications].
+* System snapshot rollback? One-click [Restore Yesterday's State].
+* Formatting a volume? Done directly in the visual Disk Inspector.
 
-4. Btrfs Snapshot Timelines:
-   Accidental update or bad file? Click [Undo OS State] in Settings to instantly roll back time without breaking anything.</textarea>
+### 3. Native Monogram Emblem
+The interlocking resonance arch represents tactile touch, soundwaves, and structural harmony.</textarea>
       </div>
     </div>
 
     <!-- ====================================================================
-         WINDOW 3: SYSTEM SETTINGS (The Zero-Terminal Control Center)
+         WINDOW 3: SYSTEM SETTINGS (The Control Center)
          ==================================================================== -->
     <div class="window glass-panel hidden" id="win-settings" style="top: 100px; left: 220px; width: 780px; height: 490px;">
       <div class="window-titlebar">
-        <div class="traffic-lights">
-          <button class="tl-btn tl-close" onclick="closeWindow('win-settings')"></button>
-          <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-settings')"></button>
-          <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-settings')"></button>
+        <div class="toccata-window-controls">
+          <button class="t-btn t-close" onclick="closeWindow('win-settings')"></button>
+          <button class="t-btn t-min" onclick="minimizeWindow('win-settings')"></button>
+          <button class="t-btn t-max" onclick="maximizeWindow('win-settings')"></button>
         </div>
         <div class="window-title">System Settings</div>
         <div class="titlebar-placeholder"></div>
@@ -366,72 +382,57 @@ Design Specification & Core Manifesto
       <div class="window-body settings-body">
         <div class="settings-sidebar">
           <div class="settings-user-card">
-            <div class="user-avatar">JD</div>
+            <div class="user-avatar">TO</div>
             <div class="user-info">
-              <div class="user-name">John Developer</div>
-              <div class="user-sub">Apple ID & Cloud</div>
+              <div class="user-name">Toccata User</div>
+              <div class="user-sub">System Administrator</div>
             </div>
           </div>
           <div class="settings-nav-group">
-            <div class="settings-nav-item active">🎨 Appearance</div>
-            <div class="settings-nav-item">🖥️ Displays (Retina 5K)</div>
-            <div class="settings-nav-item">🔊 Sound & Audio Out</div>
-            <div class="settings-nav-item">🌐 Wi-Fi & Networking</div>
-            <div class="settings-nav-item">⚡ Bluetooth Devices</div>
-            <div class="settings-nav-item">🕒 Time Machine & Restore</div>
-            <div class="settings-nav-item">🔒 Touch ID & Security</div>
+            <div class="settings-nav-item active">🎨 Appearance & Vibrancy</div>
+            <div class="settings-nav-item">🖥️ Displays (Retina Precision)</div>
+            <div class="settings-nav-item">🔊 Audio Engine (PipeWire)</div>
+            <div class="settings-nav-item">🌐 Wi-Fi & Network Mesh</div>
+            <div class="settings-nav-item">⚡ Bluetooth Peripherals</div>
+            <div class="settings-nav-item">🕒 Time Capsule Snapshots</div>
+            <div class="settings-nav-item">🔒 Security & Permissions</div>
           </div>
         </div>
         <div class="settings-content">
-          <h3>Appearance</h3>
-          <p class="settings-desc">Select how buttons, controls, and frosted translucent glass render.</p>
+          <h3>Appearance & Vibrancy</h3>
+          <p class="settings-desc">Fine-tune Toccata's signature frosted glass, accent bloom, and window materials.</p>
 
           <div class="theme-picker-row">
             <div class="theme-card light-theme-preview" onclick="setTheme('light')">
               <div class="theme-box"></div>
-              <span>Light</span>
+              <span>Luminous Glass</span>
             </div>
             <div class="theme-card dark-theme-preview active" onclick="setTheme('dark')">
               <div class="theme-box"></div>
-              <span>Dark</span>
-            </div>
-            <div class="theme-card auto-theme-preview" onclick="triggerNotification('Auto Theme scheduled for sunrise/sunset')">
-              <div class="theme-box"></div>
-              <span>Auto</span>
+              <span>Obsidian Glass</span>
             </div>
           </div>
 
           <div class="settings-row">
             <div>
-              <div class="row-title">Accent Color</div>
-              <div class="row-desc">Highlight color for buttons, focus rings, and dock active dots</div>
+              <div class="row-title">Signature Accent Hue</div>
+              <div class="row-desc">The primary bloom color for focus rings, controls, and dock active dots</div>
             </div>
             <div class="accent-dots">
-              <span class="accent-dot blue active" onclick="setAccent('#007aff')"></span>
-              <span class="accent-dot purple" onclick="setAccent('#af52de')"></span>
-              <span class="accent-dot pink" onclick="setAccent('#ff2d55')"></span>
-              <span class="accent-dot green" onclick="setAccent('#34c759')"></span>
-              <span class="accent-dot orange" onclick="setAccent('#ff9500')"></span>
+              <span class="accent-dot sapphire active" onclick="setAccent('#38bdf8')"></span>
+              <span class="accent-dot amethyst" onclick="setAccent('#a855f7')"></span>
+              <span class="accent-dot emerald" onclick="setAccent('#10b981')"></span>
+              <span class="accent-dot amber" onclick="setAccent('#f59e0b')"></span>
+              <span class="accent-dot rose" onclick="setAccent('#f43f5e')"></span>
             </div>
           </div>
 
           <div class="settings-row">
             <div>
-              <div class="row-title">Allow Wallpaper Tinting in Windows</div>
-              <div class="row-desc">Blends desktop wallpaper colors into window materials and sidebars</div>
+              <div class="row-title">Time Capsule Instant Rollback</div>
+              <div class="row-desc">One-click Btrfs snapshot: revert system state without touching a terminal</div>
             </div>
-            <label class="switch">
-              <input type="checkbox" checked>
-              <span class="slider round"></span>
-            </label>
-          </div>
-
-          <div class="settings-row">
-            <div>
-              <div class="row-title">Time Machine Undo Point</div>
-              <div class="row-desc">One-click snapshot: revert system state if any update causes issues</div>
-            </div>
-            <button class="btn btn-secondary" onclick="triggerNotification('Snapshot created: Ready to roll back at any time')">Create Instant Restore Point</button>
+            <button class="btn btn-secondary" onclick="triggerNotification('Snapshot created: Ready to roll back at any time')">Create Instant Rollback Point</button>
           </div>
         </div>
       </div>
@@ -442,103 +443,99 @@ Design Specification & Core Manifesto
          ==================================================================== -->
     <div class="window glass-panel hidden" id="win-installer" style="top: 170px; left: 380px; width: 500px; height: 320px;">
       <div class="window-titlebar">
-        <div class="traffic-lights">
-          <button class="tl-btn tl-close" onclick="closeWindow('win-installer')"></button>
-          <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-installer')"></button>
-          <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-installer')"></button>
+        <div class="toccata-window-controls">
+          <button class="t-btn t-close" onclick="closeWindow('win-installer')"></button>
+          <button class="t-btn t-min" onclick="minimizeWindow('win-installer')"></button>
+          <button class="t-btn t-max" onclick="maximizeWindow('win-installer')"></button>
         </div>
-        <div class="window-title">Blender 4.2 Installer</div>
+        <div class="window-title">App Installer — Blender.app</div>
         <div class="titlebar-placeholder"></div>
       </div>
       <div class="window-body installer-body">
         <div class="installer-header">
-          <div class="mac-app-icon blender-art">
-            <div class="blender-eye"></div>
+          <div class="toccata-app-tile tile-creative" style="width: 58px; height: 58px;">
+            <div class="color-core"></div>
           </div>
           <div>
             <div class="installer-app-name">Blender 4.2.app</div>
-            <div class="installer-app-sub">Version 4.2.1 • Universal 64-bit Binary</div>
+            <div class="installer-app-sub">Version 4.2.1 • Universal Linux App Bundle</div>
           </div>
         </div>
         <p class="installer-desc">
-          This application bundle is verified and ready to install directly into your <strong>/Applications</strong> directory.
+          Ready to install into your <strong>/Applications</strong> directory. No terminal or packaging commands required.
         </p>
         <div class="installer-actions">
           <button class="btn btn-secondary" onclick="closeWindow('win-installer')">Cancel</button>
           <button class="btn btn-secondary" onclick="triggerNotification('Running Blender in temporary sandbox...')">Run Once</button>
-          <button class="btn btn-primary" onclick="triggerNotification('Blender 4.2 installed to /Applications and added to Dock!')">Install to Applications</button>
+          <button class="btn btn-primary" onclick="triggerNotification('Blender 4.2 installed to /Applications!')">Install to Applications</button>
         </div>
       </div>
     </div>
 
     <!-- ====================================================================
-         CENTERED FLOATING 3D GLASS DOCK WITH MAGNIFICATION
+         CENTERED FLOATING DOCK WITH TOCCATA SIGNATURE TILES
          ==================================================================== -->
     <footer id="dock-container">
       <div id="dock" class="glass-panel">
-        <!-- Finder -->
-        <div class="dock-item" data-app="Finder" onclick="openWindow('win-finder')">
-          <div class="mac-app-icon finder-art">
-            <div class="finder-smile"></div>
-            <div class="finder-nose"></div>
-            <div class="finder-eyes"></div>
+        <!-- Cadence -->
+        <div class="dock-item" data-app="Cadence" onclick="openWindow('win-cadence')">
+          <div class="toccata-app-tile tile-cadence">
+            <div class="cadence-flow-wave"></div>
           </div>
           <div class="dock-dot"></div>
-          <span class="dock-tooltip">Finder</span>
+          <span class="dock-tooltip">Cadence</span>
         </div>
 
-        <!-- Safari -->
-        <div class="dock-item" data-app="Safari" onclick="triggerNotification('Safari launched')">
-          <div class="mac-app-icon safari-art">
-            <div class="compass-dial">
-              <div class="compass-needle"></div>
+        <!-- Horizon Browser -->
+        <div class="dock-item" data-app="Horizon" onclick="triggerNotification('Horizon Browser launched')">
+          <div class="toccata-app-tile tile-horizon">
+            <div class="horizon-orbit">
+              <div class="orbit-particle"></div>
             </div>
           </div>
           <div class="dock-dot hidden"></div>
-          <span class="dock-tooltip">Safari</span>
+          <span class="dock-tooltip">Horizon</span>
         </div>
 
-        <!-- TextEdit -->
-        <div class="dock-item" data-app="TextEdit" onclick="openWindow('win-textedit')">
-          <div class="mac-app-icon textedit-art">
-            <div class="notepad-lines"><span></span><span></span><span></span></div>
-            <div class="fountain-pen"></div>
+        <!-- Scribe Notes -->
+        <div class="dock-item" data-app="Scribe" onclick="openWindow('win-scribe')">
+          <div class="toccata-app-tile tile-scribe">
+            <div class="scribe-lines"><span></span><span></span></div>
+            <div class="scribe-stylus"></div>
           </div>
-          <div class="dock-dot hidden" id="dot-textedit"></div>
-          <span class="dock-tooltip">TextEdit</span>
+          <div class="dock-dot hidden" id="dot-scribe"></div>
+          <span class="dock-tooltip">Scribe</span>
         </div>
 
         <!-- Settings -->
-        <div class="dock-item" data-app="System Settings" onclick="openWindow('win-settings')">
-          <div class="mac-app-icon settings-art">
-            <div class="gear-outer">
-              <div class="gear-center"></div>
+        <div class="dock-item" data-app="Settings" onclick="openWindow('win-settings')">
+          <div class="toccata-app-tile tile-settings">
+            <div class="precision-rings">
+              <div class="ring-core"></div>
             </div>
           </div>
           <div class="dock-dot hidden" id="dot-settings"></div>
-          <span class="dock-tooltip">System Settings</span>
+          <span class="dock-tooltip">Settings</span>
         </div>
 
-        <!-- Installer -->
-        <div class="dock-item" data-app="App Installer" onclick="openWindow('win-installer')">
-          <div class="mac-app-icon appstore-art">
-            <div class="appstore-a-pencil"></div>
-            <div class="appstore-a-ruler"></div>
-            <div class="appstore-a-brush"></div>
+        <!-- Gallery -->
+        <div class="dock-item" data-app="Gallery" onclick="openWindow('win-installer')">
+          <div class="toccata-app-tile tile-gallery">
+            <div class="prism-diamond"></div>
           </div>
           <div class="dock-dot hidden" id="dot-installer"></div>
-          <span class="dock-tooltip">App Installer</span>
+          <span class="dock-tooltip">Gallery</span>
         </div>
 
         <div class="dock-divider"></div>
 
-        <!-- Trash -->
-        <div class="dock-item" data-app="Trash" onclick="triggerNotification('Trash is empty')">
-          <div class="mac-app-icon trash-art">
-            <div class="trash-rim"></div>
-            <div class="trash-mesh"></div>
+        <!-- Bin / Recycle -->
+        <div class="dock-item" data-app="Recycle Bin" onclick="triggerNotification('Bin is empty')">
+          <div class="toccata-app-tile tile-bin">
+            <div class="bin-lid"></div>
+            <div class="bin-canister"></div>
           </div>
-          <span class="dock-tooltip">Trash</span>
+          <span class="dock-tooltip">Bin</span>
         </div>
       </div>
     </footer>
