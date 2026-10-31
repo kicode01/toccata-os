@@ -296,13 +296,41 @@
             <span class="app-title">Tempo.app</span>
           </div>
 
-          <div class="app-card" onclick="playHarmonicChime([587.33, 739.99]); triggerNotification('Horizon Engine connected')">
+          <div class="app-card" ondblclick="openWindow('win-horizon')" onclick="selectFile(this, 'Horizon.app', 'Sovereign Web Browser', '62 MB')">
             <div class="mac-app-icon icon-horizon">
               <div class="compass-dial">
                 <div class="compass-needle"></div>
               </div>
             </div>
             <span class="app-title">Horizon.app</span>
+          </div>
+
+          <div class="app-card" ondblclick="openWindow('win-console')" onclick="selectFile(this, 'Console.app', 'Terminal & Command Bridge', '14 MB')">
+            <div class="mac-app-icon" style="background: linear-gradient(135deg, #18181b 0%, #27272a 100%);">
+              <div style="color: #34c759; font-family: monospace; font-weight: 900; font-size: 16px;">&gt;_</div>
+            </div>
+            <span class="app-title">Console.app</span>
+          </div>
+
+          <div class="app-card" ondblclick="openWindow('win-calc')" onclick="selectFile(this, 'Calculator.app', 'Precision Calculator', '8 MB')">
+            <div class="mac-app-icon" style="background: linear-gradient(135deg, #ff9500 0%, #ff5e3a 100%);">
+              <div style="color: white; font-size: 18px; font-weight: 700;">&plusmn;</div>
+            </div>
+            <span class="app-title">Calculator.app</span>
+          </div>
+
+          <div class="app-card" ondblclick="openWindow('win-prism')" onclick="selectFile(this, 'Prism.app', 'Photos & Vector Inspector', '32 MB')">
+            <div class="mac-app-icon" style="background: linear-gradient(135deg, #38bdf8 0%, #af52de 100%);">
+              <div style="font-size: 16px;">💎</div>
+            </div>
+            <span class="app-title">Prism.app</span>
+          </div>
+
+          <div class="app-card" ondblclick="openWindow('win-chronicle')" onclick="selectFile(this, 'Chronicle.app', 'Calendar & Focus Clock', '22 MB')">
+            <div class="mac-app-icon" style="background: linear-gradient(135deg, #ff2d55 0%, #ff375f 100%);">
+              <div style="color: white; font-weight: 900; font-size: 14px;">NOV</div>
+            </div>
+            <span class="app-title">Chronicle.app</span>
           </div>
         </main>
 
@@ -909,6 +937,270 @@ Every administrative task is accessible visually:
     </div>
 
     <!-- ====================================================================
+         WINDOW 7: HORIZON (The Sovereign Web Browser)
+         ==================================================================== -->
+    <div class="window glass-panel hidden" id="win-horizon" style="top: 80px; left: 160px; width: 860px; height: 530px;">
+      <div class="window-titlebar">
+        <div class="traffic-lights">
+          <button class="tl-btn tl-close" onclick="closeWindow('win-horizon')"></button>
+          <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-horizon')"></button>
+          <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-horizon')"></button>
+        </div>
+        <div class="window-title">Horizon &mdash; Sovereign Web Browser</div>
+        <div class="titlebar-placeholder"></div>
+      </div>
+
+      <div class="horizon-toolbar">
+        <div class="toolbar-nav-group">
+          <button class="toolbar-icon-btn" onclick="horizonGoBack()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg></button>
+          <button class="toolbar-icon-btn" onclick="horizonGoForward()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></button>
+          <button class="toolbar-icon-btn" onclick="horizonReload()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg></button>
+        </div>
+
+        <div class="horizon-url-box">
+          <div class="horizon-shield-badge" title="Zero Telemetry - 100% Trackers Blocked">
+            <span>🛡️</span>
+            <span id="horizon-tracker-count">2,841</span>
+          </div>
+          <span style="opacity: 0.6; font-size: 11px;">🔒</span>
+          <input type="text" id="horizon-url-input" class="horizon-url-input" value="toccata://speed-benchmark" onkeydown="if(event.key==='Enter') navigateHorizon(this.value)">
+          <button class="toolbar-icon-btn" onclick="toggleHorizonReader()" title="Reader Mode (Distraction Free)" style="width: 22px; height: 22px;"><span style="font-size: 12px;">📖</span></button>
+        </div>
+
+        <div style="display: flex; gap: 8px;">
+          <button class="toolbar-icon-btn" onclick="triggerNotification('Bookmark saved to Horizon Favorites')" title="Add Bookmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m19 21-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+          <button class="toolbar-icon-btn" onclick="triggerNotification('Private Tab created')" title="New Tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14m-7-7h14"/></svg></button>
+        </div>
+      </div>
+
+      <div class="horizon-bookmarks-bar">
+        <div class="horizon-bookmark-item" onclick="navigateHorizon('toccata://speed-benchmark')">
+          <span>⚡</span> <span>Speed &amp; Latency</span>
+        </div>
+        <div class="horizon-bookmark-item" onclick="navigateHorizon('toccata://pipewire-studio')">
+          <span>🎼</span> <span>PipeWire Studio</span>
+        </div>
+        <div class="horizon-bookmark-item" onclick="navigateHorizon('https://archlinux.org')">
+          <span>🐧</span> <span>Arch Core</span>
+        </div>
+        <div class="horizon-bookmark-item" onclick="navigateHorizon('toccata://privacy-manifesto')">
+          <span>🛡️</span> <span>Zero-Telemetry</span>
+        </div>
+      </div>
+
+      <div class="horizon-viewport" id="horizon-page-content">
+        <!-- Rendered Page Content -->
+      </div>
+
+      <!-- Window Resizer Handles -->
+      <div class="window-resizer window-resizer-r"></div>
+      <div class="window-resizer window-resizer-b"></div>
+      <div class="window-resizer window-resizer-rb" title="Drag to Resize"></div>
+    </div>
+
+    <!-- ====================================================================
+         WINDOW 8: CONSOLE (Terminal & Command Bridge)
+         ==================================================================== -->
+    <div class="window glass-panel hidden" id="win-console" style="top: 140px; left: 300px; width: 680px; height: 440px;">
+      <div class="window-titlebar">
+        <div class="traffic-lights">
+          <button class="tl-btn tl-close" onclick="closeWindow('win-console')"></button>
+          <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-console')"></button>
+          <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-console')"></button>
+        </div>
+        <div class="window-title">Console &mdash; toccata@core: ~ (zsh / pwsh)</div>
+        <div class="titlebar-placeholder"></div>
+      </div>
+
+      <div class="terminal-tab-bar">
+        <div class="terminal-tab-pill active" onclick="switchTerminalTab(this, 'zsh')">🐚 toccata-zsh</div>
+        <div class="terminal-tab-pill" onclick="switchTerminalTab(this, 'pwsh')">⚡ PowerShell 7.4</div>
+        <div class="terminal-tab-pill" onclick="switchTerminalTab(this, 'cmd')">🪟 CMD Bridge</div>
+      </div>
+
+      <div class="terminal-body" id="term-container" onclick="document.getElementById('term-input').focus()">
+        <div class="term-line-output" style="color: #38bdf8;">Toccata OS v1.0.4 "Sonata" (x86_64-toccata-linux-gnu)
+Kernel 6.11.5-bore #1 SMP PREEMPT_DYNAMIC | Wayland Compositor | Btrfs Active
+Dual-Personality Shell: Run native Linux commands or Windows CMD &amp; PowerShell shims.
+Type 'help' to view available commands.</div>
+        <div id="term-history"></div>
+        <div class="term-input-row">
+          <span class="term-prompt" id="term-prompt-label">toccata@core:~$</span>
+          <input type="text" id="term-input" class="term-input" autocomplete="off" spellcheck="false" onkeydown="handleTerminalKey(event)">
+        </div>
+      </div>
+
+      <!-- Window Resizer Handles -->
+      <div class="window-resizer window-resizer-r"></div>
+      <div class="window-resizer window-resizer-b"></div>
+      <div class="window-resizer window-resizer-rb" title="Drag to Resize"></div>
+    </div>
+
+    <!-- ====================================================================
+         WINDOW 9: SOLFEGE (The Precision Calculator)
+         ==================================================================== -->
+    <div class="window glass-panel calc-window hidden" id="win-calc" style="top: 110px; left: 450px;">
+      <div class="window-titlebar">
+        <div class="traffic-lights">
+          <button class="tl-btn tl-close" onclick="closeWindow('win-calc')"></button>
+          <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-calc')"></button>
+          <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-calc')"></button>
+        </div>
+        <div class="window-title">Calculator</div>
+        <div class="titlebar-placeholder"></div>
+      </div>
+
+      <div class="calc-body">
+        <div class="calc-screen">
+          <div class="calc-screen-sub" id="calc-sub-display"></div>
+          <div class="calc-screen-main" id="calc-main-display">0</div>
+        </div>
+
+        <div class="calc-keypad">
+          <button class="calc-key calc-key-fn" onclick="calcAction('clear')">AC</button>
+          <button class="calc-key calc-key-fn" onclick="calcAction('invert')">&plusmn;</button>
+          <button class="calc-key calc-key-fn" onclick="calcAction('percent')">%</button>
+          <button class="calc-key calc-key-op" onclick="calcAction('op', '/')">&divide;</button>
+
+          <button class="calc-key calc-key-num" onclick="calcAction('num', '7')">7</button>
+          <button class="calc-key calc-key-num" onclick="calcAction('num', '8')">8</button>
+          <button class="calc-key calc-key-num" onclick="calcAction('num', '9')">9</button>
+          <button class="calc-key calc-key-op" onclick="calcAction('op', '*')">&times;</button>
+
+          <button class="calc-key calc-key-num" onclick="calcAction('num', '4')">4</button>
+          <button class="calc-key calc-key-num" onclick="calcAction('num', '5')">5</button>
+          <button class="calc-key calc-key-num" onclick="calcAction('num', '6')">6</button>
+          <button class="calc-key calc-key-op" onclick="calcAction('op', '-')">&minus;</button>
+
+          <button class="calc-key calc-key-num" onclick="calcAction('num', '1')">1</button>
+          <button class="calc-key calc-key-num" onclick="calcAction('num', '2')">2</button>
+          <button class="calc-key calc-key-num" onclick="calcAction('num', '3')">3</button>
+          <button class="calc-key calc-key-op" onclick="calcAction('op', '+')">+</button>
+
+          <button class="calc-key calc-key-num" style="grid-column: span 2;" onclick="calcAction('num', '0')">0</button>
+          <button class="calc-key calc-key-num" onclick="calcAction('dot')">.</button>
+          <button class="calc-key calc-key-op" onclick="calcAction('equals')">=</button>
+        </div>
+      </div>
+      <!-- Window Resizer Handles -->
+      <div class="window-resizer window-resizer-r"></div>
+      <div class="window-resizer window-resizer-b"></div>
+      <div class="window-resizer window-resizer-rb" title="Drag to Resize"></div>
+    </div>
+
+    <!-- ====================================================================
+         WINDOW 10: PRISM (Photos & Vector Image Inspector)
+         ==================================================================== -->
+    <div class="window glass-panel hidden" id="win-prism" style="top: 100px; left: 200px; width: 720px; height: 480px;">
+      <div class="window-titlebar">
+        <div class="traffic-lights">
+          <button class="tl-btn tl-close" onclick="closeWindow('win-prism')"></button>
+          <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-prism')"></button>
+          <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-prism')"></button>
+        </div>
+        <div class="window-title" id="prism-window-title">Prism &mdash; Dynamic Topography.heic</div>
+        <div class="titlebar-placeholder"></div>
+      </div>
+
+      <div class="prism-toolbar">
+        <div style="display: flex; gap: 8px;">
+          <button class="toolbar-icon-btn" onclick="prismZoom(-0.15)" title="Zoom Out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8M8 11h6"/></svg></button>
+          <button class="toolbar-icon-btn" onclick="prismZoom(0.15)" title="Zoom In"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8M11 8v6M8 11h6"/></svg></button>
+          <button class="toolbar-icon-btn" onclick="prismRotate()" title="Rotate 90°"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg></button>
+        </div>
+
+        <div class="segmented-control">
+          <button class="seg-btn active" onclick="setPrismFilter(this, 'normal')">Normal</button>
+          <button class="seg-btn" onclick="setPrismFilter(this, 'vivid')">Display P3</button>
+          <button class="seg-btn" onclick="setPrismFilter(this, 'mono')">Mono</button>
+        </div>
+
+        <button class="btn btn-secondary" onclick="togglePrismExif()" style="font-size: 11px; padding: 3px 10px;">EXIF Info</button>
+      </div>
+
+      <div class="prism-canvas-area">
+        <div class="prism-image-frame" id="prism-frame">
+          <div style="width: 320px; height: 200px; border-radius: 10px; background: radial-gradient(circle at 30% 30%, #38bdf8 0%, #007aff 40%, #af52de 85%, #ff2d55 100%); box-shadow: inset 0 0 30px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;">
+            <div style="font-size: 42px; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.4));">💎</div>
+          </div>
+        </div>
+        <div class="prism-exif-pill" id="prism-exif-pill">
+          <span>📐 3840 &times; 2160</span>
+          <span>🎨 Display P3 Gamut</span>
+          <span>📸 10-bit HDR</span>
+          <span>⚡ 120Hz ProMotion</span>
+        </div>
+      </div>
+
+      <!-- Window Resizer Handles -->
+      <div class="window-resizer window-resizer-r"></div>
+      <div class="window-resizer window-resizer-b"></div>
+      <div class="window-resizer window-resizer-rb" title="Drag to Resize"></div>
+    </div>
+
+    <!-- ====================================================================
+         WINDOW 11: CHRONICLE (Calendar & Pomodoro Acoustic Clock)
+         ==================================================================== -->
+    <div class="window glass-panel hidden" id="win-chronicle" style="top: 90px; left: 220px; width: 750px; height: 490px;">
+      <div class="window-titlebar">
+        <div class="traffic-lights">
+          <button class="tl-btn tl-close" onclick="closeWindow('win-chronicle')"></button>
+          <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-chronicle')"></button>
+          <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-chronicle')"></button>
+        </div>
+        <div class="window-title">Chronicle &mdash; Calendar &amp; Focus Timer</div>
+        <div class="titlebar-placeholder"></div>
+      </div>
+
+      <div class="chronicle-body">
+        <aside class="chronicle-sidebar">
+          <div class="pomodoro-box">
+            <span style="font-weight: 700; font-size: 12px; color: var(--text-secondary);">FOCUS SESSION</span>
+            <div class="pomodoro-digits" id="pomo-display">25:00</div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-primary" id="pomo-toggle-btn" onclick="togglePomodoro()" style="padding: 4px 14px; font-size: 12px;">Start</button>
+              <button class="btn btn-secondary" onclick="resetPomodoro()" style="padding: 4px 10px; font-size: 12px;">Reset</button>
+            </div>
+            <span style="font-size: 10px; color: var(--text-secondary);">Acoustic bell upon completion</span>
+          </div>
+
+          <div>
+            <div style="font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 8px;">Upcoming Milestones</div>
+            <div style="display: flex; flex-direction: column; gap: 8px; font-size: 12px;">
+              <div style="padding: 6px 10px; background: rgba(0, 122, 255, 0.15); border-left: 3px solid #007aff; border-radius: 4px;">
+                <div style="font-weight: 600;">Toccata Phase 2 Review</div>
+                <div style="color: var(--text-secondary); font-size: 10px;">Today &bull; 4:00 PM</div>
+              </div>
+              <div style="padding: 6px 10px; background: rgba(175, 82, 222, 0.15); border-left: 3px solid #af52de; border-radius: 4px;">
+                <div style="font-weight: 600;">PipeWire Studio Jam</div>
+                <div style="color: var(--text-secondary); font-size: 10px;">Tomorrow &bull; 7:30 PM</div>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <main class="chronicle-main">
+          <div class="cal-month-header">
+            <span style="font-size: 18px; font-weight: 800;" id="cal-month-title">November 2026</span>
+            <div style="display: flex; gap: 6px;">
+              <button class="toolbar-icon-btn" onclick="changeCalMonth(-1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg></button>
+              <button class="toolbar-icon-btn" onclick="changeCalMonth(1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></button>
+            </div>
+          </div>
+
+          <div class="cal-grid" id="cal-grid-cells">
+            <!-- Dynamically populated month days -->
+          </div>
+        </main>
+      </div>
+
+      <!-- Window Resizer Handles -->
+      <div class="window-resizer window-resizer-r"></div>
+      <div class="window-resizer window-resizer-b"></div>
+      <div class="window-resizer window-resizer-rb" title="Drag to Resize"></div>
+    </div>
+
+    <!-- ====================================================================
          CENTERED FLOATING DOCK WITH MACOS-STYLE ICONS
          ==================================================================== -->
     <footer id="dock-container">
@@ -920,6 +1212,17 @@ Every administrative task is accessible visually:
           </div>
           <div class="dock-dot" id="dot-cadence"></div>
           <span class="dock-tooltip">Cadence</span>
+        </div>
+
+        <!-- Horizon Browser -->
+        <div class="dock-item" data-app="Horizon" onclick="playHarmonicChime([587.33]); openWindow('win-horizon')">
+          <div class="mac-app-icon icon-horizon">
+            <div class="compass-dial">
+              <div class="compass-needle"></div>
+            </div>
+          </div>
+          <div class="dock-dot hidden" id="dot-horizon"></div>
+          <span class="dock-tooltip">Horizon</span>
         </div>
 
         <!-- Scribe -->
@@ -950,15 +1253,40 @@ Every administrative task is accessible visually:
           <span class="dock-tooltip">Tempo</span>
         </div>
 
-        <!-- System Settings -->
-        <div class="dock-item" data-app="System Settings" onclick="playHarmonicChime([783.99]); openWindow('win-settings')">
-          <div class="mac-app-icon icon-sonata">
-            <div class="gear-outer">
-              <div class="gear-center"></div>
-            </div>
+        <!-- Console -->
+        <div class="dock-item" data-app="Console" onclick="playHarmonicChime([493.88]); openWindow('win-console')">
+          <div class="mac-app-icon" style="background: linear-gradient(135deg, #18181b 0%, #27272a 100%);">
+            <div style="color: #34c759; font-family: monospace; font-weight: 900; font-size: 15px;">&gt;_</div>
           </div>
-          <div class="dock-dot hidden" id="dot-settings"></div>
-          <span class="dock-tooltip">System Settings</span>
+          <div class="dock-dot hidden" id="dot-console"></div>
+          <span class="dock-tooltip">Console</span>
+        </div>
+
+        <!-- Calculator -->
+        <div class="dock-item" data-app="Calculator" onclick="playHarmonicChime([659.25]); openWindow('win-calc')">
+          <div class="mac-app-icon" style="background: linear-gradient(135deg, #ff9500 0%, #ff5e3a 100%);">
+            <div style="color: white; font-size: 18px; font-weight: 700;">&plusmn;</div>
+          </div>
+          <div class="dock-dot hidden" id="dot-calc"></div>
+          <span class="dock-tooltip">Calculator</span>
+        </div>
+
+        <!-- Prism -->
+        <div class="dock-item" data-app="Prism" onclick="playHarmonicChime([739.99]); openWindow('win-prism')">
+          <div class="mac-app-icon" style="background: linear-gradient(135deg, #38bdf8 0%, #af52de 100%);">
+            <div style="font-size: 15px;">💎</div>
+          </div>
+          <div class="dock-dot hidden" id="dot-prism"></div>
+          <span class="dock-tooltip">Prism</span>
+        </div>
+
+        <!-- Chronicle -->
+        <div class="dock-item" data-app="Chronicle" onclick="playHarmonicChime([830.61]); openWindow('win-chronicle')">
+          <div class="mac-app-icon" style="background: linear-gradient(135deg, #ff2d55 0%, #ff375f 100%);">
+            <div style="color: white; font-weight: 900; font-size: 13px;">NOV</div>
+          </div>
+          <div class="dock-dot hidden" id="dot-chronicle"></div>
+          <span class="dock-tooltip">Chronicle</span>
         </div>
 
         <!-- Gallery -->
@@ -970,14 +1298,15 @@ Every administrative task is accessible visually:
           <span class="dock-tooltip">Gallery</span>
         </div>
 
-        <!-- Horizon Browser -->
-        <div class="dock-item" data-app="Horizon" onclick="playHarmonicChime([587.33]); triggerNotification('Horizon Browser launched')">
-          <div class="mac-app-icon icon-horizon">
-            <div class="compass-dial">
-              <div class="compass-needle"></div>
+        <!-- System Settings -->
+        <div class="dock-item" data-app="System Settings" onclick="playHarmonicChime([783.99]); openWindow('win-settings')">
+          <div class="mac-app-icon icon-sonata">
+            <div class="gear-outer">
+              <div class="gear-center"></div>
             </div>
           </div>
-          <span class="dock-tooltip">Horizon</span>
+          <div class="dock-dot hidden" id="dot-settings"></div>
+          <span class="dock-tooltip">System Settings</span>
         </div>
 
         <div class="dock-divider"></div>

@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Version=1.5
+Name=Prism
+GenericName=Photos & Vector Image Inspector
+Comment=Photos & Vector Image Inspector
+Icon=image-viewer
+Exec=toccata-open /Applications/Prism.app
+Terminal=false
+Categories=Graphics;Viewer;
+StartupNotify=true
+X-Toccata-ZeroBloat=true

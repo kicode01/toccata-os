@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Version=1.5
+Name=Horizon
+GenericName=Sovereign Private Web Browser
+Comment=Sovereign Private Web Browser
+Icon=web-browser
+Exec=toccata-open /Applications/Horizon.app
+Terminal=false
+Categories=Network;WebBrowser;
+StartupNotify=true
+X-Toccata-ZeroBloat=true

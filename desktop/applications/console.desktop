@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Version=1.5
+Name=Console
+GenericName=Dual-Personality Terminal (zsh/pwsh/cmd)
+Comment=Dual-Personality Terminal (zsh/pwsh/cmd)
+Icon=utilities-terminal
+Exec=toccata-open /Applications/Console.app
+Terminal=false
+Categories=System;TerminalEmulator;
+StartupNotify=true
+X-Toccata-ZeroBloat=true

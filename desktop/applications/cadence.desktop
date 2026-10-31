@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Version=1.5
+Name=Cadence
+GenericName=File Manager & Workspaces
+Comment=File Manager & Workspaces
+Icon=system-file-manager
+Exec=toccata-open /Applications/Cadence.app
+Terminal=false
+Categories=FileManager;Utility;
+StartupNotify=true
+X-Toccata-ZeroBloat=true

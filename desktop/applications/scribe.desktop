@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Version=1.5
+Name=Scribe
+GenericName=Markdown, Notes & Code Canvas
+Comment=Markdown, Notes & Code Canvas
+Icon=accessories-text-editor
+Exec=toccata-open /Applications/Scribe.app
+Terminal=false
+Categories=Utility;TextEditor;Development;
+StartupNotify=true
+X-Toccata-ZeroBloat=true

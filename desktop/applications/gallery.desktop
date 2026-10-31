@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Version=1.5
+Name=Gallery
+GenericName=Package Hub & Zero-Terminal Installer
+Comment=Package Hub & Zero-Terminal Installer
+Icon=system-software-install
+Exec=toccata-open /Applications/Gallery.app
+Terminal=false
+Categories=PackageManager;System;
+StartupNotify=true
+X-Toccata-ZeroBloat=true

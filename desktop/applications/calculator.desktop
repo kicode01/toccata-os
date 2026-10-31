@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Version=1.5
+Name=Calculator
+GenericName=Solfege Precision Glass Calculator
+Comment=Solfege Precision Glass Calculator
+Icon=accessories-calculator
+Exec=toccata-calc
+Terminal=false
+Categories=Utility;Calculator;
+StartupNotify=true
+X-Toccata-ZeroBloat=true

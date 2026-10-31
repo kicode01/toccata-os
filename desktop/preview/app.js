@@ -110,20 +110,30 @@
 
   const windowDockMap = {
     'win-cadence': document.querySelector('.dock-item[data-app="Cadence"]'),
+    'win-horizon': document.querySelector('.dock-item[data-app="Horizon"]'),
     'win-scribe': document.querySelector('.dock-item[data-app="Scribe"]'),
-    'win-tempo': document.querySelector('.dock-item[data-app="Tempo"]'),
     'win-sonata': document.querySelector('.dock-item[data-app="Sonata"]'),
-    'win-settings': document.querySelector('.dock-item[data-app="System Settings"]'),
-    'win-installer': document.querySelector('.dock-item[data-app="Gallery"]')
+    'win-tempo': document.querySelector('.dock-item[data-app="Tempo"]'),
+    'win-console': document.querySelector('.dock-item[data-app="Console"]'),
+    'win-calc': document.querySelector('.dock-item[data-app="Calculator"]'),
+    'win-prism': document.querySelector('.dock-item[data-app="Prism"]'),
+    'win-chronicle': document.querySelector('.dock-item[data-app="Chronicle"]'),
+    'win-installer': document.querySelector('.dock-item[data-app="Gallery"]'),
+    'win-settings': document.querySelector('.dock-item[data-app="System Settings"]')
   };
 
   const windowDotMap = {
     'win-cadence': document.getElementById('dot-cadence'),
+    'win-horizon': document.getElementById('dot-horizon'),
     'win-scribe': document.getElementById('dot-scribe'),
-    'win-tempo': document.getElementById('dot-tempo'),
     'win-sonata': document.getElementById('dot-sonata'),
-    'win-settings': document.getElementById('dot-settings'),
-    'win-installer': document.getElementById('dot-installer')
+    'win-tempo': document.getElementById('dot-tempo'),
+    'win-console': document.getElementById('dot-console'),
+    'win-calc': document.getElementById('dot-calc'),
+    'win-prism': document.getElementById('dot-prism'),
+    'win-chronicle': document.getElementById('dot-chronicle'),
+    'win-installer': document.getElementById('dot-installer'),
+    'win-settings': document.getElementById('dot-settings')
   };
 
   function getActiveWindow() {
@@ -698,11 +708,16 @@
 
     const appIndex = [
       { name: 'Cadence (Files & Explorer)', icon: '📂', id: 'win-cadence' },
-      { name: 'Scribe (Notes & Code)', icon: '📝', id: 'win-scribe' },
+      { name: 'Horizon (Sovereign Web Browser)', icon: '🧭', id: 'win-horizon' },
+      { name: 'Scribe (Notes & Code Canvas)', icon: '📝', id: 'win-scribe' },
       { name: 'Sonata (Lossless Hi-Fi & PipeWire Player)', icon: '🎼', id: 'win-sonata' },
-      { name: 'Tempo (Task Manager & Activity)', icon: '⚡', id: 'win-tempo' },
-      { name: 'System Settings (Control Panel)', icon: '⚙️', id: 'win-settings' },
-      { name: 'Gallery & Installer (winget)', icon: '💎', id: 'win-installer' }
+      { name: 'Tempo (Task Manager & Activity Monitor)', icon: '⚡', id: 'win-tempo' },
+      { name: 'Console (Terminal & Command Bridge)', icon: '💻', id: 'win-console' },
+      { name: 'Calculator (Solfege Precision)', icon: '🔢', id: 'win-calc' },
+      { name: 'Prism (Photos & Vector Inspector)', icon: '💎', id: 'win-prism' },
+      { name: 'Chronicle (Calendar & Focus Clock)', icon: '📅', id: 'win-chronicle' },
+      { name: 'Gallery & Installer (App Store & winget)', icon: '🛍️', id: 'win-installer' },
+      { name: 'System Settings (Control Panel)', icon: '⚙️', id: 'win-settings' }
     ];
 
     const matches = appIndex.filter(a => a.name.toLowerCase().includes(lowerQ));
@@ -1370,6 +1385,560 @@
     playHarmonicChime([440, 554.37], 0.18);
   }
   window.switchSettingsTab = switchSettingsTab;
+
+  // ==========================================================================
+  // 14. HORIZON SOVEREIGN BROWSER ENGINE (Zero Telemetry, WebKit Aesthetics)
+  // ==========================================================================
+  let horizonHistory = ['toccata://speed-benchmark'];
+  let horizonHistoryIdx = 0;
+  let horizonTrackerCount = 2841;
+
+  function renderHorizonPage(url) {
+    const container = document.getElementById('horizon-page-content');
+    if (!container) return;
+
+    if (url === 'toccata://speed-benchmark') {
+      container.innerHTML = `
+        <div class="horizon-page-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div>
+              <span style="font-size: 11px; font-weight: 700; color: #34c759; text-transform: uppercase;">Realtime Benchmark Suite</span>
+              <h2 style="font-size: 22px; margin-top: 4px;">Toccata OS Architecture Efficiency</h2>
+            </div>
+            <span style="background: rgba(52, 199, 89, 0.15); color: #34c759; padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 12px;">Validated Live</span>
+          </div>
+
+          <p style="color: var(--text-secondary); font-size: 13px; line-height: 1.6; margin-bottom: 24px;">
+            Engineered from the ground up to eliminate Windows kernel thread contention and background telemetry thrashing, while preserving pure macOS aesthetic polish.
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px;">
+            <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 10px; padding: 14px;">
+              <div style="font-size: 11px; color: var(--text-secondary);">Audio Master Latency</div>
+              <div style="font-size: 22px; font-weight: 800; color: #38bdf8; margin: 6px 0;">0.7 ms</div>
+              <div style="font-size: 11px; color: #34c759;">vs 12.4ms (Windows DPC)</div>
+            </div>
+            <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 10px; padding: 14px;">
+              <div style="font-size: 11px; color: var(--text-secondary);">Idle Memory Footprint</div>
+              <div style="font-size: 22px; font-weight: 800; color: #34c759; margin: 6px 0;">820 MB</div>
+              <div style="font-size: 11px; color: #34c759;">vs 4.4 GB (Windows 11)</div>
+            </div>
+            <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 10px; padding: 14px;">
+              <div style="font-size: 11px; color: var(--text-secondary);">Telemetry Bandwidth</div>
+              <div style="font-size: 22px; font-weight: 800; color: #ff9500; margin: 6px 0;">0 KB/day</div>
+              <div style="font-size: 11px; color: #34c759;">100% Kernel Blocked</div>
+            </div>
+          </div>
+
+          <div style="border-top: 1px solid var(--glass-border); padding-top: 16px; display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary);">
+            <span>BORE CPU Scheduler active</span>
+            <span>Btrfs Zstd-15 transparent compression</span>
+          </div>
+        </div>
+      `;
+    } else if (url === 'toccata://pipewire-studio') {
+      container.innerHTML = `
+        <div class="horizon-page-card">
+          <span style="font-size: 11px; font-weight: 700; color: var(--accent-color); text-transform: uppercase;">Pro Studio Sound Architecture</span>
+          <h2 style="font-size: 22px; margin: 6px 0 16px;">PipeWire ALSA Hardware Passthrough</h2>
+          <p style="color: var(--text-secondary); font-size: 13px; line-height: 1.6; margin-bottom: 20px;">
+            Unlike the Windows Audio Session API (WASAPI) and generic ALSA layers, Toccata wires bit-perfect streams straight into memory buffers at 96kHz / 24-bit with zero jitter.
+          </p>
+          <div style="padding: 16px; background: rgba(0,0,0,0.25); border-radius: 10px; font-family: var(--font-mono); font-size: 12px; color: #a1a1aa; line-height: 1.8;">
+            <div>&bull; Graph Node: [alsa_output.pci-0000_00_1f.3.analog-stereo]</div>
+            <div>&bull; Buffer Size: 64 samples @ 96000 Hz (0.667 ms)</div>
+            <div>&bull; Resampler: Speex-Resampler (Quality 10, Bit-Perfect)</div>
+            <div>&bull; Active Sinks: Sonata Lossless Stream &rarr; Master Bus</div>
+          </div>
+        </div>
+      `;
+    } else if (url === 'toccata://privacy-manifesto') {
+      container.innerHTML = `
+        <div class="horizon-page-card">
+          <span style="font-size: 11px; font-weight: 700; color: #ff2d55; text-transform: uppercase;">Privacy Sovereignty</span>
+          <h2 style="font-size: 22px; margin: 6px 0 16px;">Your Hardware. Zero Corporate Extraction.</h2>
+          <p style="color: var(--text-secondary); font-size: 13px; line-height: 1.6; margin-bottom: 16px;">
+            Windows ships with dozens of diagnostics services (DiagTrack, dmwappushservice, Connected User Experiences) sending telemetry, keystrokes, and diagnostics back to corporate servers.
+          </p>
+          <p style="color: var(--text-secondary); font-size: 13px; line-height: 1.6;">
+            Toccata OS contains exactly zero telemetry packages. No ad IDs, no start menu suggestions, no cloud account forcing. Everything runs on local silicon.
+          </p>
+        </div>
+      `;
+    } else {
+      container.innerHTML = `
+        <div class="horizon-page-card">
+          <h2 style="font-size: 20px; margin-bottom: 12px;">Search: ${url}</h2>
+          <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 20px;">Results via Sovereign Private Index (Zero Tracking):</p>
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div>
+              <a href="#" style="color: var(--accent-color); font-weight: 600; text-decoration: none;" onclick="navigateHorizon('toccata://speed-benchmark')">Toccata OS Architectural Overview &amp; Benchmark</a>
+              <div style="color: var(--text-secondary); font-size: 12px; margin-top: 2px;">Official documentation on Linux speed, macOS polish, and Windows commands.</div>
+            </div>
+            <div>
+              <a href="#" style="color: var(--accent-color); font-weight: 600; text-decoration: none;" onclick="navigateHorizon('https://archlinux.org')">Arch Linux Rolling Foundation</a>
+              <div style="color: var(--text-secondary); font-size: 12px; margin-top: 2px;">Bleeding-edge Linux kernel, pacman package infrastructure, and Wayland desktop.</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  function navigateHorizon(url) {
+    if (!url) return;
+    const input = document.getElementById('horizon-url-input');
+    if (input) input.value = url;
+
+    horizonHistory.push(url);
+    horizonHistoryIdx = horizonHistory.length - 1;
+
+    // Simulate tracker block counter increment
+    horizonTrackerCount += Math.floor(Math.random() * 4) + 1;
+    const trackerEl = document.getElementById('horizon-tracker-count');
+    if (trackerEl) trackerEl.textContent = horizonTrackerCount.toLocaleString();
+
+    renderHorizonPage(url);
+    playHarmonicChime([587.33], 0.12);
+  }
+  window.navigateHorizon = navigateHorizon;
+
+  function horizonGoBack() {
+    if (horizonHistoryIdx > 0) {
+      horizonHistoryIdx--;
+      const url = horizonHistory[horizonHistoryIdx];
+      const input = document.getElementById('horizon-url-input');
+      if (input) input.value = url;
+      renderHorizonPage(url);
+      playHarmonicChime([480], 0.1);
+    }
+  }
+  window.horizonGoBack = horizonGoBack;
+
+  function horizonGoForward() {
+    if (horizonHistoryIdx < horizonHistory.length - 1) {
+      horizonHistoryIdx++;
+      const url = horizonHistory[horizonHistoryIdx];
+      const input = document.getElementById('horizon-url-input');
+      if (input) input.value = url;
+      renderHorizonPage(url);
+      playHarmonicChime([520], 0.1);
+    }
+  }
+  window.horizonGoForward = horizonGoForward;
+
+  function horizonReload() {
+    const input = document.getElementById('horizon-url-input');
+    if (input) renderHorizonPage(input.value);
+    playHarmonicChime([659.25], 0.1);
+    triggerNotification('Horizon: Page reloaded');
+  }
+  window.horizonReload = horizonReload;
+
+  function toggleHorizonReader() {
+    triggerNotification('Horizon: Reader Mode toggled');
+    playHarmonicChime([783.99], 0.15);
+  }
+  window.toggleHorizonReader = toggleHorizonReader;
+
+  // Initialize default page
+  renderHorizonPage('toccata://speed-benchmark');
+
+  // ==========================================================================
+  // 15. CONSOLE TERMINAL ENGINE (Dual-Personality Linux & Windows Shell)
+  // ==========================================================================
+  let currentShell = 'zsh';
+
+  function switchTerminalTab(pillEl, shellType) {
+    document.querySelectorAll('.terminal-tab-bar .terminal-tab-pill').forEach(p => p.classList.remove('active'));
+    pillEl?.classList.add('active');
+    currentShell = shellType;
+
+    const label = document.getElementById('term-prompt-label');
+    if (label) {
+      if (shellType === 'pwsh') label.textContent = 'PS /home/toccata>';
+      else if (shellType === 'cmd') label.textContent = 'C:\\Users\\Toccata>';
+      else label.textContent = 'toccata@core:~$';
+    }
+    playHarmonicChime([523.25], 0.12);
+  }
+  window.switchTerminalTab = switchTerminalTab;
+
+  function handleTerminalKey(e) {
+    if (e.key !== 'Enter') return;
+    const input = document.getElementById('term-input');
+    const history = document.getElementById('term-history');
+    if (!input || !history) return;
+
+    const cmd = input.value.trim();
+    input.value = '';
+    if (!cmd) return;
+
+    // Append executed prompt
+    const pLabel = document.getElementById('term-prompt-label')?.textContent || 'toccata@core:~$';
+    const cmdRow = document.createElement('div');
+    cmdRow.className = 'term-line-output';
+    cmdRow.innerHTML = `<span style="color: #34c759; font-weight: 700;">${pLabel}</span> ${escapeHtml(cmd)}`;
+    history.appendChild(cmdRow);
+
+    // Evaluate dual-personality command
+    const output = evaluateTerminalCommand(cmd);
+    if (output) {
+      const outRow = document.createElement('div');
+      outRow.className = 'term-line-output';
+      outRow.innerHTML = output;
+      history.appendChild(outRow);
+    }
+
+    // Scroll to bottom
+    const container = document.getElementById('term-container');
+    if (container) container.scrollTop = container.scrollHeight;
+
+    playHarmonicChime([440], 0.08);
+  }
+  window.handleTerminalKey = handleTerminalKey;
+
+  function escapeHtml(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function evaluateTerminalCommand(rawCmd) {
+    const parts = rawCmd.split(/\s+/);
+    const cmd = parts[0].toLowerCase();
+
+    // 1. Clear Screen
+    if (cmd === 'cls' || cmd === 'clear') {
+      const history = document.getElementById('term-history');
+      if (history) history.innerHTML = '';
+      return '';
+    }
+
+    // 2. IP Config (Windows / Linux)
+    if (cmd === 'ipconfig' || cmd === 'ifconfig' || (cmd === 'ip' && parts[1] === 'a')) {
+      return `<span style="color: #a1a1aa;">Windows IP Configuration &bull; Toccata Core Bridge:</span>
+Ethernet adapter Core0:
+   Connection-specific DNS Suffix  . : localdomain
+   Link-local IPv6 Address . . . . . : fe80::d418:8923:ff82:402b%12
+   IPv4 Address. . . . . . . . . . . : 192.168.1.145
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 192.168.1.1
+   Hardware MAC  . . . . . . . . . . : e8:9c:25:a1:44:bc (Realtek 2.5GbE)`;
+    }
+
+    // 3. Directory Listing (dir / ls)
+    if (cmd === 'dir' || cmd === 'ls') {
+      if (currentShell === 'cmd') {
+        return ` Volume in drive C is Toccata Core NVMe
+ Volume Serial Number is 7B12-9A4E
+
+ Directory of C:\\Users\\Toccata
+
+11/01/2026  01:40 AM    &lt;DIR&gt;          Applications
+11/01/2026  01:40 AM    &lt;DIR&gt;          Documents
+11/01/2026  01:40 AM    &lt;DIR&gt;          Downloads
+11/01/2026  01:40 AM             4,280 Toccata Manifesto.md
+11/01/2026  01:40 AM        52,428,800 Scribe.app
+11/01/2026  01:40 AM        38,912,000 Sonata.app
+               2 File(s)     52,433,080 bytes
+               3 Dir(s)  449,368,064,000 bytes free`;
+      }
+      return `<span style="color: #38bdf8; font-weight: 700;">Applications/  Documents/  Downloads/</span>
+Toccata Manifesto.md   Scribe.app   Sonata.app   Tempo.app   Horizon.app`;
+    }
+
+    // 4. Task Manager (taskmgr / tasklist / ps / top)
+    if (cmd === 'taskmgr' || cmd === 'tasklist' || cmd === 'ps' || cmd === 'top') {
+      openWindow('win-tempo');
+      return `PID   TTY      TIME     CMD
+1042  ?        00:01:24 kwin_wayland
+1850  ?        00:00:18 cadence
+1920  ?        00:00:04 scribe
+2105  ?        00:00:12 sonata
+2842  ?        00:00:32 horizon
+Opening Tempo Activity Monitor...`;
+    }
+
+    // 5. Memory / Resources (free / systeminfo)
+    if (cmd === 'free' || cmd === 'free -m' || cmd === 'free -h') {
+      return `               total        used        free      shared  buff/cache   available
+Mem:            32Gi       820Mi        29Gi        42Mi       2.1Gi        30Gi
+Swap:           16Gi          0B        16Gi`;
+    }
+
+    if (cmd === 'systeminfo') {
+      return `OS Name:                   Toccata Operating System
+OS Version:                1.0.4 Build 20261101 (Sonata)
+System Manufacturer:       Toccata Acoustics & Systems
+System Model:              Display P3 Studio Pro
+System Type:               x64-based PC
+Processor(s):              16 Symphony Cores @ 4.8 GHz (BORE Scheduler)
+Installed Physical Memory: 32,768 MB (820 MB Used at Idle)
+Audio Engine:              PipeWire Low-Latency Subsystem (0.7ms ALSA)`;
+    }
+
+    // 6. Kernel & System (uname / ver)
+    if (cmd === 'uname' || cmd === 'uname -a') {
+      return `Linux toccata-core 6.11.5-bore #1 SMP PREEMPT_DYNAMIC x86_64 GNU/Linux`;
+    }
+
+    if (cmd === 'ver') {
+      return `Toccata OS [Version 1.0.4.2026] (Windows Command Subsystem Compatible)`;
+    }
+
+    // 7. Package Installer (winget / pacman / apt)
+    if (cmd === 'winget' || cmd === 'pacman') {
+      return `<span style="color: #34c759;">Toccata Unified Package Hub (Zero-Terminal Enabled):</span>
+Double-click any .app, .dmg, or .exe in Cadence to install visually.
+Or search packages in Gallery.app.`;
+    }
+
+    // 8. Help
+    if (cmd === 'help') {
+      return `<span style="color: #38bdf8; font-weight: 700;">Toccata Shell Built-in Commands:</span>
+&bull; Windows Compatibility : ipconfig, dir, cls, taskmgr, tasklist, systeminfo, ver, winget
+&bull; Linux Standard CLI   : ls, ps, free, df, uname, clear, pwd, whoami, help
+&bull; GUI Integration      : Double-clicking any .app or file launches instant native visual sheets.`;
+    }
+
+    return `<span style="color: #ff453a;">${escapeHtml(cmd)}: command not found</span>. Type 'help' for available commands.`;
+  }
+
+  // ==========================================================================
+  // 16. SOLFEGE CALCULATOR ENGINE (Apple Glass Layout & Precision Math)
+  // ==========================================================================
+  let calcCurrent = '0';
+  let calcPrev = null;
+  let calcOp = null;
+  let calcShouldReset = false;
+
+  function updateCalcScreen() {
+    const mainEl = document.getElementById('calc-main-display');
+    const subEl = document.getElementById('calc-sub-display');
+    if (mainEl) mainEl.textContent = calcCurrent;
+    if (subEl) subEl.textContent = calcOp ? `${calcPrev} ${calcOp}` : '';
+  }
+
+  function calcAction(action, val) {
+    if (action === 'num') {
+      if (calcCurrent === '0' || calcShouldReset) {
+        calcCurrent = val;
+        calcShouldReset = false;
+      } else {
+        if (calcCurrent.length < 12) calcCurrent += val;
+      }
+      playHarmonicChime([400 + parseInt(val, 10) * 30], 0.08);
+    } else if (action === 'dot') {
+      if (!calcCurrent.includes('.')) calcCurrent += '.';
+      playHarmonicChime([480], 0.08);
+    } else if (action === 'clear') {
+      calcCurrent = '0';
+      calcPrev = null;
+      calcOp = null;
+      calcShouldReset = false;
+      playHarmonicChime([300], 0.1);
+    } else if (action === 'invert') {
+      calcCurrent = (parseFloat(calcCurrent) * -1).toString();
+      playHarmonicChime([450], 0.08);
+    } else if (action === 'percent') {
+      calcCurrent = (parseFloat(calcCurrent) / 100).toString();
+      playHarmonicChime([500], 0.08);
+    } else if (action === 'op') {
+      calcPrev = parseFloat(calcCurrent);
+      calcOp = val;
+      calcShouldReset = true;
+      playHarmonicChime([600], 0.1);
+    } else if (action === 'equals') {
+      if (calcOp && calcPrev !== null) {
+        const cur = parseFloat(calcCurrent);
+        let res = 0;
+        if (calcOp === '+') res = calcPrev + cur;
+        else if (calcOp === '-') res = calcPrev - cur;
+        else if (calcOp === '*') res = calcPrev * cur;
+        else if (calcOp === '/') res = cur !== 0 ? calcPrev / cur : 'Error';
+
+        calcCurrent = res.toString();
+        calcPrev = null;
+        calcOp = null;
+        calcShouldReset = true;
+        playHarmonicChime([523.25, 659.25], 0.15);
+      }
+    }
+    updateCalcScreen();
+  }
+  window.calcAction = calcAction;
+
+  // ==========================================================================
+  // 17. PRISM PHOTOS & VECTOR PREVIEW ENGINE
+  // ==========================================================================
+  let prismZoomScale = 1.0;
+  let prismRot = 0;
+  let prismExifShown = true;
+
+  function updatePrismTransform() {
+    const frame = document.getElementById('prism-frame');
+    if (frame) {
+      frame.style.transform = `scale(${prismZoomScale}) rotate(${prismRot}deg)`;
+    }
+  }
+
+  function prismZoom(delta) {
+    prismZoomScale = Math.max(0.6, Math.min(2.5, prismZoomScale + delta));
+    updatePrismTransform();
+    playHarmonicChime([450 + prismZoomScale * 100], 0.08);
+  }
+  window.prismZoom = prismZoom;
+
+  function prismRotate() {
+    prismRot = (prismRot + 90) % 360;
+    updatePrismTransform();
+    playHarmonicChime([587.33], 0.12);
+  }
+  window.prismRotate = prismRotate;
+
+  function setPrismFilter(btnEl, filterType) {
+    document.querySelectorAll('.prism-toolbar .seg-btn').forEach(b => b.classList.remove('active'));
+    btnEl?.classList.add('active');
+
+    const frame = document.getElementById('prism-frame');
+    if (!frame) return;
+
+    if (filterType === 'vivid') {
+      frame.style.filter = 'saturate(160%) contrast(110%)';
+      triggerNotification('Prism: Display P3 Wide Gamut active');
+    } else if (filterType === 'mono') {
+      frame.style.filter = 'grayscale(100%) contrast(125%)';
+      triggerNotification('Prism: Monolithic Silver Halide filter');
+    } else {
+      frame.style.filter = 'none';
+      triggerNotification('Prism: Standard color profile');
+    }
+    playHarmonicChime([523.25], 0.1);
+  }
+  window.setPrismFilter = setPrismFilter;
+
+  function togglePrismExif() {
+    prismExifShown = !prismExifShown;
+    const pill = document.getElementById('prism-exif-pill');
+    if (pill) pill.style.display = prismExifShown ? 'flex' : 'none';
+    playHarmonicChime([440], 0.1);
+  }
+  window.togglePrismExif = togglePrismExif;
+
+  // ==========================================================================
+  // 18. CHRONICLE CALENDAR & POMODORO ACOUSTIC FOCUS CLOCK
+  // ==========================================================================
+  let currentCalYear = 2026;
+  let currentCalMonth = 10; // 0-indexed: 10 = November
+
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  function renderCalendar(year, month) {
+    const titleEl = document.getElementById('cal-month-title');
+    const gridEl = document.getElementById('cal-grid-cells');
+    if (titleEl) titleEl.textContent = `${monthNames[month]} ${year}`;
+    if (!gridEl) return;
+
+    const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    let html = dayLabels.map(d => `<div class="cal-day-name">${d}</div>`).join('');
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const prevMonthDays = new Date(year, month, 0).getDate();
+
+    // Previous month padding
+    for (let i = firstDay - 1; i >= 0; i--) {
+      html += `<div class="cal-cell other-month">${prevMonthDays - i}</div>`;
+    }
+
+    // Current month days
+    const now = new Date();
+    const isThisMonth = now.getFullYear() === year && now.getMonth() === month;
+    for (let d = 1; d <= daysInMonth; d++) {
+      const isToday = isThisMonth && now.getDate() === d;
+      html += `<div class="cal-cell ${isToday ? 'today' : ''}" onclick="playHarmonicChime([440 + ${d} * 15]); triggerNotification('Selected ${monthNames[month]} ${d}, ${year}')">${d}</div>`;
+    }
+
+    // Next month padding
+    const remaining = 35 - (firstDay + daysInMonth);
+    for (let n = 1; n <= (remaining > 0 ? remaining : remaining + 7); n++) {
+      html += `<div class="cal-cell other-month">${n}</div>`;
+    }
+
+    gridEl.innerHTML = html;
+  }
+
+  function changeCalMonth(delta) {
+    currentCalMonth += delta;
+    if (currentCalMonth < 0) {
+      currentCalMonth = 11;
+      currentCalYear--;
+    } else if (currentCalMonth > 11) {
+      currentCalMonth = 0;
+      currentCalYear++;
+    }
+    renderCalendar(currentCalYear, currentCalMonth);
+    playHarmonicChime([523.25], 0.12);
+  }
+  window.changeCalMonth = changeCalMonth;
+
+  // Initialize Calendar
+  renderCalendar(currentCalYear, currentCalMonth);
+
+  // Pomodoro Focus Clock
+  let pomoSeconds = 25 * 60;
+  let pomoRunning = false;
+  let pomoTimer = null;
+
+  function updatePomoDisplay() {
+    const el = document.getElementById('pomo-display');
+    if (!el) return;
+    const m = Math.floor(pomoSeconds / 60);
+    const s = pomoSeconds % 60;
+    el.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  }
+
+  function togglePomodoro() {
+    pomoRunning = !pomoRunning;
+    const btn = document.getElementById('pomo-toggle-btn');
+    if (pomoRunning) {
+      if (btn) btn.textContent = 'Pause';
+      playHarmonicChime([523.25, 659.25], 0.2);
+      pomoTimer = setInterval(() => {
+        if (pomoSeconds > 0) {
+          pomoSeconds--;
+          updatePomoDisplay();
+        } else {
+          clearInterval(pomoTimer);
+          pomoRunning = false;
+          if (btn) btn.textContent = 'Start';
+          playHarmonicChime([523.25, 659.25, 783.99, 1046.50], 0.8);
+          triggerNotification('Focus Session Complete! Take a 5-minute break.');
+        }
+      }, 1000);
+      triggerNotification('Focus Timer: 25 minutes started');
+    } else {
+      if (btn) btn.textContent = 'Resume';
+      clearInterval(pomoTimer);
+      triggerNotification('Focus Timer paused');
+      playHarmonicChime([392], 0.15);
+    }
+  }
+  window.togglePomodoro = togglePomodoro;
+
+  function resetPomodoro() {
+    clearInterval(pomoTimer);
+    pomoRunning = false;
+    pomoSeconds = 25 * 60;
+    const btn = document.getElementById('pomo-toggle-btn');
+    if (btn) btn.textContent = 'Start';
+    updatePomoDisplay();
+    playHarmonicChime([330], 0.15);
+    triggerNotification('Focus Timer reset to 25:00');
+  }
+  window.resetPomodoro = resetPomodoro;
 
   // Initial focus
   bringToFront(document.getElementById('win-cadence'));

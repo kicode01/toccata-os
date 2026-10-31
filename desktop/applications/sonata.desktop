@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Version=1.5
+Name=Sonata
+GenericName=Acoustic Hi-Fi Audio Player & PipeWire Studio
+Comment=Acoustic Hi-Fi Audio Player & PipeWire Studio
+Icon=multimedia-audio-player
+Exec=toccata-open /Applications/Sonata.app
+Terminal=false
+Categories=Audio;AudioVideo;Player;
+StartupNotify=true
+X-Toccata-ZeroBloat=true
