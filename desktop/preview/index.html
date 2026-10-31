@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toccata OS - Live Desktop Environment</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="dark-mode">
+
+  <!-- Desktop Canvas -->
+  <div id="desktop">
+
+    <!-- Top Global Menu Bar -->
+    <header id="menu-bar">
+      <div class="menu-left">
+        <div class="menu-item logo-item" id="apple-menu-btn">
+          <svg class="toccata-logo" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/>
+          </svg>
+        </div>
+        <div class="menu-item active-app-name" id="active-app-title">Finder</div>
+        <div class="menu-item">File</div>
+        <div class="menu-item">Edit</div>
+        <div class="menu-item">View</div>
+        <div class="menu-item">Go</div>
+        <div class="menu-item">Window</div>
+        <div class="menu-item">Help</div>
+      </div>
+
+      <div class="menu-right">
+        <div class="menu-item icon-btn" id="theme-toggle-btn" title="Toggle Light/Dark Mode">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"/>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+          </svg>
+        </div>
+        <div class="menu-item icon-btn" id="spotlight-btn" title="Search (Cmd + Space)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+        </div>
+        <div class="menu-item icon-btn" id="control-center-btn" title="Control Center">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="4" y1="21" x2="4" y2="14"/>
+            <line x1="4" y1="10" x2="4" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="12"/>
+            <line x1="12" y1="8" x2="12" y2="3"/>
+            <line x1="20" y1="21" x2="20" y2="16"/>
+            <line x1="20" y1="12" x2="20" y2="3"/>
+            <line x1="1" y1="14" x2="7" y2="14"/>
+            <line x1="9" y1="8" x2="15" y2="8"/>
+            <line x1="17" y1="16" x2="23" y2="16"/>
+          </svg>
+        </div>
+        <div class="menu-item clock" id="clock-display">Sun Nov 1 1:30 AM</div>
+      </div>
+    </header>
+
+    <!-- Control Center Popup -->
+    <div id="control-center" class="glass-panel hidden">
+      <div class="cc-grid">
+        <div class="cc-card cc-toggle active" id="wifi-toggle">
+          <span class="cc-icon">📶</span>
+          <div class="cc-info">
+            <div class="cc-label">Wi-Fi</div>
+            <div class="cc-sub">Toccata-5G</div>
+          </div>
+        </div>
+        <div class="cc-card cc-toggle active" id="bt-toggle">
+          <span class="cc-icon">⚡</span>
+          <div class="cc-info">
+            <div class="cc-label">Bluetooth</div>
+            <div class="cc-sub">AirPods Pro</div>
+          </div>
+        </div>
+      </div>
+      <div class="cc-card slider-card">
+        <div class="slider-header">
+          <span>Display Brightness</span>
+          <span id="brightness-val">85%</span>
+        </div>
+        <input type="range" min="20" max="100" value="85" class="glass-slider" id="brightness-slider">
+      </div>
+      <div class="cc-card slider-card">
+        <div class="slider-header">
+          <span>Sound Volume</span>
+          <span id="volume-val">70%</span>
+        </div>
+        <input type="range" min="0" max="100" value="70" class="glass-slider" id="volume-slider">
+      </div>
+    </div>
+
+    <!-- Spotlight Search Overlay -->
+    <div id="spotlight-overlay" class="hidden">
+      <div class="spotlight-card glass-panel">
+        <div class="spotlight-input-row">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input type="text" id="spotlight-input" placeholder="Spotlight Search or math (e.g. 125 * 8)..." autofocus>
+        </div>
+        <div id="spotlight-results">
+          <!-- Dynamic results -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Window 1: Finder (Miller Columns) -->
+    <div class="window glass-panel" id="win-finder" style="top: 80px; left: 100px; width: 780px; height: 460px;">
+      <div class="window-titlebar">
+        <div class="traffic-lights">
+          <button class="tl-btn tl-close" onclick="closeWindow('win-finder')"></button>
+          <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-finder')"></button>
+          <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-finder')"></button>
+        </div>
+        <div class="window-title">Applications</div>
+        <div class="titlebar-placeholder"></div>
+      </div>
+      <div class="window-body finder-body">
+        <div class="finder-sidebar">
+          <div class="sidebar-section">Favorites</div>
+          <div class="sidebar-item active">📁 Applications</div>
+          <div class="sidebar-item">📁 Documents</div>
+          <div class="sidebar-item">📁 Downloads</div>
+          <div class="sidebar-item">📁 Desktop</div>
+          <div class="sidebar-section">Locations</div>
+          <div class="sidebar-item">💻 Macintosh HD</div>
+          <div class="sidebar-item">☁️ iCloud Drive</div>
+        </div>
+        <div class="finder-content">
+          <div class="app-grid">
+            <div class="app-item" ondblclick="openWindow('win-textedit')">
+              <div class="app-icon textedit-icon">📝</div>
+              <div class="app-label">TextEdit.app</div>
+            </div>
+            <div class="app-item" ondblclick="openWindow('win-settings')">
+              <div class="app-icon settings-icon">⚙️</div>
+              <div class="app-label">Settings.app</div>
+            </div>
+            <div class="app-item" ondblclick="openWindow('win-installer')">
+              <div class="app-icon store-icon">📦</div>
+              <div class="app-label">Installer.app</div>
+            </div>
+            <div class="app-item" onclick="triggerNotification('Figma launched')">
+              <div class="app-icon figma-icon">🎨</div>
+              <div class="app-label">Figma.app</div>
+            </div>
+            <div class="app-item" onclick="triggerNotification('Terminal launched')">
+              <div class="app-icon term-icon">💻</div>
+              <div class="app-label">Terminal.app</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Window 2: TextEdit -->
+    <div class="window glass-panel hidden" id="win-textedit" style="top: 140px; left: 320px; width: 620px; height: 400px;">
+      <div class="window-titlebar">
+        <div class="traffic-lights">
+          <button class="tl-btn tl-close" onclick="closeWindow('win-textedit')"></button>
+          <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-textedit')"></button>
+          <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-textedit')"></button>
+        </div>
+        <div class="window-title">Untitled.txt — TextEdit</div>
+        <div class="titlebar-placeholder"></div>
+      </div>
+      <div class="window-body textedit-body">
+        <div class="textedit-toolbar">
+          <button class="tb-btn bold-btn">B</button>
+          <button class="tb-btn italic-btn">I</button>
+          <button class="tb-btn underline-btn">U</button>
+          <span class="tb-divider"></span>
+          <span class="tb-font">Plus Jakarta Sans</span>
+        </div>
+        <textarea class="editor-area" placeholder="Start typing freely in Toccata OS...">Welcome to Toccata OS!
+
+This is a live, interactive preview of your new operating system.
+Notice the details:
+• Left-aligned traffic lights with glow and symbols on hover.
+• Frosted glass translucency with backdrop blur.
+• Centered floating dock with magnification and active indicators.
+• Zero mandatory terminal commands: everything is accessible through visual buttons.
+
+Press Cmd+Space (or Ctrl+Space) or click the Search icon to test Spotlight!</textarea>
+      </div>
+    </div>
+
+    <!-- Window 3: System Settings (Click-first Inspector) -->
+    <div class="window glass-panel hidden" id="win-settings" style="top: 120px; left: 240px; width: 720px; height: 460px;">
+      <div class="window-titlebar">
+        <div class="traffic-lights">
+          <button class="tl-btn tl-close" onclick="closeWindow('win-settings')"></button>
+          <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-settings')"></button>
+          <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-settings')"></button>
+        </div>
+        <div class="window-title">System Settings</div>
+        <div class="titlebar-placeholder"></div>
+      </div>
+      <div class="window-body settings-body">
+        <div class="settings-sidebar">
+          <div class="settings-nav-item active">🎨 Appearance</div>
+          <div class="settings-nav-item">🖥️ Displays</div>
+          <div class="settings-nav-item">🔊 Sound</div>
+          <div class="settings-nav-item">🌐 Network</div>
+          <div class="settings-nav-item">🔒 Privacy & Security</div>
+          <div class="settings-nav-item">🕒 Time Machine Snapshots</div>
+        </div>
+        <div class="settings-content">
+          <h3>Appearance</h3>
+          <p class="settings-desc">Customize the appearance of buttons, windows, and translucent surfaces.</p>
+          <div class="theme-picker">
+            <div class="theme-card light-theme-preview" onclick="setTheme('light')">
+              <div class="theme-box"></div>
+              <span>Light</span>
+            </div>
+            <div class="theme-card dark-theme-preview active" onclick="setTheme('dark')">
+              <div class="theme-box"></div>
+              <span>Dark</span>
+            </div>
+          </div>
+          <div class="settings-row">
+            <div>
+              <div class="row-title">Accent Color</div>
+              <div class="row-desc">Choose your system highlight and button color</div>
+            </div>
+            <div class="accent-dots">
+              <span class="accent-dot blue active" onclick="setAccent('#007aff')"></span>
+              <span class="accent-dot purple" onclick="setAccent('#af52de')"></span>
+              <span class="accent-dot pink" onclick="setAccent('#ff2d55')"></span>
+              <span class="accent-dot green" onclick="setAccent('#34c759')"></span>
+              <span class="accent-dot orange" onclick="setAccent('#ff9500')"></span>
+            </div>
+          </div>
+          <div class="settings-row">
+            <div>
+              <div class="row-title">Hardware-Accelerated Blur</div>
+              <div class="row-desc">Enable vibrant frosted glass on all window surfaces</div>
+            </div>
+            <input type="checkbox" checked class="glass-toggle">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Window 4: Graphical App Installer Dialog -->
+    <div class="window glass-panel hidden" id="win-installer" style="top: 180px; left: 360px; width: 480px; height: 320px;">
+      <div class="window-titlebar">
+        <div class="traffic-lights">
+          <button class="tl-btn tl-close" onclick="closeWindow('win-installer')"></button>
+          <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-installer')"></button>
+          <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-installer')"></button>
+        </div>
+        <div class="window-title">App Installer</div>
+        <div class="titlebar-placeholder"></div>
+      </div>
+      <div class="window-body installer-body">
+        <div class="installer-header">
+          <div class="installer-app-icon">🎨</div>
+          <div>
+            <div class="installer-app-name">Blender 4.2.app</div>
+            <div class="installer-app-sub">Version 4.2.0 • 3D Creative Suite</div>
+          </div>
+        </div>
+        <div class="installer-desc">
+          Ready to install into your Applications. No terminal commands required.
+        </div>
+        <div class="installer-actions">
+          <button class="btn btn-secondary" onclick="closeWindow('win-installer')">Cancel</button>
+          <button class="btn btn-secondary" onclick="triggerNotification('Running Blender once...')">Run Once</button>
+          <button class="btn btn-primary" onclick="triggerNotification('Blender 4.2 installed to /Applications!')">Install to Applications</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating Dock -->
+    <footer id="dock-container">
+      <div id="dock" class="glass-panel">
+        <div class="dock-item" data-app="Finder" onclick="openWindow('win-finder')">
+          <div class="dock-icon finder-dock-icon">📂</div>
+          <div class="dock-dot"></div>
+          <span class="dock-tooltip">Finder</span>
+        </div>
+        <div class="dock-item" data-app="TextEdit" onclick="openWindow('win-textedit')">
+          <div class="dock-icon textedit-dock-icon">📝</div>
+          <div class="dock-dot hidden" id="dot-textedit"></div>
+          <span class="dock-tooltip">TextEdit</span>
+        </div>
+        <div class="dock-item" data-app="Settings" onclick="openWindow('win-settings')">
+          <div class="dock-icon settings-dock-icon">⚙️</div>
+          <div class="dock-dot hidden" id="dot-settings"></div>
+          <span class="dock-tooltip">Settings</span>
+        </div>
+        <div class="dock-item" data-app="Installer" onclick="openWindow('win-installer')">
+          <div class="dock-icon installer-dock-icon">📦</div>
+          <div class="dock-dot hidden" id="dot-installer"></div>
+          <span class="dock-tooltip">App Installer</span>
+        </div>
+        <div class="dock-divider"></div>
+        <div class="dock-item" onclick="triggerNotification('Trash is empty')">
+          <div class="dock-icon trash-dock-icon">🗑️</div>
+          <span class="dock-tooltip">Trash</span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="glass-panel hidden">
+      <span id="toast-msg">Notification message</span>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

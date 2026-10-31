@@ -1,0 +1,793 @@
+/* Toccata OS - Visual Design Language & Materials */
+
+:root {
+  --accent-color: #007aff;
+  --accent-hover: #0062cc;
+  --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
+  /* Dark Mode Defaults */
+  --bg-desktop: radial-gradient(circle at 20% 20%, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+  --glass-bg: rgba(28, 28, 30, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.14);
+  --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.65);
+  --titlebar-bg: rgba(36, 36, 38, 0.85);
+  --menubar-bg: rgba(20, 20, 22, 0.65);
+  --dock-bg: rgba(30, 30, 32, 0.65);
+  --active-card: rgba(255, 255, 255, 0.12);
+}
+
+body.light-mode {
+  --bg-desktop: radial-gradient(circle at 20% 20%, #e0c3fc 0%, #8ec5fc 100%);
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  --text-primary: #1d1d1f;
+  --text-secondary: rgba(0, 0, 0, 0.55);
+  --titlebar-bg: rgba(246, 246, 246, 0.85);
+  --menubar-bg: rgba(255, 255, 255, 0.65);
+  --dock-bg: rgba(255, 255, 255, 0.65);
+  --active-card: rgba(0, 0, 0, 0.06);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+body {
+  font-family: var(--font-family);
+  background: var(--bg-desktop);
+  color: var(--text-primary);
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  transition: background 0.4s ease;
+}
+
+#desktop {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Glass Material utility */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(32px) saturate(190%);
+  -webkit-backdrop-filter: blur(32px) saturate(190%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 14px;
+}
+
+/* ==========================================================================
+   Top Global Menu Bar
+   ========================================================================== */
+#menu-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  background: var(--menubar-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 1000;
+}
+
+.menu-left, .menu-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.menu-item {
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  transition: background 0.15s ease;
+}
+
+.menu-item:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.toccata-logo {
+  width: 15px;
+  height: 15px;
+}
+
+.active-app-name {
+  font-weight: 700;
+}
+
+.icon-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+.clock {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+}
+
+/* ==========================================================================
+   Window Framework & Traffic Lights
+   ========================================================================== */
+.window {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  min-width: 380px;
+  min-height: 240px;
+}
+
+.window.active-window {
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55), 0 0 0 1px var(--accent-color);
+  z-index: 100;
+}
+
+.window-titlebar {
+  height: 38px;
+  background: var(--titlebar-bg);
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  cursor: move;
+}
+
+/* The Traffic Lights */
+.traffic-lights {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tl-btn {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: filter 0.15s ease;
+}
+
+.tl-close {
+  background: #ff5f56;
+  border: 1px solid #e0443e;
+}
+
+.tl-minimize {
+  background: #ffbd2e;
+  border: 1px solid #dea123;
+}
+
+.tl-maximize {
+  background: #27c93f;
+  border: 1px solid #1aab29;
+}
+
+.traffic-lights:hover .tl-close::after {
+  content: '×';
+  font-size: 11px;
+  color: #550000;
+  font-weight: bold;
+}
+
+.traffic-lights:hover .tl-minimize::after {
+  content: '–';
+  font-size: 10px;
+  color: #553300;
+  font-weight: bold;
+}
+
+.traffic-lights:hover .tl-maximize::after {
+  content: '+';
+  font-size: 10px;
+  color: #003300;
+  font-weight: bold;
+}
+
+.window-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  opacity: 0.9;
+}
+
+.titlebar-placeholder {
+  width: 52px; /* balances traffic lights on the left */
+}
+
+.window-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* Finder Body */
+.finder-sidebar {
+  width: 180px;
+  background: rgba(0, 0, 0, 0.08);
+  border-right: 1px solid var(--glass-border);
+  padding: 14px 10px;
+}
+
+.sidebar-section {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin: 12px 0 6px 8px;
+}
+
+.sidebar-item {
+  font-size: 13px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 2px;
+}
+
+.sidebar-item.active, .sidebar-item:hover {
+  background: var(--active-card);
+}
+
+.finder-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.app-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 20px;
+}
+
+.app-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px 4px;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+
+.app-item:hover {
+  background: var(--active-card);
+}
+
+.app-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 8px;
+}
+
+.app-label {
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  word-break: break-all;
+}
+
+/* TextEdit Window */
+.textedit-body {
+  flex-direction: column;
+}
+
+.textedit-toolbar {
+  height: 36px;
+  background: rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+}
+
+.tb-btn {
+  background: none;
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.tb-divider {
+  width: 1px;
+  height: 16px;
+  background: var(--glass-border);
+  margin: 0 4px;
+}
+
+.tb-font {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.editor-area {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 16px;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 1.6;
+  resize: none;
+}
+
+/* Settings Window */
+.settings-body {
+  display: flex;
+}
+
+.settings-sidebar {
+  width: 200px;
+  background: rgba(0, 0, 0, 0.08);
+  border-right: 1px solid var(--glass-border);
+  padding: 14px 10px;
+}
+
+.settings-nav-item {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 4px;
+}
+
+.settings-nav-item.active {
+  background: var(--accent-color);
+  color: white;
+}
+
+.settings-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.settings-content h3 {
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.settings-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+.theme-picker {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.theme-card {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.theme-box {
+  width: 100px;
+  height: 64px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+}
+
+.light-theme-preview .theme-box {
+  background: #f0f0f5;
+  box-shadow: inset 0 0 0 1px #ccc;
+}
+
+.dark-theme-preview .theme-box {
+  background: #1c1c1e;
+  box-shadow: inset 0 0 0 1px #444;
+}
+
+.theme-card.active .theme-box {
+  border-color: var(--accent-color);
+}
+
+.settings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.row-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.row-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.accent-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.accent-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.accent-dot.active {
+  border-color: var(--text-primary);
+}
+
+.accent-dot.blue { background: #007aff; }
+.accent-dot.purple { background: #af52de; }
+.accent-dot.pink { background: #ff2d55; }
+.accent-dot.green { background: #34c759; }
+.accent-dot.orange { background: #ff9500; }
+
+/* Installer Dialog Window */
+.installer-body {
+  flex-direction: column;
+  padding: 24px;
+}
+
+.installer-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.installer-app-icon {
+  font-size: 38px;
+  width: 64px;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.installer-app-name {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.installer-app-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.installer-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 30px;
+}
+
+.installer-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s ease;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-primary {
+  background: var(--accent-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+}
+
+/* ==========================================================================
+   Centered Floating Dock
+   ========================================================================== */
+#dock-container {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+#dock {
+  pointer-events: auto;
+  height: 64px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 20px;
+  background: var(--dock-bg);
+}
+
+.dock-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.dock-item:hover {
+  transform: scale(1.35) translateY(-8px);
+}
+
+.dock-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.dock-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--text-primary);
+  margin-top: 4px;
+  opacity: 0.8;
+}
+
+.dock-divider {
+  width: 1px;
+  height: 38px;
+  background: var(--glass-border);
+  margin: 0 4px;
+}
+
+.dock-tooltip {
+  position: absolute;
+  top: -34px;
+  background: rgba(20, 20, 20, 0.85);
+  backdrop-filter: blur(12px);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.dock-item:hover .dock-tooltip {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   Spotlight Search Overlay
+   ========================================================================== */
+#spotlight-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  justify-content: center;
+  padding-top: 15vh;
+  z-index: 2000;
+}
+
+.spotlight-card {
+  width: 600px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+}
+
+.spotlight-input-row {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--glass-border);
+  gap: 12px;
+}
+
+.search-icon {
+  width: 22px;
+  height: 22px;
+  color: var(--text-secondary);
+}
+
+#spotlight-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+#spotlight-results {
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.result-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.1s ease;
+}
+
+.result-item:hover, .result-item.selected {
+  background: var(--accent-color);
+  color: white;
+}
+
+/* Control Center Popup */
+#control-center {
+  position: absolute;
+  top: 36px;
+  right: 14px;
+  width: 320px;
+  padding: 16px;
+  z-index: 1500;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.cc-card {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.cc-card.active {
+  background: var(--accent-color);
+  color: white;
+}
+
+.cc-icon {
+  font-size: 20px;
+}
+
+.cc-label {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.cc-sub {
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+.slider-card {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  cursor: default;
+}
+
+.slider-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.glass-slider {
+  width: 100%;
+  accent-color: var(--accent-color);
+  cursor: pointer;
+}
+
+/* Toast */
+#toast {
+  position: absolute;
+  top: 42px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 3000;
+  border-radius: 20px;
+  animation: fadeInDown 0.3s ease;
+}
+
+.hidden {
+  display: none !important;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translate(-50%, -10px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
