@@ -1,4 +1,5 @@
-# Toccata OS - Core Package Manifest (Arch Linux Base)
+# Toccata OS - GUI-First System Package Manifest
+# Engineered for zero-terminal operation: buttons, visual toggles, and graphical dialogs.
 
 # 1. Base Kernel & Hardware Drivers
 base
@@ -20,7 +21,7 @@ vulkan-intel
 vulkan-radeon
 nvidia-prime
 
-# 2. Wayland & Graphics Server
+# 2. Wayland Desktop Server & Compositor
 plasma-wayland-session
 plasma-desktop
 kwin
@@ -29,31 +30,48 @@ xorg-xwayland
 qt6-wayland
 qt5-wayland
 
-# 3. macOS Experience Subsystems (Global Menu, Dock, Blur)
+# 3. GUI System Settings & Popups (Zero-terminal configuration)
+systemsettings
+plasma-nm             # Graphical Wi-Fi & Network Tray Menu
+plasma-pa             # Graphical Sound & Volume Slider Popup
+bluedevil             # Graphical Bluetooth Pairing & Battery Inspector
+kinfocenter           # "About This Mac" / System Specs Overview
+plasma-systemmonitor  # Graphical Task & Resource Inspector (CPU/RAM/GPU)
+powerdevil            # Battery & Power Profile Sliders (Eco, Balanced, Performance)
+
+# 4. Graphical App Store & Software Management
+discover
+flatpak
+plasma-discover-flatpak-backend
+packagekit-qt5
+
+# 5. Core GUI Applications (Click-and-Done)
+dolphin               # Visual Finder File Browser (Miller Columns, QuickLook)
+dolphin-plugins       # Git & Btrfs snapshot badges in file manager
+ark                   # One-Click Zip / Tar Extractor & Compressor
+partitionmanager      # Visual Disk Utility (Format, Partition, Storage Bars)
+spectacle             # Visual Screenshot & Screen Recording Tool
+gwenview              # Photo & Image Inspector
+okular                # PDF & Document Reader
+kcalc                 # Visual Calculator
+kwrite                # Visual Text Editor
+firefox               # Web Browser
+
+# 6. Time Machine Snapshot Restoration (Visual Rollback)
+btrfs-assistant       # Graphical Snapshot & Backup Timeline Manager
+snapper
+
+# 7. Toccata Mac Ergonomics & AppMenu Support
 appmenu-gtk-module
 libdbusmenu-glib
 libdbusmenu-gtk3
-plasma-systemmonitor
-krunner
-dolphin
-konsole
-sushi
-kquickimageeditor
-kio-admin
+krunner               # Spotlight Search Overlay (Cmd + Space)
+sushi                 # Spacebar QuickLook Preview Daemon
 
-# 4. Utilities, Fonts & Multimedia
-git
-curl
-wget
-nano
-vim
+# 8. Fonts, Runtimes & Python GUI
 python
 python-pip
+tk                    # Python Tkinter GUI Toolkit
 ttf-dejavu
 noto-fonts
 noto-fonts-emoji
-firefox
-htop
-neofetch
-pciutils
-usbutils
