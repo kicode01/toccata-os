@@ -665,15 +665,43 @@
       return;
     }
 
-    const appIndex = [
-      { name: 'Cadence', icon: '📂', id: 'win-cadence' },
-      { name: 'Scribe', icon: '📝', id: 'win-scribe' },
-      { name: 'Tempo', icon: '⚡', id: 'win-tempo' },
-      { name: 'System Settings', icon: '⚙️', id: 'win-settings' },
-      { name: 'Gallery', icon: '💎', id: 'win-installer' }
+    const lowerQ = query.toLowerCase();
+
+    // Windows Commands & Muscle Memory Intelligent Bridge
+    const winCommands = [
+      { cmd: 'ipconfig', icon: '🖧', title: 'ipconfig — 192.168.1.145 (Toccata-5G Fiber)', action: "triggerNotification('IP: 192.168.1.145 • Gateway: 192.168.1.1 • DNS: 1.1.1.1'); toggleSpotlight();" },
+      { cmd: 'taskmgr', icon: '⚡', title: 'Task Manager → Tempo Activity Monitor', action: "openWindow('win-tempo'); toggleSpotlight();" },
+      { cmd: 'tasklist', icon: '⚡', title: 'tasklist → Tempo Activity Monitor', action: "openWindow('win-tempo'); toggleSpotlight();" },
+      { cmd: 'explorer', icon: '📂', title: 'File Explorer → Cadence Files', action: "openWindow('win-cadence'); toggleSpotlight();" },
+      { cmd: 'dir', icon: '📂', title: 'dir / ls → Cadence File System', action: "openWindow('win-cadence'); toggleSpotlight();" },
+      { cmd: 'notepad', icon: '📝', title: 'Notepad → Scribe Prose Canvas', action: "openWindow('win-scribe'); toggleSpotlight();" },
+      { cmd: 'control', icon: '⚙️', title: 'Control Panel → System Settings', action: "openWindow('win-settings'); toggleSpotlight();" },
+      { cmd: 'winget', icon: '💎', title: 'winget install → Gallery & Installer Sheet', action: "openWindow('win-installer'); toggleSpotlight();" },
+      { cmd: 'systeminfo', icon: 'ℹ️', title: 'systeminfo → Toccata OS (6.11 XanMod • 120Hz Wayland)', action: "triggerNotification('Toccata OS 1.0 • 800MB Idle RAM • PipeWire 0.7ms'); toggleSpotlight();" }
     ];
 
-    const lowerQ = query.toLowerCase();
+    const winMatch = winCommands.find(w => w.cmd.startsWith(lowerQ) || lowerQ.startsWith(w.cmd));
+    if (winMatch) {
+      spotlightResults.innerHTML = `
+        <div class="result-item selected" onclick="${winMatch.action}">
+          <span style="font-size: 22px;">${winMatch.icon}</span>
+          <div>
+            <div style="font-weight: 700; font-size: 15px;">${winMatch.title}</div>
+            <div style="font-size: 11px; opacity: 0.75;">Windows Command Bridge • Instant Zero-Terminal Execution</div>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    const appIndex = [
+      { name: 'Cadence (Files & Explorer)', icon: '📂', id: 'win-cadence' },
+      { name: 'Scribe (Notes & Code)', icon: '📝', id: 'win-scribe' },
+      { name: 'Tempo (Task Manager & Activity)', icon: '⚡', id: 'win-tempo' },
+      { name: 'System Settings (Control Panel)', icon: '⚙️', id: 'win-settings' },
+      { name: 'Gallery & Installer (winget)', icon: '💎', id: 'win-installer' }
+    ];
+
     const matches = appIndex.filter(a => a.name.toLowerCase().includes(lowerQ));
 
     if (matches.length > 0) {
@@ -685,7 +713,7 @@
     } else {
       spotlightResults.innerHTML = `
         <div style="padding: 14px; color: var(--text-secondary); font-size: 13px;">
-          Search Google or Web for "${query}"
+          Search web, files, or Windows command for "${query}"
         </div>
       `;
     }
