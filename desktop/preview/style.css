@@ -191,6 +191,62 @@ body {
   background: rgba(255, 255, 255, 0.14);
 }
 
+/* Toccata Apple-Style System Dropdown */
+.toccata-system-dropdown {
+  position: absolute;
+  top: 30px;
+  left: 10px;
+  width: 230px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(40px) saturate(210%);
+  -webkit-backdrop-filter: blur(40px) saturate(210%);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+  border-radius: 9px;
+  padding: 5px;
+  z-index: 9999;
+  animation: menuDrop 0.14s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes menuDrop {
+  from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.menu-dropdown-item {
+  padding: 5px 12px;
+  border-radius: 5px;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  color: var(--text-primary);
+  user-select: none;
+  transition: background 0.08s ease, color 0.08s ease;
+}
+
+.menu-dropdown-item:hover {
+  background: var(--accent-color);
+  color: white;
+}
+
+.menu-dropdown-item:hover .menu-shortcut {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.menu-dropdown-separator {
+  height: 1px;
+  background: var(--glass-border);
+  margin: 4px 6px;
+}
+
+.menu-shortcut {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
 /* The Toccata Tuning Logo in Apple Cyan/Sapphire */
 .toccata-tuning-logo {
   width: 15px;

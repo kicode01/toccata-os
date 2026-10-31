@@ -785,11 +785,17 @@
         closeQuickLook();
         return;
       }
+      const shutModal = document.getElementById('shutdown-modal');
+      if (shutModal && !shutModal.classList.contains('hidden')) {
+        closeShutdownModal();
+        return;
+      }
       const fqSheet = document.getElementById('tempo-force-quit-sheet');
       if (fqSheet && !fqSheet.classList.contains('hidden')) {
         cancelForceQuit();
         return;
       }
+      if (isToccataMenuOpen) closeToccataMenu();
       if (isSpotlightOpen) toggleSpotlight();
       if (isControlCenterOpen) {
         isControlCenterOpen = false;
@@ -866,6 +872,80 @@
       }
     }
   });
+
+  // ==========================================================================
+  // 9B. TOCCATA APPLE-STYLE SYSTEM MENU & SHUTDOWN ENGINE
+  // ==========================================================================
+  let isToccataMenuOpen = false;
+  const toccataSystemMenu = document.getElementById('toccata-system-menu');
+
+  function toggleToccataMenu() {
+    isToccataMenuOpen = !isToccataMenuOpen;
+    toccataSystemMenu?.classList.toggle('hidden', !isToccataMenuOpen);
+    if (isToccataMenuOpen) {
+      playHarmonicChime([523.25], 0.12);
+    }
+  }
+  window.toggleToccataMenu = toggleToccataMenu;
+
+  function closeToccataMenu() {
+    isToccataMenuOpen = false;
+    toccataSystemMenu?.classList.add('hidden');
+  }
+  window.closeToccataMenu = closeToccataMenu;
+
+  document.addEventListener('pointerdown', (e) => {
+    if (isToccataMenuOpen && !e.target.closest('#toccata-menu-btn') && !e.target.closest('#toccata-system-menu')) {
+      closeToccataMenu();
+    }
+  });
+
+  function promptShutdown() {
+    const modal = document.getElementById('shutdown-modal');
+    modal?.classList.remove('hidden');
+    playHarmonicChime([392, 330, 261.63], 0.3);
+  }
+  window.promptShutdown = promptShutdown;
+
+  function closeShutdownModal() {
+    document.getElementById('shutdown-modal')?.classList.add('hidden');
+    playHarmonicChime([440], 0.1);
+  }
+  window.closeShutdownModal = closeShutdownModal;
+
+  function exitToWindows() {
+    playHarmonicChime([440, 330, 220, 164.81], 0.6);
+    triggerNotification('Shutting down Toccata OS...');
+    setTimeout(() => {
+      window.close();
+      // Graceful fallback if browser restricts script close
+      document.body.innerHTML = `
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#09090b;color:#a1a1aa;font-family:-apple-system,BlinkMacSystemFont,sans-serif;text-align:center;user-select:none;">
+          <div style="font-size:52px;margin-bottom:16px;">⏻</div>
+          <h2 style="color:white;font-size:24px;margin-bottom:8px;font-weight:700;">Toccata OS Terminated</h2>
+          <p style="font-size:14px;max-width:400px;line-height:1.6;margin-bottom:24px;color:#71717a;">
+            You can safely close this window or press <strong style="color:white;">Alt + F4</strong> to return to your Windows desktop.
+          </p>
+          <button onclick="location.reload()" style="background:#007aff;color:white;border:none;padding:10px 22px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(0,122,255,0.4);">Restart Desktop</button>
+        </div>
+      `;
+    }, 350);
+  }
+  window.exitToWindows = exitToWindows;
+
+  function toggleSleepMode() {
+    const overlay = document.getElementById('sleep-overlay');
+    overlay?.classList.remove('hidden');
+    playHarmonicChime([330, 220], 0.4);
+  }
+  window.toggleSleepMode = toggleSleepMode;
+
+  function wakeFromSleep() {
+    const overlay = document.getElementById('sleep-overlay');
+    overlay?.classList.add('hidden');
+    playHarmonicChime([440, 554.37, 659.25], 0.3);
+  }
+  window.wakeFromSleep = wakeFromSleep;
 
   // ==========================================================================
   // 10. CONTROL CENTER POPUP

@@ -17,7 +17,7 @@
     <header id="menu-bar">
       <div class="menu-left">
         <!-- Toccata Signature Tuning Fork Emblem -->
-        <div class="menu-item logo-item" id="toccata-menu-btn" title="Toccata System Menu">
+        <div class="menu-item logo-item" id="toccata-menu-btn" title="Toccata System Menu" onclick="toggleToccataMenu()">
           <svg class="toccata-tuning-logo" viewBox="0 0 100 100" fill="none">
             <path d="M28 20V50C28 62 38 72 50 72C62 72 72 62 72 50V20" stroke="url(#blue-toccata)" stroke-width="8" stroke-linecap="round"/>
             <path d="M50 72V90" stroke="url(#blue-toccata)" stroke-width="8" stroke-linecap="round"/>
@@ -31,6 +31,35 @@
               </linearGradient>
             </defs>
           </svg>
+        </div>
+
+        <!-- Toccata Apple-Style System Dropdown -->
+        <div class="toccata-system-dropdown hidden" id="toccata-system-menu">
+          <div class="menu-dropdown-item" onclick="openWindow('win-settings'); switchSettingsTab('general'); closeToccataMenu();">
+            <span>About Toccata OS</span>
+          </div>
+          <div class="menu-dropdown-separator"></div>
+          <div class="menu-dropdown-item" onclick="openWindow('win-settings'); closeToccataMenu();">
+            <span>System Settings...</span>
+          </div>
+          <div class="menu-dropdown-item" onclick="openWindow('win-installer'); closeToccataMenu();">
+            <span>App Store &amp; Gallery...</span>
+          </div>
+          <div class="menu-dropdown-separator"></div>
+          <div class="menu-dropdown-item" onclick="openWindow('win-tempo'); promptForceQuit(); closeToccataMenu();">
+            <span>Force Quit Applications...</span>
+            <span class="menu-shortcut">⌥⌘⎋</span>
+          </div>
+          <div class="menu-dropdown-separator"></div>
+          <div class="menu-dropdown-item" onclick="toggleSleepMode(); closeToccataMenu();">
+            <span>Sleep</span>
+          </div>
+          <div class="menu-dropdown-item" onclick="location.reload();">
+            <span>Restart Desktop...</span>
+          </div>
+          <div class="menu-dropdown-item" onclick="promptShutdown(); closeToccataMenu();" style="color: #ff453a;">
+            <span>Shut Down / Exit to Windows...</span>
+          </div>
         </div>
 
         <div class="menu-item active-app-name" id="active-app-title">Cadence</div>
@@ -1799,6 +1828,27 @@ Type 'help' to view available commands.</div>
     <!-- Notification Toast -->
     <div id="toast" class="glass-panel hidden">
       <span id="toast-msg">Notification</span>
+    </div>
+
+    <!-- macOS-Style Shutdown / Exit Confirmation Modal -->
+    <div class="quick-look-backdrop hidden" id="shutdown-modal" style="z-index: 99999;" onclick="if(event.target===this) closeShutdownModal()">
+      <div class="quick-look-window glass-panel" style="width: 440px; height: auto; padding: 26px; text-align: center; box-shadow: 0 24px 60px rgba(0,0,0,0.6);">
+        <div style="font-size: 42px; margin-bottom: 12px; filter: drop-shadow(0 2px 8px rgba(255, 69, 58, 0.4));">⏻</div>
+        <h3 style="font-size: 19px; font-weight: 700; margin-bottom: 8px;">Shut Down Toccata OS?</h3>
+        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 24px;">
+          Are you sure you want to shut down the desktop environment and return to Windows?
+        </p>
+        <div style="display: flex; justify-content: center; gap: 12px;">
+          <button class="btn btn-secondary" onclick="closeShutdownModal()" style="min-width: 90px; padding: 7px 16px;">Cancel</button>
+          <button class="btn btn-secondary" onclick="location.reload()" style="min-width: 90px; padding: 7px 16px;">Restart</button>
+          <button class="btn btn-primary" onclick="exitToWindows()" style="background: #ff3b30; min-width: 130px; padding: 7px 16px;">Exit to Windows</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sleep Display Overlay -->
+    <div id="sleep-overlay" class="hidden" onclick="wakeFromSleep()" style="position: fixed; inset: 0; background: black; z-index: 999999; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: opacity 0.4s ease;">
+      <div style="color: rgba(255,255,255,0.4); font-size: 13px; font-weight: 500;">Display in Sleep Mode &bull; Click anywhere to wake</div>
     </div>
 
   </div>
