@@ -969,10 +969,10 @@
 
   function switchCadenceFolder(folderId) {
     const folders = {
-      'apps': { view: 'cadence-view-apps', title: 'Cadence — Applications', status: '6 items • 418.5 GB available on Toccata Core' },
-      'docs': { view: 'cadence-view-docs', title: 'Cadence — Documents', status: '4 items • 418.5 GB available on Toccata Core' },
-      'downloads': { view: 'cadence-view-downloads', title: 'Cadence — Downloads', status: '3 items • 418.5 GB available on Toccata Core' },
-      'disk': { view: 'cadence-view-disk', title: 'Cadence — Toccata Core (NVMe Storage)', status: '1.0 TB Total • 418.5 GB Available • Btrfs Compressed' }
+      'apps': { view: 'cadence-view-apps', title: 'Cadence — Applications', status: '10 items • 418.5 GB available on Toccata Core', path: 'Applications' },
+      'docs': { view: 'cadence-view-docs', title: 'Cadence — Documents', status: '4 items • 418.5 GB available on Toccata Core', path: 'Documents' },
+      'downloads': { view: 'cadence-view-downloads', title: 'Cadence — Downloads', status: '3 items • 418.5 GB available on Toccata Core', path: 'Downloads' },
+      'disk': { view: 'cadence-view-disk', title: 'Cadence — Toccata Core (NVMe Storage)', status: '1.0 TB Total • 418.5 GB Available • Btrfs Compressed', path: 'Toccata Core' }
     };
 
     const target = folders[folderId];
@@ -995,10 +995,13 @@
     });
 
     const titleEl = document.getElementById('cadence-toolbar-title');
-    if (titleEl) titleEl.textContent = target.title;
+    if (titleEl) titleEl.innerHTML = `<span class="proxy-icon">📂</span>${target.title}`;
 
     const statusEl = document.querySelector('.finder-statusbar span');
     if (statusEl) statusEl.textContent = target.status;
+
+    const pathEl = document.getElementById('finder-current-path');
+    if (pathEl) pathEl.textContent = target.path;
 
     playHarmonicChime([523.25], 0.15);
   }
@@ -1368,10 +1371,16 @@
   }
   window.confirmForceQuit = confirmForceQuit;
 
-  // --- F. SYSTEM SETTINGS TAB CONTROLLER ---
+  // --- F. SYSTEM SETTINGS TAB CONTROLLER (macOS Sequoia Multi-Category Suite) ---
+  const allSettingsTabs = [
+    'wifi', 'bluetooth', 'network',
+    'appearance', 'controlcenter', 'desktopdock', 'wallpaper',
+    'displays', 'sound', 'battery',
+    'general', 'snapshots', 'security', 'windowscompat'
+  ];
+
   function switchSettingsTab(tabKey) {
-    const tabs = ['appearance', 'displays', 'sound', 'snapshots', 'security'];
-    tabs.forEach(t => {
+    allSettingsTabs.forEach(t => {
       const nav = document.getElementById(`tab-nav-${t}`);
       const content = document.getElementById(`settings-tab-${t}`);
       if (t === tabKey) {
@@ -1385,6 +1394,27 @@
     playHarmonicChime([440, 554.37], 0.18);
   }
   window.switchSettingsTab = switchSettingsTab;
+
+  function filterSettings(query) {
+    const q = (query || '').toLowerCase().trim();
+    const navItems = document.querySelectorAll('.settings-sidebar .settings-nav-item');
+    const sectionTitles = document.querySelectorAll('.settings-sidebar .settings-section-title');
+
+    navItems.forEach(item => {
+      const text = item.textContent.toLowerCase();
+      if (!q || text.includes(q)) {
+        item.style.display = 'flex';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+
+    // Hide section headers if all items in section hidden
+    sectionTitles.forEach(title => {
+      title.style.display = q ? 'none' : 'block';
+    });
+  }
+  window.filterSettings = filterSettings;
 
   // ==========================================================================
   // 14. HORIZON SOVEREIGN BROWSER ENGINE (Zero Telemetry, WebKit Aesthetics)

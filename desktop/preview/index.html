@@ -200,7 +200,7 @@
     <!-- ====================================================================
          WINDOW 1: CADENCE (The Unified File Browser)
          ==================================================================== -->
-    <div class="window glass-panel" id="win-cadence" style="top: 70px; left: 80px; width: 880px; height: 520px;">
+    <div class="window glass-panel" id="win-cadence" style="top: 60px; left: 100px; width: 860px; height: 530px;">
       <div class="window-titlebar">
         <!-- Iconic Apple Traffic Lights -->
         <div class="traffic-lights">
@@ -212,7 +212,7 @@
         <div class="toolbar-nav-group">
           <button class="toolbar-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg></button>
           <button class="toolbar-icon-btn" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></button>
-          <span class="toolbar-title" id="cadence-toolbar-title">Cadence &mdash; Applications</span>
+          <span class="toolbar-title" id="cadence-toolbar-title"><span class="proxy-icon">📂</span>Cadence &mdash; Applications</span>
         </div>
 
         <!-- Quick Look & View Controls -->
@@ -405,6 +405,16 @@
         </div>
       </div>
 
+      <div class="finder-pathbar">
+        <span>📁 Toccata Core</span>
+        <span>&rsaquo;</span>
+        <span>Users</span>
+        <span>&rsaquo;</span>
+        <span>toccata</span>
+        <span>&rsaquo;</span>
+        <span id="finder-current-path" style="font-weight: 600; color: var(--text-primary);">Applications</span>
+      </div>
+
       <footer class="finder-statusbar">
         <span>6 items &bull; 418.5 GB available on Toccata Core</span>
       </footer>
@@ -418,14 +428,14 @@
     <!-- ====================================================================
          WINDOW 2: SCRIBE (Prose & Code Canvas)
          ==================================================================== -->
-    <div class="window glass-panel hidden" id="win-scribe" style="top: 130px; left: 340px; width: 680px; height: 450px;">
+    <div class="window glass-panel hidden" id="win-scribe" style="top: 85px; left: 240px; width: 720px; height: 490px;">
       <div class="window-titlebar">
         <div class="traffic-lights">
           <button class="tl-btn tl-close" onclick="closeWindow('win-scribe')"></button>
           <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-scribe')"></button>
           <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-scribe')"></button>
         </div>
-        <div class="window-title">Scribe &mdash; Toccata Manifesto.md</div>
+        <div class="window-title"><span class="proxy-icon">📝</span>Scribe &mdash; Toccata Manifesto.md</div>
         <div class="titlebar-placeholder"></div>
       </div>
       <div class="window-body textedit-body" style="display: flex; flex-direction: column; height: calc(100% - 42px);">
@@ -484,35 +494,222 @@ Every administrative task is accessible visually:
     <!-- ====================================================================
          WINDOW 3: SYSTEM SETTINGS (The Control Center)
          ==================================================================== -->
-    <div class="window glass-panel hidden" id="win-settings" style="top: 100px; left: 220px; width: 780px; height: 490px;">
+    <div class="window glass-panel hidden" id="win-settings" style="top: 65px; left: 180px; width: 840px; height: 570px;">
       <div class="window-titlebar">
         <div class="traffic-lights">
           <button class="tl-btn tl-close" onclick="closeWindow('win-settings')"></button>
           <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-settings')"></button>
           <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-settings')"></button>
         </div>
-        <div class="window-title">System Settings</div>
+        <div class="window-title"><span class="proxy-icon">⚙️</span>System Settings</div>
         <div class="titlebar-placeholder"></div>
       </div>
       <div class="window-body settings-body">
         <div class="settings-sidebar">
+          <div class="settings-search-wrap">
+            <svg class="settings-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
+            <input type="text" class="settings-search-input" id="settings-search-box" placeholder="Search" oninput="filterSettings(this.value)">
+          </div>
+
           <div class="settings-user-card">
             <div class="user-avatar">TO</div>
             <div class="user-info">
               <div class="user-name">Toccata User</div>
-              <div class="user-sub">Administrator</div>
+              <div class="user-sub">Administrator &bull; Local Silicon</div>
             </div>
           </div>
-          <div class="settings-nav-group">
-            <div class="settings-nav-item active" id="tab-nav-appearance" onclick="switchSettingsTab('appearance')">🎨 Appearance</div>
-            <div class="settings-nav-item" id="tab-nav-displays" onclick="switchSettingsTab('displays')">🖥️ Displays & Retina</div>
-            <div class="settings-nav-item" id="tab-nav-sound" onclick="switchSettingsTab('sound')">🔊 Sound & Audio Engine</div>
-            <div class="settings-nav-item" id="tab-nav-snapshots" onclick="switchSettingsTab('snapshots')">🕒 Time Capsule Snapshots</div>
-            <div class="settings-nav-item" id="tab-nav-security" onclick="switchSettingsTab('security')">🔒 Security & Permissions</div>
+
+          <!-- Section 1: Connectivity -->
+          <div class="settings-section-title">Connectivity</div>
+          <div class="settings-nav-item" id="tab-nav-wifi" onclick="switchSettingsTab('wifi')">
+            <div class="settings-nav-badge" style="background: #007aff;">📶</div>
+            <span>Wi-Fi</span>
+          </div>
+          <div class="settings-nav-item" id="tab-nav-bluetooth" onclick="switchSettingsTab('bluetooth')">
+            <div class="settings-nav-badge" style="background: #007aff;">🌐</div>
+            <span>Bluetooth</span>
+          </div>
+          <div class="settings-nav-item" id="tab-nav-network" onclick="switchSettingsTab('network')">
+            <div class="settings-nav-badge" style="background: #34c759;">🔌</div>
+            <span>Network</span>
+          </div>
+
+          <!-- Section 2: Personalization -->
+          <div class="settings-section-title">Personalization</div>
+          <div class="settings-nav-item active" id="tab-nav-appearance" onclick="switchSettingsTab('appearance')">
+            <div class="settings-nav-badge" style="background: #5856d6;">🎨</div>
+            <span>Appearance</span>
+          </div>
+          <div class="settings-nav-item" id="tab-nav-controlcenter" onclick="switchSettingsTab('controlcenter')">
+            <div class="settings-nav-badge" style="background: #af52de;">🎛️</div>
+            <span>Control Center</span>
+          </div>
+          <div class="settings-nav-item" id="tab-nav-desktopdock" onclick="switchSettingsTab('desktopdock')">
+            <div class="settings-nav-badge" style="background: #007aff;">🖥️</div>
+            <span>Desktop &amp; Dock</span>
+          </div>
+          <div class="settings-nav-item" id="tab-nav-wallpaper" onclick="switchSettingsTab('wallpaper')">
+            <div class="settings-nav-badge" style="background: #ff2d55;">🌄</div>
+            <span>Wallpaper</span>
+          </div>
+
+          <!-- Section 3: Hardware & Audio -->
+          <div class="settings-section-title">Hardware &amp; Audio</div>
+          <div class="settings-nav-item" id="tab-nav-displays" onclick="switchSettingsTab('displays')">
+            <div class="settings-nav-badge" style="background: #38bdf8;">📺</div>
+            <span>Displays &amp; Retina</span>
+          </div>
+          <div class="settings-nav-item" id="tab-nav-sound" onclick="switchSettingsTab('sound')">
+            <div class="settings-nav-badge" style="background: #ff3b30;">🔊</div>
+            <span>Sound &amp; PipeWire</span>
+          </div>
+          <div class="settings-nav-item" id="tab-nav-battery" onclick="switchSettingsTab('battery')">
+            <div class="settings-nav-badge" style="background: #34c759;">🔋</div>
+            <span>Battery &amp; Energy</span>
+          </div>
+
+          <!-- Section 4: System & Security -->
+          <div class="settings-section-title">System &amp; Security</div>
+          <div class="settings-nav-item" id="tab-nav-general" onclick="switchSettingsTab('general')">
+            <div class="settings-nav-badge" style="background: #8e8e93;">⚙️</div>
+            <span>General &amp; About</span>
+          </div>
+          <div class="settings-nav-item" id="tab-nav-snapshots" onclick="switchSettingsTab('snapshots')">
+            <div class="settings-nav-badge" style="background: #af52de;">🕒</div>
+            <span>Time Capsule</span>
+          </div>
+          <div class="settings-nav-item" id="tab-nav-security" onclick="switchSettingsTab('security')">
+            <div class="settings-nav-badge" style="background: #007aff;">🔒</div>
+            <span>Privacy &amp; Security</span>
+          </div>
+          <div class="settings-nav-item" id="tab-nav-windowscompat" onclick="switchSettingsTab('windowscompat')">
+            <div class="settings-nav-badge" style="background: #ff9500;">🪟</div>
+            <span>Windows Subsystem</span>
           </div>
         </div>
-        <div class="settings-content">
-          <!-- Tab 1: Appearance -->
+
+        <div class="settings-content" id="settings-main-pane">
+          <!-- Tab 1: Wi-Fi -->
+          <div id="settings-tab-wifi" class="hidden">
+            <h3>Wi-Fi</h3>
+            <p class="settings-desc">Manage wireless network connections and private MAC addressing.</p>
+            <div class="settings-group-card">
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Wi-Fi Radio</div>
+                  <div class="row-desc">Connected to <strong>Toccata-5G</strong> (802.11ax Wi-Fi 6E)</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" checked onchange="triggerNotification(this.checked ? 'Wi-Fi: Enabled' : 'Wi-Fi: Disabled')">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">IP Address</div>
+                  <div class="row-desc">192.168.1.145 &bull; Subnet: 255.255.255.0 &bull; Gateway: 192.168.1.1</div>
+                </div>
+                <span class="status-text" style="color: #34c759; font-weight: 700;">DHCP Active</span>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Private MAC Address</div>
+                  <div class="row-desc">Rotates hardware address to block public network tracking</div>
+                </div>
+                <span class="status-text" style="color: var(--accent-color); font-weight: 700;">Randomized</span>
+              </div>
+            </div>
+
+            <div style="font-weight: 700; font-size: 13px; margin: 16px 0 8px;">Known Networks</div>
+            <div class="settings-group-card">
+              <div class="settings-row">
+                <div><strong>Toccata-5G</strong> (Current Network)</div>
+                <span style="color: #34c759; font-size: 12px; font-weight: 600;">Connected</span>
+              </div>
+              <div class="settings-row">
+                <div>Studio-Audio-Pro</div>
+                <span style="color: var(--text-secondary); font-size: 12px;">Auto-Join</span>
+              </div>
+              <div class="settings-row">
+                <div>iPhone Hotspot</div>
+                <span style="color: var(--text-secondary); font-size: 12px;">Ask to Join</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 2: Bluetooth -->
+          <div id="settings-tab-bluetooth" class="hidden">
+            <h3>Bluetooth</h3>
+            <p class="settings-desc">Pair and manage wireless studio accessories, audio peripherals, and input devices.</p>
+            <div class="settings-group-card">
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Bluetooth Radio</div>
+                  <div class="row-desc">Discoverable as &ldquo;Toccata Studio Pro&rdquo;</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" checked onchange="triggerNotification(this.checked ? 'Bluetooth: Active' : 'Bluetooth: Off')">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+
+            <div style="font-weight: 700; font-size: 13px; margin: 16px 0 8px;">My Devices</div>
+            <div class="settings-group-card">
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">🎧 AirPods Pro</div>
+                  <div class="row-desc">Spatial Audio &bull; Battery 98% (Left: 96%, Right: 100%)</div>
+                </div>
+                <button class="btn btn-secondary" style="font-size: 11px; padding: 3px 10px;" onclick="triggerNotification('AirPods Pro disconnected')">Disconnect</button>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">⌨️ Magic Keyboard with Touch ID</div>
+                  <div class="row-desc">Connected &bull; Battery 84%</div>
+                </div>
+                <button class="btn btn-secondary" style="font-size: 11px; padding: 3px 10px;" onclick="triggerNotification('Keyboard disconnected')">Disconnect</button>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">🎛️ Studio BLE MIDI Controller</div>
+                  <div class="row-desc">Low Latency Profile Active</div>
+                </div>
+                <span style="color: #34c759; font-size: 12px; font-weight: 600;">Ready</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 3: Network -->
+          <div id="settings-tab-network" class="hidden">
+            <h3>Network</h3>
+            <p class="settings-desc">Physical Ethernet, firewall rules, and encrypted DNS transport.</p>
+            <div class="settings-group-card">
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Ethernet 2.5GbE (PCIe)</div>
+                  <div class="row-desc">Connected &bull; 2,500 Mbps Full Duplex &bull; Realtek RTL8125</div>
+                </div>
+                <span class="status-text" style="color: #34c759; font-weight: 700;">Active</span>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Hardware Stateful Firewall</div>
+                  <div class="row-desc">Drop all unsolicited inbound connections and ICMP discovery</div>
+                </div>
+                <span class="status-text" style="color: #34c759; font-weight: 700;">Active</span>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">DNS-over-HTTPS (DoH)</div>
+                  <div class="row-desc">Prevents ISP DNS snooping and request hijacking</div>
+                </div>
+                <span class="status-text" style="color: var(--accent-color); font-weight: 700;">Cloudflare (1.1.1.1)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 4: Appearance -->
           <div id="settings-tab-appearance">
             <h3>Appearance</h3>
             <p class="settings-desc">Select how buttons, controls, and frosted glass vibrancy render.</p>
@@ -528,123 +725,343 @@ Every administrative task is accessible visually:
               </div>
             </div>
 
-            <div class="settings-row">
-              <div>
-                <div class="row-title">Accent Color</div>
-                <div class="row-desc">System highlight color for buttons, focus rings, and dock active dots</div>
+            <div class="settings-group-card">
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Accent Color</div>
+                  <div class="row-desc">System highlight color for buttons, focus rings, and dock active dots</div>
+                </div>
+                <div class="accent-dots">
+                  <span class="accent-dot blue active" onclick="setAccent('#007aff')" title="System Blue"></span>
+                  <span class="accent-dot purple" onclick="setAccent('#af52de')" title="System Purple"></span>
+                  <span class="accent-dot pink" onclick="setAccent('#ff2d55')" title="System Pink"></span>
+                  <span class="accent-dot green" onclick="setAccent('#34c759')" title="System Green"></span>
+                  <span class="accent-dot orange" onclick="setAccent('#ff9500')" title="System Orange"></span>
+                </div>
               </div>
-              <div class="accent-dots">
-                <span class="accent-dot blue active" onclick="setAccent('#007aff')" title="System Blue"></span>
-                <span class="accent-dot purple" onclick="setAccent('#af52de')" title="System Purple"></span>
-                <span class="accent-dot pink" onclick="setAccent('#ff2d55')" title="System Pink"></span>
-                <span class="accent-dot green" onclick="setAccent('#34c759')" title="System Green"></span>
-                <span class="accent-dot orange" onclick="setAccent('#ff9500')" title="System Orange"></span>
-              </div>
-            </div>
 
-            <div class="settings-row">
-              <div>
-                <div class="row-title">Toccata Signature Porcelain Cursor</div>
-                <div class="row-desc">Bespoke aerodynamic arrow with inset sapphire resonator node</div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Toccata Signature Porcelain Cursor</div>
+                  <div class="row-desc">Bespoke aerodynamic arrow with inset sapphire resonator node</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="setting-cursor-toggle" checked onchange="toggleCustomCursor(this.checked)">
+                  <span class="slider round"></span>
+                </label>
               </div>
-              <label class="switch">
-                <input type="checkbox" id="setting-cursor-toggle" checked onchange="toggleCustomCursor(this.checked)">
-                <span class="slider round"></span>
-              </label>
-            </div>
 
-            <div class="settings-row">
-              <div>
-                <div class="row-title">Acoustic Touch Feedback ("To Touch")</div>
-                <div class="row-desc">Displays a subtle harmonic resonance ring at the pointer tip when clicking</div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Acoustic Touch Feedback (&ldquo;To Touch&rdquo;)</div>
+                  <div class="row-desc">Displays a subtle harmonic resonance ring at the pointer tip when clicking</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="setting-touch-toggle" checked onchange="toggleTouchRipple(this.checked)">
+                  <span class="slider round"></span>
+                </label>
               </div>
-              <label class="switch">
-                <input type="checkbox" id="setting-touch-toggle" checked onchange="toggleTouchRipple(this.checked)">
-                <span class="slider round"></span>
-              </label>
-            </div>
 
-            <div class="settings-row">
-              <div>
-                <div class="row-title">Window Inertial Tilt Physics</div>
-                <div class="row-desc">Simulates physical weight and aerodynamic lean when dragging windows</div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Window Inertial Tilt Physics</div>
+                  <div class="row-desc">Simulates physical weight and aerodynamic lean when dragging windows</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="setting-tilt-toggle" checked onchange="toggleTilt(this.checked)">
+                  <span class="slider round"></span>
+                </label>
               </div>
-              <label class="switch">
-                <input type="checkbox" id="setting-tilt-toggle" checked onchange="toggleTilt(this.checked)">
-                <span class="slider round"></span>
-              </label>
-            </div>
 
-            <div class="settings-row">
-              <div>
-                <div class="row-title">Wallpaper Tinting in Windows</div>
-                <div class="row-desc">Blends desktop wallpaper colors into window materials and sidebars</div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Wallpaper Tinting in Windows</div>
+                  <div class="row-desc">Blends desktop wallpaper colors into window materials and sidebars</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" checked onchange="triggerNotification('Wallpaper tinting updated')">
+                  <span class="slider round"></span>
+                </label>
               </div>
-              <label class="switch">
-                <input type="checkbox" checked>
-                <span class="slider round"></span>
-              </label>
             </div>
           </div>
 
-          <!-- Tab 2: Displays & Retina -->
+          <!-- Tab 5: Control Center -->
+          <div id="settings-tab-controlcenter" class="hidden">
+            <h3>Control Center &amp; Menu Bar</h3>
+            <p class="settings-desc">Choose which modules and shortcuts appear in the global macOS-style top bar.</p>
+            <div class="settings-group-card">
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Wi-Fi Status</div>
+                  <div class="row-desc">Always show in top menu bar</div>
+                </div>
+                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Bluetooth Quick Toggle</div>
+                  <div class="row-desc">Show when active or connected</div>
+                </div>
+                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Sound &amp; Volume Slider</div>
+                  <div class="row-desc">Always show in menu bar</div>
+                </div>
+                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Battery Percentage</div>
+                  <div class="row-desc">Show battery status and remaining charge percentage</div>
+                </div>
+                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 6: Desktop & Dock -->
+          <div id="settings-tab-desktopdock" class="hidden">
+            <h3>Desktop &amp; Dock</h3>
+            <p class="settings-desc">Configure dock magnification, icon scaling, screen position, and window minimization.</p>
+            <div class="settings-group-card">
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Dock Icon Size</div>
+                  <div class="row-desc">Default squircle size: 52px</div>
+                </div>
+                <div class="segmented-control">
+                  <button class="seg-btn" onclick="triggerNotification('Dock: Small 42px')">Small</button>
+                  <button class="seg-btn active" onclick="triggerNotification('Dock: Medium 52px')">Medium</button>
+                  <button class="seg-btn" onclick="triggerNotification('Dock: Large 64px')">Large</button>
+                </div>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Parabolic Fisheye Magnification</div>
+                  <div class="row-desc">Continuous 120Hz icon zoom on cursor proximity</div>
+                </div>
+                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Position on Screen</div>
+                  <div class="row-desc">Placement of floating frosted dock</div>
+                </div>
+                <div class="segmented-control">
+                  <button class="seg-btn" onclick="triggerNotification('Dock: Position Left')">Left</button>
+                  <button class="seg-btn active" onclick="triggerNotification('Dock: Position Bottom')">Bottom</button>
+                  <button class="seg-btn" onclick="triggerNotification('Dock: Position Right')">Right</button>
+                </div>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Minimize Windows Effect</div>
+                  <div class="row-desc">Animation curve when sending windows to the dock</div>
+                </div>
+                <div class="segmented-control">
+                  <button class="seg-btn active" onclick="triggerNotification('Minimization: Genie Curved Effect')">Genie</button>
+                  <button class="seg-btn" onclick="triggerNotification('Minimization: Linear Scale Effect')">Scale</button>
+                </div>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Automatically Hide and Show the Dock</div>
+                  <div class="row-desc">Dock auto-reveals on screen edge hover</div>
+                </div>
+                <label class="switch"><input type="checkbox"><span class="slider round"></span></label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 7: Wallpaper -->
+          <div id="settings-tab-wallpaper" class="hidden">
+            <h3>Wallpaper</h3>
+            <p class="settings-desc">Select high-dynamic-range desktop artwork calibrated for Display P3 Retina displays.</p>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;">
+              <div style="background: rgba(0,0,0,0.2); border: 2px solid var(--accent-color); border-radius: 12px; padding: 12px; cursor: pointer;" onclick="triggerNotification('Applied: Dynamic Topography (Active)')">
+                <div style="height: 100px; border-radius: 8px; background: radial-gradient(circle at 70% 30%, #ff2d55 0%, #af52de 35%, #007aff 70%, #0c0c0e 100%); margin-bottom: 8px;"></div>
+                <div style="font-weight: 700; font-size: 13px;">Dynamic Topography</div>
+                <div style="color: var(--accent-color); font-size: 11px;">Current Wallpaper &bull; Display P3</div>
+              </div>
+              <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 12px; padding: 12px; cursor: pointer;" onclick="triggerNotification('Applied: Sequoia Dawn')">
+                <div style="height: 100px; border-radius: 8px; background: linear-gradient(135deg, #ff9500 0%, #ff2d55 50%, #5856d6 100%); margin-bottom: 8px;"></div>
+                <div style="font-weight: 700; font-size: 13px;">Sequoia Dawn</div>
+                <div style="color: var(--text-secondary); font-size: 11px;">HDR 10-bit &bull; Warm Sunrise</div>
+              </div>
+              <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 12px; padding: 12px; cursor: pointer;" onclick="triggerNotification('Applied: Obsidian Night')">
+                <div style="height: 100px; border-radius: 8px; background: linear-gradient(135deg, #18181b 0%, #27272a 50%, #09090b 100%); margin-bottom: 8px;"></div>
+                <div style="font-weight: 700; font-size: 13px;">Obsidian Wave</div>
+                <div style="color: var(--text-secondary); font-size: 11px;">Pure OLED Black &bull; Low Energy</div>
+              </div>
+              <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 12px; padding: 12px; cursor: pointer;" onclick="triggerNotification('Applied: Pacific Laguna')">
+                <div style="height: 100px; border-radius: 8px; background: linear-gradient(135deg, #38bdf8 0%, #007aff 50%, #34c759 100%); margin-bottom: 8px;"></div>
+                <div style="font-weight: 700; font-size: 13px;">Pacific Laguna</div>
+                <div style="color: var(--text-secondary); font-size: 11px;">Cool Aquamarine &bull; Clean Depth</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 8: Displays & Retina -->
           <div id="settings-tab-displays" class="hidden">
             <h3>Displays &amp; Retina</h3>
-            <p class="settings-desc">Manage resolutions, ProMotion refresh rates, and color profiles.</p>
-            <div class="settings-row">
-              <div>
-                <div class="row-title">Retina Resolution</div>
-                <div class="row-desc">3840 &times; 2160 (HiDPI 200% Crisp Scaling)</div>
+            <p class="settings-desc">Manage resolutions, ProMotion refresh rates, True Tone, and color profiles.</p>
+            <div class="settings-group-card">
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Retina Resolution</div>
+                  <div class="row-desc">3840 &times; 2160 (HiDPI 200% Crisp Scaling)</div>
+                </div>
+                <div class="segmented-control">
+                  <button class="seg-btn" onclick="triggerNotification('Resolution: Scaled 2560x1440')">Scaled</button>
+                  <button class="seg-btn active" onclick="triggerNotification('Resolution: 4K Retina 3840x2160')">4K Retina</button>
+                  <button class="seg-btn" onclick="triggerNotification('Resolution: Native 4096x2304')">More Space</button>
+                </div>
               </div>
-              <span class="status-text" style="font-size: 13px; font-weight: 700; color: var(--accent-color);">4K Retina</span>
-            </div>
-            <div class="settings-row">
-              <div>
-                <div class="row-title">ProMotion Refresh Rate</div>
-                <div class="row-desc">Adaptive hardware V-Sync synchronization</div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">ProMotion Refresh Rate</div>
+                  <div class="row-desc">Adaptive hardware V-Sync synchronization</div>
+                </div>
+                <div class="segmented-control">
+                  <button class="seg-btn" onclick="triggerNotification('Refresh Rate: 60Hz')">60Hz</button>
+                  <button class="seg-btn active" onclick="triggerNotification('Refresh Rate: 120Hz ProMotion')">120Hz</button>
+                  <button class="seg-btn" onclick="triggerNotification('Refresh Rate: 144Hz Turbo')">144Hz</button>
+                </div>
               </div>
-              <span class="status-text" style="font-size: 13px; font-weight: 700; color: #34c759;">120Hz Fluid</span>
-            </div>
-            <div class="settings-row">
-              <div>
-                <div class="row-title">Color Profile</div>
-                <div class="row-desc">Cinema-grade wide gamut color reproduction</div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">True Tone</div>
+                  <div class="row-desc">Automatically adapt display colors to ambient lighting</div>
+                </div>
+                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
               </div>
-              <span class="status-text" style="font-size: 13px; font-weight: 700;">Display P3</span>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Color Profile</div>
+                  <div class="row-desc">Cinema-grade wide gamut color reproduction</div>
+                </div>
+                <span class="status-text" style="font-size: 13px; font-weight: 700; color: var(--accent-color);">Display P3 (Wide Gamut)</span>
+              </div>
             </div>
           </div>
 
-          <!-- Tab 3: Sound & Audio Engine -->
+          <!-- Tab 9: Sound & Audio Engine -->
           <div id="settings-tab-sound" class="hidden">
             <h3>Sound &amp; Audio Engine</h3>
             <p class="settings-desc">PipeWire low-latency professional studio sound architecture.</p>
-            <div class="settings-row">
-              <div>
-                <div class="row-title">PipeWire Realtime Engine</div>
-                <div class="row-desc">Hardware ALSA direct mixing &bull; 0.7ms ultra-low latency</div>
+            <div class="settings-group-card">
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">PipeWire Realtime Engine</div>
+                  <div class="row-desc">Hardware ALSA direct mixing &bull; 0.7ms ultra-low latency &bull; Zero Jitter</div>
+                </div>
+                <span class="status-text" style="color: #34c759; font-weight: 700;">Active (Bit-Perfect)</span>
               </div>
-              <span class="status-text" style="color: #34c759; font-weight: 700;">Active (Bit-Perfect)</span>
-            </div>
-            <div class="settings-row">
-              <div>
-                <div class="row-title">Harmonic Touch Chimes</div>
-                <div class="row-desc">Auditory acoustic feedback on UI gestures and window interactions</div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Output Destination</div>
+                  <div class="row-desc">Default system audio sink device</div>
+                </div>
+                <div style="display: flex; gap: 6px;">
+                  <button class="btn btn-secondary active" style="font-size: 11px; padding: 4px 8px;">🔊 Internal</button>
+                  <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;">🎧 AirPods</button>
+                  <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;">🎛️ DAC</button>
+                </div>
               </div>
-              <label class="switch">
-                <input type="checkbox" checked id="sound-feedback-setting" onchange="toggleAudioFeedback(this.checked)">
-                <span class="slider round"></span>
-              </label>
-            </div>
-            <div class="settings-row">
-              <div>
-                <div class="row-title">Buffer Period Size</div>
-                <div class="row-desc">64 samples @ 96,000 Hz (Pro Studio Grade)</div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Harmonic Touch Chimes</div>
+                  <div class="row-desc">Auditory acoustic feedback on UI gestures and window interactions</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" checked id="sound-feedback-setting" onchange="toggleAudioFeedback(this.checked)">
+                  <span class="slider round"></span>
+                </label>
               </div>
-              <span class="status-text" style="color: var(--accent-color); font-weight: 700;">64 Frames</span>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Buffer Period Size</div>
+                  <div class="row-desc">64 samples @ 96,000 Hz (Pro Studio Grade)</div>
+                </div>
+                <span class="status-text" style="color: var(--accent-color); font-weight: 700;">64 Frames (0.667ms)</span>
+              </div>
             </div>
           </div>
 
-          <!-- Tab 4: Time Capsule Snapshots -->
+          <!-- Tab 10: Battery & Energy -->
+          <div id="settings-tab-battery" class="hidden">
+            <h3>Battery &amp; Energy</h3>
+            <p class="settings-desc">Power consumption management and battery health monitoring.</p>
+            <div class="settings-group-card">
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Battery Health</div>
+                  <div class="row-desc">Maximum Capacity: 98% &bull; Cycle Count: 14 &bull; Condition: Normal</div>
+                </div>
+                <span class="status-text" style="color: #34c759; font-weight: 700;">98% Health</span>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Low Power Mode</div>
+                  <div class="row-desc">Lowers background CPU/GPU clocks to maximize battery runtime</div>
+                </div>
+                <label class="switch"><input type="checkbox" onchange="triggerNotification(this.checked ? 'Low Power Mode enabled' : 'Low Power Mode off')"><span class="slider round"></span></label>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Turn Display Off on Inactivity</div>
+                  <div class="row-desc">Sleep display to prevent OLED retention and save battery</div>
+                </div>
+                <div class="segmented-control">
+                  <button class="seg-btn" onclick="triggerNotification('Display sleep: 5 min')">5m</button>
+                  <button class="seg-btn active" onclick="triggerNotification('Display sleep: 15 min')">15m</button>
+                  <button class="seg-btn" onclick="triggerNotification('Display sleep: 30 min')">30m</button>
+                  <button class="seg-btn" onclick="triggerNotification('Display sleep: Never')">Never</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 11: General & About -->
+          <div id="settings-tab-general" class="hidden">
+            <h3>General &amp; About Toccata OS</h3>
+            <p class="settings-desc">Operating system details, kernel release, and hardware summary.</p>
+            <div class="settings-group-card">
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Toccata Operating System</div>
+                  <div class="row-desc">Version 1.0.4 "Sonata" (x86_64-toccata-linux)</div>
+                </div>
+                <span class="status-text" style="color: #34c759; font-weight: 700;">Up to date</span>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Kernel Architecture</div>
+                  <div class="row-desc">Linux 6.11.5-bore-arch1 #1 SMP PREEMPT_DYNAMIC</div>
+                </div>
+                <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary);">6.11.5-bore</span>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Processor &amp; Memory</div>
+                  <div class="row-desc">16 Symphony Cores @ 4.8 GHz &bull; 32 GB LPDDR5X (820 MB Idle)</div>
+                </div>
+                <span class="status-text" style="color: var(--accent-color); font-weight: 700;">32 GB RAM</span>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">NVMe Storage Breakdown</div>
+                  <div class="row-desc">418.5 GB Available of 1.0 TB &bull; Btrfs Zstd-15 Compressed</div>
+                </div>
+                <span style="font-size: 12px; font-weight: 600;">58% Used</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 12: Time Capsule Snapshots -->
           <div id="settings-tab-snapshots" class="hidden">
             <h3>Time Capsule Snapshots</h3>
             <p class="settings-desc">Instantaneous Btrfs copy-on-write system rollbacks (zero storage penalty).</p>
@@ -666,36 +1083,68 @@ Every administrative task is accessible visually:
             </div>
           </div>
 
-          <!-- Tab 5: Security & Permissions -->
+          <!-- Tab 13: Security & Permissions -->
           <div id="settings-tab-security" class="hidden">
-            <h3>Security &amp; Permissions</h3>
-            <p class="settings-desc">Zero telemetry, local encryption, and gatekeeper application sandboxing.</p>
-            <div class="settings-row">
-              <div>
-                <div class="row-title">Telemetry &amp; Diagnostics</div>
-                <div class="row-desc">100% blocked at kernel level. Zero data leaves your machine.</div>
+            <h3>Privacy &amp; Security</h3>
+            <p class="settings-desc">Zero telemetry, local LUKS encryption, and Gatekeeper application sandboxing.</p>
+            <div class="settings-group-card">
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Telemetry &amp; Diagnostics</div>
+                  <div class="row-desc">100% blocked at kernel level. Zero corporate data extraction.</div>
+                </div>
+                <span class="status-text" style="color: #34c759; font-weight: 700;">Zero Telemetry (Enforced)</span>
               </div>
-              <span class="status-text" style="color: #34c759; font-weight: 700;">Zero Telemetry (Enforced)</span>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">FileVault / LUKS Full Disk Encryption</div>
+                  <div class="row-desc">Hardware AES-XTS-256 with TPM 2.0 enclave security</div>
+                </div>
+                <span class="status-text" style="color: #34c759; font-weight: 700;">Encrypted</span>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Application Gatekeeper</div>
+                  <div class="row-desc">Verify checksum signatures and permissions on third-party bundles</div>
+                </div>
+                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+              </div>
             </div>
-            <div class="settings-row">
-              <div>
-                <div class="row-title">Proton Windows Sandbox</div>
-                <div class="row-desc">Isolate legacy Windows executables from core operating system files</div>
+          </div>
+
+          <!-- Tab 14: Windows Compatibility Subsystem -->
+          <div id="settings-tab-windowscompat" class="hidden">
+            <h3>Windows Subsystem &amp; Proton</h3>
+            <p class="settings-desc">Proton / Wine-GE containerization, DirectX Vulkan translation, and CMD command shims.</p>
+            <div class="settings-group-card">
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Proton Wine-GE Runtime Container</div>
+                  <div class="row-desc">Prefix isolated in <code>~/.toccata/proton-pfx</code></div>
+                </div>
+                <span class="status-text" style="color: #34c759; font-weight: 700;">Ready</span>
               </div>
-              <label class="switch">
-                <input type="checkbox" checked>
-                <span class="slider round"></span>
-              </label>
-            </div>
-            <div class="settings-row">
-              <div>
-                <div class="row-title">Application Gatekeeper</div>
-                <div class="row-desc">Verify checksum signatures and permissions on third-party bundles</div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">DirectX to Vulkan Translation (DXVK 2.4)</div>
+                  <div class="row-desc">High-performance graphics layer for Windows executables</div>
+                </div>
+                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
               </div>
-              <label class="switch">
-                <input type="checkbox" checked>
-                <span class="slider round"></span>
-              </label>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Windows Command Shims in Shell</div>
+                  <div class="row-desc">Enables <code>ipconfig</code>, <code>dir</code>, <code>cls</code>, <code>taskmgr</code>, <code>winget</code> natively</div>
+                </div>
+                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Automount Windows Partitions (C: / D:)</div>
+                  <div class="row-desc">Automatically mounts NTFS / exFAT drives as native desktop volumes</div>
+                </div>
+                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+              </div>
             </div>
           </div>
         </div>
@@ -709,14 +1158,14 @@ Every administrative task is accessible visually:
     <!-- ====================================================================
          WINDOW 4: TEMPO (Performance Monitor)
          ==================================================================== -->
-    <div class="window glass-panel hidden" id="win-tempo" style="top: 130px; left: 280px; width: 680px; height: 500px;">
+    <div class="window glass-panel hidden" id="win-tempo" style="top: 90px; left: 220px; width: 740px; height: 510px;">
       <div class="window-titlebar">
         <div class="traffic-lights">
           <button class="tl-btn tl-close" onclick="closeWindow('win-tempo')"></button>
           <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-tempo')"></button>
           <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-tempo')"></button>
         </div>
-        <div class="window-title">Tempo &mdash; Activity Monitor &amp; Task Manager</div>
+        <div class="window-title"><span class="proxy-icon">⚡</span>Tempo &mdash; Activity Monitor</div>
         <div style="display: flex; gap: 8px;">
           <button class="btn btn-secondary" onclick="promptForceQuit()" style="padding: 3px 10px; font-size: 11px; background: rgba(255, 59, 48, 0.2); border-color: rgba(255, 59, 48, 0.4); color: #ff453a;">Force Quit</button>
         </div>
@@ -836,14 +1285,14 @@ Every administrative task is accessible visually:
     <!-- ====================================================================
          WINDOW 5: ZERO-TERMINAL APP INSTALLER DIALOG
          ==================================================================== -->
-    <div class="window glass-panel hidden" id="win-installer" style="top: 170px; left: 380px; width: 500px; height: 320px;">
+    <div class="window glass-panel hidden" id="win-installer" style="top: 160px; left: 320px; width: 520px; height: 350px;">
       <div class="window-titlebar">
         <div class="traffic-lights">
           <button class="tl-btn tl-close" onclick="closeWindow('win-installer')"></button>
           <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-installer')"></button>
           <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-installer')"></button>
         </div>
-        <div class="window-title">App Installer &mdash; Ableton Live.app</div>
+        <div class="window-title"><span class="proxy-icon">🛍️</span>App Installer &mdash; Ableton Live.app</div>
         <div class="titlebar-placeholder"></div>
       </div>
       <div class="window-body installer-body">
@@ -874,14 +1323,14 @@ Every administrative task is accessible visually:
     <!-- ====================================================================
          WINDOW 6: SONATA (The Acoustic Player & Sound Engine)
          ==================================================================== -->
-    <div class="window glass-panel hidden" id="win-sonata" style="top: 120px; left: 240px; width: 660px; height: 430px;">
+    <div class="window glass-panel hidden" id="win-sonata" style="top: 110px; left: 260px; width: 680px; height: 440px;">
       <div class="window-titlebar">
         <div class="traffic-lights">
           <button class="tl-btn tl-close" onclick="closeWindow('win-sonata')"></button>
           <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-sonata')"></button>
           <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-sonata')"></button>
         </div>
-        <div class="window-title">Sonata &mdash; Acoustic Player &amp; PipeWire Studio</div>
+        <div class="window-title"><span class="proxy-icon">🎼</span>Sonata &mdash; Acoustic Player &amp; PipeWire Studio</div>
         <div class="titlebar-placeholder"></div>
       </div>
       <div class="window-body sonata-body">
@@ -939,14 +1388,14 @@ Every administrative task is accessible visually:
     <!-- ====================================================================
          WINDOW 7: HORIZON (The Sovereign Web Browser)
          ==================================================================== -->
-    <div class="window glass-panel hidden" id="win-horizon" style="top: 80px; left: 160px; width: 860px; height: 530px;">
+    <div class="window glass-panel hidden" id="win-horizon" style="top: 70px; left: 140px; width: 900px; height: 560px;">
       <div class="window-titlebar">
         <div class="traffic-lights">
           <button class="tl-btn tl-close" onclick="closeWindow('win-horizon')"></button>
           <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-horizon')"></button>
           <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-horizon')"></button>
         </div>
-        <div class="window-title">Horizon &mdash; Sovereign Web Browser</div>
+        <div class="window-title"><span class="proxy-icon">🧭</span>Horizon &mdash; Sovereign Web Browser</div>
         <div class="titlebar-placeholder"></div>
       </div>
 
@@ -1001,14 +1450,14 @@ Every administrative task is accessible visually:
     <!-- ====================================================================
          WINDOW 8: CONSOLE (Terminal & Command Bridge)
          ==================================================================== -->
-    <div class="window glass-panel hidden" id="win-console" style="top: 140px; left: 300px; width: 680px; height: 440px;">
+    <div class="window glass-panel hidden" id="win-console" style="top: 120px; left: 270px; width: 700px; height: 450px;">
       <div class="window-titlebar">
         <div class="traffic-lights">
           <button class="tl-btn tl-close" onclick="closeWindow('win-console')"></button>
           <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-console')"></button>
           <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-console')"></button>
         </div>
-        <div class="window-title">Console &mdash; toccata@core: ~ (zsh / pwsh)</div>
+        <div class="window-title"><span class="proxy-icon">💻</span>Console &mdash; toccata@core: ~ (zsh / pwsh)</div>
         <div class="titlebar-placeholder"></div>
       </div>
 
@@ -1039,14 +1488,14 @@ Type 'help' to view available commands.</div>
     <!-- ====================================================================
          WINDOW 9: SOLFEGE (The Precision Calculator)
          ==================================================================== -->
-    <div class="window glass-panel calc-window hidden" id="win-calc" style="top: 110px; left: 450px;">
+    <div class="window glass-panel calc-window hidden" id="win-calc" style="top: 100px; left: 420px; width: 280px; height: 410px;">
       <div class="window-titlebar">
         <div class="traffic-lights">
           <button class="tl-btn tl-close" onclick="closeWindow('win-calc')"></button>
           <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-calc')"></button>
           <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-calc')"></button>
         </div>
-        <div class="window-title">Calculator</div>
+        <div class="window-title"><span class="proxy-icon">🔢</span>Calculator</div>
         <div class="titlebar-placeholder"></div>
       </div>
 
@@ -1091,14 +1540,14 @@ Type 'help' to view available commands.</div>
     <!-- ====================================================================
          WINDOW 10: PRISM (Photos & Vector Image Inspector)
          ==================================================================== -->
-    <div class="window glass-panel hidden" id="win-prism" style="top: 100px; left: 200px; width: 720px; height: 480px;">
+    <div class="window glass-panel hidden" id="win-prism" style="top: 80px; left: 210px; width: 750px; height: 500px;">
       <div class="window-titlebar">
         <div class="traffic-lights">
           <button class="tl-btn tl-close" onclick="closeWindow('win-prism')"></button>
           <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-prism')"></button>
           <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-prism')"></button>
         </div>
-        <div class="window-title" id="prism-window-title">Prism &mdash; Dynamic Topography.heic</div>
+        <div class="window-title" id="prism-window-title"><span class="proxy-icon">💎</span>Prism &mdash; Dynamic Topography.heic</div>
         <div class="titlebar-placeholder"></div>
       </div>
 
@@ -1141,14 +1590,14 @@ Type 'help' to view available commands.</div>
     <!-- ====================================================================
          WINDOW 11: CHRONICLE (Calendar & Pomodoro Acoustic Clock)
          ==================================================================== -->
-    <div class="window glass-panel hidden" id="win-chronicle" style="top: 90px; left: 220px; width: 750px; height: 490px;">
+    <div class="window glass-panel hidden" id="win-chronicle" style="top: 75px; left: 200px; width: 780px; height: 510px;">
       <div class="window-titlebar">
         <div class="traffic-lights">
           <button class="tl-btn tl-close" onclick="closeWindow('win-chronicle')"></button>
           <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-chronicle')"></button>
           <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-chronicle')"></button>
         </div>
-        <div class="window-title">Chronicle &mdash; Calendar &amp; Focus Timer</div>
+        <div class="window-title"><span class="proxy-icon">📅</span>Chronicle &mdash; Calendar &amp; Focus Timer</div>
         <div class="titlebar-placeholder"></div>
       </div>
 
