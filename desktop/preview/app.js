@@ -112,6 +112,7 @@
     'win-cadence': document.querySelector('.dock-item[data-app="Cadence"]'),
     'win-scribe': document.querySelector('.dock-item[data-app="Scribe"]'),
     'win-tempo': document.querySelector('.dock-item[data-app="Tempo"]'),
+    'win-sonata': document.querySelector('.dock-item[data-app="Sonata"]'),
     'win-settings': document.querySelector('.dock-item[data-app="System Settings"]'),
     'win-installer': document.querySelector('.dock-item[data-app="Gallery"]')
   };
@@ -120,6 +121,7 @@
     'win-cadence': document.getElementById('dot-cadence'),
     'win-scribe': document.getElementById('dot-scribe'),
     'win-tempo': document.getElementById('dot-tempo'),
+    'win-sonata': document.getElementById('dot-sonata'),
     'win-settings': document.getElementById('dot-settings'),
     'win-installer': document.getElementById('dot-installer')
   };
@@ -697,6 +699,7 @@
     const appIndex = [
       { name: 'Cadence (Files & Explorer)', icon: '📂', id: 'win-cadence' },
       { name: 'Scribe (Notes & Code)', icon: '📝', id: 'win-scribe' },
+      { name: 'Sonata (Lossless Hi-Fi & PipeWire Player)', icon: '🎼', id: 'win-sonata' },
       { name: 'Tempo (Task Manager & Activity)', icon: '⚡', id: 'win-tempo' },
       { name: 'System Settings (Control Panel)', icon: '⚙️', id: 'win-settings' },
       { name: 'Gallery & Installer (winget)', icon: '💎', id: 'win-installer' }
@@ -728,6 +731,8 @@
   // ==========================================================================
   document.addEventListener('keydown', (e) => {
     const isCmd = e.metaKey || e.ctrlKey;
+    const tag = (e.target.tagName || '').toUpperCase();
+    const isEditable = e.target.isContentEditable || tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
 
     // Cmd + Space: Toggle Spotlight
     if (isCmd && e.code === 'Space') {
@@ -736,13 +741,47 @@
       return;
     }
 
-    // Escape: Close Spotlight or Control Center
+    // Spacebar: Quick Look Toggle (Only when not actively typing in an input/textarea)
+    if (e.code === 'Space' && !isCmd && !isEditable) {
+      e.preventDefault();
+      const ql = document.getElementById('quick-look-modal');
+      if (ql && !ql.classList.contains('hidden')) {
+        closeQuickLook();
+      } else {
+        openQuickLook();
+      }
+      return;
+    }
+
+    // Escape: Close Overlays & Sheets
     if (e.code === 'Escape') {
+      const ql = document.getElementById('quick-look-modal');
+      if (ql && !ql.classList.contains('hidden')) {
+        closeQuickLook();
+        return;
+      }
+      const fqSheet = document.getElementById('tempo-force-quit-sheet');
+      if (fqSheet && !fqSheet.classList.contains('hidden')) {
+        cancelForceQuit();
+        return;
+      }
       if (isSpotlightOpen) toggleSpotlight();
       if (isControlCenterOpen) {
         isControlCenterOpen = false;
         document.getElementById('control-center')?.classList.add('hidden');
       }
+      return;
+    }
+
+    // Cmd + B / Cmd + I in Scribe Editor
+    if (isCmd && (e.key === 'b' || e.key === 'B') && isEditable && e.target.id === 'scribe-input') {
+      e.preventDefault();
+      insertScribeFormat('**');
+      return;
+    }
+    if (isCmd && (e.key === 'i' || e.key === 'I') && isEditable && e.target.id === 'scribe-input') {
+      e.preventDefault();
+      insertScribeFormat('*');
       return;
     }
 
@@ -842,6 +881,495 @@
     toastTimer = setTimeout(() => toast.classList.add('hidden'), 2400);
   }
   window.triggerNotification = triggerNotification;
+
+  // ==========================================================================
+  // 13. PHASE 1 CORE APPLICATION SUITE ENGINE
+  // ==========================================================================
+
+  // --- A. CADENCE FILE BROWSER & ARCHIVE EXTRACTION ---
+  let currentSelectedFile = {
+    name: 'Toccata Manifesto.md',
+    type: 'Markdown Document',
+    size: '4.2 KB',
+    meta: 'Markdown Document • 4.2 KB • Modified Today at 1:40 AM',
+    icon: '📄',
+    actionText: 'Open with Scribe',
+    actionApp: 'win-scribe'
+  };
+
+  function selectFile(el, name, type, size) {
+    document.querySelectorAll('.finder-grid-view .app-card, .finder-list-view .file-row').forEach(item => {
+      item.classList.remove('selected');
+    });
+    if (el) el.classList.add('selected');
+
+    let icon = '📄';
+    let actionText = 'Open';
+    let actionApp = 'win-scribe';
+
+    const lower = name.toLowerCase();
+    if (lower.endsWith('.md') || lower.endsWith('.rtf') || lower.endsWith('.txt')) {
+      icon = '📄';
+      actionText = 'Open with Scribe';
+      actionApp = 'win-scribe';
+    } else if (lower.endsWith('.flac') || lower.endsWith('.mp3') || lower.endsWith('.wav')) {
+      icon = '🎵';
+      actionText = 'Play in Sonata';
+      actionApp = 'win-sonata';
+    } else if (lower.endsWith('.zip') || lower.endsWith('.tar.gz')) {
+      icon = '📦';
+      actionText = 'Extract Archive';
+      actionApp = 'extract';
+    } else if (lower.endsWith('.dmg') || lower.endsWith('.exe') || lower.endsWith('.msi')) {
+      icon = '🪟';
+      actionText = 'Open in Gallery';
+      actionApp = 'win-installer';
+    } else if (lower.endsWith('.app')) {
+      icon = '⚡';
+      actionText = 'Launch Application';
+      actionApp = lower.includes('scribe') ? 'win-scribe' :
+                  lower.includes('sonata') ? 'win-sonata' :
+                  lower.includes('settings') ? 'win-settings' :
+                  lower.includes('tempo') ? 'win-tempo' :
+                  lower.includes('gallery') ? 'win-installer' : 'win-cadence';
+    } else if (lower.endsWith('.pdf')) {
+      icon = '📕';
+      actionText = 'View Document';
+      actionApp = 'pdf';
+    }
+
+    currentSelectedFile = {
+      name,
+      type: type || 'File',
+      size: size || 'Unknown size',
+      meta: `${type || 'File'} • ${size || ''} • Modified Today`,
+      icon,
+      actionText,
+      actionApp
+    };
+
+    playHarmonicChime([480], 0.12);
+  }
+  window.selectFile = selectFile;
+
+  function switchCadenceFolder(folderId) {
+    const folders = {
+      'apps': { view: 'cadence-view-apps', title: 'Cadence — Applications', status: '6 items • 418.5 GB available on Toccata Core' },
+      'docs': { view: 'cadence-view-docs', title: 'Cadence — Documents', status: '4 items • 418.5 GB available on Toccata Core' },
+      'downloads': { view: 'cadence-view-downloads', title: 'Cadence — Downloads', status: '3 items • 418.5 GB available on Toccata Core' },
+      'disk': { view: 'cadence-view-disk', title: 'Cadence — Toccata Core (NVMe Storage)', status: '1.0 TB Total • 418.5 GB Available • Btrfs Compressed' }
+    };
+
+    const target = folders[folderId];
+    if (!target) return;
+
+    // Update active sidebar row
+    document.querySelectorAll('.finder-sidebar .sidebar-row').forEach(row => row.classList.remove('active'));
+    document.getElementById(`sb-row-${folderId}`)?.classList.add('active');
+
+    // Toggle view containers
+    ['apps', 'docs', 'downloads', 'disk'].forEach(f => {
+      const el = document.getElementById(folders[f].view);
+      if (el) {
+        if (f === folderId) {
+          el.classList.remove('hidden');
+        } else {
+          el.classList.add('hidden');
+        }
+      }
+    });
+
+    const titleEl = document.getElementById('cadence-toolbar-title');
+    if (titleEl) titleEl.textContent = target.title;
+
+    const statusEl = document.querySelector('.finder-statusbar span');
+    if (statusEl) statusEl.textContent = target.status;
+
+    playHarmonicChime([523.25], 0.15);
+  }
+  window.switchCadenceFolder = switchCadenceFolder;
+
+  let extractedArchives = {};
+  function extractArchive(el, archiveName) {
+    if (extractedArchives[archiveName]) {
+      triggerNotification(`${archiveName} is already uncompressed in /Downloads`);
+      return;
+    }
+    extractedArchives[archiveName] = true;
+
+    playHarmonicChime([392, 523.25, 659.25, 783.99], 0.4);
+
+    const downloadsView = document.getElementById('cadence-view-downloads');
+    if (downloadsView) {
+      const folderCard = document.createElement('div');
+      folderCard.className = 'file-row';
+      folderCard.style.animation = 'scalePop 0.24s cubic-bezier(0.16, 1, 0.3, 1)';
+      folderCard.onclick = function () { selectFile(this, 'Ableton Live 12/', 'Folder &bull; Uncompressed Bundle', '4.1 GB'); };
+      folderCard.ondblclick = function () { openWindow('win-installer'); };
+      folderCard.innerHTML = `
+        <span>📁</span>
+        <span style="font-weight: 700; color: var(--accent-color);">Ableton Live 12/</span>
+        <span style="color: var(--text-secondary);">Ready to Run</span>
+        <span style="color: var(--text-secondary);">4.1 GB</span>
+      `;
+      downloadsView.prepend(folderCard);
+    }
+
+    triggerNotification(`Extracted ${archiveName} into /Downloads in 0.08s (Zero-terminal)`);
+  }
+  window.extractArchive = extractArchive;
+
+  // --- B. QUICK LOOK MODAL OVERLAY ---
+  function openQuickLook() {
+    const modal = document.getElementById('quick-look-modal');
+    if (!modal) return;
+
+    document.getElementById('ql-header-filename').textContent = currentSelectedFile.name;
+    document.getElementById('ql-name').textContent = currentSelectedFile.name;
+    document.getElementById('ql-meta').textContent = currentSelectedFile.meta;
+
+    const heroIcon = document.getElementById('ql-hero-icon');
+    if (heroIcon) heroIcon.textContent = currentSelectedFile.icon;
+
+    const actionBtn = document.getElementById('ql-action-btn');
+    if (actionBtn) {
+      actionBtn.textContent = currentSelectedFile.actionText;
+      actionBtn.onclick = function () {
+        if (currentSelectedFile.actionApp === 'extract') {
+          extractArchive(null, currentSelectedFile.name);
+        } else if (currentSelectedFile.actionApp && currentSelectedFile.actionApp.startsWith('win-')) {
+          openWindow(currentSelectedFile.actionApp);
+        } else {
+          triggerNotification(`Opened ${currentSelectedFile.name}`);
+        }
+        closeQuickLook();
+      };
+    }
+
+    modal.classList.remove('hidden');
+    playHarmonicChime([523.25, 659.25], 0.22);
+  }
+  window.openQuickLook = openQuickLook;
+
+  function closeQuickLook() {
+    const modal = document.getElementById('quick-look-modal');
+    modal?.classList.add('hidden');
+  }
+  window.closeQuickLook = closeQuickLook;
+
+  // --- C. SCRIBE PROSE & CODE CANVAS ---
+  let currentScribeView = 'editor';
+
+  function parseMarkdown(md) {
+    if (!md) return '';
+    let html = md
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+
+    // Headings
+    html = html.replace(/^### (.*$)/gim, '<h3 style="margin: 12px 0 6px; font-size: 16px;">$1</h3>');
+    html = html.replace(/^## (.*$)/gim, '<h2 style="margin: 16px 0 8px; font-size: 19px;">$1</h2>');
+    html = html.replace(/^# (.*$)/gim, '<h1 style="margin: 20px 0 10px; font-size: 23px; border-bottom: 1px solid var(--glass-border); padding-bottom: 6px;">$1</h1>');
+
+    // Bold & Italic
+    html = html.replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>');
+    html = html.replace(/\*(.*?)\*/gim, '<em>$1</em>');
+
+    // Inline code
+    html = html.replace(/`([^`]+)`/gim, '<code>$1</code>');
+
+    // Blockquote
+    html = html.replace(/^\> (.*$)/gim, '<blockquote style="border-left: 3px solid var(--accent-color); padding-left: 10px; opacity: 0.85; margin: 8px 0;">$1</blockquote>');
+
+    // Bullet items
+    html = html.replace(/^\s*[\-\*]\s+(.*$)/gim, '<li style="margin-left: 20px; margin-bottom: 4px;">$1</li>');
+
+    // Paragraphs
+    const paras = html.split('\n\n');
+    html = paras.map(p => {
+      const trimmed = p.trim();
+      if (trimmed.startsWith('<h') || trimmed.startsWith('<li') || trimmed.startsWith('<block')) {
+        return trimmed;
+      }
+      return `<p style="margin-bottom: 10px; line-height: 1.6;">${trimmed.replace(/\n/g, '<br>')}</p>`;
+    }).join('');
+
+    return html;
+  }
+
+  function renderScribePreview() {
+    const input = document.getElementById('scribe-input');
+    const preview = document.getElementById('scribe-preview');
+    if (!input || !preview) return;
+    preview.innerHTML = parseMarkdown(input.value);
+  }
+
+  function setScribeView(mode) {
+    currentScribeView = mode;
+    ['editor', 'split', 'preview'].forEach(m => {
+      document.getElementById(`scribe-btn-${m}`)?.classList.toggle('active', m === mode);
+    });
+
+    const input = document.getElementById('scribe-input');
+    const preview = document.getElementById('scribe-preview');
+    if (!input || !preview) return;
+
+    if (mode === 'editor') {
+      input.style.display = 'block';
+      input.style.width = '100%';
+      preview.classList.add('hidden');
+      preview.style.display = 'none';
+    } else if (mode === 'preview') {
+      input.style.display = 'none';
+      preview.classList.remove('hidden');
+      preview.style.display = 'block';
+      preview.style.width = '100%';
+      renderScribePreview();
+    } else if (mode === 'split') {
+      input.style.display = 'block';
+      input.style.width = '50%';
+      preview.classList.remove('hidden');
+      preview.style.display = 'block';
+      preview.style.width = '50%';
+      renderScribePreview();
+    }
+
+    playHarmonicChime([523.25], 0.15);
+  }
+  window.setScribeView = setScribeView;
+
+  function insertScribeFormat(token) {
+    const input = document.getElementById('scribe-input');
+    if (!input) return;
+
+    const start = input.selectionStart;
+    const end = input.selectionEnd;
+    const text = input.value;
+    const selected = text.substring(start, end);
+
+    if (token === '### ') {
+      const lineStart = text.lastIndexOf('\n', start - 1) + 1;
+      input.value = text.substring(0, lineStart) + '### ' + text.substring(lineStart);
+      input.selectionStart = input.selectionEnd = start + 4;
+    } else {
+      const replacement = selected ? `${token}${selected}${token}` : `${token}${token}`;
+      input.value = text.substring(0, start) + replacement + text.substring(end);
+      const newCursor = selected ? start + replacement.length : start + token.length;
+      input.selectionStart = input.selectionEnd = newCursor;
+    }
+
+    input.focus();
+    updateScribeStats();
+    playHarmonicChime([587.33], 0.12);
+  }
+  window.insertScribeFormat = insertScribeFormat;
+
+  function updateScribeStats() {
+    const input = document.getElementById('scribe-input');
+    const stats = document.getElementById('scribe-stats');
+    if (!input) return;
+
+    const text = input.value;
+    const lines = text.split('\n').length;
+    const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+    const chars = text.length;
+
+    if (stats) {
+      stats.textContent = `${lines} lines • ${words} words • ${chars} characters`;
+    }
+    if (currentScribeView === 'split' || currentScribeView === 'preview') {
+      renderScribePreview();
+    }
+  }
+  window.updateScribeStats = updateScribeStats;
+
+  // --- D. SONATA ACOUSTIC HI-FI PLAYER & SOUND STAGE ---
+  let sonataPlaying = false;
+  let sonataInterval = null;
+  let sonataStep = 0;
+
+  // Classical Bach Toccata in D minor polyphonic arpeggios
+  const toccataPhrase = [
+    [587.33], // D5
+    [554.37], // C#5
+    [587.33], // D5
+    [523.25], // C5
+    [466.16], // Bb4
+    [440.00], // A4
+    [392.00], // G4
+    [349.23], // F4
+    [329.63], // E4
+    [293.66], // D4
+    [220.00, 293.66, 349.23, 440.00], // Dm chord
+    [220.00, 293.66, 349.23, 440.00], // Dm chord hold
+    [233.08, 293.66, 349.23, 466.16], // Bb major chord
+    [220.00, 277.18, 329.63, 440.00], // A major 7th chord
+    [146.83, 220.00, 293.66, 349.23]  // Dm low register resolution
+  ];
+
+  function playSonataNote(freqs, duration = 0.24) {
+    if (!audioFeedbackEnabled) return;
+    try {
+      initAudio();
+      if (!audioCtx || !masterGain) return;
+      const now = audioCtx.currentTime;
+
+      freqs.forEach(f => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        const filter = audioCtx.createBiquadFilter();
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(f, now);
+
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(2600, now);
+        filter.Q.setValueAtTime(2.5, now);
+
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(0.07 / freqs.length, now + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.06);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(masterGain);
+
+        osc.start(now);
+        osc.stop(now + duration + 0.08);
+      });
+    } catch (e) {}
+  }
+
+  function toggleSonataPlayback() {
+    sonataPlaying = !sonataPlaying;
+    const playBtn = document.getElementById('sonata-play-btn');
+    const vinyl = document.getElementById('sonata-vinyl');
+    const spectrum = document.getElementById('sonata-spectrum');
+
+    if (sonataPlaying) {
+      if (playBtn) playBtn.textContent = '❚❚';
+      vinyl?.classList.add('playing');
+      spectrum?.classList.add('playing');
+      triggerNotification('Sonata: Playing Toccata & Fugue in D Minor (PipeWire 0.7ms)');
+
+      sonataStep = 0;
+      playSonataNote(toccataPhrase[sonataStep], 0.28);
+      sonataInterval = setInterval(() => {
+        sonataStep = (sonataStep + 1) % toccataPhrase.length;
+        const isChord = toccataPhrase[sonataStep].length > 1;
+        playSonataNote(toccataPhrase[sonataStep], isChord ? 0.52 : 0.25);
+      }, 280);
+    } else {
+      if (playBtn) playBtn.textContent = '▶';
+      vinyl?.classList.remove('playing');
+      spectrum?.classList.remove('playing');
+      if (sonataInterval) {
+        clearInterval(sonataInterval);
+        sonataInterval = null;
+      }
+      triggerNotification('Sonata: Paused');
+    }
+  }
+  window.toggleSonataPlayback = toggleSonataPlayback;
+
+  function setAudioOutput(pillEl, deviceName) {
+    document.querySelectorAll('.pipewire-output-box .output-pill').forEach(p => p.classList.remove('active'));
+    pillEl?.classList.add('active');
+    playHarmonicChime([523.25, 783.99], 0.25);
+    triggerNotification(`PipeWire Output: Switched to ${deviceName} (0.7ms Latency)`);
+  }
+  window.setAudioOutput = setAudioOutput;
+
+  // --- E. TEMPO ACTIVITY MONITOR & TASK MANAGER ---
+  let selectedProcess = {
+    name: 'Horizon Web Engine',
+    pid: '2842',
+    cpu: '4.8%',
+    mem: '280 MB',
+    element: null
+  };
+
+  function selectProcess(rowEl, name, pid, cpu, mem) {
+    document.querySelectorAll('#tempo-process-list .process-row').forEach(r => r.classList.remove('selected'));
+    if (rowEl) rowEl.classList.add('selected');
+    selectedProcess = { name, pid, cpu: cpu || '1.0%', mem: mem || '50 MB', element: rowEl };
+
+    const fqName = document.getElementById('fq-process-name');
+    if (fqName) fqName.textContent = name;
+    playHarmonicChime([480], 0.12);
+  }
+  window.selectProcess = selectProcess;
+
+  function filterProcesses(query) {
+    const lower = (query || '').toLowerCase();
+    const rows = document.querySelectorAll('#tempo-process-list .process-row');
+    rows.forEach(r => {
+      const text = r.textContent.toLowerCase();
+      r.style.display = text.includes(lower) ? '' : 'none';
+    });
+  }
+  window.filterProcesses = filterProcesses;
+
+  function promptForceQuit() {
+    const sheet = document.getElementById('tempo-force-quit-sheet');
+    const fqName = document.getElementById('fq-process-name');
+    if (fqName) fqName.textContent = selectedProcess.name || 'Selected Application';
+    sheet?.classList.remove('hidden');
+    playHarmonicChime([349.23, 293.66], 0.25);
+  }
+  window.promptForceQuit = promptForceQuit;
+
+  function cancelForceQuit() {
+    document.getElementById('tempo-force-quit-sheet')?.classList.add('hidden');
+  }
+  window.cancelForceQuit = cancelForceQuit;
+
+  function confirmForceQuit() {
+    const sheet = document.getElementById('tempo-force-quit-sheet');
+    sheet?.classList.add('hidden');
+
+    const row = selectedProcess.element || document.querySelector('#tempo-process-list .process-row.selected');
+    if (row) {
+      row.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+      row.style.opacity = '0';
+      row.style.transform = 'translateX(24px)';
+      setTimeout(() => {
+        row.remove();
+        const cpuMetric = document.getElementById('tempo-cpu-metric');
+        if (cpuMetric) cpuMetric.textContent = '9% Load';
+      }, 200);
+    }
+
+    const procLower = (selectedProcess.name || '').toLowerCase();
+    if (procLower.includes('sonata')) {
+      closeWindow('win-sonata');
+    } else if (procLower.includes('scribe')) {
+      closeWindow('win-scribe');
+    }
+
+    triggerNotification(`Force-quit ${selectedProcess.name} (PID: ${selectedProcess.pid})`);
+    playHarmonicChime([440, 330, 220], 0.35);
+  }
+  window.confirmForceQuit = confirmForceQuit;
+
+  // --- F. SYSTEM SETTINGS TAB CONTROLLER ---
+  function switchSettingsTab(tabKey) {
+    const tabs = ['appearance', 'displays', 'sound', 'snapshots', 'security'];
+    tabs.forEach(t => {
+      const nav = document.getElementById(`tab-nav-${t}`);
+      const content = document.getElementById(`settings-tab-${t}`);
+      if (t === tabKey) {
+        nav?.classList.add('active');
+        content?.classList.remove('hidden');
+      } else {
+        nav?.classList.remove('active');
+        content?.classList.add('hidden');
+      }
+    });
+    playHarmonicChime([440, 554.37], 0.18);
+  }
+  window.switchSettingsTab = switchSettingsTab;
 
   // Initial focus
   bringToFront(document.getElementById('win-cadence'));

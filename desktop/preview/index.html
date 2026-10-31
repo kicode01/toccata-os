@@ -212,56 +212,53 @@
         <div class="toolbar-nav-group">
           <button class="toolbar-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg></button>
           <button class="toolbar-icon-btn" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></button>
-          <span class="toolbar-title">Cadence &mdash; Applications</span>
+          <span class="toolbar-title" id="cadence-toolbar-title">Cadence &mdash; Applications</span>
         </div>
 
-        <div class="segmented-control">
-          <button class="seg-btn active" title="Icons View"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="5" height="5" rx="1.5"/><rect x="10" y="1" width="5" height="5" rx="1.5"/><rect x="1" y="10" width="5" height="5" rx="1.5"/><rect x="10" y="10" width="5" height="5" rx="1.5"/></svg></button>
-          <button class="seg-btn" title="List View"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 3h12v2H2zm0 4h12v2H2zm0 4h12v2H2z"/></svg></button>
-          <button class="seg-btn" title="Columns View"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="3.5" height="14" rx="1"/><rect x="6.2" y="1" width="3.5" height="14" rx="1"/><rect x="11.5" y="1" width="3.5" height="14" rx="1"/></svg></button>
+        <!-- Quick Look & View Controls -->
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <button class="toolbar-icon-btn" onclick="openQuickLook()" title="Quick Look (Spacebar)" style="background: rgba(255,255,255,0.1); border-radius: 6px; width: 28px; height: 26px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+
+          <div class="segmented-control">
+            <button class="seg-btn active" title="Icons View"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="5" height="5" rx="1.5"/><rect x="10" y="1" width="5" height="5" rx="1.5"/><rect x="1" y="10" width="5" height="5" rx="1.5"/><rect x="10" y="10" width="5" height="5" rx="1.5"/></svg></button>
+            <button class="seg-btn" title="List View"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 3h12v2H2zm0 4h12v2H2zm0 4h12v2H2z"/></svg></button>
+          </div>
         </div>
 
         <div class="toolbar-search">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
-          <input type="text" placeholder="Search">
+          <input type="text" placeholder="Search Cadence">
         </div>
       </div>
 
       <div class="window-body finder-body">
         <aside class="finder-sidebar">
           <div class="sidebar-category">Favorites</div>
-          <div class="sidebar-row active">
+          <div class="sidebar-row active" id="sb-row-apps" onclick="switchCadenceFolder('apps')">
             <svg class="sb-icon" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
             <span>Applications</span>
           </div>
-          <div class="sidebar-row">
+          <div class="sidebar-row" id="sb-row-docs" onclick="switchCadenceFolder('docs')">
             <svg class="sb-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
             <span>Documents</span>
           </div>
-          <div class="sidebar-row">
+          <div class="sidebar-row" id="sb-row-downloads" onclick="switchCadenceFolder('downloads')">
             <svg class="sb-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l5.59-5.59L19 10l-7 7z"/></svg>
             <span>Downloads</span>
           </div>
-          <div class="sidebar-row">
-            <svg class="sb-icon" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
-            <span>Desktop</span>
-          </div>
 
           <div class="sidebar-category">Locations</div>
-          <div class="sidebar-row">
+          <div class="sidebar-row" id="sb-row-disk" onclick="switchCadenceFolder('disk')">
             <svg class="sb-icon" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="4" width="20" height="12" rx="2"/><circle cx="12" cy="19" r="1"/></svg>
             <span>Toccata Core</span>
           </div>
-          <div class="sidebar-row">
-            <svg class="sb-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
-            <span>Cloud Sync</span>
-          </div>
         </aside>
 
-        <!-- Vibrant 3D Squircle App Grid -->
-        <main class="finder-grid-view">
-          <!-- Scribe -->
-          <div class="app-card" ondblclick="openWindow('win-scribe')">
+        <!-- Folder 1: Applications Grid -->
+        <main class="finder-grid-view" id="cadence-view-apps">
+          <div class="app-card" ondblclick="openWindow('win-scribe')" onclick="selectFile(this, 'Scribe.app', 'Universal Toccata Application', '54 MB')">
             <div class="mac-app-icon icon-scribe">
               <div class="scribe-lines"><span></span><span></span><span></span></div>
               <div class="scribe-pen"></div>
@@ -269,8 +266,14 @@
             <span class="app-title">Scribe.app</span>
           </div>
 
-          <!-- Sonata / Settings -->
-          <div class="app-card" ondblclick="openWindow('win-settings')">
+          <div class="app-card" ondblclick="openWindow('win-sonata')" onclick="selectFile(this, 'Sonata.app', 'Acoustic Sound Engine', '38 MB')">
+            <div class="mac-app-icon" style="background: linear-gradient(135deg, #6366f1, #af52de);">
+              <div class="vinyl-center-art" style="width: 32px; height: 32px; font-size: 14px;">🎼</div>
+            </div>
+            <span class="app-title">Sonata.app</span>
+          </div>
+
+          <div class="app-card" ondblclick="openWindow('win-settings')" onclick="selectFile(this, 'System Settings.app', 'Configuration Suite', '28 MB')">
             <div class="mac-app-icon icon-sonata">
               <div class="gear-outer">
                 <div class="gear-center"></div>
@@ -279,23 +282,20 @@
             <span class="app-title">System Settings.app</span>
           </div>
 
-          <!-- Gallery (Software Hub) -->
-          <div class="app-card" ondblclick="openWindow('win-installer')">
+          <div class="app-card" ondblclick="openWindow('win-installer')" onclick="selectFile(this, 'Gallery.app', 'Package Manager & Installer', '42 MB')">
             <div class="mac-app-icon icon-gallery">
               <div class="gallery-prism"></div>
             </div>
             <span class="app-title">Gallery.app</span>
           </div>
 
-          <!-- Tempo (Performance) -->
-          <div class="app-card" ondblclick="openWindow('win-tempo')">
+          <div class="app-card" ondblclick="openWindow('win-tempo')" onclick="selectFile(this, 'Tempo.app', 'Performance Monitor', '18 MB')">
             <div class="mac-app-icon icon-tempo">
               <div class="tempo-pulse"></div>
             </div>
             <span class="app-title">Tempo.app</span>
           </div>
 
-          <!-- Horizon (Browser) -->
           <div class="app-card" onclick="playHarmonicChime([587.33, 739.99]); triggerNotification('Horizon Engine connected')">
             <div class="mac-app-icon icon-horizon">
               <div class="compass-dial">
@@ -304,15 +304,77 @@
             </div>
             <span class="app-title">Horizon.app</span>
           </div>
-
-          <!-- Shell (Terminal) -->
-          <div class="app-card" onclick="playHarmonicChime([329.63, 493.88]); triggerNotification('Shell session opened')">
-            <div class="mac-app-icon icon-shell">
-              <span class="term-prompt">&gt;_</span>
-            </div>
-            <span class="app-title">Shell.app</span>
-          </div>
         </main>
+
+        <!-- Folder 2: Documents List View -->
+        <div class="finder-list-view hidden" id="cadence-view-docs">
+          <div class="file-row selected" onclick="selectFile(this, 'Toccata Manifesto.md', 'Markdown Document', '4.2 KB')" ondblclick="openWindow('win-scribe')">
+            <span>📝</span>
+            <span style="font-weight: 600;">Toccata Manifesto.md</span>
+            <span style="color: var(--text-secondary);">Today, 1:40 AM</span>
+            <span style="color: var(--text-secondary);">4.2 KB</span>
+          </div>
+          <div class="file-row" onclick="selectFile(this, 'Kernel Architecture.pdf', 'PDF Document', '1.8 MB')" ondblclick="openQuickLook()">
+            <span>📕</span>
+            <span style="font-weight: 600;">Kernel Architecture.pdf</span>
+            <span style="color: var(--text-secondary);">Yesterday, 11:20 PM</span>
+            <span style="color: var(--text-secondary);">1.8 MB</span>
+          </div>
+          <div class="file-row" onclick="selectFile(this, 'Symphony No. 5.flac', 'FLAC 24-bit/96kHz Audio', '48.6 MB')" ondblclick="openWindow('win-sonata')">
+            <span>🎵</span>
+            <span style="font-weight: 600;">Symphony No. 5.flac</span>
+            <span style="color: var(--text-secondary);">Oct 28, 4:15 PM</span>
+            <span style="color: var(--text-secondary);">48.6 MB</span>
+          </div>
+          <div class="file-row" onclick="selectFile(this, 'System Specs.rtf', 'Rich Text Document', '12 KB')" ondblclick="openWindow('win-scribe')">
+            <span>📄</span>
+            <span style="font-weight: 600;">System Specs.rtf</span>
+            <span style="color: var(--text-secondary);">Oct 25, 9:02 AM</span>
+            <span style="color: var(--text-secondary);">12 KB</span>
+          </div>
+        </div>
+
+        <!-- Folder 3: Downloads View with 1-Click Archive Extraction -->
+        <div class="finder-list-view hidden" id="cadence-view-downloads">
+          <div class="file-row" onclick="selectFile(this, 'Ableton Live 12.zip', 'Compressed Zip Archive', '2.8 GB')" ondblclick="extractArchive(this, 'Ableton Live 12.zip')">
+            <span>📦</span>
+            <span style="font-weight: 600;">Ableton Live 12.zip</span>
+            <span style="color: var(--text-secondary);">Double-click to Extract</span>
+            <span style="color: var(--text-secondary);">2.8 GB</span>
+          </div>
+          <div class="file-row" onclick="selectFile(this, 'Blender 4.2.dmg', 'Disk Image Bundle', '340 MB')" ondblclick="openWindow('win-installer')">
+            <span>💿</span>
+            <span style="font-weight: 600;">Blender 4.2.dmg</span>
+            <span style="color: var(--text-secondary);">Disk Image</span>
+            <span style="color: var(--text-secondary);">340 MB</span>
+          </div>
+          <div class="file-row" onclick="selectFile(this, 'VSCode-Setup.exe', 'Windows Universal Executable', '94 MB')" ondblclick="openWindow('win-installer')">
+            <span>🪟</span>
+            <span style="font-weight: 600;">VSCode-Setup.exe</span>
+            <span style="color: var(--text-secondary);">Proton Ready</span>
+            <span style="color: var(--text-secondary);">94 MB</span>
+          </div>
+        </div>
+
+        <!-- Folder 4: Toccata Core Disk Space Donut Overview -->
+        <div class="disk-overview-card hidden" id="cadence-view-disk">
+          <div class="donut-chart">
+            <div class="donut-hole">
+              <span style="font-size: 14px;">58%</span>
+              <span style="font-size: 10px; color: var(--text-secondary);">Used</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size: 20px; font-weight: 800; margin-bottom: 4px;">Toccata Core NVMe</div>
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">418.5 GB Available of 1.0 TB &bull; Btrfs Zstd-15 Compressed</div>
+            <div style="display: flex; gap: 16px; font-size: 12px;">
+              <div><span style="color: var(--system-blue);">■</span> Apps: 142 GB</div>
+              <div><span style="color: var(--system-purple);">■</span> Documents: 220 GB</div>
+              <div><span style="color: var(--system-pink);">■</span> System: 48 GB</div>
+              <div><span style="color: rgba(255,255,255,0.4);">■</span> Free: 418.5 GB</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <footer class="finder-statusbar">
@@ -338,17 +400,25 @@
         <div class="window-title">Scribe &mdash; Toccata Manifesto.md</div>
         <div class="titlebar-placeholder"></div>
       </div>
-      <div class="window-body textedit-body">
+      <div class="window-body textedit-body" style="display: flex; flex-direction: column; height: calc(100% - 42px);">
         <div class="textedit-toolbar">
           <div class="tb-segmented">
-            <button class="tb-btn active">Markdown</button>
-            <button class="tb-btn">Preview</button>
+            <button class="tb-btn active" id="scribe-btn-editor" onclick="setScribeView('editor')">Editor</button>
+            <button class="tb-btn" id="scribe-btn-split" onclick="setScribeView('split')">Split View</button>
+            <button class="tb-btn" id="scribe-btn-preview" onclick="setScribeView('preview')">Preview</button>
           </div>
           <span class="tb-divider"></span>
-          <span class="tb-font-picker">SF Pro Text &bull; 15pt</span>
+          <button class="toolbar-icon-btn" onclick="insertScribeFormat('**')" title="Bold (Cmd+B)"><strong>B</strong></button>
+          <button class="toolbar-icon-btn" onclick="insertScribeFormat('*')" title="Italic (Cmd+I)"><em>I</em></button>
+          <button class="toolbar-icon-btn" onclick="insertScribeFormat('`')" title="Code">`&lt;&gt;`</button>
+          <button class="toolbar-icon-btn" onclick="insertScribeFormat('### ')" title="Heading">H3</button>
+          <span class="tb-divider"></span>
+          <span class="tb-font-picker">JetBrains Mono &bull; 14pt</span>
           <span class="tb-tag">Autosaved to Core</span>
         </div>
-        <textarea class="editor-area"># Toccata Operating System
+
+        <div class="scribe-split-container">
+          <textarea class="editor-area" id="scribe-input" oninput="updateScribeStats()"># Toccata Operating System
 
 ### 1. The Visual Standard
 Pure, crisp macOS aesthetics:
@@ -361,7 +431,21 @@ Pure, crisp macOS aesthetics:
 Every administrative task is accessible visually:
 * Installing apps via simple double-click.
 * Restoring Btrfs system snapshots with a single click.
-* Connecting displays, networks, and audio through intuitive sliders.</textarea>
+* Connecting displays, networks, and audio through intuitive sliders.
+
+### 3. Windows Compatibility
+* Native CMD & PowerShell command shims (`ipconfig`, `taskmgr`, `explorer`, `winget`).
+* Double-click `.exe` / `.msi` container execution via Proton.</textarea>
+
+          <div class="scribe-rendered-preview hidden" id="scribe-preview">
+            <!-- Dynamically rendered markdown -->
+          </div>
+        </div>
+
+        <footer class="scribe-statusbar">
+          <span id="scribe-stats">48 lines &bull; 114 words &bull; 798 characters</span>
+          <span>UTF-8 &bull; Markdown</span>
+        </footer>
       </div>
       <!-- Window Resizer Handles -->
       <div class="window-resizer window-resizer-r"></div>
@@ -392,94 +476,199 @@ Every administrative task is accessible visually:
             </div>
           </div>
           <div class="settings-nav-group">
-            <div class="settings-nav-item active">🎨 Appearance</div>
-            <div class="settings-nav-item">🖥️ Displays & Retina</div>
-            <div class="settings-nav-item">🔊 Sound & Audio Engine</div>
-            <div class="settings-nav-item">🌐 Network & Wi-Fi</div>
-            <div class="settings-nav-item">⚡ Bluetooth Peripherals</div>
-            <div class="settings-nav-item">🕒 Time Capsule Snapshots</div>
-            <div class="settings-nav-item">🔒 Security & Permissions</div>
+            <div class="settings-nav-item active" id="tab-nav-appearance" onclick="switchSettingsTab('appearance')">🎨 Appearance</div>
+            <div class="settings-nav-item" id="tab-nav-displays" onclick="switchSettingsTab('displays')">🖥️ Displays & Retina</div>
+            <div class="settings-nav-item" id="tab-nav-sound" onclick="switchSettingsTab('sound')">🔊 Sound & Audio Engine</div>
+            <div class="settings-nav-item" id="tab-nav-snapshots" onclick="switchSettingsTab('snapshots')">🕒 Time Capsule Snapshots</div>
+            <div class="settings-nav-item" id="tab-nav-security" onclick="switchSettingsTab('security')">🔒 Security & Permissions</div>
           </div>
         </div>
         <div class="settings-content">
-          <h3>Appearance</h3>
-          <p class="settings-desc">Select how buttons, controls, and frosted glass vibrancy render.</p>
+          <!-- Tab 1: Appearance -->
+          <div id="settings-tab-appearance">
+            <h3>Appearance</h3>
+            <p class="settings-desc">Select how buttons, controls, and frosted glass vibrancy render.</p>
 
-          <div class="theme-picker-row">
-            <div class="theme-card dark-theme-preview active" onclick="setTheme('dark'); playHarmonicChime([300, 450])">
-              <div class="theme-box"></div>
-              <span>Dark</span>
+            <div class="theme-picker-row">
+              <div class="theme-card dark-theme-preview active" onclick="setTheme('dark'); playHarmonicChime([300, 450])">
+                <div class="theme-box"></div>
+                <span>Dark</span>
+              </div>
+              <div class="theme-card light-theme-preview" onclick="setTheme('light'); playHarmonicChime([500, 650])">
+                <div class="theme-box"></div>
+                <span>Light</span>
+              </div>
             </div>
-            <div class="theme-card light-theme-preview" onclick="setTheme('light'); playHarmonicChime([500, 650])">
-              <div class="theme-box"></div>
-              <span>Light</span>
+
+            <div class="settings-row">
+              <div>
+                <div class="row-title">Accent Color</div>
+                <div class="row-desc">System highlight color for buttons, focus rings, and dock active dots</div>
+              </div>
+              <div class="accent-dots">
+                <span class="accent-dot blue active" onclick="setAccent('#007aff')" title="System Blue"></span>
+                <span class="accent-dot purple" onclick="setAccent('#af52de')" title="System Purple"></span>
+                <span class="accent-dot pink" onclick="setAccent('#ff2d55')" title="System Pink"></span>
+                <span class="accent-dot green" onclick="setAccent('#34c759')" title="System Green"></span>
+                <span class="accent-dot orange" onclick="setAccent('#ff9500')" title="System Orange"></span>
+              </div>
+            </div>
+
+            <div class="settings-row">
+              <div>
+                <div class="row-title">Toccata Signature Porcelain Cursor</div>
+                <div class="row-desc">Bespoke aerodynamic arrow with inset sapphire resonator node</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="setting-cursor-toggle" checked onchange="toggleCustomCursor(this.checked)">
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <div class="settings-row">
+              <div>
+                <div class="row-title">Acoustic Touch Feedback ("To Touch")</div>
+                <div class="row-desc">Displays a subtle harmonic resonance ring at the pointer tip when clicking</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="setting-touch-toggle" checked onchange="toggleTouchRipple(this.checked)">
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <div class="settings-row">
+              <div>
+                <div class="row-title">Window Inertial Tilt Physics</div>
+                <div class="row-desc">Simulates physical weight and aerodynamic lean when dragging windows</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="setting-tilt-toggle" checked onchange="toggleTilt(this.checked)">
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <div class="settings-row">
+              <div>
+                <div class="row-title">Wallpaper Tinting in Windows</div>
+                <div class="row-desc">Blends desktop wallpaper colors into window materials and sidebars</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider round"></span>
+              </label>
             </div>
           </div>
 
-          <div class="settings-row">
-            <div>
-              <div class="row-title">Accent Color</div>
-              <div class="row-desc">System highlight color for buttons, focus rings, and dock active dots</div>
+          <!-- Tab 2: Displays & Retina -->
+          <div id="settings-tab-displays" class="hidden">
+            <h3>Displays &amp; Retina</h3>
+            <p class="settings-desc">Manage resolutions, ProMotion refresh rates, and color profiles.</p>
+            <div class="settings-row">
+              <div>
+                <div class="row-title">Retina Resolution</div>
+                <div class="row-desc">3840 &times; 2160 (HiDPI 200% Crisp Scaling)</div>
+              </div>
+              <span class="status-text" style="font-size: 13px; font-weight: 700; color: var(--accent-color);">4K Retina</span>
             </div>
-            <div class="accent-dots">
-              <span class="accent-dot blue active" onclick="setAccent('#007aff')" title="System Blue"></span>
-              <span class="accent-dot purple" onclick="setAccent('#af52de')" title="System Purple"></span>
-              <span class="accent-dot pink" onclick="setAccent('#ff2d55')" title="System Pink"></span>
-              <span class="accent-dot green" onclick="setAccent('#34c759')" title="System Green"></span>
-              <span class="accent-dot orange" onclick="setAccent('#ff9500')" title="System Orange"></span>
+            <div class="settings-row">
+              <div>
+                <div class="row-title">ProMotion Refresh Rate</div>
+                <div class="row-desc">Adaptive hardware V-Sync synchronization</div>
+              </div>
+              <span class="status-text" style="font-size: 13px; font-weight: 700; color: #34c759;">120Hz Fluid</span>
+            </div>
+            <div class="settings-row">
+              <div>
+                <div class="row-title">Color Profile</div>
+                <div class="row-desc">Cinema-grade wide gamut color reproduction</div>
+              </div>
+              <span class="status-text" style="font-size: 13px; font-weight: 700;">Display P3</span>
             </div>
           </div>
 
-          <div class="settings-row">
-            <div>
-              <div class="row-title">Toccata Signature Porcelain Cursor</div>
-              <div class="row-desc">Bespoke aerodynamic arrow with inset sapphire resonator node</div>
+          <!-- Tab 3: Sound & Audio Engine -->
+          <div id="settings-tab-sound" class="hidden">
+            <h3>Sound &amp; Audio Engine</h3>
+            <p class="settings-desc">PipeWire low-latency professional studio sound architecture.</p>
+            <div class="settings-row">
+              <div>
+                <div class="row-title">PipeWire Realtime Engine</div>
+                <div class="row-desc">Hardware ALSA direct mixing &bull; 0.7ms ultra-low latency</div>
+              </div>
+              <span class="status-text" style="color: #34c759; font-weight: 700;">Active (Bit-Perfect)</span>
             </div>
-            <label class="switch">
-              <input type="checkbox" id="setting-cursor-toggle" checked onchange="toggleCustomCursor(this.checked)">
-              <span class="slider round"></span>
-            </label>
+            <div class="settings-row">
+              <div>
+                <div class="row-title">Harmonic Touch Chimes</div>
+                <div class="row-desc">Auditory acoustic feedback on UI gestures and window interactions</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" checked id="sound-feedback-setting" onchange="toggleAudioFeedback(this.checked)">
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="settings-row">
+              <div>
+                <div class="row-title">Buffer Period Size</div>
+                <div class="row-desc">64 samples @ 96,000 Hz (Pro Studio Grade)</div>
+              </div>
+              <span class="status-text" style="color: var(--accent-color); font-weight: 700;">64 Frames</span>
+            </div>
           </div>
 
-          <div class="settings-row">
-            <div>
-              <div class="row-title">Acoustic Touch Feedback ("To Touch")</div>
-              <div class="row-desc">Displays a subtle harmonic resonance ring at the pointer tip when clicking</div>
+          <!-- Tab 4: Time Capsule Snapshots -->
+          <div id="settings-tab-snapshots" class="hidden">
+            <h3>Time Capsule Snapshots</h3>
+            <p class="settings-desc">Instantaneous Btrfs copy-on-write system rollbacks (zero storage penalty).</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <span>14 Snapshots Available</span>
+              <button class="btn btn-primary" onclick="playHarmonicChime([261.63, 329.63, 392, 523.25]); triggerNotification('Created Snapshot: #15 (Pre-update backup)')">+ Create Snapshot</button>
             </div>
-            <label class="switch">
-              <input type="checkbox" id="setting-touch-toggle" checked onchange="toggleTouchRipple(this.checked)">
-              <span class="slider round"></span>
-            </label>
+            <div class="process-table-container">
+              <table class="process-table">
+                <thead>
+                  <tr><th>Snapshot</th><th>Created</th><th>Size</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Snapshot #14 (Clean Desktop State)</td><td>Today, 1:45 AM</td><td>12 MB</td><td><button class="btn btn-secondary" style="padding: 2px 8px; font-size: 11px;" onclick="triggerNotification('Rolled back to Snapshot #14 in 0.04s!')">Restore</button></td></tr>
+                  <tr><td>Snapshot #13 (App Installation Checkpoint)</td><td>Yesterday</td><td>48 MB</td><td><button class="btn btn-secondary" style="padding: 2px 8px; font-size: 11px;" onclick="triggerNotification('Rolled back to Snapshot #13 in 0.05s!')">Restore</button></td></tr>
+                  <tr><td>Snapshot #12 (Base System Genesis)</td><td>Oct 28</td><td>0 MB</td><td><button class="btn btn-secondary" style="padding: 2px 8px; font-size: 11px;" onclick="triggerNotification('Rolled back to Snapshot #12 in 0.04s!')">Restore</button></td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
-          <div class="settings-row">
-            <div>
-              <div class="row-title">Window Inertial Tilt Physics</div>
-              <div class="row-desc">Simulates physical weight and aerodynamic lean when dragging windows</div>
+          <!-- Tab 5: Security & Permissions -->
+          <div id="settings-tab-security" class="hidden">
+            <h3>Security &amp; Permissions</h3>
+            <p class="settings-desc">Zero telemetry, local encryption, and gatekeeper application sandboxing.</p>
+            <div class="settings-row">
+              <div>
+                <div class="row-title">Telemetry &amp; Diagnostics</div>
+                <div class="row-desc">100% blocked at kernel level. Zero data leaves your machine.</div>
+              </div>
+              <span class="status-text" style="color: #34c759; font-weight: 700;">Zero Telemetry (Enforced)</span>
             </div>
-            <label class="switch">
-              <input type="checkbox" id="setting-tilt-toggle" checked onchange="toggleTilt(this.checked)">
-              <span class="slider round"></span>
-            </label>
-          </div>
-
-          <div class="settings-row">
-            <div>
-              <div class="row-title">Wallpaper Tinting in Windows</div>
-              <div class="row-desc">Blends desktop wallpaper colors into window materials and sidebars</div>
+            <div class="settings-row">
+              <div>
+                <div class="row-title">Proton Windows Sandbox</div>
+                <div class="row-desc">Isolate legacy Windows executables from core operating system files</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider round"></span>
+              </label>
             </div>
-            <label class="switch">
-              <input type="checkbox" checked>
-              <span class="slider round"></span>
-            </label>
-          </div>
-
-          <div class="settings-row">
-            <div>
-              <div class="row-title">Time Capsule Instant Rollback</div>
-              <div class="row-desc">Create a zero-latency Btrfs snapshot to restore system harmony at any moment</div>
+            <div class="settings-row">
+              <div>
+                <div class="row-title">Application Gatekeeper</div>
+                <div class="row-desc">Verify checksum signatures and permissions on third-party bundles</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider round"></span>
+              </label>
             </div>
-            <button class="btn btn-secondary" onclick="playHarmonicChime([261.63, 329.63, 392, 523.25]); triggerNotification('Snapshot saved: Ready to restore anytime')">Create Snapshot</button>
           </div>
         </div>
       </div>
@@ -492,22 +681,39 @@ Every administrative task is accessible visually:
     <!-- ====================================================================
          WINDOW 4: TEMPO (Performance Monitor)
          ==================================================================== -->
-    <div class="window glass-panel hidden" id="win-tempo" style="top: 150px; left: 300px; width: 620px; height: 380px;">
+    <div class="window glass-panel hidden" id="win-tempo" style="top: 130px; left: 280px; width: 680px; height: 500px;">
       <div class="window-titlebar">
         <div class="traffic-lights">
           <button class="tl-btn tl-close" onclick="closeWindow('win-tempo')"></button>
           <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-tempo')"></button>
           <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-tempo')"></button>
         </div>
-        <div class="window-title">Tempo &mdash; Activity Monitor</div>
-        <div class="titlebar-placeholder"></div>
+        <div class="window-title">Tempo &mdash; Activity Monitor &amp; Task Manager</div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-secondary" onclick="promptForceQuit()" style="padding: 3px 10px; font-size: 11px; background: rgba(255, 59, 48, 0.2); border-color: rgba(255, 59, 48, 0.4); color: #ff453a;">Force Quit</button>
+        </div>
       </div>
+
+      <!-- Force Quit Modal Drop Sheet -->
+      <div class="force-quit-sheet hidden" id="tempo-force-quit-sheet">
+        <div style="font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+          <span>⚠️</span> Force Quit Application
+        </div>
+        <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.5;">
+          Are you sure you want to force quit <strong id="fq-process-name">Horizon Web Engine</strong>? Unsaved data will be lost.
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 4px;">
+          <button class="btn btn-secondary" onclick="cancelForceQuit()">Cancel</button>
+          <button class="btn btn-primary" onclick="confirmForceQuit()" style="background: #ff3b30;">Force Quit</button>
+        </div>
+      </div>
+
       <div class="window-body tempo-body">
         <div class="tempo-grid">
           <div class="tempo-card">
             <div class="tc-header">
               <span>CPU Usage</span>
-              <span class="tc-metric">14% Load</span>
+              <span class="tc-metric" id="tempo-cpu-metric">14% Load</span>
             </div>
             <div class="tempo-wave-box">
               <div class="oscilloscope-line"></div>
@@ -516,15 +722,80 @@ Every administrative task is accessible visually:
           <div class="tempo-card">
             <div class="tc-header">
               <span>Memory Pressure</span>
-              <span class="tc-metric">4.2 / 32 GB</span>
+              <span class="tc-metric">4.2 / 32 GB (13%)</span>
             </div>
             <div class="tempo-wave-box">
-              <div class="oscilloscope-line"></div>
+              <div class="oscilloscope-line" style="background: repeating-linear-gradient(90deg, #34c759 0 8px, transparent 8px 16px); box-shadow: 0 0 10px #34c759;"></div>
             </div>
           </div>
         </div>
+
+        <!-- Live Process Manager Table -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2px;">
+          <span style="font-weight: 700; font-size: 13px;">Active System Processes</span>
+          <input type="text" id="tempo-process-filter" placeholder="Filter processes..." oninput="filterProcesses(this.value)" style="background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 6px; padding: 3px 8px; font-size: 11px; color: var(--text-primary); outline: none; width: 140px;">
+        </div>
+
+        <div class="process-table-container">
+          <table class="process-table">
+            <thead>
+              <tr>
+                <th>Process Name</th>
+                <th>PID</th>
+                <th>% CPU</th>
+                <th>Memory</th>
+                <th>User</th>
+              </tr>
+            </thead>
+            <tbody id="tempo-process-list">
+              <tr class="process-row selected" onclick="selectProcess(this, 'Horizon Web Engine', '2842')">
+                <td>🌐 Horizon Web Engine</td>
+                <td>2842</td>
+                <td>4.8%</td>
+                <td>280 MB</td>
+                <td>user</td>
+              </tr>
+              <tr class="process-row" onclick="selectProcess(this, 'KWin Wayland Compositor', '1042')">
+                <td>🖥️ KWin Wayland Compositor</td>
+                <td>1042</td>
+                <td>3.2%</td>
+                <td>120 MB</td>
+                <td>user</td>
+              </tr>
+              <tr class="process-row" onclick="selectProcess(this, 'Cadence Files', '1850')">
+                <td>📂 Cadence Files</td>
+                <td>1850</td>
+                <td>1.4%</td>
+                <td>84 MB</td>
+                <td>user</td>
+              </tr>
+              <tr class="process-row" onclick="selectProcess(this, 'Sonata Acoustic Stage', '2105')">
+                <td>🎼 Sonata Acoustic Stage</td>
+                <td>2105</td>
+                <td>1.1%</td>
+                <td>64 MB</td>
+                <td>user</td>
+              </tr>
+              <tr class="process-row" onclick="selectProcess(this, 'PipeWire Studio Server', '812')">
+                <td>🔊 PipeWire Studio Server</td>
+                <td>812</td>
+                <td>0.8%</td>
+                <td>42 MB</td>
+                <td>user</td>
+              </tr>
+              <tr class="process-row" onclick="selectProcess(this, 'Scribe Notes & Code', '1920')">
+                <td>📝 Scribe Notes &amp; Code</td>
+                <td>1920</td>
+                <td>0.2%</td>
+                <td>58 MB</td>
+                <td>user</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
         <div class="tempo-status-row">
-          <span>Active Cores: 16 Symphony Threads</span>
+          <span>Active Cores: 16 Symphony Threads &bull; BORE Realtime Scheduler</span>
           <span>GPU Pipeline: 120Hz V-Sync Synchronized</span>
         </div>
       </div>
@@ -573,6 +844,71 @@ Every administrative task is accessible visually:
     </div>
 
     <!-- ====================================================================
+         WINDOW 6: SONATA (The Acoustic Player & Sound Engine)
+         ==================================================================== -->
+    <div class="window glass-panel hidden" id="win-sonata" style="top: 120px; left: 240px; width: 660px; height: 430px;">
+      <div class="window-titlebar">
+        <div class="traffic-lights">
+          <button class="tl-btn tl-close" onclick="closeWindow('win-sonata')"></button>
+          <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-sonata')"></button>
+          <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-sonata')"></button>
+        </div>
+        <div class="window-title">Sonata &mdash; Acoustic Player &amp; PipeWire Studio</div>
+        <div class="titlebar-placeholder"></div>
+      </div>
+      <div class="window-body sonata-body">
+        <div class="sonata-stage">
+          <div class="vinyl-disc" id="sonata-vinyl">
+            <div class="vinyl-center-art">🎼</div>
+          </div>
+          <div class="sonata-info">
+            <div class="sonata-title">Toccata &amp; Fugue in D Minor</div>
+            <div class="sonata-artist">Synthesized Polyphony &bull; Virtual Orchestral Ensemble</div>
+            <div class="spectrum-bars" id="sonata-spectrum">
+              <span class="spectrum-bar"></span>
+              <span class="spectrum-bar"></span>
+              <span class="spectrum-bar"></span>
+              <span class="spectrum-bar"></span>
+              <span class="spectrum-bar"></span>
+              <span class="spectrum-bar"></span>
+              <span class="spectrum-bar"></span>
+              <span class="spectrum-bar"></span>
+            </div>
+            <div class="slider-pill" style="height: 6px; width: 100%; margin-top: 6px;">
+              <div class="slider-track-fill" style="width: 42%;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-secondary);">
+              <span>1:48</span>
+              <span>4:22</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sonata-controls">
+          <button class="toolbar-icon-btn" onclick="playHarmonicChime([330]); triggerNotification('Previous movement')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
+          <button class="play-round-btn" id="sonata-play-btn" onclick="toggleSonataPlayback()">▶</button>
+          <button class="toolbar-icon-btn" onclick="playHarmonicChime([440]); triggerNotification('Next movement')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="m6 18 8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+        </div>
+
+        <div class="pipewire-output-box">
+          <div>
+            <div style="font-weight: 700;">PipeWire Output Subsystem</div>
+            <div style="color: var(--text-secondary); font-size: 11px;">Hardware ALSA Direct &bull; 0.7ms Latency &bull; Bit-Perfect</div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <div class="output-pill active" onclick="setAudioOutput(this, 'Built-in High-Excursion Speakers')">🔊 Internal</div>
+            <div class="output-pill" onclick="setAudioOutput(this, 'AirPods Pro (Spatial Audio)')">🎧 AirPods Pro</div>
+            <div class="output-pill" onclick="setAudioOutput(this, 'Studio USB DAC (96kHz / 24-bit)')">🎛️ Studio DAC</div>
+          </div>
+        </div>
+      </div>
+      <!-- Window Resizer Handles -->
+      <div class="window-resizer window-resizer-r"></div>
+      <div class="window-resizer window-resizer-b"></div>
+      <div class="window-resizer window-resizer-rb" title="Drag to Resize"></div>
+    </div>
+
+    <!-- ====================================================================
          CENTERED FLOATING DOCK WITH MACOS-STYLE ICONS
          ==================================================================== -->
     <footer id="dock-container">
@@ -594,6 +930,15 @@ Every administrative task is accessible visually:
           </div>
           <div class="dock-dot hidden" id="dot-scribe"></div>
           <span class="dock-tooltip">Scribe</span>
+        </div>
+
+        <!-- Sonata -->
+        <div class="dock-item" data-app="Sonata" onclick="playHarmonicChime([523.25, 659.25, 783.99]); openWindow('win-sonata')">
+          <div class="mac-app-icon" style="background: linear-gradient(135deg, #6366f1 0%, #af52de 100%);">
+            <div class="vinyl-center-art" style="width: 28px; height: 28px; font-size: 13px;">🎼</div>
+          </div>
+          <div class="dock-dot hidden" id="dot-sonata"></div>
+          <span class="dock-tooltip">Sonata</span>
         </div>
 
         <!-- Tempo -->
@@ -647,6 +992,31 @@ Every administrative task is accessible visually:
         </div>
       </div>
     </footer>
+
+    <!-- Quick Look Modal Overlay (Spacebar on any file) -->
+    <div id="quick-look-modal" class="hidden" onclick="if (event.target === this) closeQuickLook();">
+      <div class="quick-look-card glass-panel">
+        <div class="ql-header">
+          <div class="ql-title">
+            <span>👁️ Quick Look</span>
+            <span style="opacity: 0.5;">&bull;</span>
+            <span id="ql-header-filename">Toccata Manifesto.md</span>
+          </div>
+          <button class="ql-close-btn" onclick="closeQuickLook()">✕</button>
+        </div>
+        <div class="ql-preview-body">
+          <div class="ql-hero-icon" id="ql-hero-icon" style="background: linear-gradient(135deg, #007aff, #6366f1); color: white;">
+            📄
+          </div>
+          <div class="ql-file-name" id="ql-name">Toccata Manifesto.md</div>
+          <div class="ql-meta-tag" id="ql-meta">Markdown Document &bull; 4.2 KB &bull; Modified Today at 1:40 AM</div>
+          <div class="ql-actions">
+            <button class="btn btn-secondary" onclick="closeQuickLook()">Done</button>
+            <button class="btn btn-primary" id="ql-action-btn" onclick="openWindow('win-scribe'); closeQuickLook();">Open with Scribe</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Notification Toast -->
     <div id="toast" class="glass-panel hidden">

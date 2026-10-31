@@ -1589,3 +1589,433 @@ body.light-mode .slider-leading-icon {
     opacity: 0;
   }
 }
+
+
+/* ==========================================================================
+   PHASE 1 CORE APP SUITE EXTENSIONS
+   Quick Look, Sonata Sound Stage, Tempo Process Table, Scribe Split Canvas
+   ========================================================================== */
+
+/* 1. Quick Look Modal Overlay */
+#quick-look-modal {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2500;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.quick-look-card {
+  width: 520px;
+  max-width: 90vw;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 35px 95px rgba(0, 0, 0, 0.75), var(--glass-rim-light);
+  animation: scalePop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes scalePop {
+  0% { transform: scale(0.92); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.ql-header {
+  height: 44px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--glass-border);
+  background: var(--titlebar-bg);
+}
+
+.ql-title {
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ql-close-btn {
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.ql-preview-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+}
+
+.ql-hero-icon {
+  width: 90px;
+  height: 90px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 46px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.ql-file-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.ql-meta-tag {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.ql-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+/* 2. Cadence List & Table View */
+.finder-list-view {
+  flex: 1;
+  padding: 12px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.file-row {
+  display: grid;
+  grid-template-columns: 28px 1fr 140px 100px;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  gap: 12px;
+  transition: background 0.1s ease;
+  cursor: pointer;
+}
+
+.file-row:hover, .file-row.selected {
+  background: var(--active-card);
+}
+
+.file-row.selected {
+  background: rgba(0, 122, 255, 0.25);
+  box-shadow: inset 0 0 0 1px var(--accent-color);
+}
+
+/* Disk Space Donut Card in Cadence */
+.disk-overview-card {
+  padding: 24px;
+  display: flex;
+  gap: 28px;
+  align-items: center;
+}
+
+.donut-chart {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: conic-gradient(var(--system-blue) 0% 58%, var(--system-purple) 58% 78%, var(--system-pink) 78% 88%, rgba(255,255,255,0.15) 88% 100%);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.donut-hole {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--glass-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* 3. Sonata Music & Sound Stage */
+.sonata-body {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  gap: 20px;
+}
+
+.sonata-stage {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.vinyl-disc {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, #007aff 14px, #18181b 15px, #27272a 18px, #09090b 24px, #27272a 32px, #18181b 48px, #09090b 100%);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 122, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  animation: vinylSpin 6s infinite linear paused;
+}
+
+.vinyl-disc.playing {
+  animation-play-state: running;
+}
+
+@keyframes vinylSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.vinyl-center-art {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #007aff, #af52de);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 16px;
+  box-shadow: inset 0 0 4px rgba(0,0,0,0.5);
+}
+
+.sonata-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sonata-title {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.sonata-artist {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* Animated Frequency Spectrum Bars */
+.spectrum-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 34px;
+  padding: 4px 0;
+}
+
+.spectrum-bar {
+  width: 6px;
+  background: linear-gradient(180deg, #38bdf8 0%, #007aff 100%);
+  border-radius: 3px;
+  height: 6px;
+  transition: height 0.15s ease;
+}
+
+.spectrum-bars.playing .spectrum-bar:nth-child(1) { animation: barDance 0.8s infinite ease-in-out alternate; }
+.spectrum-bars.playing .spectrum-bar:nth-child(2) { animation: barDance 0.5s infinite ease-in-out alternate 0.1s; }
+.spectrum-bars.playing .spectrum-bar:nth-child(3) { animation: barDance 0.9s infinite ease-in-out alternate 0.2s; }
+.spectrum-bars.playing .spectrum-bar:nth-child(4) { animation: barDance 0.6s infinite ease-in-out alternate 0.15s; }
+.spectrum-bars.playing .spectrum-bar:nth-child(5) { animation: barDance 1.1s infinite ease-in-out alternate 0.3s; }
+.spectrum-bars.playing .spectrum-bar:nth-child(6) { animation: barDance 0.7s infinite ease-in-out alternate 0.25s; }
+.spectrum-bars.playing .spectrum-bar:nth-child(7) { animation: barDance 0.9s infinite ease-in-out alternate 0.4s; }
+.spectrum-bars.playing .spectrum-bar:nth-child(8) { animation: barDance 0.6s infinite ease-in-out alternate 0.1s; }
+
+@keyframes barDance {
+  0% { height: 6px; }
+  100% { height: 32px; }
+}
+
+.sonata-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.play-round-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 6px 16px var(--accent-glow);
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.play-round-btn:active {
+  transform: scale(0.9);
+}
+
+.pipewire-output-box {
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+.output-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+.output-pill.active {
+  background: var(--accent-color);
+  color: white;
+}
+
+/* 4. Tempo Process Table & Force Quit Sheet */
+.process-table-container {
+  max-height: 175px;
+  overflow-y: auto;
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.process-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.process-table th {
+  position: sticky;
+  top: 0;
+  background: var(--titlebar-bg);
+  padding: 8px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.process-table td {
+  padding: 7px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.process-row:hover, .process-row.selected {
+  background: var(--active-card);
+}
+
+.process-row.selected {
+  background: rgba(0, 122, 255, 0.2);
+}
+
+.force-quit-sheet {
+  position: absolute;
+  top: 42px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 380px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
+  border-radius: 0 0 14px 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 200;
+  animation: sheetDrop 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes sheetDrop {
+  0% { transform: translate(-50%, -100%); opacity: 0; }
+  100% { transform: translate(-50%, 0); opacity: 1; }
+}
+
+/* 5. Scribe Split View */
+.scribe-split-container {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.scribe-rendered-preview {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  border-left: 1px solid var(--glass-border);
+  background: rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.scribe-rendered-preview h1, .scribe-rendered-preview h2, .scribe-rendered-preview h3 {
+  margin-bottom: 10px;
+  color: var(--text-primary);
+}
+
+.scribe-rendered-preview code {
+  background: rgba(255, 255, 255, 0.12);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+}
+
+.scribe-statusbar {
+  height: 26px;
+  background: var(--titlebar-bg);
+  border-top: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
