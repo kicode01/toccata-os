@@ -18,6 +18,7 @@
   let audioCtx = null;
   let masterGain = null;
   let idleTimer = null;
+  let masterLimiter = null;
 
   function initAudio() {
     if (!audioCtx) {
@@ -26,17 +27,26 @@
         audioCtx = new AudioContextClass();
         masterGain = audioCtx.createGain();
         masterGain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-        masterGain.connect(audioCtx.destination);
+
+        masterLimiter = audioCtx.createDynamicsCompressor();
+        masterLimiter.threshold.setValueAtTime(-18, audioCtx.currentTime);
+        masterLimiter.knee.setValueAtTime(12, audioCtx.currentTime);
+        masterLimiter.ratio.setValueAtTime(8, audioCtx.currentTime);
+        masterLimiter.attack.setValueAtTime(0.003, audioCtx.currentTime);
+        masterLimiter.release.setValueAtTime(0.25, audioCtx.currentTime);
+
+        masterGain.connect(masterLimiter);
+        masterLimiter.connect(audioCtx.destination);
       }
     }
     if (audioCtx && audioCtx.state === 'suspended') {
       audioCtx.resume();
     }
-    // Auto-suspend after 15 seconds of inactivity to preserve CPU & battery
+    // Auto-suspend after 12 seconds of inactivity to preserve CPU & battery
     clearTimeout(idleTimer);
     idleTimer = setTimeout(() => {
       if (audioCtx && audioCtx.state === 'running') audioCtx.suspend();
-    }, 15000);
+    }, 12000);
   }
 
   function playHarmonicChime(frequencies = [440, 554.37, 659.25], duration = 0.38) {
@@ -357,40 +367,129 @@
   window.maximizeWindow = maximizeWindow;
 
   // ==========================================================================
-  // 4. REQUEST-ANIMATION-FRAME WINDOW DRAGGING WITH INERTIAL TILT
   // ==========================================================================
+  // 4. CENTRALIZED HIGH-PERFORMANCE WINDOW DRAG & RESIZE ENGINE (Single Loop)
+  // ==========================================================================
+  let activeDragWin = null;
+  let dragStartX = 0, dragStartY = 0;
+  let dragInitLeft = 0, dragInitTop = 0;
+  let dragCurX = 0, dragCurY = 0;
+  let dragLastX = 0, dragSmoothedVx = 0;
+  let dragRafId = null;
+
+  let activeResizeWin = null;
+  let resizeStartX = 0, resizeStartY = 0;
+  let resizeStartW = 0, resizeStartH = 0;
+  let resizeCurW = 0, resizeCurH = 0;
+  let resizeHandleType = ''; // 'r', 'b', 'rb'
+  let resizeRafId = null;
+
+  function updateDragFrame() {
+    if (!activeDragWin) return;
+    activeDragWin.style.left = `${dragCurX}px`;
+    activeDragWin.style.top = `${dragCurY}px`;
+    if (tiltEnabled) {
+      const tilt = Math.max(-2.5, Math.min(2.5, dragSmoothedVx * 0.16));
+      activeDragWin.style.transform = `translate3d(0, 0, 0) rotate(${tilt}deg) scale(1.008)`;
+    }
+    dragRafId = null;
+  }
+
+  function updateResizeFrame() {
+    if (!activeResizeWin) return;
+    if (resizeHandleType.includes('r')) activeResizeWin.style.width = `${resizeCurW}px`;
+    if (resizeHandleType.includes('b')) activeResizeWin.style.height = `${resizeCurH}px`;
+    resizeRafId = null;
+  }
+
+  // Single global pointermove & pointerup listener for the entire desktop
+  window.addEventListener('pointermove', (e) => {
+    if (activeDragWin) {
+      const dx = e.clientX - dragStartX;
+      const dy = e.clientY - dragStartY;
+      const instantVx = e.clientX - dragLastX;
+      dragLastX = e.clientX;
+      dragSmoothedVx = dragSmoothedVx * 0.65 + instantVx * 0.35;
+
+      dragCurX = dragInitLeft + dx;
+      dragCurY = Math.max(28, dragInitTop + dy); // Clamp below top bar
+
+      if (!dragRafId) {
+        dragRafId = requestAnimationFrame(updateDragFrame);
+      }
+    } else if (activeResizeWin) {
+      const minW = activeResizeWin.classList.contains('calc-window') ? 270 : 380;
+      const minH = activeResizeWin.classList.contains('calc-window') ? 380 : 240;
+
+      if (resizeHandleType.includes('r')) {
+        resizeCurW = Math.max(minW, resizeStartW + (e.clientX - resizeStartX));
+      }
+      if (resizeHandleType.includes('b')) {
+        resizeCurH = Math.max(minH, resizeStartH + (e.clientY - resizeStartY));
+      }
+
+      if (!resizeRafId) {
+        resizeRafId = requestAnimationFrame(updateResizeFrame);
+      }
+    }
+  }, { passive: true });
+
+  window.addEventListener('pointerup', () => {
+    if (activeDragWin) {
+      const win = activeDragWin;
+      activeDragWin = null;
+      document.body.classList.remove('is-window-dragging');
+      win.classList.remove('is-dragging');
+      win.style.willChange = '';
+      if (dragRafId) {
+        cancelAnimationFrame(dragRafId);
+        dragRafId = null;
+      }
+
+      win.style.transition = 'transform 0.24s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+      win.style.transform = 'translate3d(0, 0, 0) rotate(0deg) scale(1)';
+      setTimeout(() => {
+        if (!activeDragWin) {
+          win.style.transition = '';
+          win.style.transform = '';
+        }
+      }, 250);
+    }
+
+    if (activeResizeWin) {
+      activeResizeWin.style.willChange = '';
+      activeResizeWin = null;
+      if (resizeRafId) {
+        cancelAnimationFrame(resizeRafId);
+        resizeRafId = null;
+      }
+    }
+  });
+
   document.querySelectorAll('.window').forEach(win => {
     const titlebar = win.querySelector('.window-titlebar');
     if (!titlebar) return;
 
-    let isDragging = false;
-    let startX = 0, startY = 0;
-    let initialLeft = 0, initialTop = 0;
-    let currentX = 0, currentY = 0;
-    let lastClientX = 0;
-    let smoothedVx = 0;
-    let rafId = null;
-
-    win.addEventListener('mousedown', () => bringToFront(win), { passive: true });
+    win.addEventListener('pointerdown', () => bringToFront(win), { passive: true });
 
     titlebar.addEventListener('dblclick', (e) => {
       if (e.target.classList.contains('tl-btn')) return;
       maximizeWindow(win.id);
     });
 
-    titlebar.addEventListener('mousedown', (e) => {
+    titlebar.addEventListener('pointerdown', (e) => {
       if (e.target.classList.contains('tl-btn')) return;
       if (win.dataset.maximized === 'true') return;
 
-      isDragging = true;
-      startX = e.clientX;
-      startY = e.clientY;
-      lastClientX = e.clientX;
-      smoothedVx = 0;
-      initialLeft = win.offsetLeft;
-      initialTop = win.offsetTop;
-      currentX = initialLeft;
-      currentY = initialTop;
+      activeDragWin = win;
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      dragLastX = e.clientX;
+      dragSmoothedVx = 0;
+      dragInitLeft = win.offsetLeft;
+      dragInitTop = win.offsetTop;
+      dragCurX = dragInitLeft;
+      dragCurY = dragInitTop;
 
       bringToFront(win);
       document.body.classList.add('is-window-dragging');
@@ -398,115 +497,26 @@
       win.style.willChange = 'left, top, transform';
     });
 
-    function updateWindowPos() {
-      if (!isDragging) return;
-      win.style.left = `${currentX}px`;
-      win.style.top = `${currentY}px`;
-      if (tiltEnabled) {
-        const tilt = Math.max(-2.5, Math.min(2.5, smoothedVx * 0.16));
-        win.style.transform = `translate3d(0, 0, 0) rotate(${tilt}deg) scale(1.008)`;
-      }
-      rafId = null;
-    }
-
-    window.addEventListener('mousemove', (e) => {
-      if (!isDragging) return;
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-      const instantVx = e.clientX - lastClientX;
-      lastClientX = e.clientX;
-      smoothedVx = smoothedVx * 0.65 + instantVx * 0.35;
-
-      currentX = initialLeft + dx;
-      currentY = Math.max(28, initialTop + dy); // Clamp below top bar
-
-      if (!rafId) {
-        rafId = requestAnimationFrame(updateWindowPos);
-      }
-    }, { passive: true });
-
-    window.addEventListener('mouseup', () => {
-      if (isDragging) {
-        isDragging = false;
-        document.body.classList.remove('is-window-dragging');
-        win.classList.remove('is-dragging');
-        win.style.willChange = '';
-        if (rafId) {
-          cancelAnimationFrame(rafId);
-          rafId = null;
-        }
-
-        win.style.transition = 'transform 0.24s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-        win.style.transform = 'translate3d(0, 0, 0) rotate(0deg) scale(1)';
-        setTimeout(() => {
-          if (!isDragging) {
-            win.style.transition = '';
-            win.style.transform = '';
-          }
-        }, 250);
+    // Wire resizers with zero redundant listeners
+    ['r', 'b', 'rb'].forEach(type => {
+      const handle = win.querySelector(`.window-resizer-${type}`);
+      if (handle) {
+        handle.addEventListener('pointerdown', (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          activeResizeWin = win;
+          resizeHandleType = type;
+          resizeStartX = e.clientX;
+          resizeStartY = e.clientY;
+          resizeStartW = win.offsetWidth;
+          resizeStartH = win.offsetHeight;
+          resizeCurW = resizeStartW;
+          resizeCurH = resizeStartH;
+          bringToFront(win);
+          win.style.willChange = 'width, height';
+        });
       }
     });
-  });
-
-  // ==========================================================================
-  // 5. HARDWARE-ACCELERATED WINDOW RESIZING ENGINE
-  // ==========================================================================
-  document.querySelectorAll('.window').forEach(win => {
-    const resizerR = win.querySelector('.window-resizer-r');
-    const resizerB = win.querySelector('.window-resizer-b');
-    const resizerRB = win.querySelector('.window-resizer-rb');
-
-    function initResizer(resizerEl, resizeWidth, resizeHeight) {
-      if (!resizerEl) return;
-      let isResizing = false;
-      let startX = 0, startY = 0;
-      let startW = 0, startH = 0;
-      let curW = 0, curH = 0;
-      let rRaf = null;
-
-      resizerEl.addEventListener('mousedown', (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        isResizing = true;
-        startX = e.clientX;
-        startY = e.clientY;
-        startW = win.offsetWidth;
-        startH = win.offsetHeight;
-        curW = startW;
-        curH = startH;
-        bringToFront(win);
-        win.style.willChange = 'width, height';
-      });
-
-      function updateSize() {
-        if (!isResizing) return;
-        if (resizeWidth) win.style.width = `${curW}px`;
-        if (resizeHeight) win.style.height = `${curH}px`;
-        rRaf = null;
-      }
-
-      window.addEventListener('mousemove', (e) => {
-        if (!isResizing) return;
-        if (resizeWidth) curW = Math.max(380, startW + (e.clientX - startX));
-        if (resizeHeight) curH = Math.max(220, startH + (e.clientY - startY));
-        if (!rRaf) rRaf = requestAnimationFrame(updateSize);
-      });
-
-      window.addEventListener('mouseup', () => {
-        if (isResizing) {
-          isResizing = false;
-          win.style.willChange = '';
-          if (rRaf) {
-            cancelAnimationFrame(rRaf);
-            rRaf = null;
-          }
-        }
-      });
-    }
-
-    initResizer(resizerR, true, false);
-    initResizer(resizerB, false, true);
-    initResizer(resizerRB, true, true);
   });
 
   // ==========================================================================
@@ -814,6 +824,46 @@
       const active = getActiveWindow();
       if (active) minimizeWindow(active.id);
       return;
+    }
+
+    // Solfege Calculator Global / Focused Keyboard Routing
+    const activeWin = getActiveWindow();
+    if (activeWin && activeWin.id === 'win-calc' && !isEditable) {
+      if (e.key >= '0' && e.key <= '9') {
+        e.preventDefault();
+        calcAction('num', e.key);
+        return;
+      }
+      if (e.key === '.') {
+        e.preventDefault();
+        calcAction('dot');
+        return;
+      }
+      if (['+', '-', '*', '/'].includes(e.key)) {
+        e.preventDefault();
+        calcAction('op', e.key);
+        return;
+      }
+      if (e.key === 'Enter' || e.key === '=') {
+        e.preventDefault();
+        calcAction('equals');
+        return;
+      }
+      if (e.key === 'Backspace') {
+        e.preventDefault();
+        calcBackspace();
+        return;
+      }
+      if (e.key === 'Escape' || e.key.toLowerCase() === 'c') {
+        e.preventDefault();
+        calcAction('clear');
+        return;
+      }
+      if (e.key === '%') {
+        e.preventDefault();
+        calcAction('percent');
+        return;
+      }
     }
   });
 
@@ -1206,27 +1256,123 @@
   let sonataPlaying = false;
   let sonataInterval = null;
   let sonataStep = 0;
+  let sonataElapsedSec = 45;
+  let sonataTotalSec = 262; // 4:22
 
-  // Classical Bach Toccata in D minor polyphonic arpeggios
-  const toccataPhrase = [
-    [587.33], // D5
-    [554.37], // C#5
-    [587.33], // D5
-    [523.25], // C5
-    [466.16], // Bb4
-    [440.00], // A4
-    [392.00], // G4
-    [349.23], // F4
-    [329.63], // E4
-    [293.66], // D4
-    [220.00, 293.66, 349.23, 440.00], // Dm chord
-    [220.00, 293.66, 349.23, 440.00], // Dm chord hold
-    [233.08, 293.66, 349.23, 466.16], // Bb major chord
-    [220.00, 277.18, 329.63, 440.00], // A major 7th chord
-    [146.83, 220.00, 293.66, 349.23]  // Dm low register resolution
+  const sonataTracks = [
+    {
+      title: 'Toccata & Fugue in D Minor',
+      artist: 'J.S. Bach • Synthesized Polyphony • PipeWire Studio',
+      totalSec: 262,
+      durationStr: '4:22',
+      phrase: [
+        [587.33], [554.37], [587.33], [523.25], [466.16], [440.00], [392.00], [349.23], [329.63], [293.66],
+        [220.00, 293.66, 349.23, 440.00], [220.00, 293.66, 349.23, 440.00],
+        [233.08, 293.66, 349.23, 466.16], [220.00, 277.18, 329.63, 440.00],
+        [146.83, 220.00, 293.66, 349.23]
+      ],
+      stepSpeed: 280,
+      waveform: 'triangle'
+    },
+    {
+      title: 'Gymnopédie No. 1',
+      artist: 'Erik Satie • Ambient Acoustic Felt Piano',
+      totalSec: 195,
+      durationStr: '3:15',
+      phrase: [
+        [329.63, 392.00, 493.88], [293.66, 369.99, 440.00],
+        [329.63, 392.00, 493.88], [293.66, 369.99, 440.00],
+        [392.00, 493.88, 587.33], [440.00, 523.25, 659.25]
+      ],
+      stepSpeed: 600,
+      waveform: 'sine'
+    },
+    {
+      title: 'Clair de Lune',
+      artist: 'Claude Debussy • Impressionist Studio Master',
+      totalSec: 304,
+      durationStr: '5:04',
+      phrase: [
+        [415.30, 523.25, 622.25], [466.16, 587.33, 698.46],
+        [523.25, 659.25, 783.99], [415.30, 493.88, 622.25],
+        [392.00, 466.16, 587.33]
+      ],
+      stepSpeed: 450,
+      waveform: 'triangle'
+    },
+    {
+      title: 'The Four Seasons: Winter (Allegro)',
+      artist: 'Antonio Vivaldi • High-Velocity PipeWire Strings',
+      totalSec: 218,
+      durationStr: '3:38',
+      phrase: [
+        [349.23], [349.23], [392.00], [440.00],
+        [466.16], [440.00], [392.00], [349.23],
+        [329.63], [293.66], [261.63], [293.66],
+        [349.23, 440.00, 523.25]
+      ],
+      stepSpeed: 200,
+      waveform: 'sawtooth'
+    }
   ];
 
-  function playSonataNote(freqs, duration = 0.24) {
+  let currentTrackIdx = 0;
+
+  function updateSonataProgressUI() {
+    const curEl = document.getElementById('sonata-time-cur');
+    const totalEl = document.getElementById('sonata-time-total');
+    const fillEl = document.getElementById('sonata-progress-fill');
+
+    const m = Math.floor(sonataElapsedSec / 60);
+    const s = Math.floor(sonataElapsedSec % 60);
+    if (curEl) curEl.textContent = `${m}:${s.toString().padStart(2, '0')}`;
+    if (totalEl) totalEl.textContent = sonataTracks[currentTrackIdx].durationStr;
+
+    const pct = Math.min(100, (sonataElapsedSec / sonataTotalSec) * 100);
+    if (fillEl) fillEl.style.width = `${pct}%`;
+  }
+
+  function changeSonataTrack(direction) {
+    currentTrackIdx = (currentTrackIdx + direction + sonataTracks.length) % sonataTracks.length;
+    const track = sonataTracks[currentTrackIdx];
+    const titleEl = document.querySelector('.sonata-title');
+    const artistEl = document.querySelector('.sonata-artist');
+    if (titleEl) titleEl.textContent = track.title;
+    if (artistEl) artistEl.textContent = track.artist;
+
+    sonataStep = 0;
+    sonataElapsedSec = 0;
+    sonataTotalSec = track.totalSec;
+    updateSonataProgressUI();
+
+    triggerNotification(`Sonata: ${track.title}`);
+    playHarmonicChime([523.25, 659.25], 0.15);
+
+    if (sonataPlaying) {
+      if (sonataInterval) clearInterval(sonataInterval);
+      const curTrack = sonataTracks[currentTrackIdx];
+      playSonataNote(curTrack.phrase[sonataStep], curTrack.stepSpeed / 1000, curTrack.waveform);
+      sonataInterval = setInterval(() => {
+        sonataStep = (sonataStep + 1) % curTrack.phrase.length;
+        sonataElapsedSec = (sonataElapsedSec + (curTrack.stepSpeed / 1000)) % sonataTotalSec;
+        updateSonataProgressUI();
+        const isChord = curTrack.phrase[sonataStep].length > 1;
+        playSonataNote(curTrack.phrase[sonataStep], isChord ? 0.45 : 0.22, curTrack.waveform);
+      }, curTrack.stepSpeed);
+    }
+  }
+  window.changeSonataTrack = changeSonataTrack;
+
+  // Scrubber interactive seek
+  document.getElementById('sonata-scrubber')?.addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    sonataElapsedSec = Math.floor(pct * sonataTotalSec);
+    updateSonataProgressUI();
+    playHarmonicChime([440 + pct * 200], 0.08);
+  });
+
+  function playSonataNote(freqs, duration = 0.24, waveType = 'triangle') {
     if (!audioFeedbackEnabled) return;
     try {
       initAudio();
@@ -1238,7 +1384,7 @@
         const gain = audioCtx.createGain();
         const filter = audioCtx.createBiquadFilter();
 
-        osc.type = 'triangle';
+        osc.type = waveType;
         osc.frequency.setValueAtTime(f, now);
 
         filter.type = 'lowpass';
@@ -1264,20 +1410,22 @@
     const playBtn = document.getElementById('sonata-play-btn');
     const vinyl = document.getElementById('sonata-vinyl');
     const spectrum = document.getElementById('sonata-spectrum');
+    const curTrack = sonataTracks[currentTrackIdx];
 
     if (sonataPlaying) {
       if (playBtn) playBtn.textContent = '❚❚';
       vinyl?.classList.add('playing');
       spectrum?.classList.add('playing');
-      triggerNotification('Sonata: Playing Toccata & Fugue in D Minor (PipeWire 0.7ms)');
+      triggerNotification(`Sonata: Playing ${curTrack.title} (PipeWire 0.7ms)`);
 
-      sonataStep = 0;
-      playSonataNote(toccataPhrase[sonataStep], 0.28);
+      playSonataNote(curTrack.phrase[sonataStep], curTrack.stepSpeed / 1000, curTrack.waveform);
       sonataInterval = setInterval(() => {
-        sonataStep = (sonataStep + 1) % toccataPhrase.length;
-        const isChord = toccataPhrase[sonataStep].length > 1;
-        playSonataNote(toccataPhrase[sonataStep], isChord ? 0.52 : 0.25);
-      }, 280);
+        sonataStep = (sonataStep + 1) % curTrack.phrase.length;
+        sonataElapsedSec = (sonataElapsedSec + (curTrack.stepSpeed / 1000)) % sonataTotalSec;
+        updateSonataProgressUI();
+        const isChord = curTrack.phrase[sonataStep].length > 1;
+        playSonataNote(curTrack.phrase[sonataStep], isChord ? 0.45 : 0.22, curTrack.waveform);
+      }, curTrack.stepSpeed);
     } else {
       if (playBtn) playBtn.textContent = '▶';
       vinyl?.classList.remove('playing');
@@ -1371,6 +1519,19 @@
   }
   window.confirmForceQuit = confirmForceQuit;
 
+  // Lightweight background heartbeat for Tempo Activity Monitor
+  setInterval(() => {
+    const cpuMetric = document.getElementById('tempo-cpu-metric');
+    if (cpuMetric) {
+      const load = Math.floor(7 + Math.random() * 8);
+      cpuMetric.textContent = `${load}% Load`;
+    }
+    const firstRowCpu = document.querySelector('#tempo-process-list .process-row td:nth-child(3)');
+    if (firstRowCpu) {
+      firstRowCpu.textContent = `${(2.2 + Math.random() * 2.4).toFixed(1)}%`;
+    }
+  }, 2500);
+
   // --- F. SYSTEM SETTINGS TAB CONTROLLER (macOS Sequoia Multi-Category Suite) ---
   const allSettingsTabs = [
     'wifi', 'bluetooth', 'network',
@@ -1394,6 +1555,31 @@
     playHarmonicChime([440, 554.37], 0.18);
   }
   window.switchSettingsTab = switchSettingsTab;
+
+  function setWallpaper(gradient, name, cardEl) {
+    document.documentElement.style.setProperty('--bg-wallpaper', gradient);
+    document.querySelectorAll('#settings-tab-wallpaper .wallpaper-card').forEach(c => {
+      c.style.borderColor = 'var(--glass-border)';
+      c.style.borderWidth = '1px';
+      const statusText = c.querySelector('.wallpaper-status');
+      if (statusText) {
+        statusText.textContent = 'Available • Display P3';
+        statusText.style.color = 'var(--text-secondary)';
+      }
+    });
+    if (cardEl) {
+      cardEl.style.borderColor = 'var(--accent-color)';
+      cardEl.style.borderWidth = '2px';
+      const statusText = cardEl.querySelector('.wallpaper-status');
+      if (statusText) {
+        statusText.textContent = 'Current Wallpaper • Active';
+        statusText.style.color = 'var(--accent-color)';
+      }
+    }
+    playHarmonicChime([523.25, 659.25, 783.99], 0.25);
+    triggerNotification(`Applied Wallpaper: ${name}`);
+  }
+  window.setWallpaper = setWallpaper;
 
   function filterSettings(query) {
     const q = (query || '').toLowerCase().trim();
@@ -1594,15 +1780,48 @@
   }
   window.switchTerminalTab = switchTerminalTab;
 
+  let termHistoryList = [];
+  let termHistoryIdx = -1;
+
   function handleTerminalKey(e) {
-    if (e.key !== 'Enter') return;
     const input = document.getElementById('term-input');
     const history = document.getElementById('term-history');
     if (!input || !history) return;
 
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (termHistoryList.length === 0) return;
+      if (termHistoryIdx === -1) {
+        termHistoryIdx = termHistoryList.length - 1;
+      } else if (termHistoryIdx > 0) {
+        termHistoryIdx--;
+      }
+      input.value = termHistoryList[termHistoryIdx] || '';
+      return;
+    }
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (termHistoryIdx !== -1) {
+        if (termHistoryIdx < termHistoryList.length - 1) {
+          termHistoryIdx++;
+          input.value = termHistoryList[termHistoryIdx] || '';
+        } else {
+          termHistoryIdx = -1;
+          input.value = '';
+        }
+      }
+      return;
+    }
+
+    if (e.key !== 'Enter') return;
+
     const cmd = input.value.trim();
     input.value = '';
     if (!cmd) return;
+
+    termHistoryList.push(cmd);
+    termHistoryIdx = -1;
 
     // Append executed prompt
     const pLabel = document.getElementById('term-prompt-label')?.textContent || 'toccata@core:~$';
@@ -1715,18 +1934,87 @@ Audio Engine:              PipeWire Low-Latency Subsystem (0.7ms ALSA)`;
       return `Toccata OS [Version 1.0.4.2026] (Windows Command Subsystem Compatible)`;
     }
 
-    // 7. Package Installer (winget / pacman / apt)
+    // 7. Fastfetch & Neofetch
+    if (cmd === 'fastfetch' || cmd === 'neofetch') {
+      return '<pre style="color: #38bdf8; font-family: var(--font-mono); line-height: 1.35; margin: 4px 0;">' +
+'       _.._        <span style="color: #34c759; font-weight: 700;">toccata@core</span>\n' +
+'     .\' .-\'\'       <span style="color: var(--text-secondary);">------------</span>\n' +
+'    /  /           <span style="color: #ff9500;">OS:</span> Toccata OS 1.0 "Sonata" (x86_64)\n' +
+'    |  |  ___      <span style="color: #ff9500;">Kernel:</span> 6.11.5-bore-xanmod\n' +
+'    \\  \\ \'---\'     <span style="color: #ff9500;">Uptime:</span> 4 hours, 28 mins\n' +
+'     \'. \'\'-.,      <span style="color: #ff9500;">Shell:</span> ' + currentShell + ' / Windows Bridge\n' +
+'       \'\'\'\'        <span style="color: #ff9500;">Resolution:</span> 3840x2160 @ 120Hz (Retina Display P3)\n' +
+'     <span style="color: #ff2d55; font-weight: 700;">[TOCCATA]</span>     <span style="color: #ff9500;">DE:</span> KWin Wayland Compositor (Frosted Slate)\n' +
+'                   <span style="color: #ff9500;">Theme:</span> Apple Glass Vibrancy (No Muddy Tones)\n' +
+'                   <span style="color: #ff9500;">CPU:</span> 16 Symphony Cores @ 4.8 GHz (BORE Scheduler)\n' +
+'                   <span style="color: #ff9500;">Memory:</span> 820 MiB / 32 GiB (2.5% Idle Footprint)\n' +
+'                   <span style="color: #ff9500;">Audio:</span> PipeWire 1.2.5 ALSA Direct (0.7ms Latency)\n' +
+'      </pre>';
+    }
+
+    // 8. Matrix Real-Time Stream
+    if (cmd === 'matrix') {
+      return `<div style="color: #34c759; font-family: monospace; font-size: 11px; line-height: 1.4;">
+01010100 01101111 01100011 01100011 01100001 01110100 01100001<br>
+λ 0x7FFD2B814400 : KERNEL_REALTIME_DISPATCH_OK<br>
+λ PIPEWIRE_ALSA_STREAM : 96000Hz_24BIT_0.667ms_LOCKED<br>
+λ BORE_CPU_BURST_PENALTY : 0 (Max Interactive Responsiveness)<br>
+<span style="color: white; font-weight: 700;">[Matrix Stream Decoded] Hypervisor real-time mode active. Zero telemetry.</span>
+      </div>`;
+    }
+
+    // 9. Text Viewer (cat / type)
+    if (cmd === 'cat' || cmd === 'type') {
+      const target = (parts[1] || '').toLowerCase();
+      if (target.includes('manifesto')) {
+        return `<pre style="color: var(--text-primary); font-family: var(--font-mono); white-space: pre-wrap; margin: 4px 0;">
+# Toccata OS Manifesto
+1. Apple Aesthetics: Pure Frosted Slate Vibrancy without muddy tones.
+2. Linux Performance: XanMod/BORE kernel, PipeWire 0.7ms, 820MB idle RAM.
+3. Windows Commands: Muscle-memory bridge for dir, ipconfig, taskmgr, winget.
+4. Zero-Terminal Rule: Everything has a visual GUI and touch sheets.
+        </pre>`;
+      }
+      return `File: ${parts[1] || 'unspecified'}. Open in Scribe with 'notepad ${parts[1] || ''}'.`;
+    }
+
+    // 10. Navigation & Identity
+    if (cmd === 'pwd') {
+      return currentShell === 'cmd' ? 'C:\\Users\\Toccata' : '/home/toccata';
+    }
+
+    if (cmd === 'whoami') {
+      return currentShell === 'cmd' ? 'TOCCATA-CORE\\toccata' : 'toccata (Sovereign Root)';
+    }
+
+    if (cmd === 'date' || cmd === 'time') {
+      return new Date().toString();
+    }
+
+    if (cmd === 'echo') {
+      return escapeHtml(rawCmd.substring(5).trim());
+    }
+
+    if (cmd === 'wsl') {
+      return `<span style="color: #38bdf8;">Windows Subsystem for Linux (WSLg) Status:</span>
+Distribution: Toccata-Core-ArchLinux (Default)
+Version: WSL 2 (Kernel 6.11.5-bore-xanmod)
+Wayland Socket: /mnt/wslg/runtime-dir/wayland-0 (Hardware Accelerated)
+Audio Driver: /mnt/wslg/PulseAudio &rarr; Host WASAPI / PipeWire Direct`;
+    }
+
+    // 11. Package Installer (winget / pacman / apt)
     if (cmd === 'winget' || cmd === 'pacman') {
       return `<span style="color: #34c759;">Toccata Unified Package Hub (Zero-Terminal Enabled):</span>
 Double-click any .app, .dmg, or .exe in Cadence to install visually.
 Or search packages in Gallery.app.`;
     }
 
-    // 8. Help
+    // 12. Help
     if (cmd === 'help') {
       return `<span style="color: #38bdf8; font-weight: 700;">Toccata Shell Built-in Commands:</span>
-&bull; Windows Compatibility : ipconfig, dir, cls, taskmgr, tasklist, systeminfo, ver, winget
-&bull; Linux Standard CLI   : ls, ps, free, df, uname, clear, pwd, whoami, help
+&bull; Windows Compatibility : ipconfig, dir, cls, taskmgr, tasklist, systeminfo, ver, winget, echo, cat
+&bull; Linux Standard CLI   : ls, ps, free, df, uname, clear, pwd, whoami, fastfetch, matrix, help, date
 &bull; GUI Integration      : Double-clicking any .app or file launches instant native visual sheets.`;
     }
 
@@ -1747,6 +2035,33 @@ Or search packages in Gallery.app.`;
     if (mainEl) mainEl.textContent = calcCurrent;
     if (subEl) subEl.textContent = calcOp ? `${calcPrev} ${calcOp}` : '';
   }
+
+  function updateCalcOpHighlight() {
+    document.querySelectorAll('.calc-key-op').forEach(btn => {
+      btn.classList.remove('active');
+      const txt = btn.textContent.trim();
+      if (calcOp && !calcShouldReset) {
+        if ((calcOp === '/' && (txt === '÷' || txt === '/')) ||
+            (calcOp === '*' && (txt === '×' || txt === '*')) ||
+            (calcOp === '-' && (txt === '−' || txt === '-')) ||
+            (calcOp === '+' && txt === '+')) {
+          btn.classList.add('active');
+        }
+      }
+    });
+  }
+
+  function calcBackspace() {
+    if (calcShouldReset) return;
+    if (calcCurrent.length > 1) {
+      calcCurrent = calcCurrent.slice(0, -1);
+    } else {
+      calcCurrent = '0';
+    }
+    playHarmonicChime([380], 0.06);
+    updateCalcScreen();
+  }
+  window.calcBackspace = calcBackspace;
 
   function calcAction(action, val) {
     if (action === 'num') {
@@ -1786,7 +2101,7 @@ Or search packages in Gallery.app.`;
         else if (calcOp === '*') res = calcPrev * cur;
         else if (calcOp === '/') res = cur !== 0 ? calcPrev / cur : 'Error';
 
-        calcCurrent = res.toString();
+        calcCurrent = (typeof res === 'number') ? parseFloat(res.toPrecision(10)).toString() : res;
         calcPrev = null;
         calcOp = null;
         calcShouldReset = true;
@@ -1794,6 +2109,7 @@ Or search packages in Gallery.app.`;
       }
     }
     updateCalcScreen();
+    updateCalcOpHighlight();
   }
   window.calcAction = calcAction;
 
