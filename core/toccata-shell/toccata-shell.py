@@ -70,7 +70,8 @@ class AppleMenuLogoButton(QWidget):
             p.drawRoundedRect(QRectF(1, 1, w - 2, h - 2), 5, 5)
 
         # Draw Apple Logo Path
-        p.setBrush(QBrush(QColor(255, 255, 255, 230)))
+        logo_color = QColor(29, 29, 31, 230) if theme.IS_LIGHT_MODE else QColor(255, 255, 255, 230)
+        p.setBrush(QBrush(logo_color))
         p.setPen(Qt.PenStyle.NoPen)
         cx, cy = w / 2, h / 2
 
@@ -122,27 +123,29 @@ class TopBarStatusVector(QWidget):
         p = QPainter(self)
         p.setRenderHint(QPainter.RenderHint.Antialiasing)
         w, h = self.width(), self.height()
+        stroke_color = QColor(29, 29, 31, 230) if theme.IS_LIGHT_MODE else QColor(255, 255, 255, 220)
+        dim_color = QColor(0, 0, 0, 40) if theme.IS_LIGHT_MODE else QColor(255, 255, 255, 25)
 
         if self.is_hovered and self.on_click:
-            p.setBrush(QBrush(QColor(255, 255, 255, 25)))
+            p.setBrush(QBrush(dim_color))
             p.setPen(Qt.PenStyle.NoPen)
             p.drawRoundedRect(QRectF(1, 1, w - 2, h - 2), 4, 4)
 
         if self.icon_type == "battery":
             # "100%" text + horizontal battery pill
             p.setFont(QFont("Inter", 9))
-            p.setPen(QColor(255, 255, 255, 220))
+            p.setPen(stroke_color)
             p.drawText(QRectF(2, 4, 30, 16), Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignRight, "100%")
 
             # Battery outline
             bx, by, bw, bh = 36, 6, 20, 11
-            p.setPen(QPen(QColor(255, 255, 255, 180), 1.2))
+            p.setPen(QPen(stroke_color, 1.2))
             p.setBrush(Qt.BrushStyle.NoBrush)
             p.drawRoundedRect(QRectF(bx, by, bw, bh), 2.5, 2.5)
 
             # Battery tip
             p.setPen(Qt.PenStyle.NoPen)
-            p.setBrush(QBrush(QColor(255, 255, 255, 180)))
+            p.setBrush(QBrush(stroke_color))
             p.drawRoundedRect(QRectF(bx + bw + 1, by + 3, 1.5, 5), 0.5, 0.5)
 
             # Battery Green Charge Fill
@@ -151,32 +154,32 @@ class TopBarStatusVector(QWidget):
 
         elif self.icon_type == "wifi":
             cx, cy = w / 2, h / 2 + 3
-            p.setPen(QPen(QColor(255, 255, 255, 220), 1.4, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
+            p.setPen(QPen(stroke_color, 1.4, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
             p.drawArc(QRectF(cx - 7, cy - 8, 14, 14), 45 * 16, 90 * 16)
             p.drawArc(QRectF(cx - 4.5, cy - 5, 9, 9), 45 * 16, 90 * 16)
-            p.setBrush(QBrush(QColor(255, 255, 255, 230)))
+            p.setBrush(QBrush(stroke_color))
             p.setPen(Qt.PenStyle.NoPen)
             p.drawEllipse(QPointF(cx, cy + 1), 1.4, 1.4)
 
         elif self.icon_type == "spotlight":
             cx, cy = w / 2 - 1, h / 2 - 1
-            p.setPen(QPen(QColor(255, 255, 255, 220), 1.5, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
+            p.setPen(QPen(stroke_color, 1.5, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
             p.setBrush(Qt.BrushStyle.NoBrush)
             p.drawEllipse(QPointF(cx, cy), 4.5, 4.5)
             p.drawLine(QPointF(cx + 3.2, cy + 3.2), QPointF(cx + 7.5, cy + 7.5))
 
         elif self.icon_type == "control_center":
             # Two horizontal capsule sliders
-            p.setPen(QPen(QColor(255, 255, 255, 200), 1.2))
+            p.setPen(QPen(stroke_color, 1.2))
             p.setBrush(Qt.BrushStyle.NoBrush)
             # Top slider
             p.drawRoundedRect(QRectF(4, 5, 18, 6), 3, 3)
-            p.setBrush(QBrush(QColor(255, 255, 255, 230)))
+            p.setBrush(QBrush(stroke_color))
             p.drawEllipse(QRectF(7, 6, 4, 4))
             # Bottom slider
             p.setBrush(Qt.BrushStyle.NoBrush)
             p.drawRoundedRect(QRectF(4, 13, 18, 6), 3, 3)
-            p.setBrush(QBrush(QColor(255, 255, 255, 230)))
+            p.setBrush(QBrush(stroke_color))
             p.drawEllipse(QRectF(15, 14, 4, 4))
 
 
@@ -475,25 +478,28 @@ class FrostedTopBar(QWidget):
         # 2. Active Application Title (13pt SemiBold)
         self.app_title = QLabel("Finder")
         self.app_title.setFont(QFont("Inter", 10, QFont.Weight.DemiBold))
-        self.app_title.setStyleSheet("color: #ffffff; padding-left: 2px;")
+        text_color = "#1d1d1f" if theme.IS_LIGHT_MODE else "#ffffff"
+        self.app_title.setStyleSheet(f"color: {text_color}; padding-left: 2px;")
         layout.addWidget(self.app_title)
 
         # 3. Global Menu Bar Items (13pt Regular)
+        item_color = "rgba(0, 0, 0, 0.85)" if theme.IS_LIGHT_MODE else "rgba(255, 255, 255, 0.88)"
+        hover_bg = "rgba(0, 0, 0, 0.08)" if theme.IS_LIGHT_MODE else "rgba(255, 255, 255, 0.14)"
         for item in ["File", "Edit", "View", "Go", "Window", "Help"]:
             btn = QPushButton(item)
-            btn.setStyleSheet("""
-                QPushButton {
+            btn.setStyleSheet(f"""
+                QPushButton {{
                     background: transparent;
                     border: none;
-                    color: rgba(255, 255, 255, 0.88);
+                    color: {item_color};
                     font-size: 13px;
                     padding: 2px 7px;
                     border-radius: 4px;
-                }
-                QPushButton:hover {
-                    background: rgba(255, 255, 255, 0.14);
-                    color: #ffffff;
-                }
+                }}
+                QPushButton:hover {{
+                    background: {hover_bg};
+                    color: {text_color};
+                }}
             """)
             layout.addWidget(btn)
 
@@ -515,7 +521,7 @@ class FrostedTopBar(QWidget):
         # 5. Live Clock
         self.clock_label = QLabel()
         self.clock_label.setFont(QFont("Inter", 10, QFont.Weight.Medium))
-        self.clock_label.setStyleSheet("color: rgba(255, 255, 255, 0.95); padding-left: 4px;")
+        self.clock_label.setStyleSheet(f"color: {text_color}; padding-left: 4px;")
         layout.addWidget(self.clock_label)
 
         # Clock Timer
@@ -530,12 +536,18 @@ class FrostedTopBar(QWidget):
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        # Apple Frosted Glass Top Bar (0.5px subtle border bottom)
-        gradient = QLinearGradient(0, 0, 0, self.height())
-        gradient.setColorAt(0, QColor(28, 28, 34, 215))
-        gradient.setColorAt(1, QColor(18, 18, 22, 235))
-        painter.setBrush(QBrush(gradient))
-        painter.setPen(QPen(QColor(255, 255, 255, 22), 0.75))
+        if theme.IS_LIGHT_MODE:
+            gradient = QLinearGradient(0, 0, 0, self.height())
+            gradient.setColorAt(0, QColor(255, 255, 255, 215))
+            gradient.setColorAt(1, QColor(246, 246, 248, 200))
+            painter.setBrush(QBrush(gradient))
+            painter.setPen(QPen(QColor(0, 0, 0, 22), 0.75))
+        else:
+            gradient = QLinearGradient(0, 0, 0, self.height())
+            gradient.setColorAt(0, QColor(28, 28, 34, 215))
+            gradient.setColorAt(1, QColor(18, 18, 22, 235))
+            painter.setBrush(QBrush(gradient))
+            painter.setPen(QPen(QColor(255, 255, 255, 22), 0.75))
         painter.drawRect(self.rect())
 
     def show_system_menu(self):
@@ -620,12 +632,18 @@ class FrostedDock(QWidget):
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        # Frosted glass capsule with subtle rim glow
-        gradient = QLinearGradient(0, 0, 0, self.height())
-        gradient.setColorAt(0, QColor(36, 36, 44, 210))
-        gradient.setColorAt(1, QColor(18, 18, 24, 240))
-        painter.setBrush(QBrush(gradient))
-        painter.setPen(QPen(QColor(255, 255, 255, 40), 1.0))
+        if theme.IS_LIGHT_MODE:
+            gradient = QLinearGradient(0, 0, 0, self.height())
+            gradient.setColorAt(0, QColor(255, 255, 255, 140))
+            gradient.setColorAt(1, QColor(255, 255, 255, 95))
+            painter.setBrush(QBrush(gradient))
+            painter.setPen(QPen(QColor(255, 255, 255, 210), 1.2))
+        else:
+            gradient = QLinearGradient(0, 0, 0, self.height())
+            gradient.setColorAt(0, QColor(36, 36, 44, 210))
+            gradient.setColorAt(1, QColor(18, 18, 24, 240))
+            painter.setBrush(QBrush(gradient))
+            painter.setPen(QPen(QColor(255, 255, 255, 40), 1.0))
         painter.drawRoundedRect(self.rect().adjusted(1, 1, -1, -1), 22, 22)
 
 
@@ -635,13 +653,52 @@ class ToccataDesktopManager(QMainWindow):
         super().__init__()
         self.setWindowTitle("Toccata Desktop Shell")
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
-        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
         self.current_layout_mode = "macos"
         self.open_windows = {}
 
         screen = QApplication.primaryScreen().geometry()
         self.setGeometry(screen)
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        w, h = self.width(), self.height()
+        # macOS Sequoia Light Dynamic Ambient Wallpaper
+        if theme.IS_LIGHT_MODE:
+            gradient = QLinearGradient(0, 0, w, h)
+            gradient.setColorAt(0.0, QColor(239, 244, 250))
+            gradient.setColorAt(0.35, QColor(253, 244, 235))
+            gradient.setColorAt(0.70, QColor(248, 237, 235))
+            gradient.setColorAt(1.0, QColor(234, 242, 248))
+            painter.fillRect(self.rect(), gradient)
+
+            # Layered Fluid Sequoia Amber Ribbon
+            path = QPainterPath()
+            path.moveTo(0, h * 0.45)
+            path.cubicTo(w * 0.3, h * 0.2, w * 0.6, h * 0.65, w, h * 0.3)
+            path.lineTo(w, h)
+            path.lineTo(0, h)
+            path.closeSubpath()
+            ribbon_grad = QLinearGradient(0, h * 0.4, w, h)
+            ribbon_grad.setColorAt(0.0, QColor(255, 122, 24, 160))
+            ribbon_grad.setColorAt(0.5, QColor(255, 184, 51, 150))
+            ribbon_grad.setColorAt(1.0, QColor(255, 214, 102, 110))
+            painter.fillPath(path, ribbon_grad)
+
+            # Coral Accent Ribbon
+            coral_path = QPainterPath()
+            coral_path.moveTo(0, h * 0.7)
+            coral_path.cubicTo(w * 0.35, h * 0.85, w * 0.65, h * 0.5, w, h * 0.65)
+            coral_path.lineTo(w, h)
+            coral_path.lineTo(0, h)
+            coral_path.closeSubpath()
+            coral_grad = QLinearGradient(0, h * 0.7, w, h)
+            coral_grad.setColorAt(0.0, QColor(255, 77, 109, 140))
+            coral_grad.setColorAt(1.0, QColor(255, 168, 186, 90))
+            painter.fillPath(coral_path, coral_grad)
+        else:
+            painter.fillRect(self.rect(), QColor(9, 9, 11))
 
         # 1. Top Bar
         self.top_bar = FrostedTopBar(self, self)

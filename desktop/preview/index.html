@@ -7,9 +7,9 @@
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
-<body class="dark-mode">
+<body class="light-mode">
 
   <div id="desktop">
 
@@ -244,7 +244,7 @@
         <div class="toolbar-nav-group">
           <button class="toolbar-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg></button>
           <button class="toolbar-icon-btn" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></button>
-          <span class="toolbar-title" id="cadence-toolbar-title"><span class="proxy-icon">📂</span>Cadence &mdash; Applications</span>
+          <span class="toolbar-title" id="cadence-toolbar-title"><span class="proxy-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M10 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V8a2 2 0 00-2-2h-8l-2-2z"/></svg></span>Cadence &mdash; Applications</span>
         </div>
 
         <!-- Quick Look & View Controls -->
@@ -291,103 +291,162 @@
         <!-- Folder 1: Applications Grid -->
         <main class="finder-grid-view" id="cadence-view-apps">
           <div class="app-card" ondblclick="openWindow('win-scribe')" onclick="selectFile(this, 'Scribe.app', 'Universal Toccata Application', '54 MB')">
-            <div class="mac-app-icon icon-scribe">
-              <div class="scribe-lines"><span></span><span></span><span></span></div>
-              <div class="scribe-pen"></div>
-            </div>
+            <svg viewBox="0 0 100 100" width="48" height="48" style="filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));">
+              <defs>
+                <linearGradient id="f-scribe-bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fff8db"/><stop offset="100%" stop-color="#ffdd75"/></linearGradient>
+                <linearGradient id="f-pencil" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffd60a"/><stop offset="100%" stop-color="#ff9f0a"/></linearGradient>
+              </defs>
+              <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="url(#f-scribe-bg)"/>
+              <rect x="4" y="4" width="92" height="18" rx="21" ry="21" fill="#e6a100"/>
+              <line x1="16" y1="36" x2="84" y2="36" stroke="#e0c875" stroke-width="2"/>
+              <line x1="16" y1="52" x2="84" y2="52" stroke="#e0c875" stroke-width="2"/>
+              <line x1="16" y1="68" x2="84" y2="68" stroke="#e0c875" stroke-width="2"/>
+              <rect x="48" y="24" width="12" height="54" rx="4" fill="url(#f-pencil)" transform="rotate(35 54 51)"/>
+              <polygon points="76,82 66,75 79,62" fill="#5c5c5e"/>
+            </svg>
             <span class="app-title">Scribe.app</span>
           </div>
 
           <div class="app-card" ondblclick="openWindow('win-sonata')" onclick="selectFile(this, 'Sonata.app', 'Acoustic Sound Engine', '38 MB')">
-            <div class="mac-app-icon" style="background: linear-gradient(135deg, #6366f1, #af52de);">
-              <div class="vinyl-center-art" style="width: 32px; height: 32px; font-size: 14px;">🎼</div>
-            </div>
+            <svg viewBox="0 0 100 100" width="48" height="48" style="filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));">
+              <defs><linearGradient id="f-music-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff2d55"/><stop offset="100%" stop-color="#fa114f"/></linearGradient></defs>
+              <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="url(#f-music-bg)"/>
+              <circle cx="36" cy="66" r="10" fill="#ffffff"/>
+              <circle cx="68" cy="56" r="10" fill="#ffffff"/>
+              <rect x="42" y="26" width="6" height="40" fill="#ffffff"/>
+              <rect x="74" y="16" width="6" height="40" fill="#ffffff"/>
+              <polygon points="42,26 80,16 80,26 42,36" fill="#ffffff"/>
+            </svg>
             <span class="app-title">Sonata.app</span>
           </div>
 
           <div class="app-card" ondblclick="openWindow('win-settings')" onclick="selectFile(this, 'System Settings.app', 'Configuration Suite', '28 MB')">
-            <div class="mac-app-icon icon-sonata">
-              <div class="gear-outer">
-                <div class="gear-center"></div>
-              </div>
-            </div>
+            <svg viewBox="0 0 100 100" width="48" height="48" style="filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));">
+              <defs><radialGradient id="f-gear-metal" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#f2f2f7"/><stop offset="65%" stop-color="#8e8e93"/><stop offset="100%" stop-color="#48484a"/></radialGradient></defs>
+              <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="#636366"/>
+              <g fill="url(#f-gear-metal)">
+                <rect x="44" y="8" width="12" height="84" rx="3"/>
+                <rect x="44" y="8" width="12" height="84" rx="3" transform="rotate(45 50 50)"/>
+                <rect x="44" y="8" width="12" height="84" rx="3" transform="rotate(90 50 50)"/>
+                <rect x="44" y="8" width="12" height="84" rx="3" transform="rotate(135 50 50)"/>
+              </g>
+              <circle cx="50" cy="50" r="26" fill="#3a3a3c"/>
+              <circle cx="50" cy="50" r="15" fill="#aeaeb2"/>
+              <circle cx="50" cy="50" r="8" fill="#1c1c1e"/>
+            </svg>
             <span class="app-title">System Settings.app</span>
           </div>
 
           <div class="app-card" ondblclick="openWindow('win-installer')" onclick="selectFile(this, 'Gallery.app', 'Package Manager & Installer', '42 MB')">
-            <div class="mac-app-icon icon-gallery">
-              <div class="gallery-prism"></div>
-            </div>
+            <svg viewBox="0 0 100 100" width="48" height="48" style="filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));">
+              <defs><linearGradient id="f-store-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1e90ff"/><stop offset="100%" stop-color="#0066ee"/></linearGradient></defs>
+              <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="url(#f-store-bg)"/>
+              <rect x="46" y="14" width="8" height="72" rx="3" fill="#ffffff" transform="rotate(-30 50 50)"/>
+              <rect x="46" y="14" width="8" height="72" rx="3" fill="#ffffff" transform="rotate(30 50 50)"/>
+              <rect x="22" y="56" width="56" height="8" rx="3" fill="#ffffff"/>
+            </svg>
             <span class="app-title">Gallery.app</span>
           </div>
 
           <div class="app-card" ondblclick="openWindow('win-tempo')" onclick="selectFile(this, 'Tempo.app', 'Performance Monitor', '18 MB')">
-            <div class="mac-app-icon icon-tempo">
-              <div class="tempo-pulse"></div>
-            </div>
+            <svg viewBox="0 0 100 100" width="48" height="48" style="filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));">
+              <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="#1c1c1e"/>
+              <line x1="4" y1="35" x2="96" y2="35" stroke="#2c2c2e" stroke-width="1.5"/>
+              <line x1="4" y1="65" x2="96" y2="65" stroke="#2c2c2e" stroke-width="1.5"/>
+              <path d="M10,50 L28,50 L36,25 L48,75 L58,35 L68,60 L76,50 L90,50" fill="none" stroke="#30d158" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
             <span class="app-title">Tempo.app</span>
           </div>
 
           <div class="app-card" ondblclick="openWindow('win-horizon')" onclick="selectFile(this, 'Horizon.app', 'Sovereign Web Browser', '62 MB')">
-            <div class="mac-app-icon icon-horizon">
-              <div class="compass-dial">
-                <div class="compass-needle"></div>
-              </div>
-            </div>
+            <svg viewBox="0 0 100 100" width="48" height="48" style="filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));">
+              <defs><linearGradient id="f-safari-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00c6ff"/><stop offset="100%" stop-color="#0072ff"/></linearGradient></defs>
+              <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="url(#f-safari-bg)"/>
+              <circle cx="50" cy="50" r="36" fill="none" stroke="#ffffff" stroke-width="2.5" opacity="0.8"/>
+              <polygon points="50,18 57,48 43,48" fill="#ff3b30"/>
+              <polygon points="50,82 57,52 43,52" fill="#ffffff"/>
+              <circle cx="50" cy="50" r="4" fill="#ffffff"/>
+            </svg>
             <span class="app-title">Horizon.app</span>
           </div>
 
           <div class="app-card" ondblclick="openWindow('win-console')" onclick="selectFile(this, 'Console.app', 'Terminal & Command Bridge', '14 MB')">
-            <div class="mac-app-icon" style="background: linear-gradient(135deg, #18181b 0%, #27272a 100%);">
-              <div style="color: #34c759; font-family: monospace; font-weight: 900; font-size: 16px;">&gt;_</div>
-            </div>
+            <svg viewBox="0 0 100 100" width="48" height="48" style="filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));">
+              <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="#1c1c1e"/>
+              <rect x="4" y="4" width="92" height="18" rx="21" ry="21" fill="#2c2c2e"/>
+              <circle cx="16" cy="13" r="3" fill="#ff5f56"/>
+              <circle cx="26" cy="13" r="3" fill="#ffbd2e"/>
+              <circle cx="36" cy="13" r="3" fill="#27c93f"/>
+              <text x="18" y="58" fill="#30d158" font-family="monospace" font-size="28" font-weight="900">&gt;_</text>
+            </svg>
             <span class="app-title">Console.app</span>
           </div>
 
           <div class="app-card" ondblclick="openWindow('win-calc')" onclick="selectFile(this, 'Calculator.app', 'Precision Calculator', '8 MB')">
-            <div class="mac-app-icon" style="background: linear-gradient(135deg, #ff9500 0%, #ff5e3a 100%);">
-              <div style="color: white; font-size: 18px; font-weight: 700;">&plusmn;</div>
-            </div>
+            <svg viewBox="0 0 100 100" width="48" height="48" style="filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));">
+              <defs><linearGradient id="f-calc-bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3a3a3c"/><stop offset="100%" stop-color="#1c1c1e"/></linearGradient></defs>
+              <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="url(#f-calc-bg)"/>
+              <rect x="14" y="14" width="72" height="22" rx="5" fill="#2c2c2e"/>
+              <circle cx="30" cy="52" r="10" fill="#636366"/>
+              <circle cx="58" cy="52" r="10" fill="#636366"/>
+              <circle cx="30" cy="78" r="10" fill="#636366"/>
+              <circle cx="58" cy="78" r="10" fill="#ff9f0a"/>
+              <text x="54" y="83" fill="#ffffff" font-size="14" font-weight="bold">=</text>
+            </svg>
             <span class="app-title">Calculator.app</span>
           </div>
 
           <div class="app-card" ondblclick="openWindow('win-prism')" onclick="selectFile(this, 'Prism.app', 'Photos & Vector Inspector', '32 MB')">
-            <div class="mac-app-icon" style="background: linear-gradient(135deg, #38bdf8 0%, #af52de 100%);">
-              <div style="font-size: 16px;">💎</div>
-            </div>
+            <svg viewBox="0 0 100 100" width="48" height="48" style="filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));">
+              <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="#ffffff"/>
+              <ellipse cx="50" cy="32" rx="7" ry="16" fill="#ff2d55"/>
+              <ellipse cx="68" cy="50" rx="16" ry="7" fill="#ff9500"/>
+              <ellipse cx="50" cy="68" rx="7" ry="16" fill="#34c759"/>
+              <ellipse cx="32" cy="50" rx="16" ry="7" fill="#007aff"/>
+              <ellipse cx="63" cy="37" rx="7" ry="16" fill="#ff3b30" transform="rotate(45 63 37)"/>
+              <ellipse cx="63" cy="63" rx="7" ry="16" fill="#ffcc00" transform="rotate(-45 63 63)"/>
+              <ellipse cx="37" cy="63" rx="7" ry="16" fill="#5856d6" transform="rotate(45 37 63)"/>
+              <ellipse cx="37" cy="37" rx="7" ry="16" fill="#af52de" transform="rotate(-45 37 37)"/>
+              <circle cx="50" cy="50" r="6" fill="#ffffff"/>
+            </svg>
             <span class="app-title">Prism.app</span>
           </div>
 
           <div class="app-card" ondblclick="openWindow('win-chronicle')" onclick="selectFile(this, 'Chronicle.app', 'Calendar & Focus Clock', '22 MB')">
-            <div class="mac-app-icon" style="background: linear-gradient(135deg, #ff2d55 0%, #ff375f 100%);">
-              <div style="color: white; font-weight: 900; font-size: 14px;">NOV</div>
-            </div>
+            <svg viewBox="0 0 100 100" width="48" height="48" style="filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));">
+              <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="#ffffff"/>
+              <rect x="4" y="4" width="92" height="24" rx="21" ry="21" fill="#ff3b30"/>
+              <text x="50" y="20" fill="#ffffff" font-size="12" font-weight="800" text-anchor="middle">NOV</text>
+              <text x="50" y="72" fill="#1c1c1e" font-size="40" font-weight="300" text-anchor="middle" id="finder-cal-day">1</text>
+            </svg>
             <span class="app-title">Chronicle.app</span>
+          </div>
+        </main>
           </div>
         </main>
 
         <!-- Folder 2: Documents List View -->
         <div class="finder-list-view hidden" id="cadence-view-docs">
           <div class="file-row selected" onclick="selectFile(this, 'Toccata Manifesto.md', 'Markdown Document', '4.2 KB')" ondblclick="openWindow('win-scribe')">
-            <span>📝</span>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#007aff" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="14" y2="17"/></svg>
             <span style="font-weight: 600;">Toccata Manifesto.md</span>
             <span style="color: var(--text-secondary);">Today, 1:40 AM</span>
             <span style="color: var(--text-secondary);">4.2 KB</span>
           </div>
           <div class="file-row" onclick="selectFile(this, 'Kernel Architecture.pdf', 'PDF Document', '1.8 MB')" ondblclick="openQuickLook()">
-            <span>📕</span>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#ff3b30" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15h6"/></svg>
             <span style="font-weight: 600;">Kernel Architecture.pdf</span>
             <span style="color: var(--text-secondary);">Yesterday, 11:20 PM</span>
             <span style="color: var(--text-secondary);">1.8 MB</span>
           </div>
           <div class="file-row" onclick="selectFile(this, 'Symphony No. 5.flac', 'FLAC 24-bit/96kHz Audio', '48.6 MB')" ondblclick="openWindow('win-sonata')">
-            <span>🎵</span>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#af52de" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
             <span style="font-weight: 600;">Symphony No. 5.flac</span>
             <span style="color: var(--text-secondary);">Oct 28, 4:15 PM</span>
             <span style="color: var(--text-secondary);">48.6 MB</span>
           </div>
           <div class="file-row" onclick="selectFile(this, 'System Specs.rtf', 'Rich Text Document', '12 KB')" ondblclick="openWindow('win-scribe')">
-            <span>📄</span>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#636366" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="16" y2="16"/></svg>
             <span style="font-weight: 600;">System Specs.rtf</span>
             <span style="color: var(--text-secondary);">Oct 25, 9:02 AM</span>
             <span style="color: var(--text-secondary);">12 KB</span>
@@ -397,19 +456,19 @@
         <!-- Folder 3: Downloads View with 1-Click Archive Extraction -->
         <div class="finder-list-view hidden" id="cadence-view-downloads">
           <div class="file-row" onclick="selectFile(this, 'Ableton Live 12.zip', 'Compressed Zip Archive', '2.8 GB')" ondblclick="extractArchive(this, 'Ableton Live 12.zip')">
-            <span>📦</span>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#ff9500" stroke-width="2"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg>
             <span style="font-weight: 600;">Ableton Live 12.zip</span>
             <span style="color: var(--text-secondary);">Double-click to Extract</span>
             <span style="color: var(--text-secondary);">2.8 GB</span>
           </div>
           <div class="file-row" onclick="selectFile(this, 'Blender 4.2.dmg', 'Disk Image Bundle', '340 MB')" ondblclick="openWindow('win-installer')">
-            <span>💿</span>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#5856d6" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
             <span style="font-weight: 600;">Blender 4.2.dmg</span>
             <span style="color: var(--text-secondary);">Disk Image</span>
             <span style="color: var(--text-secondary);">340 MB</span>
           </div>
           <div class="file-row" onclick="selectFile(this, 'VSCode-Setup.exe', 'Windows Universal Executable', '94 MB')" ondblclick="openWindow('win-installer')">
-            <span>🪟</span>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#007aff" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
             <span style="font-weight: 600;">VSCode-Setup.exe</span>
             <span style="color: var(--text-secondary);">Proton Ready</span>
             <span style="color: var(--text-secondary);">94 MB</span>
@@ -467,7 +526,7 @@
           <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-scribe')"></button>
           <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-scribe')"></button>
         </div>
-        <div class="window-title"><span class="proxy-icon">📝</span>Scribe &mdash; Toccata Manifesto.md</div>
+        <div class="window-title"><span class="proxy-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>Scribe &mdash; Toccata Manifesto.md</div>
         <div class="titlebar-placeholder"></div>
       </div>
       <div class="window-body textedit-body" style="display: flex; flex-direction: column; height: calc(100% - 42px);">
@@ -554,68 +613,68 @@ Every administrative task is accessible visually:
           <!-- Section 1: Connectivity -->
           <div class="settings-section-title">Connectivity</div>
           <div class="settings-nav-item" id="tab-nav-wifi" onclick="switchSettingsTab('wifi')">
-            <div class="settings-nav-badge" style="background: #007aff;">📶</div>
+            <div class="settings-nav-badge" style="background: #007aff;"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12.55a11 11 0 0114.08 0M1.42 9a16 16 0 0121.16 0M8.53 16.11a6 6 0 016.95 0"/><circle cx="12" cy="20" r="1.5" fill="currentColor"/></svg></div>
             <span>Wi-Fi</span>
           </div>
           <div class="settings-nav-item" id="tab-nav-bluetooth" onclick="switchSettingsTab('bluetooth')">
-            <div class="settings-nav-badge" style="background: #007aff;">🌐</div>
+            <div class="settings-nav-badge" style="background: #007aff;"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m7 7 10 10-5 5V2l5 5L7 17"/></svg></div>
             <span>Bluetooth</span>
           </div>
           <div class="settings-nav-item" id="tab-nav-network" onclick="switchSettingsTab('network')">
-            <div class="settings-nav-badge" style="background: #34c759;">🔌</div>
+            <div class="settings-nav-badge" style="background: #34c759;"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>
             <span>Network</span>
           </div>
 
           <!-- Section 2: Personalization -->
           <div class="settings-section-title">Personalization</div>
           <div class="settings-nav-item active" id="tab-nav-appearance" onclick="switchSettingsTab('appearance')">
-            <div class="settings-nav-badge" style="background: #5856d6;">🎨</div>
+            <div class="settings-nav-badge" style="background: #5856d6;"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 011.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg></div>
             <span>Appearance</span>
           </div>
           <div class="settings-nav-item" id="tab-nav-controlcenter" onclick="switchSettingsTab('controlcenter')">
-            <div class="settings-nav-badge" style="background: #af52de;">🎛️</div>
+            <div class="settings-nav-badge" style="background: #af52de;"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="6" rx="3"/><circle cx="7" cy="7" r="1.5" fill="currentColor"/><rect x="3" y="14" width="18" height="6" rx="3"/><circle cx="17" cy="17" r="1.5" fill="currentColor"/></svg></div>
             <span>Control Center</span>
           </div>
           <div class="settings-nav-item" id="tab-nav-desktopdock" onclick="switchSettingsTab('desktopdock')">
-            <div class="settings-nav-badge" style="background: #007aff;">🖥️</div>
+            <div class="settings-nav-badge" style="background: #007aff;"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
             <span>Desktop &amp; Dock</span>
           </div>
           <div class="settings-nav-item" id="tab-nav-wallpaper" onclick="switchSettingsTab('wallpaper')">
-            <div class="settings-nav-badge" style="background: #ff2d55;">🌄</div>
+            <div class="settings-nav-badge" style="background: #ff2d55;"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
             <span>Wallpaper</span>
           </div>
 
           <!-- Section 3: Hardware & Audio -->
           <div class="settings-section-title">Hardware &amp; Audio</div>
           <div class="settings-nav-item" id="tab-nav-displays" onclick="switchSettingsTab('displays')">
-            <div class="settings-nav-badge" style="background: #38bdf8;">📺</div>
+            <div class="settings-nav-badge" style="background: #38bdf8;"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M12 17v4M8 21h8"/></svg></div>
             <span>Displays &amp; Retina</span>
           </div>
           <div class="settings-nav-item" id="tab-nav-sound" onclick="switchSettingsTab('sound')">
-            <div class="settings-nav-badge" style="background: #ff3b30;">🔊</div>
+            <div class="settings-nav-badge" style="background: #ff3b30;"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg></div>
             <span>Sound &amp; PipeWire</span>
           </div>
           <div class="settings-nav-item" id="tab-nav-battery" onclick="switchSettingsTab('battery')">
-            <div class="settings-nav-badge" style="background: #34c759;">🔋</div>
+            <div class="settings-nav-badge" style="background: #34c759;"><svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><rect x="2" y="7" width="16" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><rect x="4" y="9" width="12" height="6" rx="1"/><path d="M20 10h1v4h-1z"/></svg></div>
             <span>Battery &amp; Energy</span>
           </div>
 
           <!-- Section 4: System & Security -->
           <div class="settings-section-title">System &amp; Security</div>
           <div class="settings-nav-item" id="tab-nav-general" onclick="switchSettingsTab('general')">
-            <div class="settings-nav-badge" style="background: #8e8e93;">⚙️</div>
+            <div class="settings-nav-badge" style="background: #8e8e93;"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div>
             <span>General &amp; About</span>
           </div>
           <div class="settings-nav-item" id="tab-nav-snapshots" onclick="switchSettingsTab('snapshots')">
-            <div class="settings-nav-badge" style="background: #af52de;">🕒</div>
+            <div class="settings-nav-badge" style="background: #af52de;"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
             <span>Time Capsule</span>
           </div>
           <div class="settings-nav-item" id="tab-nav-security" onclick="switchSettingsTab('security')">
-            <div class="settings-nav-badge" style="background: #007aff;">🔒</div>
+            <div class="settings-nav-badge" style="background: #007aff;"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
             <span>Privacy &amp; Security</span>
           </div>
           <div class="settings-nav-item" id="tab-nav-windowscompat" onclick="switchSettingsTab('windowscompat')">
-            <div class="settings-nav-badge" style="background: #ff9500;">🪟</div>
+            <div class="settings-nav-badge" style="background: #ff9500;"><svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg></div>
             <span>Windows Subsystem</span>
           </div>
         </div>
@@ -1232,7 +1291,7 @@ Every administrative task is accessible visually:
           <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-tempo')"></button>
           <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-tempo')"></button>
         </div>
-        <div class="window-title"><span class="proxy-icon">⚡</span>Tempo &mdash; Activity Monitor</div>
+        <div class="window-title"><span class="proxy-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>Tempo &mdash; Activity Monitor</div>
         <div style="display: flex; gap: 8px;">
           <button class="btn btn-secondary" onclick="promptForceQuit()" style="padding: 3px 10px; font-size: 11px; background: rgba(255, 59, 48, 0.2); border-color: rgba(255, 59, 48, 0.4); color: #ff453a;">Force Quit</button>
         </div>
@@ -1307,28 +1366,28 @@ Every administrative task is accessible visually:
                 <td>user</td>
               </tr>
               <tr class="process-row" onclick="selectProcess(this, 'Cadence Files', '1850')">
-                <td>📂 Cadence Files</td>
+                <td>Cadence Files</td>
                 <td>1850</td>
                 <td>1.4%</td>
                 <td>84 MB</td>
                 <td>user</td>
               </tr>
               <tr class="process-row" onclick="selectProcess(this, 'Sonata Acoustic Stage', '2105')">
-                <td>🎼 Sonata Acoustic Stage</td>
+                <td>Sonata Acoustic Stage</td>
                 <td>2105</td>
                 <td>1.1%</td>
                 <td>64 MB</td>
                 <td>user</td>
               </tr>
               <tr class="process-row" onclick="selectProcess(this, 'PipeWire Studio Server', '812')">
-                <td>🔊 PipeWire Studio Server</td>
+                <td>PipeWire Studio Server</td>
                 <td>812</td>
                 <td>0.8%</td>
                 <td>42 MB</td>
                 <td>user</td>
               </tr>
               <tr class="process-row" onclick="selectProcess(this, 'Scribe Notes & Code', '1920')">
-                <td>📝 Scribe Notes &amp; Code</td>
+                <td>Scribe Notes &amp; Code</td>
                 <td>1920</td>
                 <td>0.2%</td>
                 <td>58 MB</td>
@@ -1397,13 +1456,13 @@ Every administrative task is accessible visually:
           <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-sonata')"></button>
           <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-sonata')"></button>
         </div>
-        <div class="window-title"><span class="proxy-icon">🎼</span>Sonata &mdash; Acoustic Player &amp; PipeWire Studio</div>
+        <div class="window-title"><span class="proxy-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>Sonata &mdash; Acoustic Player &amp; PipeWire Studio</div>
         <div class="titlebar-placeholder"></div>
       </div>
       <div class="window-body sonata-body">
         <div class="sonata-stage">
           <div class="vinyl-disc" id="sonata-vinyl">
-            <div class="vinyl-center-art">🎼</div>
+            <div class="vinyl-center-art"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
           </div>
           <div class="sonata-info">
             <div class="sonata-title">Toccata &amp; Fugue in D Minor</div>
@@ -1475,12 +1534,12 @@ Every administrative task is accessible visually:
 
         <div class="horizon-url-box">
           <div class="horizon-shield-badge" title="Zero Telemetry - 100% Trackers Blocked">
-            <span>🛡️</span>
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             <span id="horizon-tracker-count">2,841</span>
           </div>
-          <span style="opacity: 0.6; font-size: 11px;">🔒</span>
+          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" style="opacity: 0.6;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
           <input type="text" id="horizon-url-input" class="horizon-url-input" value="toccata://speed-benchmark" onkeydown="if(event.key==='Enter') navigateHorizon(this.value)">
-          <button class="toolbar-icon-btn" onclick="toggleHorizonReader()" title="Reader Mode (Distraction Free)" style="width: 22px; height: 22px;"><span style="font-size: 12px;">📖</span></button>
+          <button class="toolbar-icon-btn" onclick="toggleHorizonReader()" title="Reader Mode (Distraction Free)" style="width: 22px; height: 22px;"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></button>
         </div>
 
         <div style="display: flex; gap: 8px;">
@@ -1491,16 +1550,16 @@ Every administrative task is accessible visually:
 
       <div class="horizon-bookmarks-bar">
         <div class="horizon-bookmark-item" onclick="navigateHorizon('toccata://speed-benchmark')">
-          <span>⚡</span> <span>Speed &amp; Latency</span>
+          <span>Speed &amp; Latency</span>
         </div>
         <div class="horizon-bookmark-item" onclick="navigateHorizon('toccata://pipewire-studio')">
-          <span>🎼</span> <span>PipeWire Studio</span>
+          <span>PipeWire Studio</span>
         </div>
         <div class="horizon-bookmark-item" onclick="navigateHorizon('https://archlinux.org')">
-          <span>🐧</span> <span>Arch Core</span>
+          <span>Arch Core</span>
         </div>
         <div class="horizon-bookmark-item" onclick="navigateHorizon('toccata://privacy-manifesto')">
-          <span>🛡️</span> <span>Zero-Telemetry</span>
+          <span>Zero-Telemetry</span>
         </div>
       </div>
 
@@ -1524,14 +1583,14 @@ Every administrative task is accessible visually:
           <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-console')"></button>
           <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-console')"></button>
         </div>
-        <div class="window-title"><span class="proxy-icon">💻</span>Console &mdash; toccata@core: ~ (zsh / pwsh)</div>
+        <div class="window-title"><span class="proxy-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><rect x="2" y="3" width="20" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>Console &mdash; toccata@core: ~ (zsh / pwsh)</div>
         <div class="titlebar-placeholder"></div>
       </div>
 
       <div class="terminal-tab-bar">
-        <div class="terminal-tab-pill active" onclick="switchTerminalTab(this, 'zsh')">🐚 toccata-zsh</div>
-        <div class="terminal-tab-pill" onclick="switchTerminalTab(this, 'pwsh')">⚡ PowerShell 7.4</div>
-        <div class="terminal-tab-pill" onclick="switchTerminalTab(this, 'cmd')">🪟 CMD Bridge</div>
+        <div class="terminal-tab-pill active" onclick="switchTerminalTab(this, 'zsh')">toccata-zsh</div>
+        <div class="terminal-tab-pill" onclick="switchTerminalTab(this, 'pwsh')">PowerShell 7.4</div>
+        <div class="terminal-tab-pill" onclick="switchTerminalTab(this, 'cmd')">CMD Bridge</div>
       </div>
 
       <div class="terminal-body" id="term-container" onclick="document.getElementById('term-input').focus()">
@@ -1614,7 +1673,7 @@ Type 'help' to view available commands.</div>
           <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-prism')"></button>
           <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-prism')"></button>
         </div>
-        <div class="window-title" id="prism-window-title"><span class="proxy-icon">💎</span>Prism &mdash; Dynamic Topography.heic</div>
+        <div class="window-title" id="prism-window-title"><span class="proxy-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21" stroke="currentColor" stroke-width="2" fill="none"/></svg></span>Prism &mdash; Dynamic Topography.heic</div>
         <div class="titlebar-placeholder"></div>
       </div>
 
@@ -1637,14 +1696,14 @@ Type 'help' to view available commands.</div>
       <div class="prism-canvas-area">
         <div class="prism-image-frame" id="prism-frame">
           <div style="width: 320px; height: 200px; border-radius: 10px; background: radial-gradient(circle at 30% 30%, #38bdf8 0%, #007aff 40%, #af52de 85%, #ff2d55 100%); box-shadow: inset 0 0 30px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;">
-            <div style="font-size: 42px; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.4));">💎</div>
+            <svg viewBox="0 0 100 100" width="64" height="64" fill="#ffffff" opacity="0.9" style="filter: drop-shadow(0 6px 12px rgba(0,0,0,0.35));"><polygon points="50,15 90,40 75,85 25,85 10,40"/></svg>
           </div>
         </div>
         <div class="prism-exif-pill" id="prism-exif-pill">
-          <span>📐 3840 &times; 2160</span>
-          <span>🎨 Display P3 Gamut</span>
-          <span>📸 10-bit HDR</span>
-          <span>⚡ 120Hz ProMotion</span>
+          <span>3840 &times; 2160</span>
+          <span>Display P3 Gamut</span>
+          <span>10-bit HDR</span>
+          <span>120Hz ProMotion</span>
         </div>
       </div>
 
@@ -2013,15 +2072,15 @@ Type 'help' to view available commands.</div>
       <div class="quick-look-card glass-panel">
         <div class="ql-header">
           <div class="ql-title">
-            <span>👁️ Quick Look</span>
+            <span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Quick Look</span>
             <span style="opacity: 0.5;">&bull;</span>
             <span id="ql-header-filename">Toccata Manifesto.md</span>
           </div>
           <button class="ql-close-btn" onclick="closeQuickLook()">✕</button>
         </div>
         <div class="ql-preview-body">
-          <div class="ql-hero-icon" id="ql-hero-icon" style="background: linear-gradient(135deg, #007aff, #6366f1); color: white;">
-            📄
+          <div class="ql-hero-icon" id="ql-hero-icon" style="background: linear-gradient(135deg, #007aff, #6366f1); color: white; display: flex; align-items: center; justify-content: center;">
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="14" y2="17"/></svg>
           </div>
           <div class="ql-file-name" id="ql-name">Toccata Manifesto.md</div>
           <div class="ql-meta-tag" id="ql-meta">Markdown Document &bull; 4.2 KB &bull; Modified Today at 1:40 AM</div>

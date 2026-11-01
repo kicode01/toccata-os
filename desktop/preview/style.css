@@ -19,18 +19,28 @@
 
   --accent-color: var(--system-blue);
   --accent-glow: rgba(0, 122, 255, 0.4);
-  --font-system: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", 'Plus Jakarta Sans', "Segoe UI", Roboto, sans-serif;
-  --font-mono: "SF Mono", 'JetBrains Mono', Menlo, Monaco, monospace;
+  --font-system: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", Roboto, sans-serif;
+  --font-mono: "SF Mono", "JetBrains Mono", Menlo, Monaco, monospace;
 
-  /* Official macOS Sequoia / Sonoma Dynamic Abstract Ribbon Wallpaper */
-  --bg-wallpaper: 
-    radial-gradient(ellipse 85% 60% at 20% -10%, rgba(255, 159, 10, 0.85) 0%, transparent 60%),
-    radial-gradient(ellipse 65% 65% at 85% 15%, rgba(255, 55, 95, 0.8) 0%, transparent 65%),
-    radial-gradient(ellipse 75% 65% at 10% 80%, rgba(0, 113, 227, 0.85) 0%, transparent 60%),
-    radial-gradient(ellipse 95% 85% at 80% 85%, rgba(175, 82, 222, 0.8) 0%, transparent 70%),
-    linear-gradient(145deg, #070e24 0%, #170d2c 35%, #250b24 70%, #050814 100%);
+  /* Official macOS Sequoia Dynamic Wallpaper (Light by default) */
+  --bg-wallpaper: url('wallpapers/sequoia-light.svg');
 
-  /* Dark Vibrancy Materials (Clean Slate, Zero Muddy Brown) */
+  /* Light Vibrancy Materials (Apple macOS Sequoia HIG Standard) */
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.65);
+  --glass-rim-light: inset 0 1px 1px rgba(255, 255, 255, 0.95);
+  --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);
+  --text-primary: #1d1d1f;
+  --text-secondary: rgba(0, 0, 0, 0.58);
+  --titlebar-bg: rgba(246, 246, 248, 0.85);
+  --menubar-bg: rgba(255, 255, 255, 0.65);
+  --dock-bg: rgba(255, 255, 255, 0.42);
+  --active-card: rgba(0, 0, 0, 0.06);
+  --sidebar-bg: rgba(242, 242, 247, 0.65);
+}
+
+body.dark-mode {
+  --bg-wallpaper: url('wallpapers/sequoia-dark.svg');
   --glass-bg: rgba(30, 30, 36, 0.72);
   --glass-border: rgba(255, 255, 255, 0.16);
   --glass-rim-light: inset 0 1px 0 rgba(255, 255, 255, 0.22);
@@ -45,25 +55,18 @@
 }
 
 body.light-mode {
-  --bg-wallpaper: 
-    radial-gradient(ellipse 85% 60% at 15% -5%, rgba(255, 204, 0, 0.75) 0%, transparent 60%),
-    radial-gradient(ellipse 65% 65% at 85% 20%, rgba(255, 105, 135, 0.7) 0%, transparent 65%),
-    radial-gradient(ellipse 75% 65% at 10% 75%, rgba(56, 189, 248, 0.8) 0%, transparent 60%),
-    radial-gradient(ellipse 95% 85% at 80% 85%, rgba(192, 132, 252, 0.7) 0%, transparent 70%),
-    linear-gradient(145deg, #eff4ff 0%, #fdf2f8 35%, #fff7ed 70%, #f1f5f9 100%);
-
-  /* Light Vibrancy Materials */
-  --glass-bg: rgba(255, 255, 255, 0.75);
-  --glass-border: rgba(255, 255, 255, 0.55);
-  --glass-rim-light: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  --bg-wallpaper: url('wallpapers/sequoia-light.svg');
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.65);
+  --glass-rim-light: inset 0 1px 1px rgba(255, 255, 255, 0.95);
   --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);
   --text-primary: #1d1d1f;
-  --text-secondary: rgba(0, 0, 0, 0.55);
-  --titlebar-bg: rgba(246, 246, 248, 0.88);
-  --menubar-bg: rgba(255, 255, 255, 0.72);
-  --dock-bg: rgba(255, 255, 255, 0.58);
-  --active-card: rgba(0, 0, 0, 0.08);
-  --sidebar-bg: rgba(238, 238, 242, 0.65);
+  --text-secondary: rgba(0, 0, 0, 0.58);
+  --titlebar-bg: rgba(246, 246, 248, 0.85);
+  --menubar-bg: rgba(255, 255, 255, 0.65);
+  --dock-bg: rgba(255, 255, 255, 0.42);
+  --active-card: rgba(0, 0, 0, 0.06);
+  --sidebar-bg: rgba(242, 242, 247, 0.65);
 }
 
 /* ==========================================================================
@@ -124,11 +127,16 @@ body.is-window-dragging *,
 body {
   font-family: var(--font-system);
   background: var(--bg-wallpaper);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   color: var(--text-primary);
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  transition: background 0.4s ease;
+  letter-spacing: -0.012em;
+  transition: background 0.4s ease, color 0.3s ease;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -1330,11 +1338,200 @@ body {
 }
 
 body.light-mode .settings-group-card {
-  background: rgba(255, 255, 255, 0.65);
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 body.light-mode .settings-row {
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Authentic Apple macOS Sequoia Light Mode Component Overrides */
+body.light-mode #menu-bar {
+  background: rgba(255, 255, 255, 0.72);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  color: #1d1d1f;
+}
+
+body.light-mode .menu-item:hover {
+  background: rgba(0, 0, 0, 0.07);
+}
+
+body.light-mode .toccata-system-dropdown {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.15);
+  color: #1d1d1f;
+}
+
+body.light-mode .menu-dropdown-item:hover {
+  background: var(--accent-color);
+  color: #ffffff;
+}
+
+body.light-mode .menu-dropdown-separator {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode #dock-container {
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.14), inset 0 1px 1px rgba(255, 255, 255, 0.95);
+}
+
+body.light-mode .dock-divider {
+  background: rgba(0, 0, 0, 0.12);
+}
+
+body.light-mode .dock-dot {
+  background: #1d1d1f;
+}
+
+body.light-mode .window {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.14), 0 2px 8px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  color: #1d1d1f;
+}
+
+body.light-mode .window-titlebar {
+  background: rgba(246, 246, 248, 0.92);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  color: #1d1d1f;
+}
+
+body.light-mode .finder-sidebar {
+  background: rgba(242, 242, 247, 0.78);
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode .sidebar-category {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+body.light-mode .sidebar-row {
+  color: #1d1d1f;
+}
+
+body.light-mode .sidebar-row:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .sidebar-row.active {
+  background: rgba(0, 122, 255, 0.15);
+  color: #007aff;
+}
+
+body.light-mode .finder-grid-view,
+body.light-mode .finder-list-view {
+  background: #ffffff;
+}
+
+body.light-mode .app-card:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+body.light-mode .app-title {
+  color: #1d1d1f;
+}
+
+body.light-mode .file-row {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+body.light-mode .file-row:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+body.light-mode .file-row.selected {
+  background: #007aff;
+  color: #ffffff;
+}
+
+body.light-mode .file-row.selected span {
+  color: #ffffff !important;
+}
+
+body.light-mode .settings-sidebar {
+  background: rgba(242, 242, 247, 0.78);
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode .settings-content {
+  background: #ffffff;
+}
+
+body.light-mode .settings-nav-item {
+  color: #1d1d1f;
+}
+
+body.light-mode .settings-nav-item:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .settings-nav-item.active {
+  background: rgba(0, 122, 255, 0.15);
+  color: #007aff;
+}
+
+body.light-mode #control-center {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.16);
+  color: #1d1d1f;
+}
+
+body.light-mode .cc-large-module,
+body.light-mode .cc-card-btn,
+body.light-mode .cc-slider-card {
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+body.light-mode .cc-title {
+  color: #1d1d1f;
+}
+
+body.light-mode .cc-desc {
+  color: rgba(0, 0, 0, 0.55);
+}
+
+body.light-mode .cc-icon-bubble {
+  background: rgba(0, 0, 0, 0.08);
+  color: #1d1d1f;
+}
+
+body.light-mode .cc-icon-bubble.active {
+  background: var(--accent-color);
+  color: #ffffff;
+}
+
+body.light-mode #spotlight {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  box-shadow: 0 32px 70px rgba(0, 0, 0, 0.22);
+  color: #1d1d1f;
+}
+
+body.light-mode .spotlight-search input {
+  color: #1d1d1f;
+}
+
+body.light-mode .spotlight-search input::placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+body.light-mode .result-item:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .result-item.selected {
+  background: var(--accent-color);
+  color: #ffffff;
+}
+
+body.light-mode .result-item.selected .res-meta {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .proxy-icon {

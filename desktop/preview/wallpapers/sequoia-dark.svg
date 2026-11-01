@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3840 2160" width="100%" height="100%">
+  <defs>
+    <!-- Midnight Sky Gradient -->
+    <linearGradient id="bg-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#050814"/>
+      <stop offset="35%" stop-color="#0f1124"/>
+      <stop offset="70%" stop-color="#190d2e"/>
+      <stop offset="100%" stop-color="#070916"/>
+    </linearGradient>
+
+    <!-- Glowing Deep Amber / Ember Ribbon -->
+    <linearGradient id="ember-ribbon" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#d9480f"/>
+      <stop offset="30%" stop-color="#f76707"/>
+      <stop offset="65%" stop-color="#ff922b"/>
+      <stop offset="100%" stop-color="#ffd43b"/>
+    </linearGradient>
+
+    <!-- Deep Magenta & Electric Violet Ribbon -->
+    <linearGradient id="violet-ribbon" x1="10%" y1="90%" x2="90%" y2="10%">
+      <stop offset="0%" stop-color="#3b0764"/>
+      <stop offset="35%" stop-color="#701a75"/>
+      <stop offset="70%" stop-color="#c026d3"/>
+      <stop offset="100%" stop-color="#e879f9"/>
+    </linearGradient>
+
+    <!-- Royal Oceanic Blue Ribbon -->
+    <linearGradient id="oceanic-ribbon" x1="100%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#020617"/>
+      <stop offset="35%" stop-color="#0c4a6e"/>
+      <stop offset="70%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#38bdf8"/>
+    </linearGradient>
+
+    <linearGradient id="glow-edge" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.7"/>
+      <stop offset="50%" stop-color="#38bdf8" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- High-Glow Blur Filters -->
+    <filter id="dark-glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="90" result="blur"/>
+    </filter>
+    <filter id="ribbon-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="30" result="blur"/>
+    </filter>
+    <filter id="subtle-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="-10" dy="20" stdDeviation="24" flood-color="#000000" flood-opacity="0.8"/>
+    </filter>
+  </defs>
+
+  <!-- Midnight Base Canvas -->
+  <rect width="3840" height="2160" fill="url(#bg-dark)"/>
+
+  <!-- Atmospheric Nebular Glows -->
+  <circle cx="900" cy="600" r="1100" fill="#f76707" opacity="0.18" filter="url(#dark-glow)"/>
+  <circle cx="3000" cy="1500" r="1200" fill="#a21caf" opacity="0.22" filter="url(#dark-glow)"/>
+  <circle cx="700" cy="1700" r="900" fill="#0284c7" opacity="0.25" filter="url(#dark-glow)"/>
+  <circle cx="2600" cy="400" r="950" fill="#6366f1" opacity="0.16" filter="url(#dark-glow)"/>
+
+  <!-- Back Layer Ribbons (Deep Oceanic Indigo) -->
+  <path d="M-200,1600 C600,1900 1200,1200 1800,1500 C2400,1800 3000,1300 4100,1700 L4100,2400 L-200,2400 Z"
+        fill="url(#oceanic-ribbon)" opacity="0.85" filter="url(#subtle-shadow)"/>
+
+  <!-- Mid-Layer Fluid Ribbon (Electric Violet) -->
+  <path d="M-100,1100 C700,600 1400,1600 2200,1100 C2900,650 3500,1400 4000,900 L4000,2300 L-100,2300 Z"
+        fill="url(#violet-ribbon)" opacity="0.88" filter="url(#subtle-shadow)"/>
+
+  <!-- Hero Ember Ribbon (Glowing Sequoia Amber) -->
+  <path d="M-200,750 C500,300 1100,1250 1900,700 C2700,200 3400,1100 4100,500 L4100,2200 L-200,2200 Z"
+        fill="url(#ember-ribbon)" filter="url(#subtle-shadow)"/>
+
+  <!-- Specular Ridge Highlight -->
+  <path d="M-200,740 C500,290 1100,1240 1900,690 C2700,190 3400,1090 4100,490"
+        fill="none" stroke="url(#glow-edge)" stroke-width="6" opacity="0.85" filter="url(#ribbon-glow)"/>
+</svg>

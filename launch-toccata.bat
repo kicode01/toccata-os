@@ -11,13 +11,13 @@ set "PREVIEW_URL=file:///%CD:\=/%/desktop/preview/index.html"
 
 if exist "C:\Program Files\Google\Chrome\Application\chrome.exe" (
     echo [INFO] Found Google Chrome. Launching Frameless Native Desktop Window...
-    start "" "C:\Program Files\Google\Chrome\Application\chrome.exe" --app="%PREVIEW_URL%" --start-maximized --disable-features=Translate
+    start "" "C:\Program Files\Google\Chrome\Application\chrome.exe" --app="%PREVIEW_URL%" --start-maximized --disable-features=Translate --disable-http-cache
     goto launched
 )
 
 if exist "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" (
     echo [INFO] Found Microsoft Edge. Launching Frameless Native Desktop Window...
-    start "" "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --app="%PREVIEW_URL%" --start-maximized --disable-features=Translate
+    start "" "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --app="%PREVIEW_URL%" --start-maximized --disable-features=Translate --disable-http-cache
     goto launched
 )
 

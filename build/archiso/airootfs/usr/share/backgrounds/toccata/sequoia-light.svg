@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3840 2160" width="100%" height="100%">
+  <defs>
+    <!-- Background Ambient Gradient -->
+    <linearGradient id="bg-light" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#eff4fa"/>
+      <stop offset="35%" stop-color="#fdf4eb"/>
+      <stop offset="70%" stop-color="#f8edeb"/>
+      <stop offset="100%" stop-color="#eaf2f8"/>
+    </linearGradient>
+
+    <!-- Radial Sunlight Glows -->
+    <radialGradient id="sun-glow" cx="35%" cy="25%" r="65%">
+      <stop offset="0%" stop-color="#fff8eb" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#fef0db" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#fdf4eb" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Ribbon 1: Golden Amber & Apricot -->
+    <linearGradient id="amber-ribbon" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ff7a18"/>
+      <stop offset="30%" stop-color="#ff9f0a"/>
+      <stop offset="60%" stop-color="#ffb833"/>
+      <stop offset="100%" stop-color="#ffd666"/>
+    </linearGradient>
+
+    <!-- Ribbon 2: Sunset Coral & Crimson -->
+    <linearGradient id="coral-ribbon" x1="10%" y1="90%" x2="90%" y2="10%">
+      <stop offset="0%" stop-color="#c9184a"/>
+      <stop offset="40%" stop-color="#ff4d6d"/>
+      <stop offset="75%" stop-color="#ff758f"/>
+      <stop offset="100%" stop-color="#ffa8ba"/>
+    </linearGradient>
+
+    <!-- Ribbon 3: Deep Royal Sapphire & Violet -->
+    <linearGradient id="sapphire-ribbon" x1="100%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#2a085c"/>
+      <stop offset="35%" stop-color="#4f1271"/>
+      <stop offset="70%" stop-color="#184e77"/>
+      <stop offset="100%" stop-color="#1e6091"/>
+    </linearGradient>
+
+    <!-- Ribbon 4: Electric Cyan & Sky Blue -->
+    <linearGradient id="cyan-ribbon" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#0077b6"/>
+      <stop offset="50%" stop-color="#00b4d8"/>
+      <stop offset="100%" stop-color="#90e0ef"/>
+    </linearGradient>
+
+    <!-- Specular Highlight Ribbon -->
+    <linearGradient id="specular-ribbon" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.85"/>
+      <stop offset="45%" stop-color="#ffffff" stop-opacity="0.4"/>
+      <stop offset="80%" stop-color="#ffffff" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Blur Filters for Layered Organic Depth -->
+    <filter id="soft-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="70" result="blur"/>
+    </filter>
+    <filter id="medium-blur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="35" result="blur"/>
+    </filter>
+    <filter id="ribbon-shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="-15" dy="25" stdDeviation="28" flood-color="#141a29" flood-opacity="0.18"/>
+    </filter>
+    <filter id="deep-shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="20" dy="35" stdDeviation="40" flood-color="#0a0e1a" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+
+  <!-- Base Canvas -->
+  <rect width="3840" height="2160" fill="url(#bg-light)"/>
+  <rect width="3840" height="2160" fill="url(#sun-glow)"/>
+
+  <!-- Background Ambient Color Flares -->
+  <circle cx="800" cy="500" r="900" fill="#ffd166" opacity="0.35" filter="url(#soft-glow)"/>
+  <circle cx="3100" cy="1600" r="1100" fill="#ff758f" opacity="0.32" filter="url(#soft-glow)"/>
+  <circle cx="600" cy="1800" r="850" fill="#00b4d8" opacity="0.28" filter="url(#soft-glow)"/>
+  <circle cx="2800" cy="400" r="950" fill="#c77dff" opacity="0.25" filter="url(#soft-glow)"/>
+
+  <!-- Back Layer Ribbons (Deep Purple/Sapphire) -->
+  <path d="M-200,1600 C600,1900 1200,1200 1800,1500 C2400,1800 3000,1300 4100,1700 L4100,2400 L-200,2400 Z"
+        fill="url(#sapphire-ribbon)" opacity="0.75" filter="url(#deep-shadow)"/>
+
+  <!-- Mid-Layer Fluid Ribbon 1 (Cyan/Sky) -->
+  <path d="M-100,1100 C700,600 1400,1600 2200,1100 C2900,650 3500,1400 4000,900 L4000,2300 L-100,2300 Z"
+        fill="url(#cyan-ribbon)" opacity="0.82" filter="url(#ribbon-shadow)"/>
+
+  <!-- Main Hero Ribbon (Amber / Gold / Sunset Apricot) -->
+  <path d="M-200,750 C500,300 1100,1250 1900,700 C2700,200 3400,1100 4100,500 L4100,2200 L-200,2200 Z"
+        fill="url(#amber-ribbon)" filter="url(#ribbon-shadow)"/>
+
+  <!-- Foreground Dynamic Ribbon (Coral / Crimson Elegance) -->
+  <path d="M-150,1350 C450,1650 1050,900 1750,1300 C2450,1700 3150,850 4050,1200 L4050,2300 L-150,2300 Z"
+        fill="url(#coral-ribbon)" opacity="0.9" filter="url(#deep-shadow)"/>
+
+  <!-- Top Accent Swirl (Golden Sunlight Edge) -->
+  <path d="M200,-100 C900,400 1600,-50 2300,350 C3000,750 3600,200 4100,500 L4100,-100 Z"
+        fill="url(#amber-ribbon)" opacity="0.55" filter="url(#medium-blur)"/>
+
+  <!-- Specular Ridge Highlights (Crisp Glass Edge) -->
+  <path d="M-200,740 C500,290 1100,1240 1900,690 C2700,190 3400,1090 4100,490"
+        fill="none" stroke="url(#specular-ribbon)" stroke-width="8" opacity="0.8" filter="url(#medium-blur)"/>
+
+  <path d="M-150,1340 C450,1640 1050,890 1750,1290 C2450,1690 3150,840 4050,1190"
+        fill="none" stroke="#ffffff" stroke-width="5" opacity="0.6"/>
+
+  <!-- Ambient Pearlescent Vignette -->
+  <rect width="3840" height="2160" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+</svg>
