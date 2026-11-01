@@ -100,7 +100,9 @@ mkdir -p "$BUILD_PROFILE/airootfs/usr/share/themes" \
 cp -a /usr/share/themes/pearOS* /usr/share/themes/Zorin* "$BUILD_PROFILE/airootfs/usr/share/themes/" 2>/dev/null || true
 cp -a /usr/share/icons/pearOS* /usr/share/icons/Zorin* "$BUILD_PROFILE/airootfs/usr/share/icons/" 2>/dev/null || true
 cp -a /usr/share/backgrounds/* "$BUILD_PROFILE/airootfs/usr/share/backgrounds/" 2>/dev/null || true
-cp -a /usr/share/sounds/* "$BUILD_PROFILE/airootfs/usr/share/sounds/" 2>/dev/null || true
+cp -a "$PROJECT_ROOT/assets/wallpapers"/* "$BUILD_PROFILE/airootfs/usr/share/backgrounds/" 2>/dev/null || true
+cp -a /usr/share/sounds/zorin "$BUILD_PROFILE/airootfs/usr/share/sounds/" 2>/dev/null || true
+cp -a "$PROJECT_ROOT/assets/sounds/boot-sound.wav" "$BUILD_PROFILE/airootfs/usr/share/sounds/" 2>/dev/null || true
 cp -a /usr/share/zorin-appearance/* "$BUILD_PROFILE/airootfs/usr/share/zorin-appearance/" 2>/dev/null || true
 cp -a /usr/share/zorin-exec-guard/* "$BUILD_PROFILE/airootfs/usr/share/zorin-exec-guard/" 2>/dev/null || true
 cp -a /usr/share/gnome-shell/extensions/* "$BUILD_PROFILE/airootfs/usr/share/gnome-shell/extensions/" 2>/dev/null || true

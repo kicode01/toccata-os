@@ -8,6 +8,8 @@ base
 base-devel
 linux
 linux-headers
+mkinitcpio
+iptables
 systemd
 systemd-sysvcompat
 btrfs-progs
