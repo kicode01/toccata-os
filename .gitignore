@@ -10,3 +10,5 @@ foundation/
 dist/
 out/
 *.iso
+
+.vercel

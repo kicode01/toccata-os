@@ -11,6 +11,7 @@
   let touchRippleEnabled = true;
   let tiltEnabled = true;
   let customCursorEnabled = true;
+  const IS_NATIVE_KIOSK = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
   // ==========================================================================
   // 1. HIGH-EFFICIENCY WEB AUDIO ENGINE (Zero Memory Leaks & Audio Limiter)
@@ -916,6 +917,13 @@
   function exitToWindows() {
     playHarmonicChime([440, 330, 220, 164.81], 0.6);
     triggerNotification('Shutting down Toccata OS...');
+    if (IS_NATIVE_KIOSK) {
+      fetch('/api/system/power', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'shutdown' })
+      }).catch(() => {});
+    }
     setTimeout(() => {
       window.close();
       // Graceful fallback if browser restricts script close
@@ -924,7 +932,7 @@
           <div style="font-size:52px;margin-bottom:16px;">⏻</div>
           <h2 style="color:white;font-size:24px;margin-bottom:8px;font-weight:700;">Toccata OS Terminated</h2>
           <p style="font-size:14px;max-width:400px;line-height:1.6;margin-bottom:24px;color:#71717a;">
-            You can safely close this window or press <strong style="color:white;">Alt + F4</strong> to return to your Windows desktop.
+            The sovereign session has stopped. Safe to power off hardware or exit VM.
           </p>
           <button onclick="location.reload()" style="background:#007aff;color:white;border:none;padding:10px 22px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(0,122,255,0.4);">Restart Desktop</button>
         </div>
@@ -932,6 +940,20 @@
     }, 350);
   }
   window.exitToWindows = exitToWindows;
+
+  function restartSystem() {
+    playHarmonicChime([330, 440, 554.37], 0.4);
+    triggerNotification('Rebooting Toccata OS...');
+    if (IS_NATIVE_KIOSK) {
+      fetch('/api/system/power', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'restart' })
+      }).catch(() => {});
+    }
+    setTimeout(() => { location.reload(); }, 350);
+  }
+  window.restartSystem = restartSystem;
 
   function toggleSleepMode() {
     const overlay = document.getElementById('sleep-overlay');
@@ -1640,6 +1662,18 @@
 
   // Lightweight background heartbeat for Tempo Activity Monitor
   setInterval(() => {
+    if (IS_NATIVE_KIOSK) {
+      fetch('/api/system')
+        .then(res => res.json())
+        .then(data => {
+          const cpuMetric = document.getElementById('tempo-cpu-metric');
+          if (cpuMetric && data.cpu_percent !== undefined) {
+            cpuMetric.textContent = `${data.cpu_percent}% Load`;
+          }
+        })
+        .catch(() => {});
+      return;
+    }
     const cpuMetric = document.getElementById('tempo-cpu-metric');
     if (cpuMetric) {
       const load = Math.floor(7 + Math.random() * 8);
@@ -1948,6 +1982,47 @@
     cmdRow.className = 'term-line-output';
     cmdRow.innerHTML = `<span style="color: #34c759; font-weight: 700;">${pLabel}</span> ${escapeHtml(cmd)}`;
     history.appendChild(cmdRow);
+
+    // Native Bridge IPC Execution Hook
+    if (IS_NATIVE_KIOSK && !['cls', 'clear'].includes(cmd.toLowerCase())) {
+      const container = document.getElementById('term-container');
+      fetch('/api/exec', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cmd: cmd })
+      })
+      .then(res => res.json())
+      .then(data => {
+        const outRow = document.createElement('div');
+        outRow.className = 'term-line-output';
+        let rendered = '';
+        if (data.stdout) {
+          rendered += escapeHtml(data.stdout).replace(/\n/g, '<br>');
+        }
+        if (data.stderr) {
+          rendered += (rendered ? '<br>' : '') + `<span style="color: #ef4444;">${escapeHtml(data.stderr).replace(/\n/g, '<br>')}</span>`;
+        }
+        if (!rendered && data.error) {
+          rendered = `<span style="color: #ef4444;">${escapeHtml(data.error)}</span>`;
+        }
+        outRow.innerHTML = rendered || `<span style="color: #a1a1aa;">(Command returned with exit code ${data.exit_code || 0})</span>`;
+        history.appendChild(outRow);
+        if (container) container.scrollTop = container.scrollHeight;
+      })
+      .catch(() => {
+        // Fallback to static simulator if API fails
+        const output = evaluateTerminalCommand(cmd);
+        if (output) {
+          const outRow = document.createElement('div');
+          outRow.className = 'term-line-output';
+          outRow.innerHTML = output;
+          history.appendChild(outRow);
+        }
+        if (container) container.scrollTop = container.scrollHeight;
+      });
+      playHarmonicChime([440], 0.08);
+      return;
+    }
 
     // Evaluate dual-personality command
     const output = evaluateTerminalCommand(cmd);

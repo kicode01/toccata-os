@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Toccata OS 1.0 - Sovereign Kiosk Desktop Compositor
+set -e
+
+export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+export WAYLAND_DISPLAY="wayland-0"
+export XDG_CURRENT_DESKTOP="Toccata"
+export MOZ_ENABLE_WAYLAND=1
+export QT_QPA_PLATFORM=wayland
+
+# Wait for Toccata Bridge to initialize
+for i in {1..40}; do
+    if curl -s http://127.0.0.1:5000/api/status >/dev/null 2>&1; then
+        break
+    fi
+    sleep 0.15
+done
+
+# Play authentic boot chime
+if [ -f /usr/share/sounds/boot-sound.wav ]; then
+    pw-play /usr/share/sounds/boot-sound.wav 2>/dev/null &
+fi
+
+# Launch Cage Wayland compositor with Chromium Ozone full-screen kiosk
+exec cage -d -s -- chromium \
+    --kiosk \
+    --ozone-platform=wayland \
+    --enable-features=UseOzonePlatform,OverlayScrollbar \
+    --ignore-gpu-blocklist \
+    --enable-gpu-rasterization \
+    --enable-zero-copy \
+    --disable-gpu-watchdog \
+    --disable-dev-shm-usage \
+    --no-first-run \
+    --no-default-browser-check \
+    --password-store=basic \
+    --disable-translate \
+    --disable-features=Translate \
+    --autoplay-policy=no-user-gesture-required \
+    --disable-infobars \
+    --disable-session-crashed-bubble \
+    --check-for-update-interval=31536000 \
+    --user-data-dir="/home/toccata/.config/toccata-browser" \
+    http://localhost:5000/

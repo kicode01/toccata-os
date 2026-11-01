@@ -18,13 +18,18 @@ if [ -f /usr/local/share/toccata/toccata-logo.svg ]; then
     cp -f /usr/local/share/toccata/toccata-logo.svg /usr/share/pixmaps/archlinux-logo.svg
 fi
 
-# Enable graphical target and display manager
+# Enable graphical target, seatd, Toccata Kiosk and IPC Bridge
 systemctl set-default graphical.target
-systemctl enable gdm.service
+systemctl enable seatd.service
+systemctl enable toccata-bridge.service
+systemctl enable toccata-kiosk.service
 systemctl enable NetworkManager.service
 systemctl mask systemd-firstboot.service
+systemctl mask gdm.service 2>/dev/null || true
 
-# Ensure toccata user ownership
+# Ensure toccata user groups and permissions
+usermod -aG video,audio,input,storage,wheel,seat,render toccata 2>/dev/null || true
 chown -R toccata:toccata /home/toccata
 chmod 755 /home/toccata
 chmod 755 /usr/local/bin/*
+chmod +x /usr/local/share/toccata/toccata-bridge/server.py 2>/dev/null || true

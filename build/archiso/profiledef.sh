@@ -23,6 +23,7 @@ declare -A file_permissions=(
   ["/root/customize_airootfs.sh"]="0:0:755"
   ["/usr/local/bin/toccata-shell"]="0:0:755"
   ["/usr/local/bin/toccata-installer"]="0:0:755"
+  ["/usr/local/bin/toccata-kiosk-session"]="0:0:755"
   ["/usr/local/bin/toccata-session"]="0:0:755"
   ["/usr/local/bin/toccata-open"]="0:0:755"
   ["/usr/local/bin/toccata-startup"]="0:0:755"
@@ -34,4 +35,5 @@ declare -A file_permissions=(
   ["/usr/local/bin/gallery"]="0:0:755"
   ["/usr/local/bin/toccata-console"]="0:0:755"
   ["/usr/local/bin/maestro"]="0:0:755"
+  ["/usr/local/share/toccata/toccata-bridge/server.py"]="0:0:755"
 )

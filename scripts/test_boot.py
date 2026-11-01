@@ -1,6 +1,6 @@
 import subprocess, time, socket, os, glob
 
-isos = glob.glob("/mnt/c/Users/PC/Desktop/rnd/p3os/dist/toccata-os-*.iso")
+isos = glob.glob("/var/tmp/dist/toccata-os-*.iso") + glob.glob("/mnt/c/Users/PC/Desktop/rnd/p3os/dist/toccata-os-*.iso")
 if not isos:
     print("No ISO found!")
     exit(1)

@@ -1,0 +1,14 @@
+[Unit]
+Description=Toccata OS Native IPC & Desktop Web Bridge
+After=network.target sound.target
+
+[Service]
+Type=simple
+User=toccata
+WorkingDirectory=/home/toccata
+ExecStart=/usr/bin/python3 /usr/local/share/toccata/toccata-bridge/server.py
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=multi-user.target

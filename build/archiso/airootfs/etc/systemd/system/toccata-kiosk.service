@@ -1,0 +1,25 @@
+[Unit]
+Description=Toccata OS Sovereign Kiosk Desktop Session
+After=systemd-user-sessions.service toccata-bridge.service seatd.service
+Conflicts=getty@tty1.service
+Wants=toccata-bridge.service seatd.service
+
+[Service]
+User=toccata
+Group=toccata
+PAMName=login
+Environment=XDG_SESSION_TYPE=wayland
+Environment=XDG_CURRENT_DESKTOP=Toccata
+Environment=WAYLAND_DISPLAY=wayland-0
+ExecStart=/usr/local/bin/toccata-kiosk-session
+Restart=always
+RestartSec=1
+StandardInput=tty
+StandardOutput=journal
+StandardError=journal
+TTYPath=/dev/tty1
+TTYReset=yes
+TTYVHangup=yes
+
+[Install]
+WantedBy=graphical.target

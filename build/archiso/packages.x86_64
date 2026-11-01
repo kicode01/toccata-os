@@ -43,29 +43,16 @@ wpa_supplicant
 bluez
 bluez-utils
 
-# 4. Wayland Compositor & GNOME 47 Desktop Suite
+# 4. Wayland Kiosk Compositor & Direct Hardware Display Engine
 wayland
 wayland-protocols
 xorg-server
 xorg-xwayland
 xf86-video-qxl
-gnome-shell
-gnome-session
-gnome-control-center
-gnome-tweaks
-gdm
-mutter
-nautilus
-dconf
-dconf-editor
-python-gobject
-python-psutil
-labwc
+cage
+chromium
 seatd
-qt6-base
-qt6-declarative
-qt6-wayland
-python-pyqt6
+python-psutil
 
 # 5. PipeWire Low-Latency Hi-Fi Audio (0.7ms ALSA Direct)
 pipewire

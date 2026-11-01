@@ -81,9 +81,13 @@ mkdir -p "$BUILD_PROFILE"
 echo "[1/3] Staging build profile to fast ext4 storage ($BUILD_PROFILE)..."
 cp -a "$PROFILE_DIR"/* "$BUILD_PROFILE"/
 
-echo "      Syncing latest Toccata Shell, Zorin themes, and first-party applications..."
+echo "      Syncing latest Toccata Shell, IPC Bridge, and first-party applications..."
 mkdir -p "$BUILD_PROFILE/airootfs/usr/local/share/toccata"
 cp -r "$PROJECT_ROOT/core"/* "$BUILD_PROFILE/airootfs/usr/local/share/toccata/"
+
+echo "      Staging Toccata Sovereign Web Desktop to /usr/share/toccata/desktop/preview..."
+mkdir -p "$BUILD_PROFILE/airootfs/usr/share/toccata/desktop/preview"
+cp -a "$PROJECT_ROOT/desktop/preview"/* "$BUILD_PROFILE/airootfs/usr/share/toccata/desktop/preview/"
 
 # Stage Zorin & pearOS themes, icons, wallpapers, extensions & schemas directly on ext4
 echo "      Staging Zorin OS & pearOS design suites into airootfs on ext4..."
@@ -112,10 +116,15 @@ cp -a /usr/bin/zorin* "$BUILD_PROFILE/airootfs/usr/bin/" 2>/dev/null || true
 cp -a /usr/lib/python3.14/site-packages/zorin* "$BUILD_PROFILE/airootfs/usr/lib/python3.14/site-packages/" 2>/dev/null || true
 glib-compile-schemas "$BUILD_PROFILE/airootfs/usr/share/glib-2.0/schemas/" 2>/dev/null || true
 
-# Configure GDM Display Manager and Graphical Target
-echo "      Configuring GDM automatic login and graphical.target..."
-mkdir -p "$BUILD_PROFILE/airootfs/etc/systemd/system/multi-user.target.wants"
-ln -sf /usr/lib/systemd/system/gdm.service "$BUILD_PROFILE/airootfs/etc/systemd/system/display-manager.service"
+# Configure Toccata Sovereign Kiosk Compositor & IPC Bridge
+echo "      Configuring Toccata Sovereign Kiosk Compositor & IPC Bridge..."
+mkdir -p "$BUILD_PROFILE/airootfs/etc/systemd/system/multi-user.target.wants" \
+         "$BUILD_PROFILE/airootfs/etc/systemd/system/graphical.target.wants"
+rm -f "$BUILD_PROFILE/airootfs/etc/systemd/system/display-manager.service"
+rm -rf "$BUILD_PROFILE/airootfs/etc/gdm"
+ln -sf /etc/systemd/system/toccata-bridge.service "$BUILD_PROFILE/airootfs/etc/systemd/system/multi-user.target.wants/toccata-bridge.service"
+ln -sf /usr/lib/systemd/system/seatd.service "$BUILD_PROFILE/airootfs/etc/systemd/system/multi-user.target.wants/seatd.service"
+ln -sf /etc/systemd/system/toccata-kiosk.service "$BUILD_PROFILE/airootfs/etc/systemd/system/graphical.target.wants/toccata-kiosk.service"
 ln -sf /usr/lib/systemd/system/graphical.target "$BUILD_PROFILE/airootfs/etc/systemd/system/default.target"
 ln -sf /usr/lib/systemd/system/NetworkManager.service "$BUILD_PROFILE/airootfs/etc/systemd/system/multi-user.target.wants/NetworkManager.service"
 ln -sf /dev/null "$BUILD_PROFILE/airootfs/etc/systemd/system/systemd-firstboot.service"
@@ -132,6 +141,5 @@ mkarchiso -v -w "$WORK_DIR" -o "$OUT_DIR" "$BUILD_PROFILE"
 echo ""
 echo "[3/3] Bootable ISO successfully generated on fast ext4 ($OUT_DIR)..."
 ls -lh "$OUT_DIR"/toccata-os-*.iso
-cp "$OUT_DIR"/toccata-os-*.iso "$FINAL_OUT_DIR"/ 2>/dev/null || true
-echo "      Build Complete! Bootable ISO generated."
+echo "      Build Complete! Bootable ISO generated at $OUT_DIR."
 echo "==============================================================================="
