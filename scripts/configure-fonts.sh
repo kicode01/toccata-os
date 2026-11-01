@@ -9,13 +9,15 @@ cat << 'EOF' > /etc/fonts/local.conf
   <match target="pattern">
     <test qual="any" name="family"><string>sans-serif</string></test>
     <edit name="family" mode="prepend" binding="strong">
+      <string>Inter Display</string>
+      <string>Inter</string>
+      <string>Segoe UI Variable Display</string>
       <string>Segoe UI</string>
       <string>DejaVu Sans</string>
-      <string>Noto Sans</string>
     </edit>
   </match>
 </fontconfig>
 EOF
 
-fc-cache -f /mnt/c/Windows/Fonts /usr/share/fonts
-echo "Fonts configured successfully."
+fc-cache -f /usr/share/fonts
+echo "Inter font configured as primary sans-serif."

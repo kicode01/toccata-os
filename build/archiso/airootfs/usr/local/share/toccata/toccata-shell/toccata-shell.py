@@ -392,7 +392,7 @@ class ToccataDesktopManager(QMainWindow):
 
 def main():
     app = QApplication(sys.argv)
-    app.setFont(QFont("Inter, Segoe UI", 10))
+    app.setFont(QFont("Inter Display, Inter, sans-serif", 10))
     manager = ToccataDesktopManager()
     manager.show()
 

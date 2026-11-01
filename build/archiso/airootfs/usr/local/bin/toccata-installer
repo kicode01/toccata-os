@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 Toccata OS 1.0 - macOS Sequoia Light Mode Setup Assistant & System Installer
-Luminous Apple porcelain palette, bespoke vector iconography, left-rail navigation, and interactive NVMe disk cards.
+Engineered with Inter Display typography, Golden Ratio proportions, connecting stepper rail,
+and smooth animated progress interpolation.
 """
 
 import sys
@@ -18,7 +19,7 @@ from PyQt6.QtWidgets import (
 
 class VectorIcon(QWidget):
     """Bespoke vector icon renderer drawn via anti-aliased QPainter (Zero Emojis)."""
-    def __init__(self, icon_type="brand", size=48, parent=None):
+    def __init__(self, icon_type="brand", size=52, parent=None):
         super().__init__(parent)
         self.icon_type = icon_type
         self.setFixedSize(size, size)
@@ -34,22 +35,22 @@ class VectorIcon(QWidget):
             grad.setColorAt(0, QColor(0, 122, 255))
             grad.setColorAt(1, QColor(88, 86, 214))
             p.setBrush(QBrush(grad))
-            p.setPen(QPen(QColor(255, 255, 255, 60), 1.2))
-            p.drawRoundedRect(QRectF(2, 2, w - 4, h - 4), w * 0.26, h * 0.26)
+            p.setPen(QPen(QColor(255, 255, 255, 70), 1.2))
+            p.drawRoundedRect(QRectF(2, 2, w - 4, h - 4), w * 0.28, h * 0.28)
 
             # Elegant audio waveform / tuning fork motif
             p.setPen(QPen(QColor(255, 255, 255), 2.5, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
             cx, cy = w / 2, h / 2
-            bars = [-12, -6, 0, 6, 12]
-            heights = [8, 14, 20, 14, 8]
+            bars = [-13, -6.5, 0, 6.5, 13]
+            heights = [9, 16, 22, 16, 9]
             for dx, bh in zip(bars, heights):
                 p.drawLine(QPointF(cx + dx, cy - bh / 2), QPointF(cx + dx, cy + bh / 2))
 
         elif self.icon_type == "disk":
             # Crisp metallic NVMe / SSD Drive Symbol for Light Mode
-            p.setBrush(QBrush(QColor(240, 242, 246)))
-            p.setPen(QPen(QColor(0, 0, 0, 45), 1.2))
-            p.drawRoundedRect(QRectF(4, 8, w - 8, h - 16), 6, 6)
+            p.setBrush(QBrush(QColor(242, 244, 247)))
+            p.setPen(QPen(QColor(0, 0, 0, 35), 1.2))
+            p.drawRoundedRect(QRectF(4, 9, w - 8, h - 18), 7, 7)
 
             # Drive activity indicator LED
             p.setBrush(QBrush(QColor(0, 122, 255)))
@@ -57,7 +58,7 @@ class VectorIcon(QWidget):
             p.drawEllipse(QPointF(w - 14, h / 2), 3, 3)
 
             # Bus tracks
-            p.setPen(QPen(QColor(110, 110, 120), 1.5))
+            p.setPen(QPen(QColor(120, 120, 130), 1.5))
             p.drawLine(QPointF(12, h / 2 - 3), QPointF(w - 24, h / 2 - 3))
             p.drawLine(QPointF(12, h / 2 + 3), QPointF(w - 32, h / 2 + 3))
 
@@ -101,37 +102,37 @@ class SelectionBadge(QWidget):
         else:
             # Muted hollow circle for Light Mode
             p.setBrush(Qt.BrushStyle.NoBrush)
-            p.setPen(QPen(QColor(0, 0, 0, 50), 1.5))
+            p.setPen(QPen(QColor(0, 0, 0, 40), 1.5))
             p.drawEllipse(QRectF(1.5, 1.5, w - 3, h - 3))
 
 
 class DiskCard(QFrame):
-    """Interactive NVMe / SATA Storage Target Card (Apple Light Mode)."""
+    """Interactive NVMe / SATA Storage Target Card with Golden Ratio proportions."""
     def __init__(self, name, size, model, is_selected=False, parent=None):
         super().__init__(parent)
         self.setObjectName("DiskCard")
         self.is_selected = is_selected
-        self.setFixedHeight(72)
+        self.setFixedHeight(74)
         self.setCursor(Qt.CursorShape.PointingHandCursor)
 
         layout = QHBoxLayout(self)
-        layout.setContentsMargins(14, 10, 16, 10)
+        layout.setContentsMargins(16, 12, 18, 12)
         layout.setSpacing(14)
 
         # Vector Disk Icon
-        layout.addWidget(VectorIcon("disk", 38))
+        layout.addWidget(VectorIcon("disk", 40))
 
         # Drive Info
         info_layout = QVBoxLayout()
-        info_layout.setSpacing(2)
+        info_layout.setSpacing(3)
         info_layout.setAlignment(Qt.AlignmentFlag.AlignVCenter)
 
         self.title_lbl = QLabel(f"{model} ({size})")
-        self.title_lbl.setFont(QFont("Segoe UI, Inter", 11, QFont.Weight.DemiBold))
+        self.title_lbl.setFont(QFont("Inter Display, Inter", 11, QFont.Weight.DemiBold))
         info_layout.addWidget(self.title_lbl)
 
         self.sub_lbl = QLabel(f"Device: /dev/{name} • Target: Btrfs (@, @home, @snapshots)")
-        self.sub_lbl.setFont(QFont("Segoe UI, Inter", 9))
+        self.sub_lbl.setFont(QFont("Inter", 9))
         info_layout.addWidget(self.sub_lbl)
 
         layout.addLayout(info_layout)
@@ -166,12 +167,12 @@ class DiskCard(QFrame):
             self.setStyleSheet("""
                 QFrame#DiskCard {
                     background-color: #ffffff;
-                    border: 1px solid rgba(0, 0, 0, 0.10);
+                    border: 1px solid rgba(0, 0, 0, 0.08);
                     border-radius: 12px;
                 }
                 QFrame#DiskCard:hover {
                     background-color: #fafbfc;
-                    border: 1px solid rgba(0, 0, 0, 0.22);
+                    border: 1px solid rgba(0, 0, 0, 0.18);
                 }
                 QLabel {
                     border: none;
@@ -190,12 +191,57 @@ class DiskCard(QFrame):
         super().mousePressEvent(event)
 
 
+class StepRailItem(QWidget):
+    """Individual Step Node in the Left Stepper Rail."""
+    def __init__(self, step_num, title, is_active=False, is_done=False, parent=None):
+        super().__init__(parent)
+        self.title_text = title
+        self.is_active = is_active
+        self.is_done = is_done
+        self.setFixedHeight(34)
+
+        layout = QHBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(12)
+
+        self.dot = QLabel()
+        self.dot.setFixedSize(18, 18)
+        self.dot.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.dot)
+
+        self.lbl = QLabel(title)
+        self.lbl.setFont(QFont("Inter Display, Inter", 10))
+        layout.addWidget(self.lbl)
+        layout.addStretch()
+
+        self.update_state(is_active, is_done)
+
+    def update_state(self, is_active, is_done):
+        self.is_active = is_active
+        self.is_done = is_done
+        if is_active:
+            self.dot.setStyleSheet("background: #007aff; border-radius: 9px; color: #ffffff; font-size: 9px; font-weight: bold;")
+            self.dot.setText("•")
+            self.lbl.setFont(QFont("Inter Display, Inter", 10, QFont.Weight.DemiBold))
+            self.lbl.setStyleSheet("color: #1d1d1f; background: transparent;")
+        elif is_done:
+            self.dot.setStyleSheet("background: #34c759; border-radius: 9px; color: #ffffff; font-size: 9px; font-weight: bold;")
+            self.dot.setText("✓")
+            self.lbl.setFont(QFont("Inter Display, Inter", 10))
+            self.lbl.setStyleSheet("color: #48484a; background: transparent;")
+        else:
+            self.dot.setStyleSheet("background: rgba(0, 0, 0, 0.08); border-radius: 9px; color: rgba(0,0,0,0.3); font-size: 8px;")
+            self.dot.setText(" ")
+            self.lbl.setFont(QFont("Inter Display, Inter", 10))
+            self.lbl.setStyleSheet("color: #86868b; background: transparent;")
+
+
 class ToccataInstaller(QWidget):
-    """macOS Sequoia Light Mode Setup Assistant."""
+    """macOS Sequoia Light Mode Setup Assistant with Golden Ratio proportions."""
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Toccata OS Setup Assistant")
-        self.resize(840, 520)
+        self.resize(850, 525)  # 1.618 Golden Ratio Window Frame
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
@@ -211,8 +257,8 @@ class ToccataInstaller(QWidget):
         self.container.setStyleSheet("""
             QFrame#Container {
                 background-color: #fbfbfd;
-                border: 1px solid rgba(0, 0, 0, 0.14);
-                border-radius: 16px;
+                border: 1px solid rgba(0, 0, 0, 0.12);
+                border-radius: 18px;
             }
         """)
         root.addWidget(self.container)
@@ -221,19 +267,19 @@ class ToccataInstaller(QWidget):
         container_layout.setContentsMargins(0, 0, 0, 0)
         container_layout.setSpacing(0)
 
-        # 1. Left Rail / Steps Sidebar (Apple Aluminum Mist)
+        # 1. Left Rail / Steps Sidebar (Soft Aluminum Mist)
         sidebar = QFrame()
-        sidebar.setFixedWidth(210)
+        sidebar.setFixedWidth(205)
         sidebar.setStyleSheet("""
             QFrame {
-                background-color: #f2f3f6;
-                border-top-left-radius: 16px;
-                border-bottom-left-radius: 16px;
+                background-color: #f3f4f6;
+                border-top-left-radius: 18px;
+                border-bottom-left-radius: 18px;
                 border-right: 1px solid rgba(0, 0, 0, 0.08);
             }
         """)
         sb_layout = QVBoxLayout(sidebar)
-        sb_layout.setContentsMargins(18, 20, 18, 20)
+        sb_layout.setContentsMargins(20, 20, 18, 20)
         sb_layout.setSpacing(14)
 
         # Inset Traffic Lights
@@ -261,17 +307,17 @@ class ToccataInstaller(QWidget):
 
         # Brand Monogram in Sidebar
         sb_brand = QHBoxLayout()
-        sb_brand.addWidget(VectorIcon("brand", 32))
+        sb_brand.addWidget(VectorIcon("brand", 34))
         sb_title = QLabel("Toccata OS")
-        sb_title.setFont(QFont("Segoe UI, Inter", 13, QFont.Weight.Bold))
+        sb_title.setFont(QFont("Inter Display, Inter", 13, QFont.Weight.Bold))
         sb_title.setStyleSheet("color: #1d1d1f; background: transparent; padding-left: 4px;")
         sb_brand.addWidget(sb_title)
         sb_brand.addStretch()
         sb_layout.addLayout(sb_brand)
         sb_layout.addSpacing(16)
 
-        # Vertical Step Indicators
-        self.step_labels = []
+        # Vertical Stepper Rail
+        self.step_items = []
         steps = [
             "Welcome",
             "Target Disk",
@@ -280,38 +326,24 @@ class ToccataInstaller(QWidget):
             "Ready"
         ]
         for idx, title in enumerate(steps):
-            row = QHBoxLayout()
-            row.setSpacing(10)
-
-            dot = QLabel("●")
-            dot.setFont(QFont("Segoe UI", 8))
-            dot.setStyleSheet("color: rgba(0, 0, 0, 0.25); background: transparent;")
-
-            lbl = QLabel(title)
-            lbl.setFont(QFont("Segoe UI, Inter", 10, QFont.Weight.Medium))
-            lbl.setStyleSheet("color: #86868b; background: transparent;")
-
-            row.addWidget(dot)
-            row.addWidget(lbl)
-            row.addStretch()
-
-            self.step_labels.append((dot, lbl))
-            sb_layout.addLayout(row)
+            item = StepRailItem(idx + 1, title, is_active=(idx == 0))
+            self.step_items.append(item)
+            sb_layout.addWidget(item)
 
         sb_layout.addStretch()
 
         version_lbl = QLabel("Version 1.0 (x86_64)")
-        version_lbl.setFont(QFont("Segoe UI, Inter", 9))
+        version_lbl.setFont(QFont("Inter", 9))
         version_lbl.setStyleSheet("color: #86868b; background: transparent;")
         sb_layout.addWidget(version_lbl)
 
         container_layout.addWidget(sidebar)
 
-        # 2. Right Content Area (Porcelain White)
+        # 2. Right Content Area (Proportional Margin: 44px)
         right_panel = QWidget()
         right_panel.setStyleSheet("background: transparent;")
         rp_layout = QVBoxLayout(right_panel)
-        rp_layout.setContentsMargins(36, 28, 36, 28)
+        rp_layout.setContentsMargins(44, 32, 44, 28)
         rp_layout.setSpacing(16)
 
         self.stack = QStackedWidget()
@@ -325,16 +357,16 @@ class ToccataInstaller(QWidget):
         # Bottom Button Bar
         self.nav_bar = QHBoxLayout()
         self.btn_back = QPushButton("Back")
-        self.btn_back.setFont(QFont("Segoe UI, Inter", 10))
+        self.btn_back.setFont(QFont("Inter Display, Inter", 10))
         self.btn_back.setStyleSheet("""
             QPushButton {
                 background: #ffffff;
                 color: #1d1d1f;
                 border: 1px solid rgba(0, 0, 0, 0.15);
                 border-radius: 8px;
-                padding: 7px 20px;
+                padding: 7px 22px;
             }
-            QPushButton:hover { background: #f2f3f5; }
+            QPushButton:hover { background: #f4f5f7; }
         """)
         self.btn_back.clicked.connect(self.prev_step)
         self.btn_back.hide()
@@ -342,14 +374,14 @@ class ToccataInstaller(QWidget):
         self.nav_bar.addStretch()
 
         self.btn_next = QPushButton("Continue")
-        self.btn_next.setFont(QFont("Segoe UI, Inter", 10, QFont.Weight.DemiBold))
+        self.btn_next.setFont(QFont("Inter Display, Inter", 10, QFont.Weight.DemiBold))
         self.btn_next.setStyleSheet("""
             QPushButton {
                 background: #007aff;
                 color: #ffffff;
                 border: none;
                 border-radius: 8px;
-                padding: 7px 26px;
+                padding: 7px 28px;
             }
             QPushButton:hover { background: #0066cc; }
             QPushButton:pressed { background: #0055b3; }
@@ -363,16 +395,8 @@ class ToccataInstaller(QWidget):
         self.update_sidebar_step(0)
 
     def update_sidebar_step(self, active_idx):
-        for idx, (dot, lbl) in enumerate(self.step_labels):
-            if idx == active_idx:
-                dot.setStyleSheet("color: #007aff; background: transparent;")
-                lbl.setStyleSheet("color: #1d1d1f; font-weight: bold; background: transparent;")
-            elif idx < active_idx:
-                dot.setStyleSheet("color: #34c759; background: transparent;")
-                lbl.setStyleSheet("color: #48484a; background: transparent;")
-            else:
-                dot.setStyleSheet("color: rgba(0, 0, 0, 0.25); background: transparent;")
-                lbl.setStyleSheet("color: #86868b; background: transparent;")
+        for idx, item in enumerate(self.step_items):
+            item.update_state(is_active=(idx == active_idx), is_done=(idx < active_idx))
 
     # PAGE 1: Welcome
     def create_welcome_page(self):
@@ -385,7 +409,7 @@ class ToccataInstaller(QWidget):
         layout.addWidget(icon, alignment=Qt.AlignmentFlag.AlignCenter)
 
         title = QLabel("Welcome to Toccata OS")
-        title.setFont(QFont("Segoe UI, Inter", 20, QFont.Weight.Bold))
+        title.setFont(QFont("Inter Display", 21, QFont.Weight.Bold))
         title.setStyleSheet("color: #1d1d1f;")
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title)
@@ -396,8 +420,8 @@ class ToccataInstaller(QWidget):
             "This assistant will guide you through setting up your installation target with\n"
             "automatic Btrfs subvolumes, ZSTD compression, and sub-second Snapper rollbacks."
         )
-        sub.setFont(QFont("Segoe UI, Inter", 10))
-        sub.setStyleSheet("color: #48484a; line-height: 1.6;")
+        sub.setFont(QFont("Inter", 10))
+        sub.setStyleSheet("color: #48484a; line-height: 1.65;")
         sub.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(sub)
 
@@ -410,12 +434,12 @@ class ToccataInstaller(QWidget):
         layout.setSpacing(12)
 
         title = QLabel("Select Installation Destination")
-        title.setFont(QFont("Segoe UI, Inter", 16, QFont.Weight.Bold))
+        title.setFont(QFont("Inter Display", 17, QFont.Weight.Bold))
         title.setStyleSheet("color: #1d1d1f;")
         layout.addWidget(title)
 
         desc = QLabel("Choose the storage device for Toccata OS. The selected drive will be formatted with GPT and Btrfs.")
-        desc.setFont(QFont("Segoe UI, Inter", 10))
+        desc.setFont(QFont("Inter", 10))
         desc.setStyleSheet("color: #6e6e73;")
         layout.addWidget(desc)
         layout.addSpacing(6)
@@ -441,7 +465,7 @@ class ToccataInstaller(QWidget):
                 background: #f4f5f7;
                 border: 1px solid rgba(0, 0, 0, 0.08);
                 border-radius: 10px;
-                padding: 10px;
+                padding: 10px 14px;
             }
             QLabel {
                 border: none;
@@ -485,12 +509,12 @@ class ToccataInstaller(QWidget):
         layout.setSpacing(12)
 
         title = QLabel("Create Administrator Account")
-        title.setFont(QFont("Segoe UI, Inter", 16, QFont.Weight.Bold))
+        title.setFont(QFont("Inter Display", 17, QFont.Weight.Bold))
         title.setStyleSheet("color: #1d1d1f;")
         layout.addWidget(title)
 
         desc = QLabel("Set up your primary login credentials and system hostname.")
-        desc.setFont(QFont("Segoe UI, Inter", 10))
+        desc.setFont(QFont("Inter", 10))
         desc.setStyleSheet("color: #6e6e73;")
         layout.addWidget(desc)
         layout.addSpacing(10)
@@ -501,8 +525,8 @@ class ToccataInstaller(QWidget):
             QFrame#UserForm {
                 background: #ffffff;
                 border: 1px solid rgba(0, 0, 0, 0.10);
-                border-radius: 12px;
-                padding: 16px;
+                border-radius: 14px;
+                padding: 16px 18px;
             }
             QLabel {
                 border: none;
@@ -513,7 +537,7 @@ class ToccataInstaller(QWidget):
             }
             QLineEdit {
                 background: #fbfbfd;
-                border: 1px solid rgba(0, 0, 0, 0.15);
+                border: 1px solid rgba(0, 0, 0, 0.14);
                 border-radius: 8px;
                 padding: 8px 12px;
                 color: #1d1d1f;
@@ -554,17 +578,17 @@ class ToccataInstaller(QWidget):
         layout.addWidget(VectorIcon("brand", 56), alignment=Qt.AlignmentFlag.AlignCenter)
 
         self.install_title = QLabel("Installing Toccata OS...")
-        self.install_title.setFont(QFont("Segoe UI, Inter", 18, QFont.Weight.Bold))
+        self.install_title.setFont(QFont("Inter Display", 19, QFont.Weight.Bold))
         self.install_title.setStyleSheet("color: #1d1d1f;")
         self.install_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.install_title)
 
         # Progress Bar Box with Clean Status & Percentage Footer Row
         prog_box = QWidget()
-        prog_box.setFixedWidth(480)
+        prog_box.setFixedWidth(490)
         pb_layout = QVBoxLayout(prog_box)
         pb_layout.setContentsMargins(0, 0, 0, 0)
-        pb_layout.setSpacing(8)
+        pb_layout.setSpacing(9)
 
         self.progress = QProgressBar()
         self.progress.setTextVisible(False)
@@ -588,14 +612,14 @@ class ToccataInstaller(QWidget):
         status_row.setContentsMargins(2, 0, 2, 0)
 
         self.install_detail = QLabel("Formatting GPT partition table on target drive...")
-        self.install_detail.setFont(QFont("Segoe UI, Inter", 10))
+        self.install_detail.setFont(QFont("Inter", 10))
         self.install_detail.setStyleSheet("color: #6e6e73; background: transparent;")
         status_row.addWidget(self.install_detail)
 
         status_row.addStretch()
 
         self.pct_label = QLabel("10%")
-        self.pct_label.setFont(QFont("Segoe UI, Inter", 10, QFont.Weight.DemiBold))
+        self.pct_label.setFont(QFont("Inter Display, Inter", 10, QFont.Weight.DemiBold))
         self.pct_label.setStyleSheet("color: #1d1d1f; background: transparent;")
         status_row.addWidget(self.pct_label)
 
@@ -614,7 +638,7 @@ class ToccataInstaller(QWidget):
         layout.addWidget(VectorIcon("complete", 56), alignment=Qt.AlignmentFlag.AlignCenter)
 
         title = QLabel("Toccata OS is Ready")
-        title.setFont(QFont("Segoe UI, Inter", 20, QFont.Weight.Bold))
+        title.setFont(QFont("Inter Display", 21, QFont.Weight.Bold))
         title.setStyleSheet("color: #1d1d1f;")
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title)
@@ -624,8 +648,8 @@ class ToccataInstaller(QWidget):
             "All Btrfs subvolumes, Snapper snapshots, and systemd-boot entries have been verified.\n\n"
             "Remove the installation media and restart your computer to begin."
         )
-        desc.setFont(QFont("Segoe UI, Inter", 10))
-        desc.setStyleSheet("color: #48484a; line-height: 1.6;")
+        desc.setFont(QFont("Inter", 10))
+        desc.setStyleSheet("color: #48484a; line-height: 1.65;")
         desc.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(desc)
 
@@ -659,31 +683,45 @@ class ToccataInstaller(QWidget):
             self.btn_back.hide()
 
     def start_install(self):
-        self.step_counter = 0
-        self.install_timer = QTimer(self)
-        self.install_timer.timeout.connect(self._run_install_step)
-        self.install_timer.start(800)
-
-    def _run_install_step(self):
-        self.step_counter += 1
-        phases = [
-            (20, "Creating Btrfs subvolumes: @, @home, @snapshots..."),
-            (40, "Configuring Zstandard Level 3 transparent filesystem compression..."),
-            (65, "Deploying Linux XanMod BORE Kernel & Universal Offline Drivers..."),
-            (85, "Installing Toccata Qt6 Glass Shell & PipeWire audio engine..."),
+        self.target_pct = 10
+        self.current_pct = 10
+        self.step_idx = 0
+        self.phases = [
+            (25, "Creating Btrfs subvolumes: @, @home, @snapshots..."),
+            (50, "Configuring Zstandard Level 3 transparent filesystem compression..."),
+            (75, "Deploying Linux XanMod BORE Kernel & Universal Offline Drivers..."),
+            (90, "Installing Toccata Qt6 Glass Shell & PipeWire audio engine..."),
             (100, "Writing UEFI systemd-bootloader entries & Plymouth boot theme..."),
         ]
-        if self.step_counter <= len(phases):
-            pct, msg = phases[self.step_counter - 1]
-            self.progress.setValue(pct)
+
+        # Smooth interpolation timer (every 30ms)
+        self.anim_timer = QTimer(self)
+        self.anim_timer.timeout.connect(self._animate_progress)
+        self.anim_timer.start(30)
+
+        # Phase trigger timer
+        self.phase_timer = QTimer(self)
+        self.phase_timer.timeout.connect(self._advance_phase)
+        self.phase_timer.start(1200)
+
+    def _advance_phase(self):
+        if self.step_idx < len(self.phases):
+            self.target_pct, msg = self.phases[self.step_idx]
             self.install_detail.setText(msg)
-            self.pct_label.setText(f"{pct}%")
+            self.step_idx += 1
         else:
-            self.install_timer.stop()
+            self.phase_timer.stop()
+            self.anim_timer.stop()
             self.stack.setCurrentIndex(4)
             self.update_sidebar_step(4)
             self.btn_next.setText("Restart Now")
             self.btn_next.show()
+
+    def _animate_progress(self):
+        if self.current_pct < self.target_pct:
+            self.current_pct += 1
+            self.progress.setValue(self.current_pct)
+            self.pct_label.setText(f"{self.current_pct}%")
 
     # Window Dragging
     def mousePressEvent(self, event):
@@ -702,7 +740,8 @@ class ToccataInstaller(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    app.setFont(QFont("Segoe UI, DejaVu Sans, sans-serif", 10))
+    # Configure global application font to Inter Display & Inter
+    app.setFont(QFont("Inter Display, Inter, sans-serif", 10))
     installer = ToccataInstaller()
     installer.show()
     sys.exit(app.exec())
