@@ -854,7 +854,42 @@ Every administrative task is accessible visually:
           <!-- Tab 6: Desktop & Dock -->
           <div id="settings-tab-desktopdock" class="hidden">
             <h3>Desktop &amp; Dock</h3>
-            <p class="settings-desc">Configure dock magnification, icon scaling, screen position, and window minimization.</p>
+            <p class="settings-desc">Configure dock magnification, desktop layout preset, screen position, and window minimization.</p>
+
+            <!-- Zorin-Style Adaptive Desktop Layout Switcher -->
+            <div class="settings-group-card">
+              <div class="settings-row" style="padding: 14px 16px 8px;">
+                <div>
+                  <div class="row-title">Desktop Layout (Adaptive Ergonomics)</div>
+                  <div class="row-desc">Switch seamlessly between macOS dock and Windows taskbar layouts</div>
+                </div>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0 16px 16px;">
+                <div class="layout-preset-card active" id="layout-card-macos" onclick="setDesktopLayout('macos')">
+                  <div class="layout-preview-box macos-preview">
+                    <div class="lp-topbar"></div>
+                    <div class="lp-dock"></div>
+                  </div>
+                  <div class="lp-title">macOS Sequoia</div>
+                  <div class="lp-sub">Floating Dock &bull; Top Bar</div>
+                </div>
+                <div class="layout-preset-card" id="layout-card-win11" onclick="setDesktopLayout('win11')">
+                  <div class="layout-preview-box win11-preview">
+                    <div class="lp-bottombar-center"></div>
+                  </div>
+                  <div class="lp-title">Windows 11 Modern</div>
+                  <div class="lp-sub">Centered Taskbar &bull; Start</div>
+                </div>
+                <div class="layout-preset-card" id="layout-card-win10" onclick="setDesktopLayout('win10')">
+                  <div class="layout-preview-box win10-preview">
+                    <div class="lp-bottombar-left"></div>
+                  </div>
+                  <div class="lp-title">Windows 10 Classic</div>
+                  <div class="lp-sub">Full Taskbar &bull; Left Start</div>
+                </div>
+              </div>
+            </div>
+
             <div class="settings-group-card">
               <div class="settings-row">
                 <div>

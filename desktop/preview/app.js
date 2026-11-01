@@ -983,6 +983,31 @@
   });
 
   // ==========================================================================
+  // 10B. DESKTOP LAYOUT SWITCHER (Zorin OS Adaptive Superpower)
+  // ==========================================================================
+  function setDesktopLayout(layout) {
+    document.body.classList.remove('layout-macos', 'layout-win11', 'layout-win10');
+    document.querySelectorAll('.layout-preset-card').forEach(c => c.classList.remove('active'));
+
+    document.getElementById(`layout-card-${layout}`)?.classList.add('active');
+
+    if (layout === 'win11') {
+      document.body.classList.add('layout-win11');
+      triggerNotification('Layout: Windows 11 Modern Centered Taskbar active');
+      playHarmonicChime([440, 554.37], 0.2);
+    } else if (layout === 'win10') {
+      document.body.classList.add('layout-win10');
+      triggerNotification('Layout: Windows 10 Classic Taskbar active');
+      playHarmonicChime([392, 523.25], 0.2);
+    } else {
+      document.body.classList.add('layout-macos');
+      triggerNotification('Layout: macOS Sequoia Floating Dock active');
+      playHarmonicChime([523.25, 659.25, 783.99], 0.25);
+    }
+  }
+  window.setDesktopLayout = setDesktopLayout;
+
+  // ==========================================================================
   // 11. THEME & ACCENT SYSTEM
   // ==========================================================================
   function setTheme(theme) {
