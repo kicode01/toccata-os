@@ -75,7 +75,10 @@ class MaestroHUD(QWidget):
         self.dm = desktop_manager
         self.engine = MaestroEngine()
 
-        self.setWindowFlags(Qt.WindowType.Popup | Qt.WindowType.FramelessWindowHint)
+        if parent:
+            self.setWindowFlags(Qt.WindowType.Popup | Qt.WindowType.FramelessWindowHint)
+        else:
+            self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.setFixedSize(620, 480)
 
