@@ -514,38 +514,58 @@ class ToccataInstaller(QWidget):
         page = QWidget()
         layout = QVBoxLayout(page)
         layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.setSpacing(16)
+        layout.setSpacing(18)
 
-        layout.addWidget(VectorIcon("brand", 54), alignment=Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(VectorIcon("brand", 56), alignment=Qt.AlignmentFlag.AlignCenter)
 
         self.install_title = QLabel("Installing Toccata OS...")
-        self.install_title.setFont(QFont("Segoe UI, Inter", 17, QFont.Weight.Bold))
+        self.install_title.setFont(QFont("Segoe UI, Inter", 18, QFont.Weight.Bold))
         self.install_title.setStyleSheet("color: #ffffff;")
         self.install_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.install_title)
 
-        self.install_detail = QLabel("Formatting GPT partition table on target drive...")
-        self.install_detail.setFont(QFont("Segoe UI, Inter", 10))
-        self.install_detail.setStyleSheet("color: rgba(255, 255, 255, 0.6);")
-        self.install_detail.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(self.install_detail)
+        # Progress Bar Box with Clean Separate Status & Percentage Footer
+        prog_box = QWidget()
+        prog_box.setFixedWidth(480)
+        pb_layout = QVBoxLayout(prog_box)
+        pb_layout.setContentsMargins(0, 0, 0, 0)
+        pb_layout.setSpacing(8)
 
         self.progress = QProgressBar()
-        self.progress.setFixedWidth(460)
-        self.progress.setFixedHeight(10)
+        self.progress.setTextVisible(False)  # Completely disables ugly text overlapping the bar
+        self.progress.setFixedHeight(7)
         self.progress.setRange(0, 100)
         self.progress.setValue(10)
         self.progress.setStyleSheet("""
             QProgressBar {
-                background: rgba(255, 255, 255, 0.1);
-                border-radius: 5px;
+                background: rgba(255, 255, 255, 0.08);
+                border-radius: 3px;
+                border: none;
             }
             QProgressBar::chunk {
-                background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #007aff, stop:1 #5856d6);
-                border-radius: 5px;
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #007aff, stop:1 #38bdf8);
+                border-radius: 3px;
             }
         """)
-        layout.addWidget(self.progress, alignment=Qt.AlignmentFlag.AlignCenter)
+        pb_layout.addWidget(self.progress)
+
+        status_row = QHBoxLayout()
+        status_row.setContentsMargins(2, 0, 2, 0)
+
+        self.install_detail = QLabel("Formatting GPT partition table on target drive...")
+        self.install_detail.setFont(QFont("Segoe UI, Inter", 10))
+        self.install_detail.setStyleSheet("color: rgba(255, 255, 255, 0.6); background: transparent;")
+        status_row.addWidget(self.install_detail)
+
+        status_row.addStretch()
+
+        self.pct_label = QLabel("10%")
+        self.pct_label.setFont(QFont("Segoe UI, Inter", 10, QFont.Weight.DemiBold))
+        self.pct_label.setStyleSheet("color: rgba(255, 255, 255, 0.85); background: transparent;")
+        status_row.addWidget(self.pct_label)
+
+        pb_layout.addLayout(status_row)
+        layout.addWidget(prog_box, alignment=Qt.AlignmentFlag.AlignCenter)
 
         return page
 
@@ -622,6 +642,7 @@ class ToccataInstaller(QWidget):
             pct, msg = phases[self.step_counter - 1]
             self.progress.setValue(pct)
             self.install_detail.setText(msg)
+            self.pct_label.setText(f"{pct}%")
         else:
             self.install_timer.stop()
             self.stack.setCurrentIndex(4)
