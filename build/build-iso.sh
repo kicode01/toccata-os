@@ -78,13 +78,25 @@ echo "[1/3] Syncing latest Toccata Shell, Zorin themes, and first-party applicat
 mkdir -p "$PROFILE_DIR/airootfs/usr/local/share/toccata"
 cp -r "$PROJECT_ROOT/core"/* "$PROFILE_DIR/airootfs/usr/local/share/toccata/"
 
-# Stage Zorin themes & icons if present in Arch host
-if [ -d "/usr/share/themes/ZorinBlue-Light" ]; then
-    echo "      Copying Zorin themes and icons to airootfs..."
-    mkdir -p "$PROFILE_DIR/airootfs/usr/share/themes" "$PROFILE_DIR/airootfs/usr/share/icons"
-    cp -r /usr/share/themes/Zorin* "$PROFILE_DIR/airootfs/usr/share/themes/" 2>/dev/null || true
-    cp -r /usr/share/icons/Zorin* "$PROFILE_DIR/airootfs/usr/share/icons/" 2>/dev/null || true
-fi
+# Stage Zorin & pearOS themes, icons, wallpapers, extensions & schemas
+echo "      Staging Zorin OS & pearOS design suites into airootfs..."
+mkdir -p "$PROFILE_DIR/airootfs/usr/share/themes" \
+         "$PROFILE_DIR/airootfs/usr/share/icons" \
+         "$PROFILE_DIR/airootfs/usr/share/backgrounds" \
+         "$PROFILE_DIR/airootfs/usr/share/sounds" \
+         "$PROFILE_DIR/airootfs/usr/share/zorin-appearance" \
+         "$PROFILE_DIR/airootfs/usr/share/zorin-exec-guard" \
+         "$PROFILE_DIR/airootfs/usr/share/gnome-shell/extensions" \
+         "$PROFILE_DIR/airootfs/usr/share/glib-2.0/schemas"
+
+cp -r /usr/share/themes/pearOS* /usr/share/themes/Zorin* "$PROFILE_DIR/airootfs/usr/share/themes/" 2>/dev/null || true
+cp -r /usr/share/icons/pearOS* /usr/share/icons/Zorin* "$PROFILE_DIR/airootfs/usr/share/icons/" 2>/dev/null || true
+cp -r /usr/share/backgrounds/* "$PROFILE_DIR/airootfs/usr/share/backgrounds/" 2>/dev/null || true
+cp -r /usr/share/sounds/* "$PROFILE_DIR/airootfs/usr/share/sounds/" 2>/dev/null || true
+cp -r /usr/share/zorin-appearance/* "$PROFILE_DIR/airootfs/usr/share/zorin-appearance/" 2>/dev/null || true
+cp -r /usr/share/zorin-exec-guard/* "$PROFILE_DIR/airootfs/usr/share/zorin-exec-guard/" 2>/dev/null || true
+cp -r /usr/share/gnome-shell/extensions/* "$PROFILE_DIR/airootfs/usr/share/gnome-shell/extensions/" 2>/dev/null || true
+cp -r /usr/share/glib-2.0/schemas/*zorin* "$PROFILE_DIR/airootfs/usr/share/glib-2.0/schemas/" 2>/dev/null || true
 
 echo "[2/3] Building bootable ISO with mkarchiso (zstd compression)..."
 echo "      Output Directory: $OUT_DIR"

@@ -131,9 +131,11 @@ class SystemSettings(ToccataWindow):
 
         # Layout Switcher Cards
         layouts = [
-            ("macOS Sequoia", "Floating bottom dock with parabolic magnification and top menu bar.", "macos"),
-            ("Windows 11 Modern", "Centered taskbar with start menu flyout, search bar, and action center.", "win11"),
+            ("macOS Sequoia", "Floating bottom dock with parabolic magnification and top global menu bar.", "macos"),
+            ("pearOS NiceC0re", "Cupertino dock with pearOS themes, squircle icons, and Apple sound chimes.", "pearos"),
+            ("Windows 11 (Zorin)", "Centered taskbar with start menu flyout, search pill, and control center.", "win11"),
             ("Windows 10 Classic", "Full-width bottom taskbar with left-aligned start button and system tray.", "win10"),
+            ("GNOME 47 / Zorin Overview", "Native GNOME dynamic workspaces with left-aligned vertical Dash.", "gnome"),
         ]
 
         self.layout_group = QButtonGroup(self)
@@ -178,20 +180,53 @@ class SystemSettings(ToccataWindow):
     def create_wallpaper_page(self):
         page = QWidget()
         layout = QVBoxLayout(page)
-        lbl = QLabel("Desktop Artwork & Wallpaper")
+        lbl = QLabel("Desktop Artwork & Official Wallpapers")
         lbl.setFont(QFont("Inter", 15, QFont.Weight.Bold))
         lbl.setStyleSheet("color: #ffffff;")
         layout.addWidget(lbl)
 
-        card = self._create_card()
-        c_layout = QVBoxLayout(card)
-        c_layout.addWidget(QLabel("Current Wallpaper: Sonoma / Sequoia Deep Obsidian"))
-        btn = QPushButton("Choose Custom Wallpaper Image...")
-        btn.setStyleSheet(theme.BUTTON_SECONDARY_STYLE)
-        c_layout.addWidget(btn)
-        layout.addWidget(card)
+        sub = QLabel("Select from authentic 5K wallpapers extracted from pearOS, Zorin OS, and Apple Sequoia.")
+        sub.setFont(QFont("Inter", 10))
+        sub.setStyleSheet("color: rgba(255, 255, 255, 0.6);")
+        layout.addWidget(sub)
+
+        wallpapers = [
+            ("pearOS NiceC0re 5K", "5K Monterey / Ventura Cupertino artwork", "pearos-light.jpg"),
+            ("pearOS Dark Mode 5K", "Deep sapphire dark mode extracted from pearOS", "pearos-dark.jpg"),
+            ("Zorin OS 18.1 Mountain Dawn", "Zorin OS 18.1 flagship light artwork", "zorin-light.jpg"),
+            ("Zorin OS 18.1 Midnight Dusk", "Zorin OS 18.1 flagship dark theme", "zorin-dark.jpg"),
+            ("Zorin 4K Alpine Lake & Island", "High-contrast alpine mountain scenery", "zorin-island.jpg"),
+            ("Apple macOS Sequoia Vector", "Bespoke continuous fluid ribbon geometry", "sequoia-light.svg"),
+        ]
+
+        for name, desc, filename in wallpapers:
+            card = self._create_card()
+            c_layout = QHBoxLayout(card)
+            c_layout.setContentsMargins(12, 10, 12, 10)
+
+            info = QVBoxLayout()
+            t_lbl = QLabel(name)
+            t_lbl.setFont(QFont("Inter", 11, QFont.Weight.Bold))
+            t_lbl.setStyleSheet("color: #ffffff;")
+            d_lbl = QLabel(desc)
+            d_lbl.setFont(QFont("Inter", 9))
+            d_lbl.setStyleSheet("color: rgba(255, 255, 255, 0.6);")
+            info.addWidget(t_lbl)
+            info.addWidget(d_lbl)
+            c_layout.addLayout(info)
+            c_layout.addStretch()
+
+            btn = QPushButton("Set Wallpaper")
+            btn.setStyleSheet(theme.BUTTON_SECONDARY_STYLE)
+            btn.clicked.connect(lambda ch, f=filename, n=name: self._set_wallpaper(f, n))
+            c_layout.addWidget(btn)
+            layout.addWidget(card)
+
         layout.addStretch()
         return page
+
+    def _set_wallpaper(self, filename, name):
+        print(f"[SETTINGS] Applying wallpaper: {name} ({filename})")
 
     # PAGE 4: Sound & PipeWire
     def create_sound_page(self):

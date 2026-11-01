@@ -983,22 +983,36 @@
   });
 
   // ==========================================================================
-  // 10B. DESKTOP LAYOUT SWITCHER (Zorin OS Adaptive Superpower)
+  // 10B. DESKTOP LAYOUT SWITCHER (Zorin OS & pearOS Adaptive Superpower)
   // ==========================================================================
   function setDesktopLayout(layout) {
-    document.body.classList.remove('layout-macos', 'layout-win11', 'layout-win10');
+    document.body.classList.remove('layout-macos', 'layout-pearos', 'layout-win11', 'layout-win10', 'layout-gnome');
     document.querySelectorAll('.layout-preset-card').forEach(c => c.classList.remove('active'));
 
     document.getElementById(`layout-card-${layout}`)?.classList.add('active');
 
     if (layout === 'win11') {
       document.body.classList.add('layout-win11');
-      triggerNotification('Layout: Windows 11 Modern Centered Taskbar active');
+      triggerNotification('Layout: Windows 11 Modern (Zorin Taskbar) active');
       playHarmonicChime([440, 554.37], 0.2);
     } else if (layout === 'win10') {
       document.body.classList.add('layout-win10');
-      triggerNotification('Layout: Windows 10 Classic Taskbar active');
+      triggerNotification('Layout: Windows 10 Classic (Zorin Legacy) active');
       playHarmonicChime([392, 523.25], 0.2);
+    } else if (layout === 'gnome') {
+      document.body.classList.add('layout-gnome');
+      triggerNotification('Layout: GNOME 47 / Zorin Overview active');
+      playHarmonicChime([330, 440, 554.37], 0.22);
+    } else if (layout === 'pearos') {
+      document.body.classList.add('layout-pearos', 'layout-macos');
+      triggerNotification('Layout: pearOS NiceC0re Cupertino active');
+      try {
+        const audio = new Audio('sounds/boot-sound.wav');
+        audio.volume = 0.5;
+        audio.play().catch(() => playHarmonicChime([523.25, 659.25, 783.99, 1046.5], 0.35));
+      } catch (e) {
+        playHarmonicChime([523.25, 659.25, 783.99, 1046.5], 0.35);
+      }
     } else {
       document.body.classList.add('layout-macos');
       triggerNotification('Layout: macOS Sequoia Floating Dock active');

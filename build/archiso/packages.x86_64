@@ -40,10 +40,19 @@ wpa_supplicant
 bluez
 bluez-utils
 
-# 4. Wayland Compositor & Display Engine
+# 4. Wayland Compositor & GNOME 47 Desktop Suite
 wayland
 wayland-protocols
 xorg-xwayland
+gnome-shell
+gnome-session
+gnome-control-center
+gnome-tweaks
+gdm
+mutter
+nautilus
+dconf
+dconf-editor
 labwc
 seatd
 qt6-base
@@ -66,7 +75,9 @@ wine-mono
 # 7. Guided Graphical Installer Engine
 archinstall
 
-# 8. Typography & Assets
+# 8. Typography & Assets (Inter Display + Apple Standard)
+inter-font
+ttf-jetbrains-mono
 noto-fonts
 noto-fonts-emoji
 ttf-dejavu

@@ -22,8 +22,8 @@
   --font-system: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", Roboto, sans-serif;
   --font-mono: "SF Mono", "JetBrains Mono", Menlo, Monaco, monospace;
 
-  /* Official macOS Sequoia Dynamic Wallpaper (Light by default) */
-  --bg-wallpaper: url('wallpapers/sequoia-light.svg');
+  /* Official High-Resolution 5K Wallpapers (Extracted from pearOS & Zorin OS) */
+  --bg-wallpaper: url('wallpapers/pearos-light.jpg');
 
   /* Light Vibrancy Materials (Apple macOS Sequoia HIG Standard) */
   --glass-bg: rgba(255, 255, 255, 0.72);
@@ -40,7 +40,7 @@
 }
 
 body.dark-mode {
-  --bg-wallpaper: url('wallpapers/sequoia-dark.svg');
+  --bg-wallpaper: url('wallpapers/pearos-dark.jpg');
   --glass-bg: rgba(30, 30, 36, 0.72);
   --glass-border: rgba(255, 255, 255, 0.16);
   --glass-rim-light: inset 0 1px 0 rgba(255, 255, 255, 0.22);
@@ -55,7 +55,7 @@ body.dark-mode {
 }
 
 body.light-mode {
-  --bg-wallpaper: url('wallpapers/sequoia-light.svg');
+  --bg-wallpaper: url('wallpapers/pearos-light.jpg');
   --glass-bg: rgba(255, 255, 255, 0.72);
   --glass-border: rgba(255, 255, 255, 0.65);
   --glass-rim-light: inset 0 1px 1px rgba(255, 255, 255, 0.95);
@@ -126,7 +126,8 @@ body.is-window-dragging *,
 
 body {
   font-family: var(--font-system);
-  background: var(--bg-wallpaper);
+  background-color: #1a1b26;
+  background-image: var(--bg-wallpaper);
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -2944,5 +2945,32 @@ body.layout-win10 #dock {
   border-right: none !important;
   justify-content: flex-start !important;
   padding: 4px 18px !important;
+}
+
+body.layout-gnome #dock {
+  left: 14px !important;
+  top: 50% !important;
+  bottom: auto !important;
+  transform: translateY(-50%) !important;
+  width: auto !important;
+  height: auto !important;
+  border-radius: 20px !important;
+  padding: 12px 6px !important;
+}
+
+body.layout-gnome #dock-container {
+  flex-direction: column !important;
+  gap: 10px !important;
+  height: auto !important;
+}
+
+body.layout-gnome .dock-divider {
+  width: 32px !important;
+  height: 1px !important;
+  margin: 4px 0 !important;
+}
+
+body.layout-gnome .dock-item:hover {
+  transform: scale(1.15) translateX(6px) !important;
 }
 

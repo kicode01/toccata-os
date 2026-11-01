@@ -926,7 +926,7 @@ Every administrative task is accessible visually:
                   <div class="row-desc">Switch seamlessly between macOS dock and Windows taskbar layouts</div>
                 </div>
               </div>
-              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0 16px 16px;">
+              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 0 16px 16px;">
                 <div class="layout-preset-card active" id="layout-card-macos" onclick="setDesktopLayout('macos')">
                   <div class="layout-preview-box macos-preview">
                     <div class="lp-topbar"></div>
@@ -935,19 +935,28 @@ Every administrative task is accessible visually:
                   <div class="lp-title">macOS Sequoia</div>
                   <div class="lp-sub">Floating Dock &bull; Top Bar</div>
                 </div>
+                <div class="layout-preset-card" id="layout-card-pearos" onclick="setDesktopLayout('pearos')">
+                  <div class="layout-preview-box macos-preview" style="background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);">
+                    <div class="lp-topbar" style="background: rgba(255,255,255,0.85);"></div>
+                    <div class="lp-dock" style="background: rgba(255,255,255,0.7);"></div>
+                  </div>
+                  <div class="lp-title">pearOS NiceC0re</div>
+                  <div class="lp-sub">Cupertino &bull; Sound Chime</div>
+                </div>
                 <div class="layout-preset-card" id="layout-card-win11" onclick="setDesktopLayout('win11')">
                   <div class="layout-preview-box win11-preview">
                     <div class="lp-bottombar-center"></div>
                   </div>
-                  <div class="lp-title">Windows 11 Modern</div>
+                  <div class="lp-title">Windows 11 (Zorin)</div>
                   <div class="lp-sub">Centered Taskbar &bull; Start</div>
                 </div>
-                <div class="layout-preset-card" id="layout-card-win10" onclick="setDesktopLayout('win10')">
-                  <div class="layout-preview-box win10-preview">
-                    <div class="lp-bottombar-left"></div>
+                <div class="layout-preset-card" id="layout-card-gnome" onclick="setDesktopLayout('gnome')">
+                  <div class="layout-preview-box" style="background: #1e1e24; position: relative;">
+                    <div class="lp-topbar" style="background: #111;"></div>
+                    <div style="position: absolute; left: 4px; top: 18px; bottom: 6px; width: 6px; background: rgba(255,255,255,0.3); border-radius: 3px;"></div>
                   </div>
-                  <div class="lp-title">Windows 10 Classic</div>
-                  <div class="lp-sub">Full Taskbar &bull; Left Start</div>
+                  <div class="lp-title">GNOME 47 / Zorin</div>
+                  <div class="lp-sub">Left Dash &bull; Overview</div>
                 </div>
               </div>
             </div>
@@ -1005,27 +1014,37 @@ Every administrative task is accessible visually:
           <!-- Tab 7: Wallpaper -->
           <div id="settings-tab-wallpaper" class="hidden">
             <h3>Wallpaper</h3>
-            <p class="settings-desc">Select high-dynamic-range desktop artwork calibrated for Display P3 Retina displays.</p>
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;">
-              <div class="wallpaper-card" style="background: rgba(0,0,0,0.2); border: 2px solid var(--accent-color); border-radius: 12px; padding: 12px; cursor: pointer;" onclick="setWallpaper('radial-gradient(circle at 70% 30%, #ff2d55 0%, #af52de 35%, #007aff 70%, #0c0c0e 100%)', 'Dynamic Topography', this)">
-                <div style="height: 100px; border-radius: 8px; background: radial-gradient(circle at 70% 30%, #ff2d55 0%, #af52de 35%, #007aff 70%, #0c0c0e 100%); margin-bottom: 8px;"></div>
-                <div style="font-weight: 700; font-size: 13px;">Dynamic Topography</div>
-                <div class="wallpaper-status" style="color: var(--accent-color); font-size: 11px;">Current Wallpaper &bull; Display P3</div>
+            <p class="settings-desc">Select high-dynamic-range desktop artwork extracted directly from macOS Sequoia, pearOS NiceC0re, and Zorin OS 18.1.</p>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+              <div class="wallpaper-card" style="background: rgba(0,0,0,0.06); border: 2px solid var(--accent-color); border-radius: 12px; padding: 10px; cursor: pointer;" onclick="setWallpaper('url(\'wallpapers/sequoia-light.svg\')', 'macOS Sequoia Light', this)">
+                <div style="height: 80px; border-radius: 8px; background: url('wallpapers/sequoia-light.svg') center/cover; margin-bottom: 8px;"></div>
+                <div style="font-weight: 700; font-size: 12px;">Sequoia Light</div>
+                <div class="wallpaper-status" style="color: var(--accent-color); font-size: 11px;">Active &bull; Display P3</div>
               </div>
-              <div class="wallpaper-card" style="background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 12px; padding: 12px; cursor: pointer;" onclick="setWallpaper('linear-gradient(135deg, #ff9500 0%, #ff2d55 50%, #5856d6 100%)', 'Sequoia Dawn', this)">
-                <div style="height: 100px; border-radius: 8px; background: linear-gradient(135deg, #ff9500 0%, #ff2d55 50%, #5856d6 100%); margin-bottom: 8px;"></div>
-                <div style="font-weight: 700; font-size: 13px;">Sequoia Dawn</div>
-                <div class="wallpaper-status" style="color: var(--text-secondary); font-size: 11px;">HDR 10-bit &bull; Warm Sunrise</div>
+              <div class="wallpaper-card" style="background: rgba(0,0,0,0.06); border: 1px solid var(--glass-border); border-radius: 12px; padding: 10px; cursor: pointer;" onclick="setWallpaper('url(\'wallpapers/pearos-light.jpg\')', 'pearOS Monterey Light', this)">
+                <div style="height: 80px; border-radius: 8px; background: url('wallpapers/pearos-light.jpg') center/cover; margin-bottom: 8px;"></div>
+                <div style="font-weight: 700; font-size: 12px;">pearOS Monterey</div>
+                <div class="wallpaper-status" style="color: var(--text-secondary); font-size: 11px;">5K Crisp Apple</div>
               </div>
-              <div class="wallpaper-card" style="background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 12px; padding: 12px; cursor: pointer;" onclick="setWallpaper('radial-gradient(circle at 50% 50%, #1e1e24 0%, #111115 60%, #08080a 100%)', 'Obsidian Wave', this)">
-                <div style="height: 100px; border-radius: 8px; background: linear-gradient(135deg, #18181b 0%, #27272a 50%, #09090b 100%); margin-bottom: 8px;"></div>
-                <div style="font-weight: 700; font-size: 13px;">Obsidian Wave</div>
-                <div class="wallpaper-status" style="color: var(--text-secondary); font-size: 11px;">Pure OLED Black &bull; Low Energy</div>
+              <div class="wallpaper-card" style="background: rgba(0,0,0,0.06); border: 1px solid var(--glass-border); border-radius: 12px; padding: 10px; cursor: pointer;" onclick="setWallpaper('url(\'wallpapers/zorin-light.jpg\')', 'Zorin OS 18.1 Light', this)">
+                <div style="height: 80px; border-radius: 8px; background: url('wallpapers/zorin-light.jpg') center/cover; margin-bottom: 8px;"></div>
+                <div style="font-weight: 700; font-size: 12px;">Zorin OS 18.1</div>
+                <div class="wallpaper-status" style="color: var(--text-secondary); font-size: 11px;">Official Zorin Blue</div>
               </div>
-              <div class="wallpaper-card" style="background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 12px; padding: 12px; cursor: pointer;" onclick="setWallpaper('linear-gradient(135deg, #38bdf8 0%, #007aff 50%, #34c759 100%)', 'Pacific Laguna', this)">
-                <div style="height: 100px; border-radius: 8px; background: linear-gradient(135deg, #38bdf8 0%, #007aff 50%, #34c759 100%); margin-bottom: 8px;"></div>
-                <div style="font-weight: 700; font-size: 13px;">Pacific Laguna</div>
-                <div class="wallpaper-status" style="color: var(--text-secondary); font-size: 11px;">Cool Aquamarine &bull; Clean Depth</div>
+              <div class="wallpaper-card" style="background: rgba(0,0,0,0.06); border: 1px solid var(--glass-border); border-radius: 12px; padding: 10px; cursor: pointer;" onclick="setWallpaper('url(\'wallpapers/zorin-island.jpg\')', 'Zorin Island 4K', this)">
+                <div style="height: 80px; border-radius: 8px; background: url('wallpapers/zorin-island.jpg') center/cover; margin-bottom: 8px;"></div>
+                <div style="font-weight: 700; font-size: 12px;">Zorin Island</div>
+                <div class="wallpaper-status" style="color: var(--text-secondary); font-size: 11px;">4K Naturalist HDR</div>
+              </div>
+              <div class="wallpaper-card" style="background: rgba(0,0,0,0.06); border: 1px solid var(--glass-border); border-radius: 12px; padding: 10px; cursor: pointer;" onclick="setWallpaper('url(\'wallpapers/pearos-dark.jpg\')', 'pearOS Monterey Dark', this)">
+                <div style="height: 80px; border-radius: 8px; background: url('wallpapers/pearos-dark.jpg') center/cover; margin-bottom: 8px;"></div>
+                <div style="font-weight: 700; font-size: 12px;">pearOS Dark</div>
+                <div class="wallpaper-status" style="color: var(--text-secondary); font-size: 11px;">OLED Indigo</div>
+              </div>
+              <div class="wallpaper-card" style="background: rgba(0,0,0,0.06); border: 1px solid var(--glass-border); border-radius: 12px; padding: 10px; cursor: pointer;" onclick="setWallpaper('url(\'wallpapers/zorin-dark.jpg\')', 'Zorin OS 18.1 Dark', this)">
+                <div style="height: 80px; border-radius: 8px; background: url('wallpapers/zorin-dark.jpg') center/cover; margin-bottom: 8px;"></div>
+                <div style="font-weight: 700; font-size: 12px;">Zorin Dark Night</div>
+                <div class="wallpaper-status" style="color: var(--text-secondary); font-size: 11px;">Deep Obsidian</div>
               </div>
             </div>
           </div>
