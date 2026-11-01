@@ -55,8 +55,14 @@ if [ -c /dev/kvm ]; then
     KVM_FLAG="-enable-kvm -cpu host"
 fi
 
+BIOS_FLAG=""
+if [ -f /usr/share/edk2/x64/OVMF.4m.fd ]; then
+    BIOS_FLAG="-bios /usr/share/edk2/x64/OVMF.4m.fd"
+fi
+
 exec qemu-system-x86_64 \
     $KVM_FLAG \
+    $BIOS_FLAG \
     -m "$RAM" \
     -smp "$CORES" \
     -cdrom "$ISO" \

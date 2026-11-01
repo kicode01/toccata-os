@@ -5,7 +5,7 @@ cd /d "%~dp0"
 
 echo ===============================================================================
 echo            TOCCATA OS - THE SOVEREIGN UNIFIED OPERATING SYSTEM
-echo   Speed of Linux  *  Polish of pearOS  *  Adaptive Workflows of Zorin & GNOME 47
+echo   Speed of Linux  *  Polish of pearOS  *  Adaptive Workflows of Zorin ^& GNOME 47
 echo ===============================================================================
 echo.
 echo [*] Initializing Unified Hardware Virtual Machine (QEMU KVM + VirtIO GPU)...

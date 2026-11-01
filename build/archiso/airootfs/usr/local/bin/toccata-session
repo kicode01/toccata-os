@@ -19,10 +19,9 @@ export XDG_SESSION_TYPE=wayland
 export GDK_BACKEND="wayland,x11"
 export QT_QPA_PLATFORM="wayland;xcb"
 
-# Launch GNOME Session with Mutter Wayland Compositor
+# Launch GNOME Session with Mutter Wayland Compositor (with labwc fallback)
 if command -v gnome-session &>/dev/null; then
-    exec dbus-run-session gnome-session
+    dbus-run-session gnome-session || exec labwc -s /usr/local/bin/toccata-shell
 else
-    # Fallback to Toccata Qt6 Shell if gnome-session binary not installed
     exec labwc -s /usr/local/bin/toccata-shell
 fi
