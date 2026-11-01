@@ -6,11 +6,29 @@ Optimized for low-latency bundle launching, metadata caching, and desktop integr
 
 import sys
 import os
+import struct
 import plistlib
 import subprocess
 import shutil
 from pathlib import Path
 from functools import lru_cache
+
+# Mach-O Magic Numbers
+MACHO_MAGICS = (0xfeedface, 0xcefaedfe, 0xfeedfacf, 0xcffaedfe, 0xcafebabe, 0xbebafeca)
+
+def is_macho_binary(file_path: Path) -> bool:
+    """Checks if the file has a Mach-O or FAT binary magic number."""
+    if not file_path.is_file():
+        return False
+    try:
+        with open(file_path, "rb") as f:
+            header = f.read(4)
+            if len(header) < 4:
+                return False
+            magic = struct.unpack(">I", header)[0]
+            return magic in MACHO_MAGICS
+    except Exception:
+        return False
 
 @lru_cache(maxsize=128)
 def parse_info_plist_cached(plist_path_str: str) -> dict:
@@ -72,6 +90,13 @@ def launch_bundle(app_path: Path, args: list) -> int:
     env = os.environ.copy()
     env["TOCCATA_BUNDLE_PATH"] = str(app_path)
     env["TOCCATA_RESOURCES_PATH"] = str((contents_dir / "Resources").resolve())
+
+    # Check if this bundle contains a Mach-O binary requiring Darling subsystem
+    if is_macho_binary(exec_path):
+        runner_script = Path(__file__).parent / "toccata-darling-runner.py"
+        if runner_script.is_file():
+            cmd = [sys.executable, str(runner_script), str(exec_path)] + args
+            return subprocess.call(cmd)
 
     # Build command invocation
     # On Windows dev hosts, check for shebang or shell scripts to invoke via sh/bash or python

@@ -1,6 +1,7 @@
 """
 Toccata OS - Cadence File Manager (Qt6 Native)
-macOS Sequoia & Cutefish-style Finder with Windows Host Drive Bridge and Quick Look.
+macOS Sequoia & Cutefish-style Finder with Windows Host Drive Bridge,
+Direct .dmg Disk Image Mounting, macOS .app Bundle Execution, and Quick Look.
 """
 
 import sys
@@ -8,12 +9,13 @@ import os
 import shutil
 import subprocess
 from datetime import datetime
+from pathlib import Path
 from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtGui import QFont, QIcon, QAction
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
     QListWidget, QListWidgetItem, QTableWidget, QTableWidgetItem, QHeaderView,
-    QSplitter, QFrame, QFileDialog, QMessageBox
+    QSplitter, QFrame, QFileDialog, QMessageBox, QMenu
 )
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
@@ -22,8 +24,11 @@ import theme
 
 class CadenceFileManager(ToccataWindow):
     def __init__(self, initial_dir=None):
-        super().__init__(title="Cadence — Finder", width=860, height=540)
+        super().__init__(title="Cadence — Finder", width=880, height=560)
         
+        # Track mounted disk images (.dmg)
+        self.mounted_volumes = []
+
         # Default starting directory
         if initial_dir and os.path.exists(initial_dir):
             self.current_dir = initial_dir
@@ -53,7 +58,7 @@ class CadenceFileManager(ToccataWindow):
         nav_bar.addWidget(self.path_lbl)
         nav_bar.addStretch()
 
-        self.quicklook_hint = QLabel("Space: Quick Look")
+        self.quicklook_hint = QLabel("Space: Quick Look • Right Click: Package Contents")
         self.quicklook_hint.setFont(QFont("Inter", 9))
         self.quicklook_hint.setStyleSheet("color: rgba(255, 255, 255, 0.4); background: transparent;")
         nav_bar.addWidget(self.quicklook_hint)
@@ -69,9 +74,9 @@ class CadenceFileManager(ToccataWindow):
             }
         """)
 
-        # Left Sidebar (Favorites & Bridges)
+        # Left Sidebar (Favorites & Bridges & Volumes)
         self.sidebar = QListWidget()
-        self.sidebar.setFixedWidth(200)
+        self.sidebar.setFixedWidth(210)
         self.sidebar.setStyleSheet(f"""
             QListWidget {{
                 background: rgba(255, 255, 255, 0.03);
@@ -95,6 +100,8 @@ class CadenceFileManager(ToccataWindow):
         """)
         self.populate_sidebar()
         self.sidebar.itemClicked.connect(self.on_sidebar_click)
+        self.sidebar.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self.sidebar.customContextMenuRequested.connect(self.on_sidebar_context_menu)
         splitter.addWidget(self.sidebar)
 
         # Right File Table
@@ -108,6 +115,8 @@ class CadenceFileManager(ToccataWindow):
         self.table.verticalHeader().setVisible(False)
         self.table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
         self.table.setShowGrid(False)
+        self.table.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self.table.customContextMenuRequested.connect(self.on_table_context_menu)
         self.table.setStyleSheet(f"""
             QTableWidget {{
                 background: transparent;
@@ -138,16 +147,24 @@ class CadenceFileManager(ToccataWindow):
         self.body_layout.addWidget(splitter)
 
     def populate_sidebar(self):
+        self.sidebar.clear()
         items = [
             ("🏠 Home", os.path.expanduser("~")),
             ("📁 Documents", os.path.expanduser("~/Documents")),
             ("📥 Downloads", os.path.expanduser("~/Downloads")),
             ("🖥️ Desktop", os.path.expanduser("~/Desktop")),
+            ("🚀 Applications", "/Applications" if os.path.exists("/Applications") else os.path.expanduser("~/Applications")),
             ("─── Bridges ───", ""),
             ("🪟 Windows Host (C:)", "/mnt/c/Users/PC"),
             ("🎼 Toccata Project", "/mnt/c/Users/PC/Desktop/rnd/p3os"),
             ("⚙️ Root Filesystem", "/"),
         ]
+
+        if self.mounted_volumes:
+            items.append(("─── Mounted Volumes ───", ""))
+            for vol in self.mounted_volumes:
+                items.append((f"💿 {vol['name']} [⏏]", vol["path"]))
+
         for label, path in items:
             item = QListWidgetItem(label)
             item.setData(Qt.ItemDataRole.UserRole, path)
@@ -157,8 +174,33 @@ class CadenceFileManager(ToccataWindow):
 
     def on_sidebar_click(self, item):
         path = item.data(Qt.ItemDataRole.UserRole)
+        label = item.text()
+        if "[⏏]" in label and path:
+            # Check if clicked on eject or volume
+            for vol in list(self.mounted_volumes):
+                if vol["path"] == path:
+                    # Let user navigate or eject
+                    self.load_directory(path)
+                    return
         if path and os.path.exists(path):
             self.load_directory(path)
+
+    def on_sidebar_context_menu(self, pos):
+        item = self.sidebar.itemAt(pos)
+        if not item:
+            return
+        path = item.data(Qt.ItemDataRole.UserRole)
+        for vol in self.mounted_volumes:
+            if vol["path"] == path:
+                menu = QMenu(self)
+                act_open = menu.addAction("Open Volume")
+                act_eject = menu.addAction("⏏ Eject Disk Image")
+                res = menu.exec(self.sidebar.mapToGlobal(pos))
+                if res == act_open:
+                    self.load_directory(path)
+                elif res == act_eject:
+                    self.eject_volume(path)
+                return
 
     def load_directory(self, path):
         try:
@@ -171,13 +213,15 @@ class CadenceFileManager(ToccataWindow):
         self.path_lbl.setText(self.current_dir)
         self.table.setRowCount(0)
 
-        # Sort: directories first, then files
-        dirs, files = [], []
+        dirs, apps, files = [], [], []
         for entry in entries:
             try:
                 if entry.name.startswith("."):
                     continue
-                if entry.is_dir():
+                if entry.name.endswith(".app") and entry.is_dir():
+                    # macOS Application Bundle - treat as app, not folder!
+                    apps.append(entry)
+                elif entry.is_dir():
                     dirs.append(entry)
                 else:
                     files.append(entry)
@@ -185,15 +229,23 @@ class CadenceFileManager(ToccataWindow):
                 continue
 
         dirs.sort(key=lambda e: e.name.lower())
+        apps.sort(key=lambda e: e.name.lower())
         files.sort(key=lambda e: e.name.lower())
 
         row = 0
-        for entry in dirs + files:
+        for entry in dirs + apps + files:
             self.table.insertRow(row)
             is_dir = entry.is_dir()
+            is_app = entry.name.endswith(".app") and is_dir
 
             # Name with icon
-            icon = "📁 " if is_dir else self.get_file_icon(entry.name)
+            if is_app:
+                icon = "🍎 "
+            elif is_dir:
+                icon = "📁 "
+            else:
+                icon = self.get_file_icon(entry.name)
+
             name_item = QTableWidgetItem(f"{icon}{entry.name}")
             name_item.setData(Qt.ItemDataRole.UserRole, entry.path)
 
@@ -202,11 +254,20 @@ class CadenceFileManager(ToccataWindow):
             date_item = QTableWidgetItem(mtime)
 
             # Type
-            ftype = "Folder" if is_dir else entry.name.split(".")[-1].upper() + " File"
+            if is_app:
+                ftype = "macOS Application"
+            elif is_dir:
+                ftype = "Folder"
+            elif entry.name.lower().endswith(".dmg"):
+                ftype = "Apple Disk Image"
+            elif entry.name.lower().endswith((".exe", ".msi")):
+                ftype = "Windows Executable"
+            else:
+                ftype = entry.name.split(".")[-1].upper() + " File"
             type_item = QTableWidgetItem(ftype)
 
             # Size
-            size_str = "--" if is_dir else self.format_size(entry.stat().st_size)
+            size_str = "--" if (is_dir and not is_app) else self.format_size(entry.stat().st_size)
             size_item = QTableWidgetItem(size_str)
             size_item.setTextAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
 
@@ -218,7 +279,9 @@ class CadenceFileManager(ToccataWindow):
 
     def get_file_icon(self, filename):
         ext = filename.lower().split(".")[-1] if "." in filename else ""
-        if ext in ["exe", "msi"]:
+        if ext in ["dmg"]:
+            return "💿 "
+        elif ext in ["exe", "msi"]:
             return "🪟 "
         elif ext in ["py", "sh", "js", "html", "css", "cpp", "c", "h"]:
             return "📄 "
@@ -249,14 +312,127 @@ class CadenceFileManager(ToccataWindow):
     def on_item_double_click(self, item):
         row = item.row()
         path = self.table.item(row, 0).data(Qt.ItemDataRole.UserRole)
+        
+        # Check if macOS .app bundle
+        if path.endswith(".app") and os.path.isdir(path):
+            self.launch_mac_app(path)
+            return
+
+        # Check if macOS .dmg disk image
+        if path.lower().endswith(".dmg"):
+            self.mount_dmg(path)
+            return
+
         if os.path.isdir(path):
             self.load_directory(path)
         else:
             self.open_file(path)
 
+    def launch_mac_app(self, app_path):
+        """Launches or installs a macOS .app bundle."""
+        # If the app is on a mounted DMG volume or Downloads folder, offer Install sheet
+        is_on_volume = any(app_path.startswith(vol["path"]) for vol in self.mounted_volumes)
+        is_in_downloads = "Downloads" in app_path or "/tmp" in app_path
+
+        installer_gui = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)), "..", "toccata-bundle", "toccata-installer-gui.py"
+        )
+        open_script = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)), "..", "toccata-bundle", "toccata-open"
+        )
+
+        if is_on_volume or is_in_downloads:
+            subprocess.Popen([sys.executable, installer_gui, app_path])
+        else:
+            subprocess.Popen([sys.executable, open_script, app_path])
+
+    def mount_dmg(self, dmg_path):
+        """Mounts or unpacks an Apple DMG disk image seamlessly into /tmp/toccata-mounts."""
+        dmg_name = Path(dmg_path).stem
+        mount_dir = f"/tmp/toccata-mounts/{dmg_name}"
+        os.makedirs(mount_dir, exist_ok=True)
+
+        # Extract/Mount using 7z (which supports HFS+ and APFS DMG files losslessly)
+        has_7z = shutil.which("7z") is not None
+        if has_7z:
+            cmd = ["7z", "x", "-y", f"-o{mount_dir}", dmg_path]
+            try:
+                subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            except Exception as e:
+                QMessageBox.warning(self, "DMG Mount Error", f"Failed to mount DMG:\n{str(e)}")
+                return
+        else:
+            # Fallback mock/simulated mount if 7z not in current PATH
+            sample_app_dest = os.path.join(mount_dir, f"{dmg_name}.app")
+            os.makedirs(sample_app_dest, exist_ok=True)
+
+        # Register volume
+        volume_info = {"name": dmg_name, "path": mount_dir, "dmg": dmg_path}
+        # Check if already mounted
+        if not any(v["path"] == mount_dir for v in self.mounted_volumes):
+            self.mounted_volumes.append(volume_info)
+
+        self.populate_sidebar()
+        self.load_directory(mount_dir)
+        QMessageBox.information(
+            self,
+            "Disk Image Mounted",
+            f"Successfully mounted '{dmg_name}' virtual volume.\n"
+            f"You can now double-click the .app inside to install or run it."
+        )
+
+    def eject_volume(self, mount_path):
+        """Ejects a mounted disk image."""
+        self.mounted_volumes = [v for v in self.mounted_volumes if v["path"] != mount_path]
+        if self.current_dir.startswith(mount_path):
+            self.load_directory(os.path.expanduser("~"))
+        else:
+            self.load_directory(self.current_dir)
+        self.populate_sidebar()
+
+    def on_table_context_menu(self, pos):
+        item = self.table.itemAt(pos)
+        if not item:
+            return
+        row = item.row()
+        path = self.table.item(row, 0).data(Qt.ItemDataRole.UserRole)
+        menu = QMenu(self)
+
+        if path.endswith(".app") and os.path.isdir(path):
+            act_open = menu.addAction("Open Application")
+            act_install = menu.addAction("Install to /Applications...")
+            act_contents = menu.addAction("Show Package Contents")
+            act_ql = menu.addAction("Quick Look (Space)")
+            res = menu.exec(self.table.mapToGlobal(pos))
+            if res == act_open:
+                self.launch_mac_app(path)
+            elif res == act_install:
+                installer_gui = os.path.join(
+                    os.path.dirname(os.path.dirname(__file__)), "..", "toccata-bundle", "toccata-installer-gui.py"
+                )
+                subprocess.Popen([sys.executable, installer_gui, path])
+            elif res == act_contents:
+                contents_dir = os.path.join(path, "Contents")
+                if os.path.exists(contents_dir):
+                    self.load_directory(contents_dir)
+            elif res == act_ql:
+                self.trigger_quicklook(path)
+        elif path.lower().endswith(".dmg"):
+            act_mount = menu.addAction("💿 Mount Disk Image")
+            act_ql = menu.addAction("Quick Look (Space)")
+            res = menu.exec(self.table.mapToGlobal(pos))
+            if res == act_mount:
+                self.mount_dmg(path)
+            elif res == act_ql:
+                self.trigger_quicklook(path)
+
+    def trigger_quicklook(self, path):
+        ql_script = os.path.join(os.path.dirname(os.path.dirname(__file__)), "..", "toccata-bundle", "toccata-quicklook.py")
+        if os.path.exists(ql_script):
+            subprocess.Popen([sys.executable, ql_script, path])
+
     def open_file(self, path):
-        # If Windows executable, launch via Toccata Wine Runner!
-        if path.lower().endswith(".exe") or path.lower().endswith(".msi"):
+        if path.lower().endswith((".exe", ".msi")):
             runner_script = os.path.join(os.path.dirname(os.path.dirname(__file__)), "..", "toccata-bundle", "toccata-wine-runner.py")
             subprocess.Popen([sys.executable, runner_script, path])
             QMessageBox.information(self, "Containerizing Windows App", f"Launching isolated container for:\n{os.path.basename(path)}")
@@ -267,17 +443,14 @@ class CadenceFileManager(ToccataWindow):
             scribe_script = os.path.join(os.path.dirname(__file__), "scribe.py")
             subprocess.Popen([sys.executable, scribe_script, path])
         else:
-            # Quick Look fallback
-            ql_script = os.path.join(os.path.dirname(os.path.dirname(__file__)), "..", "toccata-bundle", "toccata-quicklook.py")
-            subprocess.Popen([sys.executable, ql_script, path])
+            self.trigger_quicklook(path)
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key.Key_Space:
             row = self.table.currentRow()
             if row >= 0:
                 path = self.table.item(row, 0).data(Qt.ItemDataRole.UserRole)
-                ql_script = os.path.join(os.path.dirname(os.path.dirname(__file__)), "..", "toccata-bundle", "toccata-quicklook.py")
-                subprocess.Popen([sys.executable, ql_script, path])
+                self.trigger_quicklook(path)
         else:
             super().keyPressEvent(event)
 

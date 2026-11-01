@@ -72,6 +72,7 @@ noto-fonts-emoji
 ttf-dejavu
 
 # 9. User Utilities & Command Bridge
+7zip
 bash-completion
 sudo
 curl
