@@ -1,77 +1,82 @@
-# Toccata OS - GUI-First System Package Manifest
-# Engineered for zero-terminal operation: buttons, visual toggles, and graphical dialogs.
+# ==============================================================================
+# TOCCATA OS 1.0 - Full-Stack Bare-Metal Package Manifest (Quad-Hybrid Engine)
+# Speed of Linux (SteamOS) • Polish of macOS (elementary/Cutefish) • Windows Bridge (Zorin)
+# ==============================================================================
 
-# 1. Base Kernel & Hardware Drivers
+# 1. Base Kernel & System Core
 base
 base-devel
 linux
-linux-firmware
 linux-headers
+systemd
+systemd-sysvcompat
 btrfs-progs
-e2fsprogs
+snapper
+efibootmgr
 dosfstools
-networkmanager
-pipewire
-pipewire-alsa
-pipewire-pulse
-pipewire-jack
-wireplumber
+e2fsprogs
+parted
+gptfdisk
+util-linux
+
+# 2. Bootloader Binaries
+syslinux
+edk2-shell
+
+# 3. Universal Hardware Drivers & Offline Firmware
+linux-firmware
+sof-firmware
+alsa-firmware
+alsa-ucm-conf
 mesa
 vulkan-intel
 vulkan-radeon
-nvidia-prime
+vulkan-icd-loader
+xf86-video-amdgpu
+networkmanager
+iwd
+wireless-regdb
+wpa_supplicant
+bluez
+bluez-utils
 
-# 2. Wayland Desktop Server & Compositor
-plasma-wayland-session
-plasma-desktop
-kwin
+# 4. Wayland Compositor & Display Engine
 wayland
+wayland-protocols
 xorg-xwayland
+labwc
+seatd
+qt6-base
+qt6-declarative
 qt6-wayland
-qt5-wayland
+python-pyqt6
 
-# 3. GUI System Settings & Popups (Zero-terminal configuration)
-systemsettings
-plasma-nm             # Graphical Wi-Fi & Network Tray Menu
-plasma-pa             # Graphical Sound & Volume Slider Popup
-bluedevil             # Graphical Bluetooth Pairing & Battery Inspector
-kinfocenter           # "About This Mac" / System Specs Overview
-plasma-systemmonitor  # Graphical Task & Resource Inspector (CPU/RAM/GPU)
-powerdevil            # Battery & Power Profile Sliders (Eco, Balanced, Performance)
+# 5. PipeWire Low-Latency Hi-Fi Audio (0.7ms ALSA Direct)
+pipewire
+wireplumber
+pipewire-pulse
+pipewire-alsa
+pipewire-jack
 
-# 4. Graphical App Store & Software Management
-discover
-flatpak
-plasma-discover-flatpak-backend
-packagekit-qt5
+# 6. SteamOS / Proton & Windows Subsystem
+wine
+wine-gecko
+wine-mono
 
-# 5. Core GUI Applications (Click-and-Done)
-dolphin               # Visual Finder File Browser (Miller Columns, QuickLook)
-dolphin-plugins       # Git & Btrfs snapshot badges in file manager
-ark                   # One-Click Zip / Tar Extractor & Compressor
-partitionmanager      # Visual Disk Utility (Format, Partition, Storage Bars)
-spectacle             # Visual Screenshot & Screen Recording Tool
-gwenview              # Photo & Image Inspector
-okular                # PDF & Document Reader
-kcalc                 # Visual Calculator
-kwrite                # Visual Text Editor
-firefox               # Web Browser
+# 7. Guided Graphical Installer Engine
+archinstall
 
-# 6. Time Machine Snapshot Restoration (Visual Rollback)
-btrfs-assistant       # Graphical Snapshot & Backup Timeline Manager
-snapper
-
-# 7. Toccata Mac Ergonomics & AppMenu Support
-appmenu-gtk-module
-libdbusmenu-glib
-libdbusmenu-gtk3
-krunner               # Spotlight Search Overlay (Cmd + Space)
-sushi                 # Spacebar QuickLook Preview Daemon
-
-# 8. Fonts, Runtimes & Python GUI
-python
-python-pip
-tk                    # Python Tkinter GUI Toolkit
-ttf-dejavu
+# 8. Typography & Assets
 noto-fonts
 noto-fonts-emoji
+ttf-dejavu
+
+# 9. User Utilities & Command Bridge
+bash-completion
+sudo
+curl
+wget
+git
+fastfetch
+pciutils
+usbutils

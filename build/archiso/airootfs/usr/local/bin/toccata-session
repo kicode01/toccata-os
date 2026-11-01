@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Toccata OS 1.0 - Display Session Entry Point
+# Initializes PipeWire audio graph, seats, and launches the Wayland Compositor.
+
+# Start PipeWire & WirePlumber
+pipewire &
+wireplumber &
+pipewire-pulse &
+
+# Launch Wayland Compositor with Toccata Qt6 Shell
+exec labwc -s /usr/local/bin/toccata-shell

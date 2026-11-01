@@ -6,3 +6,7 @@ Thumbs.db
 foundation/
 *.tar.gz
 *.zip
+
+dist/
+out/
+*.iso

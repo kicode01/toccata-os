@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Toccata OS 1.0 - Native Shell Launcher
+export QT_QPA_PLATFORM=wayland
+export XDG_CURRENT_DESKTOP=Toccata
+export XDG_SESSION_DESKTOP=Toccata
+exec python3 /usr/local/share/toccata/toccata-shell/toccata-shell.py "$@"
