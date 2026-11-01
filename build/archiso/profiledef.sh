@@ -20,6 +20,7 @@ declare -A file_permissions=(
   ["/etc/sudoers.d/toccata"]="0:0:440"
   ["/home/toccata"]="1000:1000:755"
   ["/root"]="0:0:750"
+  ["/root/customize_airootfs.sh"]="0:0:755"
   ["/usr/local/bin/toccata-shell"]="0:0:755"
   ["/usr/local/bin/toccata-installer"]="0:0:755"
   ["/usr/local/bin/toccata-session"]="0:0:755"

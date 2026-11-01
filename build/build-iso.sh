@@ -114,9 +114,12 @@ glib-compile-schemas "$BUILD_PROFILE/airootfs/usr/share/glib-2.0/schemas/" 2>/de
 
 # Configure GDM Display Manager and Graphical Target
 echo "      Configuring GDM automatic login and graphical.target..."
-mkdir -p "$BUILD_PROFILE/airootfs/etc/systemd/system"
+mkdir -p "$BUILD_PROFILE/airootfs/etc/systemd/system/multi-user.target.wants"
 ln -sf /usr/lib/systemd/system/gdm.service "$BUILD_PROFILE/airootfs/etc/systemd/system/display-manager.service"
 ln -sf /usr/lib/systemd/system/graphical.target "$BUILD_PROFILE/airootfs/etc/systemd/system/default.target"
+ln -sf /usr/lib/systemd/system/NetworkManager.service "$BUILD_PROFILE/airootfs/etc/systemd/system/multi-user.target.wants/NetworkManager.service"
+ln -sf /dev/null "$BUILD_PROFILE/airootfs/etc/systemd/system/systemd-firstboot.service"
+ln -sf /usr/share/zoneinfo/UTC "$BUILD_PROFILE/airootfs/etc/localtime"
 rm -rf "$BUILD_PROFILE/airootfs/etc/systemd/system/getty@tty1.service.d"
 
 echo "[2/3] Building bootable ISO with mkarchiso (zstd compression)..."
@@ -127,8 +130,8 @@ echo "      Profile Directory: $BUILD_PROFILE"
 mkarchiso -v -w "$WORK_DIR" -o "$OUT_DIR" "$BUILD_PROFILE"
 
 echo ""
-echo "[3/3] Copying bootable ISO to workspace ($FINAL_OUT_DIR)..."
-cp "$OUT_DIR"/toccata-os-*.iso "$FINAL_OUT_DIR"/
-echo "      Build Complete! Bootable ISO generated:"
-ls -lh "$FINAL_OUT_DIR"/toccata-os-*.iso
+echo "[3/3] Bootable ISO successfully generated on fast ext4 ($OUT_DIR)..."
+ls -lh "$OUT_DIR"/toccata-os-*.iso
+cp "$OUT_DIR"/toccata-os-*.iso "$FINAL_OUT_DIR"/ 2>/dev/null || true
+echo "      Build Complete! Bootable ISO generated."
 echo "==============================================================================="

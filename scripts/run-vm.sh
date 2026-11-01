@@ -28,7 +28,7 @@ case "$TARGET" in
         TITLE="Zorin OS 18.1 Core Live Environment (GNOME/Adaptive)"
         ;;
     toccata|*)
-        ISO="$(ls -t "$ROOT_DIR"/dist/toccata-os-*.iso 2>/dev/null | head -n 1 || true)"
+        ISO="$(ls -t /var/tmp/dist/toccata-os-*.iso "$ROOT_DIR"/dist/toccata-os-*.iso 2>/dev/null | head -n 1 || true)"
         if [ -n "$ISO" ] && [ -f "$ISO" ]; then
             TITLE="Toccata OS 1.0 (Full Unified Operating System)"
         else

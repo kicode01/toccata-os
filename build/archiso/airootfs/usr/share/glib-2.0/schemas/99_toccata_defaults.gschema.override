@@ -4,7 +4,8 @@
 ################################################################################
 
 [org.gnome.shell]
-favorite-apps = ['cadence.desktop', 'horizon.desktop', 'toccata-console.desktop', 'solfege.desktop', 'scribe.desktop', 'tempo.desktop', 'gallery.desktop', 'settings.desktop', 'zorin-appearance.desktop', 'maestro.desktop']
+disable-user-extensions = false
+favorite-apps = ['cadence.desktop', 'toccata-console.desktop', 'solfege.desktop', 'scribe.desktop', 'tempo.desktop', 'gallery.desktop', 'settings.desktop', 'zorin-appearance.desktop', 'maestro.desktop']
 enabled-extensions = ['zorin-taskbar@zorinos.com', 'zorin-menu@zorinos.com', 'zorin-magic-lamp-effect@zorinos.com', 'zorin-window-move-effect@zorinos.com', 'zorin-tiling-shell@zorinos.com', 'zorin-desktop-icons@zorinos.com', 'zorin-appindicator@zorinos.com']
 
 [org.gnome.desktop.interface]
