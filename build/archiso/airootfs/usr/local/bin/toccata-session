@@ -13,6 +13,8 @@ if command -v pw-play &>/dev/null && [ -f /usr/share/sounds/boot-sound.wav ]; th
 fi
 
 # Export Desktop Session Variables
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+mkdir -p "$XDG_RUNTIME_DIR" && chmod 700 "$XDG_RUNTIME_DIR"
 export XDG_CURRENT_DESKTOP=GNOME
 export XDG_SESSION_DESKTOP=gnome
 export XDG_SESSION_TYPE=wayland

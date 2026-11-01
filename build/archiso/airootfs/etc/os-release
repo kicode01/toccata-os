@@ -1,0 +1,10 @@
+NAME="Toccata OS"
+PRETTY_NAME="Toccata OS 1.0 (Virtuosic Edition)"
+ID=toccata
+ID_LIKE=arch
+BUILD_ID=2026.11
+ANSI_COLOR="0;36"
+HOME_URL="https://toccata-os.org"
+SUPPORT_URL="https://toccata-os.org/support"
+BUG_REPORT_URL="https://toccata-os.org/bugs"
+LOGO=toccata
