@@ -13,7 +13,7 @@ from datetime import datetime
 from PyQt6.QtCore import Qt, QPoint, QPointF, QRectF, QSize, QTimer, QTime, QDateTime, pyqtSlot
 from PyQt6.QtGui import (
     QColor, QFont, QPainter, QBrush, QPen, QLinearGradient, QRadialGradient,
-    QPainterPath, QAction, QKeySequence, QShortcut
+    QPainterPath, QAction, QKeySequence, QShortcut, QPixmap
 )
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QHBoxLayout, QVBoxLayout,
@@ -21,6 +21,15 @@ from PyQt6.QtWidgets import (
 )
 
 # Set Wayland / WSLg Display configuration
+if "XDG_RUNTIME_DIR" not in os.environ and os.path.exists("/mnt/wslg/runtime-dir"):
+    os.environ["XDG_RUNTIME_DIR"] = "/mnt/wslg/runtime-dir"
+if "WAYLAND_DISPLAY" not in os.environ and os.path.exists("/mnt/wslg/runtime-dir/wayland-0"):
+    os.environ["WAYLAND_DISPLAY"] = "wayland-0"
+if "DISPLAY" not in os.environ:
+    os.environ["DISPLAY"] = ":0"
+if "PULSE_SERVER" not in os.environ and os.path.exists("/mnt/wslg/PulseServer"):
+    os.environ["PULSE_SERVER"] = "/mnt/wslg/PulseServer"
+
 os.environ["QT_QPA_PLATFORM"] = "wayland;xcb"
 
 sys.path.insert(0, os.path.dirname(__file__))
@@ -660,45 +669,12 @@ class ToccataDesktopManager(QMainWindow):
         screen = QApplication.primaryScreen().geometry()
         self.setGeometry(screen)
 
-    def paintEvent(self, event):
-        painter = QPainter(self)
-        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        w, h = self.width(), self.height()
-        # macOS Sequoia Light Dynamic Ambient Wallpaper
-        if theme.IS_LIGHT_MODE:
-            gradient = QLinearGradient(0, 0, w, h)
-            gradient.setColorAt(0.0, QColor(239, 244, 250))
-            gradient.setColorAt(0.35, QColor(253, 244, 235))
-            gradient.setColorAt(0.70, QColor(248, 237, 235))
-            gradient.setColorAt(1.0, QColor(234, 242, 248))
-            painter.fillRect(self.rect(), gradient)
-
-            # Layered Fluid Sequoia Amber Ribbon
-            path = QPainterPath()
-            path.moveTo(0, h * 0.45)
-            path.cubicTo(w * 0.3, h * 0.2, w * 0.6, h * 0.65, w, h * 0.3)
-            path.lineTo(w, h)
-            path.lineTo(0, h)
-            path.closeSubpath()
-            ribbon_grad = QLinearGradient(0, h * 0.4, w, h)
-            ribbon_grad.setColorAt(0.0, QColor(255, 122, 24, 160))
-            ribbon_grad.setColorAt(0.5, QColor(255, 184, 51, 150))
-            ribbon_grad.setColorAt(1.0, QColor(255, 214, 102, 110))
-            painter.fillPath(path, ribbon_grad)
-
-            # Coral Accent Ribbon
-            coral_path = QPainterPath()
-            coral_path.moveTo(0, h * 0.7)
-            coral_path.cubicTo(w * 0.35, h * 0.85, w * 0.65, h * 0.5, w, h * 0.65)
-            coral_path.lineTo(w, h)
-            coral_path.lineTo(0, h)
-            coral_path.closeSubpath()
-            coral_grad = QLinearGradient(0, h * 0.7, w, h)
-            coral_grad.setColorAt(0.0, QColor(255, 77, 109, 140))
-            coral_grad.setColorAt(1.0, QColor(255, 168, 186, 90))
-            painter.fillPath(coral_path, coral_grad)
-        else:
-            painter.fillRect(self.rect(), QColor(9, 9, 11))
+        # Authentic High-Resolution Wallpaper
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        self.wallpaper_path = os.path.join(base_dir, "..", "..", "assets", "wallpapers", "pearos-light.jpg")
+        self.wallpaper_pixmap = None
+        if os.path.exists(self.wallpaper_path):
+            self.wallpaper_pixmap = QPixmap(self.wallpaper_path)
 
         # 1. Top Bar
         self.top_bar = FrostedTopBar(self, self)
@@ -725,6 +701,30 @@ class ToccataDesktopManager(QMainWindow):
         self.state_timer = QTimer(self)
         self.state_timer.timeout.connect(self.sync_active_window_title)
         self.state_timer.start(500)
+
+    def set_wallpaper_image(self, filename):
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        path = os.path.join(base_dir, "..", "..", "assets", "wallpapers", filename)
+        if os.path.exists(path):
+            self.wallpaper_pixmap = QPixmap(path)
+            self.update()
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        if self.wallpaper_pixmap and not self.wallpaper_pixmap.isNull():
+            painter.drawPixmap(self.rect(), self.wallpaper_pixmap)
+        else:
+            w, h = self.width(), self.height()
+            if theme.IS_LIGHT_MODE:
+                gradient = QLinearGradient(0, 0, w, h)
+                gradient.setColorAt(0.0, QColor(239, 244, 250))
+                gradient.setColorAt(0.35, QColor(253, 244, 235))
+                gradient.setColorAt(0.70, QColor(248, 237, 235))
+                gradient.setColorAt(1.0, QColor(234, 242, 248))
+                painter.fillRect(self.rect(), gradient)
+            else:
+                painter.fillRect(self.rect(), QColor(26, 27, 38))
 
     def update_dock_geometry(self):
         screen = QApplication.primaryScreen().geometry()
@@ -773,6 +773,7 @@ class ToccataDesktopManager(QMainWindow):
             win = CadenceFileManager()
         elif action_id == "settings":
             win = SystemSettings()
+            win.wallpaper_changed.connect(self.set_wallpaper_image)
         elif action_id == "solfege":
             win = SolfegeCalculator()
         elif action_id == "console":
