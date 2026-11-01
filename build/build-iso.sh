@@ -87,7 +87,9 @@ mkdir -p "$PROFILE_DIR/airootfs/usr/share/themes" \
          "$PROFILE_DIR/airootfs/usr/share/zorin-appearance" \
          "$PROFILE_DIR/airootfs/usr/share/zorin-exec-guard" \
          "$PROFILE_DIR/airootfs/usr/share/gnome-shell/extensions" \
-         "$PROFILE_DIR/airootfs/usr/share/glib-2.0/schemas"
+         "$PROFILE_DIR/airootfs/usr/share/glib-2.0/schemas" \
+         "$PROFILE_DIR/airootfs/usr/bin" \
+         "$PROFILE_DIR/airootfs/usr/lib/python3.14/site-packages"
 
 cp -r /usr/share/themes/pearOS* /usr/share/themes/Zorin* "$PROFILE_DIR/airootfs/usr/share/themes/" 2>/dev/null || true
 cp -r /usr/share/icons/pearOS* /usr/share/icons/Zorin* "$PROFILE_DIR/airootfs/usr/share/icons/" 2>/dev/null || true
@@ -97,6 +99,9 @@ cp -r /usr/share/zorin-appearance/* "$PROFILE_DIR/airootfs/usr/share/zorin-appea
 cp -r /usr/share/zorin-exec-guard/* "$PROFILE_DIR/airootfs/usr/share/zorin-exec-guard/" 2>/dev/null || true
 cp -r /usr/share/gnome-shell/extensions/* "$PROFILE_DIR/airootfs/usr/share/gnome-shell/extensions/" 2>/dev/null || true
 cp -r /usr/share/glib-2.0/schemas/*zorin* "$PROFILE_DIR/airootfs/usr/share/glib-2.0/schemas/" 2>/dev/null || true
+cp -r /usr/bin/zorin* "$PROFILE_DIR/airootfs/usr/bin/" 2>/dev/null || true
+cp -r /usr/lib/python3.14/site-packages/zorin* "$PROFILE_DIR/airootfs/usr/lib/python3.14/site-packages/" 2>/dev/null || true
+glib-compile-schemas "$PROFILE_DIR/airootfs/usr/share/glib-2.0/schemas/" 2>/dev/null || true
 
 echo "[2/3] Building bootable ISO with mkarchiso (zstd compression)..."
 echo "      Output Directory: $OUT_DIR"

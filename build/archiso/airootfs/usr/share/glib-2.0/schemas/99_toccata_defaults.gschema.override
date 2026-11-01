@@ -1,0 +1,49 @@
+################################################################################
+# TOCCATA OS 1.0 - Master GNOME 47 Session Defaults
+# Harmonizing pearOS Cupertino Design, Zorin OS Adaptive Workflows & GNOME 47
+################################################################################
+
+[org.gnome.shell]
+favorite-apps = ['org.gnome.Nautilus.desktop', 'horizon.desktop', 'org.gnome.Terminal.desktop', 'solfege.desktop', 'scribe.desktop', 'tempo.desktop', 'zorin-appearance.desktop', 'org.gnome.Settings.desktop']
+enabled-extensions = ['zorin-taskbar@zorinos.com', 'zorin-menu@zorinos.com', 'zorin-magic-lamp-effect@zorinos.com', 'zorin-window-move-effect@zorinos.com', 'zorin-tiling-shell@zorinos.com', 'zorin-desktop-icons@zorinos.com', 'zorin-appindicator@zorinos.com']
+
+[org.gnome.desktop.interface]
+gtk-theme = 'pearOS'
+icon-theme = 'pearOS'
+cursor-theme = 'pearOS'
+font-name = 'Inter 10.5'
+document-font-name = 'Inter 10.5'
+monospace-font-name = 'JetBrains Mono 10'
+color-scheme = 'default'
+enable-hot-corners = true
+
+[org.gnome.desktop.wm.preferences]
+button-layout = 'close,minimize,maximize:'
+theme = 'pearOS'
+titlebar-font = 'Inter Bold 10.5'
+
+[org.gnome.desktop.background]
+picture-uri = 'file:///usr/share/backgrounds/pearos-light.jpg'
+picture-uri-dark = 'file:///usr/share/backgrounds/pearos-dark.jpg'
+show-desktop-icons = true
+
+[org.gnome.desktop.screensaver]
+picture-uri = 'file:///usr/share/backgrounds/pearos-light.jpg'
+
+[org.gnome.desktop.sound]
+theme-name = 'zorin'
+event-sounds = true
+input-feedback-sounds = true
+
+[org.gnome.shell.extensions.zorin-magic-lamp-effect]
+duration = 320
+
+[org.gnome.shell.extensions.zorin-window-move-effect]
+friction = 3.2
+spring-k = 2.8
+
+[org.gnome.shell.extensions.zorin-taskbar]
+dock-mode = true
+dock-fixed = false
+multi-monitors = true
+panel-element-positions = '{"0":[{"element":"show-apps-button","visible":true,"position":"stackedTL"},{"element":"activities-button","visible":false,"position":"stackedTL"},{"element":"left-box","visible":true,"position":"stackedTL"},{"element":"taskbar","visible":true,"position":"centerMonitor"},{"element":"center-box","visible":true,"position":"centerMonitor"},{"element":"right-box","visible":true,"position":"stackedBR"},{"element":"dateMenu","visible":true,"position":"stackedBR"},{"element":"systemMenu","visible":true,"position":"stackedBR"}]}'

@@ -53,6 +53,8 @@ mutter
 nautilus
 dconf
 dconf-editor
+python-gobject
+python-psutil
 labwc
 seatd
 qt6-base

@@ -1,11 +1,28 @@
 #!/usr/bin/env bash
 # Toccata OS 1.0 - Display Session Entry Point
-# Initializes PipeWire audio graph, seats, and launches the Wayland Compositor.
+# Initializes PipeWire audio graph, Apple boot chime, and launches GNOME Shell with Zorin & pearOS workflows.
 
 # Start PipeWire & WirePlumber
 pipewire &
 wireplumber &
 pipewire-pulse &
 
-# Launch Wayland Compositor with Toccata Qt6 Shell
-exec labwc -s /usr/local/bin/toccata-shell
+# Play authentic Apple boot chime if available
+if command -v pw-play &>/dev/null && [ -f /usr/share/sounds/boot-sound.wav ]; then
+    pw-play /usr/share/sounds/boot-sound.wav &
+fi
+
+# Export Desktop Session Variables
+export XDG_CURRENT_DESKTOP=GNOME
+export XDG_SESSION_DESKTOP=gnome
+export XDG_SESSION_TYPE=wayland
+export GDK_BACKEND=wayland,x11
+export QT_QPA_PLATFORM=wayland;xcb
+
+# Launch GNOME Session with Mutter Wayland Compositor
+if command -v gnome-session &>/dev/null; then
+    exec dbus-run-session gnome-session
+else
+    # Fallback to Toccata Qt6 Shell if gnome-session binary not installed
+    exec labwc -s /usr/local/bin/toccata-shell
+fi
