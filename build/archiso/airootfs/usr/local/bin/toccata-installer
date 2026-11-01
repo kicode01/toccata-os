@@ -84,10 +84,44 @@ class VectorIcon(QWidget):
             p.drawLine(QPointF(w * 0.44, h * 0.68), QPointF(w * 0.72, h * 0.36))
 
 
+class SelectionBadge(QWidget):
+    """Bespoke Apple-style circular checkmark indicator."""
+    def __init__(self, is_selected=False, parent=None):
+        super().__init__(parent)
+        self.is_selected = is_selected
+        self.setFixedSize(22, 22)
+
+    def set_selected(self, selected):
+        self.is_selected = selected
+        self.update()
+
+    def paintEvent(self, event):
+        p = QPainter(self)
+        p.setRenderHint(QPainter.RenderHint.Antialiasing)
+        w, h = self.width(), self.height()
+
+        if self.is_selected:
+            # Filled Apple blue circle
+            p.setBrush(QBrush(QColor(0, 122, 255)))
+            p.setPen(Qt.PenStyle.NoPen)
+            p.drawEllipse(QRectF(1, 1, w - 2, h - 2))
+
+            # Crisp white checkmark
+            p.setPen(QPen(QColor(255, 255, 255), 2.2, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap, Qt.PenJoinStyle.RoundJoin))
+            p.drawLine(QPointF(w * 0.28, h * 0.52), QPointF(w * 0.44, h * 0.68))
+            p.drawLine(QPointF(w * 0.44, h * 0.68), QPointF(w * 0.72, h * 0.36))
+        else:
+            # Muted hollow circle
+            p.setBrush(Qt.BrushStyle.NoBrush)
+            p.setPen(QPen(QColor(255, 255, 255, 50), 1.5))
+            p.drawEllipse(QRectF(1.5, 1.5, w - 3, h - 3))
+
+
 class DiskCard(QFrame):
     """Interactive NVMe / SATA Storage Target Card."""
     def __init__(self, name, size, model, is_selected=False, parent=None):
         super().__init__(parent)
+        self.setObjectName("DiskCard")
         self.is_selected = is_selected
         self.setFixedHeight(72)
         self.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -115,42 +149,49 @@ class DiskCard(QFrame):
         layout.addLayout(info_layout)
         layout.addStretch()
 
-        self.radio = QRadioButton()
-        self.radio.setChecked(is_selected)
-        layout.addWidget(self.radio)
+        self.badge = SelectionBadge(is_selected)
+        layout.addWidget(self.badge)
 
         self.update_style()
 
     def set_selected(self, selected):
         self.is_selected = selected
-        self.radio.setChecked(selected)
+        self.badge.set_selected(selected)
         self.update_style()
 
     def update_style(self):
         if self.is_selected:
             self.setStyleSheet("""
-                QFrame {
-                    background-color: rgba(0, 122, 255, 0.14);
+                QFrame#DiskCard {
+                    background-color: rgba(0, 122, 255, 0.12);
                     border: 1.5px solid #007aff;
                     border-radius: 12px;
                 }
-                QLabel { color: #ffffff; background: transparent; }
+                QLabel {
+                    border: none;
+                    background: transparent;
+                    color: #ffffff;
+                }
             """)
-            self.sub_lbl.setStyleSheet("color: rgba(255, 255, 255, 0.7); background: transparent;")
+            self.sub_lbl.setStyleSheet("border: none; background: transparent; color: rgba(255, 255, 255, 0.7);")
         else:
             self.setStyleSheet("""
-                QFrame {
+                QFrame#DiskCard {
                     background-color: rgba(255, 255, 255, 0.04);
                     border: 1px solid rgba(255, 255, 255, 0.12);
                     border-radius: 12px;
                 }
-                QFrame:hover {
+                QFrame#DiskCard:hover {
                     background-color: rgba(255, 255, 255, 0.07);
-                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    border: 1px solid rgba(255, 255, 255, 0.22);
                 }
-                QLabel { color: #ffffff; background: transparent; }
+                QLabel {
+                    border: none;
+                    background: transparent;
+                    color: #ffffff;
+                }
             """)
-            self.sub_lbl.setStyleSheet("color: rgba(255, 255, 255, 0.5); background: transparent;")
+            self.sub_lbl.setStyleSheet("border: none; background: transparent; color: rgba(255, 255, 255, 0.5);")
 
     def mousePressEvent(self, event):
         self.set_selected(True)
@@ -408,14 +449,20 @@ class ToccataInstaller(QWidget):
 
         # Btrfs Storage Architecture Specs Callout
         specs = QFrame()
+        specs.setObjectName("SpecsCard")
         specs.setStyleSheet("""
-            QFrame {
+            QFrame#SpecsCard {
                 background: rgba(255, 255, 255, 0.03);
                 border: 1px solid rgba(255, 255, 255, 0.08);
                 border-radius: 10px;
                 padding: 10px;
             }
-            QLabel { color: rgba(255, 255, 255, 0.7); font-size: 11px; background: transparent; }
+            QLabel {
+                border: none;
+                color: rgba(255, 255, 255, 0.7);
+                font-size: 11px;
+                background: transparent;
+            }
         """)
         s_layout = QVBoxLayout(specs)
         s_layout.setSpacing(4)
