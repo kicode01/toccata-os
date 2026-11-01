@@ -2,24 +2,52 @@
 # Toccata OS 1.0 - Sovereign Kiosk Desktop Compositor
 set -e
 
-export XDG_RUNTIME_DIR="/run/user/$(id -u)"
-export WAYLAND_DISPLAY="wayland-0"
+exec > /tmp/toccata-kiosk.log 2>&1
+echo "[*] Initializing Toccata Kiosk Session..."
+
+# Do NOT export WAYLAND_DISPLAY before Cage initializes (otherwise wlroots attempts nested wayland connection)
+unset WAYLAND_DISPLAY
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/toccata}"
 export XDG_CURRENT_DESKTOP="Toccata"
 export MOZ_ENABLE_WAYLAND=1
 export QT_QPA_PLATFORM=wayland
+export WLR_BACKENDS="drm"
+export LIBSEAT_BACKEND="seatd"
+export WLR_RENDERER_ALLOW_SOFTWARE=1
+export WLR_RENDERER="gles2"
+export WLR_LIBINPUT_NO_DEVICES=1
+export WLR_NO_HARDWARE_CURSORS=1
 
-# Wait for Toccata Bridge to initialize
+# Ensure runtime directory exists
+mkdir -p "$XDG_RUNTIME_DIR"
+chmod 700 "$XDG_RUNTIME_DIR" 2>/dev/null || true
+
+# Wait for seatd socket to be ready
+echo "[*] Checking seatd socket..."
 for i in {1..40}; do
-    if curl -s http://127.0.0.1:5000/api/status >/dev/null 2>&1; then
+    if [ -S /run/seatd.sock ] || [ -e /run/seatd.sock ]; then
+        echo "[+] seatd socket is ready."
         break
     fi
-    sleep 0.15
+    sleep 0.1
+done
+
+# Wait for Toccata Bridge to initialize
+echo "[*] Waiting for Toccata Bridge on http://127.0.0.1:5000..."
+for i in {1..50}; do
+    if curl -s http://127.0.0.1:5000/api/status >/dev/null 2>&1; then
+        echo "[+] Toccata Bridge connected successfully."
+        break
+    fi
+    sleep 0.1
 done
 
 # Play authentic boot chime
 if [ -f /usr/share/sounds/boot-sound.wav ]; then
     pw-play /usr/share/sounds/boot-sound.wav 2>/dev/null &
 fi
+
+echo "[*] Launching Cage Wayland compositor with Chromium Kiosk on DRM..."
 
 # Launch Cage Wayland compositor with Chromium Ozone full-screen kiosk
 exec cage -d -s -- chromium \
@@ -30,6 +58,7 @@ exec cage -d -s -- chromium \
     --enable-gpu-rasterization \
     --enable-zero-copy \
     --disable-gpu-watchdog \
+    --disable-gpu-sandbox \
     --disable-dev-shm-usage \
     --no-first-run \
     --no-default-browser-check \

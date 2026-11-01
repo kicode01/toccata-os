@@ -29,6 +29,7 @@ systemctl mask gdm.service 2>/dev/null || true
 
 # Ensure toccata user groups and permissions
 usermod -aG video,audio,input,storage,wheel,seat,render toccata 2>/dev/null || true
+mkdir -p /home/toccata/.config/toccata-browser
 chown -R toccata:toccata /home/toccata
 chmod 755 /home/toccata
 chmod 755 /usr/local/bin/*
