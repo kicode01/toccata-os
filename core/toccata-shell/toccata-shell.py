@@ -36,6 +36,53 @@ from apps.tempo import TempoActivityMonitor
 from apps.gallery import GalleryAppStore
 
 
+class VectorLogoButton(QWidget):
+    """Bespoke anti-aliased vector emblem for the top bar (Zero Emojis)."""
+    def __init__(self, on_click_callback, parent=None):
+        super().__init__(parent)
+        self.on_click_callback = on_click_callback
+        self.setFixedSize(26, 26)
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.is_hovered = False
+
+    def enterEvent(self, event):
+        self.is_hovered = True
+        self.update()
+
+    def leaveEvent(self, event):
+        self.is_hovered = False
+        self.update()
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.MouseButton.LeftButton:
+            self.on_click_callback()
+
+    def paintEvent(self, event):
+        p = QPainter(self)
+        p.setRenderHint(QPainter.RenderHint.Antialiasing)
+        w, h = self.width(), self.height()
+
+        if self.is_hovered:
+            p.setBrush(QBrush(QColor(255, 255, 255, 35)))
+            p.setPen(Qt.PenStyle.NoPen)
+            p.drawRoundedRect(0, 0, w, h, 6, 6)
+
+        # Draw Apple squircle with vibrant blue gradient
+        grad = QLinearGradient(2, 2, w - 4, h - 4)
+        grad.setColorAt(0, QColor(0, 122, 255))
+        grad.setColorAt(1, QColor(88, 86, 214))
+        p.setBrush(QBrush(grad))
+        p.setPen(QPen(QColor(255, 255, 255, 60), 1.0))
+        p.drawRoundedRect(2, 2, w - 4, h - 4, 6, 6)
+
+        # Elegant audio waveform / tuning fork motif
+        p.setPen(QPen(QColor(255, 255, 255), 1.8, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
+        cx, cy = w / 2, h / 2
+        bars = [-6, -3, 0, 3, 6]
+        heights = [5, 9, 12, 9, 5]
+        for dx, bh in zip(bars, heights):
+            p.drawLine(QPoint(int(cx + dx), int(cy - bh / 2)), QPoint(int(cx + dx), int(cy + bh / 2)))
+
 class FrostedTopBar(QWidget):
     """CutefishOS & macOS Sequoia Frosted Glass Top Menu Bar."""
     def __init__(self, desktop_manager, parent=None):
@@ -49,21 +96,8 @@ class FrostedTopBar(QWidget):
         layout.setContentsMargins(12, 0, 14, 0)
         layout.setSpacing(10)
 
-        # 1. Toccata Apple-Style Emblem Button
-        self.logo_btn = QPushButton("🎼")
-        self.logo_btn.setFixedSize(26, 26)
-        self.logo_btn.setStyleSheet("""
-            QPushButton {
-                background: transparent;
-                border: none;
-                font-size: 16px;
-                border-radius: 4px;
-            }
-            QPushButton:hover {
-                background: rgba(255, 255, 255, 0.15);
-            }
-        """)
-        self.logo_btn.clicked.connect(self.show_system_menu)
+        # 1. Toccata Apple-Style Emblem Button (Bespoke Vector)
+        self.logo_btn = VectorLogoButton(self.show_system_menu, self)
         layout.addWidget(self.logo_btn)
 
         # 2. Active Application Title
