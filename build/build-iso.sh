@@ -11,7 +11,8 @@ PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 PROFILE_DIR="$SCRIPT_DIR/archiso"
 BUILD_PROFILE="/var/tmp/toccata-profile"
 WORK_DIR="/var/tmp/toccata-build-work"
-OUT_DIR="$PROJECT_ROOT/dist"
+OUT_DIR="/var/tmp/dist"
+FINAL_OUT_DIR="$PROJECT_ROOT/dist"
 
 echo "==============================================================================="
 echo "   TOCCATA OS 1.0 - Bare-Metal Bootable ISO Generator (archiso)"
@@ -73,7 +74,7 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-mkdir -p "$WORK_DIR" "$OUT_DIR"
+mkdir -p "$WORK_DIR" "$OUT_DIR" "$FINAL_OUT_DIR"
 rm -rf "$BUILD_PROFILE"
 mkdir -p "$BUILD_PROFILE"
 
@@ -119,6 +120,8 @@ echo "      Profile Directory: $BUILD_PROFILE"
 mkarchiso -v -w "$WORK_DIR" -o "$OUT_DIR" "$BUILD_PROFILE"
 
 echo ""
-echo "[3/3] Build Complete! Bootable ISO generated:"
-ls -lh "$OUT_DIR"/toccata-os-*.iso
+echo "[3/3] Copying bootable ISO to workspace ($FINAL_OUT_DIR)..."
+cp "$OUT_DIR"/toccata-os-*.iso "$FINAL_OUT_DIR"/
+echo "      Build Complete! Bootable ISO generated:"
+ls -lh "$FINAL_OUT_DIR"/toccata-os-*.iso
 echo "==============================================================================="
