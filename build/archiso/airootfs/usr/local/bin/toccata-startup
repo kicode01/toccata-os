@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Toccata OS 1.0 - User Session Startup Script
+# Plays authentic Apple boot chime on desktop entry
+if command -v pw-play &>/dev/null && [ -f /usr/share/sounds/boot-sound.wav ]; then
+    pw-play /usr/share/sounds/boot-sound.wav &
+fi

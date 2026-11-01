@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Toccata Autostart
+Exec=/usr/local/bin/toccata-startup
+Hidden=false
+NoDisplay=true
+X-GNOME-Autostart-enabled=true

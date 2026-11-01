@@ -46,7 +46,9 @@ bluez-utils
 # 4. Wayland Compositor & GNOME 47 Desktop Suite
 wayland
 wayland-protocols
+xorg-server
 xorg-xwayland
+xf86-video-qxl
 gnome-shell
 gnome-session
 gnome-control-center

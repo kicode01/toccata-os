@@ -112,6 +112,13 @@ cp -a /usr/bin/zorin* "$BUILD_PROFILE/airootfs/usr/bin/" 2>/dev/null || true
 cp -a /usr/lib/python3.14/site-packages/zorin* "$BUILD_PROFILE/airootfs/usr/lib/python3.14/site-packages/" 2>/dev/null || true
 glib-compile-schemas "$BUILD_PROFILE/airootfs/usr/share/glib-2.0/schemas/" 2>/dev/null || true
 
+# Configure GDM Display Manager and Graphical Target
+echo "      Configuring GDM automatic login and graphical.target..."
+mkdir -p "$BUILD_PROFILE/airootfs/etc/systemd/system"
+ln -sf /usr/lib/systemd/system/gdm.service "$BUILD_PROFILE/airootfs/etc/systemd/system/display-manager.service"
+ln -sf /usr/lib/systemd/system/graphical.target "$BUILD_PROFILE/airootfs/etc/systemd/system/default.target"
+rm -rf "$BUILD_PROFILE/airootfs/etc/systemd/system/getty@tty1.service.d"
+
 echo "[2/3] Building bootable ISO with mkarchiso (zstd compression)..."
 echo "      Output Directory: $OUT_DIR"
 echo "      Work Directory:   $WORK_DIR"
