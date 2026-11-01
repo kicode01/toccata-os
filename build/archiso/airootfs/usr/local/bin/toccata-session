@@ -16,8 +16,8 @@ fi
 export XDG_CURRENT_DESKTOP=GNOME
 export XDG_SESSION_DESKTOP=gnome
 export XDG_SESSION_TYPE=wayland
-export GDK_BACKEND=wayland,x11
-export QT_QPA_PLATFORM=wayland;xcb
+export GDK_BACKEND="wayland,x11"
+export QT_QPA_PLATFORM="wayland;xcb"
 
 # Launch GNOME Session with Mutter Wayland Compositor
 if command -v gnome-session &>/dev/null; then
