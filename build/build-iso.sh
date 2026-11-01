@@ -9,7 +9,8 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 PROFILE_DIR="$SCRIPT_DIR/archiso"
-WORK_DIR="/tmp/toccata-build-work"
+BUILD_PROFILE="/var/tmp/toccata-profile"
+WORK_DIR="/var/tmp/toccata-build-work"
 OUT_DIR="$PROJECT_ROOT/dist"
 
 echo "==============================================================================="
@@ -73,41 +74,47 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 mkdir -p "$WORK_DIR" "$OUT_DIR"
+rm -rf "$BUILD_PROFILE"
+mkdir -p "$BUILD_PROFILE"
 
-echo "[1/3] Syncing latest Toccata Shell, Zorin themes, and first-party applications to airootfs..."
-mkdir -p "$PROFILE_DIR/airootfs/usr/local/share/toccata"
-cp -r "$PROJECT_ROOT/core"/* "$PROFILE_DIR/airootfs/usr/local/share/toccata/"
+echo "[1/3] Staging build profile to fast ext4 storage ($BUILD_PROFILE)..."
+cp -a "$PROFILE_DIR"/* "$BUILD_PROFILE"/
 
-# Stage Zorin & pearOS themes, icons, wallpapers, extensions & schemas
-echo "      Staging Zorin OS & pearOS design suites into airootfs..."
-mkdir -p "$PROFILE_DIR/airootfs/usr/share/themes" \
-         "$PROFILE_DIR/airootfs/usr/share/icons" \
-         "$PROFILE_DIR/airootfs/usr/share/backgrounds" \
-         "$PROFILE_DIR/airootfs/usr/share/sounds" \
-         "$PROFILE_DIR/airootfs/usr/share/zorin-appearance" \
-         "$PROFILE_DIR/airootfs/usr/share/zorin-exec-guard" \
-         "$PROFILE_DIR/airootfs/usr/share/gnome-shell/extensions" \
-         "$PROFILE_DIR/airootfs/usr/share/glib-2.0/schemas" \
-         "$PROFILE_DIR/airootfs/usr/bin" \
-         "$PROFILE_DIR/airootfs/usr/lib/python3.14/site-packages"
+echo "      Syncing latest Toccata Shell, Zorin themes, and first-party applications..."
+mkdir -p "$BUILD_PROFILE/airootfs/usr/local/share/toccata"
+cp -r "$PROJECT_ROOT/core"/* "$BUILD_PROFILE/airootfs/usr/local/share/toccata/"
 
-cp -r /usr/share/themes/pearOS* /usr/share/themes/Zorin* "$PROFILE_DIR/airootfs/usr/share/themes/" 2>/dev/null || true
-cp -r /usr/share/icons/pearOS* /usr/share/icons/Zorin* "$PROFILE_DIR/airootfs/usr/share/icons/" 2>/dev/null || true
-cp -r /usr/share/backgrounds/* "$PROFILE_DIR/airootfs/usr/share/backgrounds/" 2>/dev/null || true
-cp -r /usr/share/sounds/* "$PROFILE_DIR/airootfs/usr/share/sounds/" 2>/dev/null || true
-cp -r /usr/share/zorin-appearance/* "$PROFILE_DIR/airootfs/usr/share/zorin-appearance/" 2>/dev/null || true
-cp -r /usr/share/zorin-exec-guard/* "$PROFILE_DIR/airootfs/usr/share/zorin-exec-guard/" 2>/dev/null || true
-cp -r /usr/share/gnome-shell/extensions/* "$PROFILE_DIR/airootfs/usr/share/gnome-shell/extensions/" 2>/dev/null || true
-cp -r /usr/share/glib-2.0/schemas/*zorin* "$PROFILE_DIR/airootfs/usr/share/glib-2.0/schemas/" 2>/dev/null || true
-cp -r /usr/bin/zorin* "$PROFILE_DIR/airootfs/usr/bin/" 2>/dev/null || true
-cp -r /usr/lib/python3.14/site-packages/zorin* "$PROFILE_DIR/airootfs/usr/lib/python3.14/site-packages/" 2>/dev/null || true
-glib-compile-schemas "$PROFILE_DIR/airootfs/usr/share/glib-2.0/schemas/" 2>/dev/null || true
+# Stage Zorin & pearOS themes, icons, wallpapers, extensions & schemas directly on ext4
+echo "      Staging Zorin OS & pearOS design suites into airootfs on ext4..."
+mkdir -p "$BUILD_PROFILE/airootfs/usr/share/themes" \
+         "$BUILD_PROFILE/airootfs/usr/share/icons" \
+         "$BUILD_PROFILE/airootfs/usr/share/backgrounds" \
+         "$BUILD_PROFILE/airootfs/usr/share/sounds" \
+         "$BUILD_PROFILE/airootfs/usr/share/zorin-appearance" \
+         "$BUILD_PROFILE/airootfs/usr/share/zorin-exec-guard" \
+         "$BUILD_PROFILE/airootfs/usr/share/gnome-shell/extensions" \
+         "$BUILD_PROFILE/airootfs/usr/share/glib-2.0/schemas" \
+         "$BUILD_PROFILE/airootfs/usr/bin" \
+         "$BUILD_PROFILE/airootfs/usr/lib/python3.14/site-packages"
+
+cp -a /usr/share/themes/pearOS* /usr/share/themes/Zorin* "$BUILD_PROFILE/airootfs/usr/share/themes/" 2>/dev/null || true
+cp -a /usr/share/icons/pearOS* /usr/share/icons/Zorin* "$BUILD_PROFILE/airootfs/usr/share/icons/" 2>/dev/null || true
+cp -a /usr/share/backgrounds/* "$BUILD_PROFILE/airootfs/usr/share/backgrounds/" 2>/dev/null || true
+cp -a /usr/share/sounds/* "$BUILD_PROFILE/airootfs/usr/share/sounds/" 2>/dev/null || true
+cp -a /usr/share/zorin-appearance/* "$BUILD_PROFILE/airootfs/usr/share/zorin-appearance/" 2>/dev/null || true
+cp -a /usr/share/zorin-exec-guard/* "$BUILD_PROFILE/airootfs/usr/share/zorin-exec-guard/" 2>/dev/null || true
+cp -a /usr/share/gnome-shell/extensions/* "$BUILD_PROFILE/airootfs/usr/share/gnome-shell/extensions/" 2>/dev/null || true
+cp -a /usr/share/glib-2.0/schemas/*zorin* "$BUILD_PROFILE/airootfs/usr/share/glib-2.0/schemas/" 2>/dev/null || true
+cp -a /usr/bin/zorin* "$BUILD_PROFILE/airootfs/usr/bin/" 2>/dev/null || true
+cp -a /usr/lib/python3.14/site-packages/zorin* "$BUILD_PROFILE/airootfs/usr/lib/python3.14/site-packages/" 2>/dev/null || true
+glib-compile-schemas "$BUILD_PROFILE/airootfs/usr/share/glib-2.0/schemas/" 2>/dev/null || true
 
 echo "[2/3] Building bootable ISO with mkarchiso (zstd compression)..."
 echo "      Output Directory: $OUT_DIR"
 echo "      Work Directory:   $WORK_DIR"
+echo "      Profile Directory: $BUILD_PROFILE"
 
-mkarchiso -v -w "$WORK_DIR" -o "$OUT_DIR" "$PROFILE_DIR"
+mkarchiso -v -w "$WORK_DIR" -o "$OUT_DIR" "$BUILD_PROFILE"
 
 echo ""
 echo "[3/3] Build Complete! Bootable ISO generated:"

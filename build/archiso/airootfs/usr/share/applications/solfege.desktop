@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Solfège
+GenericName=Calculator
+Comment=Apple Squircle Arithmetic Calculator
+Exec=solfege
+Icon=accessories-calculator
+Terminal=false
+Type=Application
+Categories=Utility;Calculator;
+Keywords=calc;math;arithmetic;

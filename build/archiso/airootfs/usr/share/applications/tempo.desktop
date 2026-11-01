@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Tempo
+GenericName=Activity Monitor
+Comment=Real-time CPU, Memory, and Process Monitor with Force Quit
+Exec=tempo
+Icon=utilities-system-monitor
+Terminal=false
+Type=Application
+Categories=System;Monitor;
+Keywords=activity;monitor;taskmgr;process;cpu;ram;

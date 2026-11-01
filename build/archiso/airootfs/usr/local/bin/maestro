@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+exec python3 -c "import sys, os; sys.path.insert(0, '/usr/local/share/toccata/toccata-shell'); sys.path.insert(0, '/usr/local/share/toccata/toccata-ai'); from PyQt6.QtWidgets import QApplication; from maestro_hud import MaestroHUD; app = QApplication(sys.argv); hud = MaestroHUD(None); hud.show(); sys.exit(app.exec())" "$@"

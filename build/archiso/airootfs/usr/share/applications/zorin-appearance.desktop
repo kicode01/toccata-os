@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Zorin Appearance
+GenericName=Desktop Layout & Theme Switcher
+Comment=Change the desktop layout, theme, and visual effects
+Exec=zorin-appearance
+Icon=preferences-desktop-theme
+Terminal=false
+Type=Application
+Categories=Settings;DesktopSettings;GTK;
+Keywords=layout;theme;dock;taskbar;appearance;

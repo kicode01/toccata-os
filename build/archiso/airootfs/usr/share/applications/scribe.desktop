@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Scribe
+GenericName=Text Editor
+Comment=macOS Notes & Markdown Editor
+Exec=scribe %U
+Icon=accessories-text-editor
+Terminal=false
+Type=Application
+Categories=Utility;TextEditor;Development;
+Keywords=text;notes;editor;markdown;

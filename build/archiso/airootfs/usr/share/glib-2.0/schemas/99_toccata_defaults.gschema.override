@@ -4,7 +4,7 @@
 ################################################################################
 
 [org.gnome.shell]
-favorite-apps = ['org.gnome.Nautilus.desktop', 'horizon.desktop', 'org.gnome.Terminal.desktop', 'solfege.desktop', 'scribe.desktop', 'tempo.desktop', 'zorin-appearance.desktop', 'org.gnome.Settings.desktop']
+favorite-apps = ['cadence.desktop', 'horizon.desktop', 'toccata-console.desktop', 'solfege.desktop', 'scribe.desktop', 'tempo.desktop', 'gallery.desktop', 'settings.desktop', 'zorin-appearance.desktop', 'maestro.desktop']
 enabled-extensions = ['zorin-taskbar@zorinos.com', 'zorin-menu@zorinos.com', 'zorin-magic-lamp-effect@zorinos.com', 'zorin-window-move-effect@zorinos.com', 'zorin-tiling-shell@zorinos.com', 'zorin-desktop-icons@zorinos.com', 'zorin-appindicator@zorinos.com']
 
 [org.gnome.desktop.interface]
@@ -43,7 +43,14 @@ friction = 3.2
 spring-k = 2.8
 
 [org.gnome.shell.extensions.zorin-taskbar]
-dock-mode = true
-dock-fixed = false
-multi-monitors = true
-panel-element-positions = '{"0":[{"element":"show-apps-button","visible":true,"position":"stackedTL"},{"element":"activities-button","visible":false,"position":"stackedTL"},{"element":"left-box","visible":true,"position":"stackedTL"},{"element":"taskbar","visible":true,"position":"centerMonitor"},{"element":"center-box","visible":true,"position":"centerMonitor"},{"element":"right-box","visible":true,"position":"stackedBR"},{"element":"dateMenu","visible":true,"position":"stackedBR"},{"element":"systemMenu","visible":true,"position":"stackedBR"}]}'
+multi-monitors = false
+panel-element-positions-monitors-sync = true
+panel-lengths = '{}'
+panel-positions = '{}'
+panel-sizes = '{}'
+stockgs-keep-top-panel = false
+show-favorites = true
+show-running-apps = true
+panel-margin = 4
+global-border-radius = 8
+panel-element-positions = '{"0":[{"element":"showAppsButton","visible":true,"position":"stackedTL"},{"element":"activitiesButton","visible":false,"position":"stackedTL"},{"element":"leftBox","visible":true,"position":"stackedTL"},{"element":"taskbar","visible":true,"position":"centered"},{"element":"centerBox","visible":true,"position":"centered"},{"element":"rightBox","visible":true,"position":"stackedBR"},{"element":"dateMenu","visible":true,"position":"stackedBR"},{"element":"systemMenu","visible":true,"position":"stackedBR"}],"1":[{"element":"showAppsButton","visible":true,"position":"stackedTL"},{"element":"activitiesButton","visible":false,"position":"stackedTL"},{"element":"leftBox","visible":true,"position":"stackedTL"},{"element":"taskbar","visible":true,"position":"centered"},{"element":"centerBox","visible":true,"position":"centered"},{"element":"rightBox","visible":true,"position":"stackedBR"},{"element":"dateMenu","visible":true,"position":"stackedBR"},{"element":"systemMenu","visible":true,"position":"stackedBR"}]}'

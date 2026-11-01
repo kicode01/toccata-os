@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Maestro
+GenericName=AI Assistant
+Comment=On-Device Neural Assistant with Zero Telemetry
+Exec=maestro
+Icon=help-about
+Terminal=false
+Type=Application
+Categories=Utility;ArtificialIntelligence;Core;
+Keywords=assistant;ai;siri;maestro;voice;command;

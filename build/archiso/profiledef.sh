@@ -22,4 +22,12 @@ declare -A file_permissions=(
   ["/usr/local/bin/toccata-installer"]="0:0:755"
   ["/usr/local/bin/toccata-session"]="0:0:755"
   ["/usr/local/bin/toccata-open"]="0:0:755"
+  ["/usr/local/bin/cadence"]="0:0:755"
+  ["/usr/local/bin/toccata-settings"]="0:0:755"
+  ["/usr/local/bin/scribe"]="0:0:755"
+  ["/usr/local/bin/tempo"]="0:0:755"
+  ["/usr/local/bin/solfege"]="0:0:755"
+  ["/usr/local/bin/gallery"]="0:0:755"
+  ["/usr/local/bin/toccata-console"]="0:0:755"
+  ["/usr/local/bin/maestro"]="0:0:755"
 )

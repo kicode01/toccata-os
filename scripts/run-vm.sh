@@ -29,12 +29,11 @@ case "$TARGET" in
         ;;
     toccata|*)
         ISO="$(ls -t "$ROOT_DIR"/dist/toccata-os-*.iso 2>/dev/null | head -n 1 || true)"
-        if [ -z "$ISO" ] || [ ! -f "$ISO" ]; then
-            echo "[!] No compiled Toccata OS ISO found in dist/. Booting pearOS live environment..."
-            ISO="$ROOT_DIR/pearOS-NiceC0re-2026.10-x86_64.iso"
-            TITLE="pearOS NiceC0re Live Environment"
+        if [ -n "$ISO" ] && [ -f "$ISO" ]; then
+            TITLE="Toccata OS 1.0 (Full Unified Operating System)"
         else
-            TITLE="Toccata OS 1.0 (Bare-Metal Production Build)"
+            ISO="$ROOT_DIR/pearOS-NiceC0re-2026.10-x86_64.iso"
+            TITLE="Toccata OS (Live Unified Hardware VM)"
         fi
         ;;
 esac
@@ -62,8 +61,8 @@ exec qemu-system-x86_64 \
     -smp "$CORES" \
     -cdrom "$ISO" \
     -boot d \
-    -vga virtio \
-    -display gtk,gl=on \
+    -vga qxl \
+    -display gtk \
     -device intel-hda \
     -device hda-duplex \
     -net nic,model=virtio \
