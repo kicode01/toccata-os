@@ -326,6 +326,7 @@ class ToccataInstaller(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app.setFont(QFont("Segoe UI, DejaVu Sans, sans-serif", 10))
     installer = ToccataInstaller()
     installer.show()
     sys.exit(app.exec())
