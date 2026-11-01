@@ -22,13 +22,13 @@
   --font-system: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", 'Plus Jakarta Sans', "Segoe UI", Roboto, sans-serif;
   --font-mono: "SF Mono", 'JetBrains Mono', Menlo, Monaco, monospace;
 
-  /* macOS Sequoia / Sonoma Dynamic Topographical Wallpaper */
+  /* Official macOS Sequoia / Sonoma Dynamic Abstract Ribbon Wallpaper */
   --bg-wallpaper: 
-    radial-gradient(circle at 12% 18%, rgba(0, 122, 255, 0.5) 0%, transparent 50%),
-    radial-gradient(circle at 85% 82%, rgba(175, 82, 222, 0.45) 0%, transparent 50%),
-    radial-gradient(circle at 55% 45%, rgba(255, 45, 85, 0.35) 0%, transparent 60%),
-    radial-gradient(circle at 80% 15%, rgba(56, 189, 248, 0.45) 0%, transparent 45%),
-    linear-gradient(135deg, #050814 0%, #0c1228 35%, #181133 70%, #030408 100%);
+    radial-gradient(ellipse 85% 60% at 20% -10%, rgba(255, 159, 10, 0.85) 0%, transparent 60%),
+    radial-gradient(ellipse 65% 65% at 85% 15%, rgba(255, 55, 95, 0.8) 0%, transparent 65%),
+    radial-gradient(ellipse 75% 65% at 10% 80%, rgba(0, 113, 227, 0.85) 0%, transparent 60%),
+    radial-gradient(ellipse 95% 85% at 80% 85%, rgba(175, 82, 222, 0.8) 0%, transparent 70%),
+    linear-gradient(145deg, #070e24 0%, #170d2c 35%, #250b24 70%, #050814 100%);
 
   /* Dark Vibrancy Materials (Clean Slate, Zero Muddy Brown) */
   --glass-bg: rgba(30, 30, 36, 0.72);
@@ -46,10 +46,11 @@
 
 body.light-mode {
   --bg-wallpaper: 
-    radial-gradient(circle at 15% 20%, rgba(147, 197, 253, 0.6) 0%, transparent 50%),
-    radial-gradient(circle at 85% 80%, rgba(233, 213, 255, 0.6) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(254, 205, 211, 0.45) 0%, transparent 60%),
-    linear-gradient(135deg, #eff6ff 0%, #faf5ff 45%, #fff1f2 100%);
+    radial-gradient(ellipse 85% 60% at 15% -5%, rgba(255, 204, 0, 0.75) 0%, transparent 60%),
+    radial-gradient(ellipse 65% 65% at 85% 20%, rgba(255, 105, 135, 0.7) 0%, transparent 65%),
+    radial-gradient(ellipse 75% 65% at 10% 75%, rgba(56, 189, 248, 0.8) 0%, transparent 60%),
+    radial-gradient(ellipse 95% 85% at 80% 85%, rgba(192, 132, 252, 0.7) 0%, transparent 70%),
+    linear-gradient(145deg, #eff4ff 0%, #fdf2f8 35%, #fff7ed 70%, #f1f5f9 100%);
 
   /* Light Vibrancy Materials */
   --glass-bg: rgba(255, 255, 255, 0.75);
@@ -925,10 +926,45 @@ body {
 }
 
 .dock-item .mac-app-icon {
-  width: 50px;
-  height: 50px;
+  width: 52px;
+  height: 52px;
   border-radius: 12px;
   transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mac-dock-svg {
+  width: 52px;
+  height: 52px;
+  display: block;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.32));
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dock-item:hover .mac-dock-svg {
+  transform: translateY(-4px) scale(1.14);
+}
+
+.desktop-disk-svg {
+  width: 56px;
+  height: 56px;
+  display: block;
+  margin-bottom: 4px;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4));
+  transition: transform 0.15s ease;
+}
+
+.desktop-item:hover .desktop-disk-svg {
+  transform: scale(1.05);
+}
+
+.apple-menu-logo {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
+  display: block;
 }
 
 /* Authentic macOS Dock Launch Bounce with 3 Decaying Oscillations */

@@ -16,34 +16,24 @@
     <!-- Top Global Menu Bar -->
     <header id="menu-bar">
       <div class="menu-left">
-        <!-- Toccata Signature Tuning Fork Emblem -->
-        <div class="menu-item logo-item" id="toccata-menu-btn" title="Toccata System Menu" onclick="toggleToccataMenu()">
-          <svg class="toccata-tuning-logo" viewBox="0 0 100 100" fill="none">
-            <path d="M28 20V50C28 62 38 72 50 72C62 72 72 62 72 50V20" stroke="url(#blue-toccata)" stroke-width="8" stroke-linecap="round"/>
-            <path d="M50 72V90" stroke="url(#blue-toccata)" stroke-width="8" stroke-linecap="round"/>
-            <path d="M16 20H84" stroke="url(#blue-toccata)" stroke-width="8" stroke-linecap="round"/>
-            <circle cx="50" cy="46" r="6" fill="#007aff"/>
-            <defs>
-              <linearGradient id="blue-toccata" x1="16" y1="20" x2="84" y2="90" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#38bdf8"/>
-                <stop offset="0.5" stop-color="#007aff"/>
-                <stop offset="1" stop-color="#6366f1"/>
-              </linearGradient>
-            </defs>
+        <!-- Apple Official Emblem -->
+        <div class="menu-item logo-item" id="toccata-menu-btn" title="Apple System Menu" onclick="toggleToccataMenu()">
+          <svg class="apple-menu-logo" viewBox="0 0 170 170">
+            <path fill="currentColor" d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.04-7.58-7.74-11.64-14.1-6.19-9.78-10.97-20.91-14.34-33.39-3.37-12.48-5.06-23.77-5.06-33.87 0-14.56 3.7-26.4 11.09-35.53 7.39-9.13 16.59-13.78 27.6-13.97 4.9.12 10.45 1.48 16.65 4.09 6.2 2.61 10.15 3.96 11.85 4.04 1.49-.08 5.64-1.48 12.46-4.21 6.82-2.73 12.44-4 16.86-3.81 13.59.75 24.34 5.75 32.25 15.01-11.96 7.27-17.84 17.07-17.65 29.4.2 9.69 3.88 17.7 11.05 24.03 7.17 6.33 15.68 9.94 25.53 10.82-2.14 6.75-4.73 13.43-7.76 20.03zM119.22 31.84c0-7.39 2.69-14.41 8.08-21.05 5.39-6.64 12.04-10.79 19.96-12.45.14 1.09.21 2.06.21 2.92 0 7.42-2.79 14.54-8.37 21.36-5.58 6.82-12.28 10.92-20.1 12.31-.14-1.04-.21-2.07-.21-3.09z"/>
           </svg>
         </div>
 
         <!-- Toccata Apple-Style System Dropdown -->
         <div class="toccata-system-dropdown hidden" id="toccata-system-menu">
           <div class="menu-dropdown-item" onclick="openWindow('win-settings'); switchSettingsTab('general'); closeToccataMenu();">
-            <span>About Toccata OS</span>
+            <span>About This Mac</span>
           </div>
           <div class="menu-dropdown-separator"></div>
           <div class="menu-dropdown-item" onclick="openWindow('win-settings'); closeToccataMenu();">
             <span>System Settings...</span>
           </div>
           <div class="menu-dropdown-item" onclick="openWindow('win-installer'); closeToccataMenu();">
-            <span>App Store &amp; Gallery...</span>
+            <span>App Store...</span>
           </div>
           <div class="menu-dropdown-separator"></div>
           <div class="menu-dropdown-item" onclick="openWindow('win-tempo'); promptForceQuit(); closeToccataMenu();">
@@ -55,14 +45,14 @@
             <span>Sleep</span>
           </div>
           <div class="menu-dropdown-item" onclick="location.reload();">
-            <span>Restart Desktop...</span>
+            <span>Restart...</span>
           </div>
           <div class="menu-dropdown-item" onclick="promptShutdown(); closeToccataMenu();" style="color: #ff453a;">
-            <span>Shut Down / Exit to Windows...</span>
+            <span>Shut Down...</span>
           </div>
         </div>
 
-        <div class="menu-item active-app-name" id="active-app-title">Cadence</div>
+        <div class="menu-item active-app-name" id="active-app-title">Finder</div>
         <div class="menu-item">File</div>
         <div class="menu-item">Edit</div>
         <div class="menu-item">View</div>
@@ -110,10 +100,18 @@
           </svg>
         </div>
 
-        <!-- Maestro Copilot Badge -->
-        <div class="menu-item maestro-badge" onclick="playHarmonicChime([523.25, 659.25, 783.99]); triggerNotification('Maestro AI ready to assist')" title="Maestro Copilot">
-          <div class="maestro-spark"></div>
-          <span>Maestro</span>
+        <!-- Apple Intelligence Siri Orb -->
+        <div class="menu-item status-icon-item" onclick="playHarmonicChime([523.25, 659.25, 783.99]); triggerNotification('Apple Intelligence / Maestro Active')" title="Apple Intelligence">
+          <svg viewBox="0 0 24 24" width="16" height="16">
+            <defs>
+              <linearGradient id="siri-orb" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#ff2d55"/>
+                <stop offset="50%" stop-color="#af52de"/>
+                <stop offset="100%" stop-color="#007aff"/>
+              </linearGradient>
+            </defs>
+            <circle cx="12" cy="12" r="7.5" fill="url(#siri-orb)"/>
+          </svg>
         </div>
 
         <div class="menu-item clock" id="clock-display">Sun Nov 1 1:50 AM</div>
@@ -123,19 +121,24 @@
     <!-- Desktop Mounted Volumes (Top-Right) -->
     <div id="desktop-icons">
       <div class="desktop-item" ondblclick="openWindow('win-cadence')">
-        <div class="toccata-disk-art">
-          <div class="disk-plate"></div>
-          <div class="disk-notch"></div>
-        </div>
-        <span class="desktop-label">Toccata Core</span>
-      </div>
-
-      <div class="desktop-item" ondblclick="playHarmonicChime([440, 554.37, 659.25]); triggerNotification('Opus Vault: 14 snapshots cached')">
-        <div class="toccata-disk-art">
-          <div class="disk-plate vault"></div>
-          <div class="disk-notch"></div>
-        </div>
-        <span class="desktop-label">Opus Vault</span>
+        <svg viewBox="0 0 100 100" class="desktop-disk-svg">
+          <defs>
+            <linearGradient id="mac-hd-metal" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#f2f2f7"/>
+              <stop offset="40%" stop-color="#d1d1d6"/>
+              <stop offset="100%" stop-color="#8e8e93"/>
+            </linearGradient>
+            <filter id="hd-shadow" x="-20%" y="-20%" width="140%" height="150%">
+              <feDropShadow dx="0" dy="5" stdDeviation="4" flood-opacity="0.45"/>
+            </filter>
+          </defs>
+          <rect x="10" y="22" width="80" height="56" rx="8" fill="url(#mac-hd-metal)" filter="url(#hd-shadow)"/>
+          <rect x="16" y="30" width="68" height="40" rx="4" fill="#1c1c1e"/>
+          <circle cx="26" cy="50" r="3" fill="#007aff"/>
+          <line x1="38" y1="46" x2="72" y2="46" stroke="#636366" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="38" y1="54" x2="64" y2="54" stroke="#636366" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <span class="desktop-label">Macintosh HD</span>
       </div>
     </div>
 
@@ -1718,118 +1721,288 @@ Type 'help' to view available commands.</div>
          ==================================================================== -->
     <footer id="dock-container">
       <div id="dock" class="glass-panel">
-        <!-- Cadence -->
-        <div class="dock-item" data-app="Cadence" onclick="playHarmonicChime([440]); openWindow('win-cadence')">
-          <div class="mac-app-icon icon-cadence">
-            <div class="cadence-wave"></div>
-          </div>
+        <!-- 1. Finder (Cadence) -->
+        <div class="dock-item" data-app="Finder" onclick="playHarmonicChime([440]); openWindow('win-cadence')">
+          <svg viewBox="0 0 100 100" class="mac-dock-svg">
+            <defs>
+              <linearGradient id="finder-left" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#4fc3f7"/>
+                <stop offset="100%" stop-color="#0288d1"/>
+              </linearGradient>
+              <linearGradient id="finder-right" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#1e88e5"/>
+                <stop offset="100%" stop-color="#0d47a1"/>
+              </linearGradient>
+            </defs>
+            <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="url(#finder-left)"/>
+            <path d="M50 4 H75 C86.6 4 96 13.4 96 25 V75 C96 86.6 86.6 96 75 96 H50 Z" fill="url(#finder-right)"/>
+            <path d="M50 4 V50 Q50 62 42 62 H38 Q34 62 34 66 V68" stroke="#1d1d1f" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+            <circle cx="32" cy="38" r="4.5" fill="#1d1d1f"/>
+            <circle cx="68" cy="38" r="4.5" fill="#1d1d1f"/>
+            <path d="M26 66 Q50 92 74 66" stroke="#1d1d1f" stroke-width="5" stroke-linecap="round" fill="none"/>
+          </svg>
           <div class="dock-dot" id="dot-cadence"></div>
-          <span class="dock-tooltip">Cadence</span>
+          <span class="dock-tooltip">Finder</span>
         </div>
 
-        <!-- Horizon Browser -->
-        <div class="dock-item" data-app="Horizon" onclick="playHarmonicChime([587.33]); openWindow('win-horizon')">
-          <div class="mac-app-icon icon-horizon">
-            <div class="compass-dial">
-              <div class="compass-needle"></div>
-            </div>
-          </div>
+        <!-- 2. Launchpad -->
+        <div class="dock-item" data-app="Launchpad" onclick="playHarmonicChime([523.25]); toggleSpotlight();">
+          <svg viewBox="0 0 100 100" class="mac-dock-svg">
+            <defs>
+              <linearGradient id="lp-bg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#8e8e93"/>
+                <stop offset="100%" stop-color="#3a3a3c"/>
+              </linearGradient>
+            </defs>
+            <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="url(#lp-bg)"/>
+            <!-- 3x3 App Tiles -->
+            <rect x="22" y="22" width="14" height="14" rx="4" fill="#ff3b30"/>
+            <rect x="43" y="22" width="14" height="14" rx="4" fill="#ff9500"/>
+            <rect x="64" y="22" width="14" height="14" rx="4" fill="#ffcc00"/>
+            <rect x="22" y="43" width="14" height="14" rx="4" fill="#34c759"/>
+            <rect x="43" y="43" width="14" height="14" rx="4" fill="#007aff"/>
+            <rect x="64" y="43" width="14" height="14" rx="4" fill="#5856d6"/>
+            <rect x="22" y="64" width="14" height="14" rx="4" fill="#af52de"/>
+            <rect x="43" y="64" width="14" height="14" rx="4" fill="#ff2d55"/>
+            <rect x="64" y="64" width="14" height="14" rx="4" fill="#30d158"/>
+          </svg>
+          <span class="dock-tooltip">Launchpad</span>
+        </div>
+
+        <!-- 3. Safari (Horizon) -->
+        <div class="dock-item" data-app="Safari" onclick="playHarmonicChime([587.33]); openWindow('win-horizon')">
+          <svg viewBox="0 0 100 100" class="mac-dock-svg">
+            <defs>
+              <linearGradient id="safari-dial" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="100%" stop-color="#dfe3e8"/>
+              </linearGradient>
+              <linearGradient id="safari-ocean" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#00c6ff"/>
+                <stop offset="100%" stop-color="#0072ff"/>
+              </linearGradient>
+            </defs>
+            <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="url(#safari-dial)"/>
+            <circle cx="50" cy="50" r="40" fill="url(#safari-ocean)"/>
+            <circle cx="50" cy="50" r="36" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" stroke-dasharray="1 6.5"/>
+            <g transform="rotate(-45 50 50)">
+              <polygon points="50,14 56,50 44,50" fill="#ff3b30"/>
+              <polygon points="50,86 56,50 44,50" fill="#ffffff"/>
+              <circle cx="50" cy="50" r="4.5" fill="#ffffff" stroke="#c7c7cc" stroke-width="1"/>
+            </g>
+          </svg>
           <div class="dock-dot hidden" id="dot-horizon"></div>
-          <span class="dock-tooltip">Horizon</span>
+          <span class="dock-tooltip">Safari</span>
         </div>
 
-        <!-- Scribe -->
-        <div class="dock-item" data-app="Scribe" onclick="playHarmonicChime([554.37]); openWindow('win-scribe')">
-          <div class="mac-app-icon icon-scribe">
-            <div class="scribe-lines"><span></span><span></span></div>
-            <div class="scribe-pen"></div>
-          </div>
-          <div class="dock-dot hidden" id="dot-scribe"></div>
-          <span class="dock-tooltip">Scribe</span>
+        <!-- 4. Messages -->
+        <div class="dock-item" data-app="Messages" onclick="playHarmonicChime([739.99]); triggerNotification('Messages: No unread chats')">
+          <svg viewBox="0 0 100 100" class="mac-dock-svg">
+            <defs>
+              <linearGradient id="msg-bg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#34c759"/>
+                <stop offset="100%" stop-color="#248a3d"/>
+              </linearGradient>
+            </defs>
+            <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="url(#msg-bg)"/>
+            <path d="M22 46 C22 32 35 22 50 22 C65 22 78 32 78 46 C78 60 65 70 50 70 C44 70 38 68 34 65 L22 72 L25 61 C23 57 22 51 22 46 Z" fill="#ffffff"/>
+          </svg>
+          <span class="dock-tooltip">Messages</span>
         </div>
 
-        <!-- Sonata -->
-        <div class="dock-item" data-app="Sonata" onclick="playHarmonicChime([523.25, 659.25, 783.99]); openWindow('win-sonata')">
-          <div class="mac-app-icon" style="background: linear-gradient(135deg, #6366f1 0%, #af52de 100%);">
-            <div class="vinyl-center-art" style="width: 28px; height: 28px; font-size: 13px;">🎼</div>
-          </div>
+        <!-- 5. Mail -->
+        <div class="dock-item" data-app="Mail" onclick="playHarmonicChime([830.61]); triggerNotification('Mail: All inboxes updated')">
+          <svg viewBox="0 0 100 100" class="mac-dock-svg">
+            <defs>
+              <linearGradient id="mail-bg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#29b6f6"/>
+                <stop offset="100%" stop-color="#0288d1"/>
+              </linearGradient>
+            </defs>
+            <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="url(#mail-bg)"/>
+            <g transform="translate(18, 28) rotate(-6)">
+              <rect x="0" y="0" width="64" height="44" rx="4" fill="#ffffff"/>
+              <path d="M0 0 L32 26 L64 0" stroke="#0288d1" stroke-width="3" fill="none" stroke-linejoin="round"/>
+              <circle cx="32" cy="22" r="5" fill="#ff3b30"/>
+            </g>
+          </svg>
+          <span class="dock-tooltip">Mail</span>
+        </div>
+
+        <!-- 6. Music (Sonata) -->
+        <div class="dock-item" data-app="Music" onclick="playHarmonicChime([523.25, 659.25, 783.99]); openWindow('win-sonata')">
+          <svg viewBox="0 0 100 100" class="mac-dock-svg">
+            <defs>
+              <linearGradient id="music-bg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#fc3c44"/>
+                <stop offset="100%" stop-color="#f92672"/>
+              </linearGradient>
+            </defs>
+            <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="url(#music-bg)"/>
+            <path d="M40 68 A8 8 0 1 1 32 60 L32 30 L66 22 L66 58 A8 8 0 1 1 58 50 L58 32 L40 37 Z" fill="#ffffff"/>
+          </svg>
           <div class="dock-dot hidden" id="dot-sonata"></div>
-          <span class="dock-tooltip">Sonata</span>
+          <span class="dock-tooltip">Music</span>
         </div>
 
-        <!-- Tempo -->
-        <div class="dock-item" data-app="Tempo" onclick="playHarmonicChime([659.25]); openWindow('win-tempo')">
-          <div class="mac-app-icon icon-tempo">
-            <div class="tempo-pulse"></div>
-          </div>
+        <!-- 7. Notes (Scribe) -->
+        <div class="dock-item" data-app="Notes" onclick="playHarmonicChime([554.37]); openWindow('win-scribe')">
+          <svg viewBox="0 0 100 100" class="mac-dock-svg">
+            <defs>
+              <linearGradient id="notes-bg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#fff9c4"/>
+                <stop offset="100%" stop-color="#fff176"/>
+              </linearGradient>
+            </defs>
+            <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="url(#notes-bg)"/>
+            <path d="M4 4 H96 V22 C96 22 96 24 94 24 H6 C4 24 4 22 4 22 Z" fill="#d4a373"/>
+            <line x1="16" y1="40" x2="84" y2="40" stroke="#90caf9" stroke-width="2"/>
+            <line x1="16" y1="54" x2="84" y2="54" stroke="#90caf9" stroke-width="2"/>
+            <line x1="16" y1="68" x2="84" y2="68" stroke="#90caf9" stroke-width="2"/>
+            <line x1="16" y1="82" x2="65" y2="82" stroke="#90caf9" stroke-width="2"/>
+            <g transform="translate(62, 38) rotate(35)">
+              <rect x="0" y="0" width="8" height="42" fill="#ffb74d"/>
+              <polygon points="0,42 4,50 8,42" fill="#f5ecd7"/>
+              <polygon points="2,46 4,50 6,46" fill="#212121"/>
+              <rect x="0" y="-6" width="8" height="6" fill="#e57373"/>
+            </g>
+          </svg>
+          <div class="dock-dot hidden" id="dot-scribe"></div>
+          <span class="dock-tooltip">Notes</span>
+        </div>
+
+        <!-- 8. Activity Monitor (Tempo) -->
+        <div class="dock-item" data-app="Activity Monitor" onclick="playHarmonicChime([659.25]); openWindow('win-tempo')">
+          <svg viewBox="0 0 100 100" class="mac-dock-svg">
+            <defs>
+              <linearGradient id="tempo-bg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#242426"/>
+                <stop offset="100%" stop-color="#0f0f11"/>
+              </linearGradient>
+            </defs>
+            <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="url(#tempo-bg)"/>
+            <line x1="12" y1="50" x2="88" y2="50" stroke="#333336" stroke-width="1"/>
+            <line x1="50" y1="12" x2="50" y2="88" stroke="#333336" stroke-width="1"/>
+            <path d="M12 50 L34 50 L40 32 L46 68 L52 22 L58 74 L64 45 L70 50 L88 50" stroke="#30d158" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
           <div class="dock-dot hidden" id="dot-tempo"></div>
-          <span class="dock-tooltip">Tempo</span>
+          <span class="dock-tooltip">Activity Monitor</span>
         </div>
 
-        <!-- Console -->
-        <div class="dock-item" data-app="Console" onclick="playHarmonicChime([493.88]); openWindow('win-console')">
-          <div class="mac-app-icon" style="background: linear-gradient(135deg, #18181b 0%, #27272a 100%);">
-            <div style="color: #34c759; font-family: monospace; font-weight: 900; font-size: 15px;">&gt;_</div>
-          </div>
-          <div class="dock-dot hidden" id="dot-console"></div>
-          <span class="dock-tooltip">Console</span>
-        </div>
-
-        <!-- Calculator -->
+        <!-- 9. Calculator (Solfege) -->
         <div class="dock-item" data-app="Calculator" onclick="playHarmonicChime([659.25]); openWindow('win-calc')">
-          <div class="mac-app-icon" style="background: linear-gradient(135deg, #ff9500 0%, #ff5e3a 100%);">
-            <div style="color: white; font-size: 18px; font-weight: 700;">&plusmn;</div>
-          </div>
+          <svg viewBox="0 0 100 100" class="mac-dock-svg">
+            <defs>
+              <linearGradient id="calc-bg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#3a3a3c"/>
+                <stop offset="100%" stop-color="#1c1c1e"/>
+              </linearGradient>
+            </defs>
+            <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="url(#calc-bg)"/>
+            <circle cx="28" cy="28" r="9" fill="#505054"/>
+            <circle cx="50" cy="28" r="9" fill="#505054"/>
+            <circle cx="72" cy="28" r="9" fill="#ff9f0a"/>
+            <circle cx="28" cy="50" r="9" fill="#636366"/>
+            <circle cx="50" cy="50" r="9" fill="#636366"/>
+            <circle cx="72" cy="50" r="9" fill="#ff9f0a"/>
+            <circle cx="28" cy="72" r="9" fill="#636366"/>
+            <circle cx="50" cy="72" r="9" fill="#636366"/>
+            <circle cx="72" cy="72" r="9" fill="#ff9f0a"/>
+            <text x="72" y="32" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">÷</text>
+            <text x="72" y="54" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">×</text>
+            <text x="72" y="76" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">=</text>
+          </svg>
           <div class="dock-dot hidden" id="dot-calc"></div>
           <span class="dock-tooltip">Calculator</span>
         </div>
 
-        <!-- Prism -->
-        <div class="dock-item" data-app="Prism" onclick="playHarmonicChime([739.99]); openWindow('win-prism')">
-          <div class="mac-app-icon" style="background: linear-gradient(135deg, #38bdf8 0%, #af52de 100%);">
-            <div style="font-size: 15px;">💎</div>
-          </div>
-          <div class="dock-dot hidden" id="dot-prism"></div>
-          <span class="dock-tooltip">Prism</span>
+        <!-- 10. Terminal (Console) -->
+        <div class="dock-item" data-app="Terminal" onclick="playHarmonicChime([493.88]); openWindow('win-console')">
+          <svg viewBox="0 0 100 100" class="mac-dock-svg">
+            <defs>
+              <linearGradient id="term-bg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#2c2c2e"/>
+                <stop offset="100%" stop-color="#121214"/>
+              </linearGradient>
+            </defs>
+            <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="url(#term-bg)"/>
+            <rect x="4" y="4" width="92" height="18" rx="21" ry="21" fill="#3a3a3c"/>
+            <rect x="4" y="16" width="92" height="6" fill="#3a3a3c"/>
+            <circle cx="16" cy="13" r="3" fill="#ff5f56"/>
+            <circle cx="24" cy="13" r="3" fill="#ffbd2e"/>
+            <circle cx="32" cy="13" r="3" fill="#27c93f"/>
+            <text x="18" y="50" font-family="'SF Mono', Menlo, monospace" font-size="20" font-weight="bold" fill="#34c759">&gt;_</text>
+            <rect x="52" y="35" width="9" height="16" fill="rgba(255,255,255,0.75)"/>
+          </svg>
+          <div class="dock-dot hidden" id="dot-console"></div>
+          <span class="dock-tooltip">Terminal</span>
         </div>
 
-        <!-- Chronicle -->
-        <div class="dock-item" data-app="Chronicle" onclick="playHarmonicChime([830.61]); openWindow('win-chronicle')">
-          <div class="mac-app-icon" style="background: linear-gradient(135deg, #ff2d55 0%, #ff375f 100%);">
-            <div style="color: white; font-weight: 900; font-size: 13px;">NOV</div>
-          </div>
-          <div class="dock-dot hidden" id="dot-chronicle"></div>
-          <span class="dock-tooltip">Chronicle</span>
-        </div>
-
-        <!-- Gallery -->
-        <div class="dock-item" data-app="Gallery" onclick="playHarmonicChime([880]); openWindow('win-installer')">
-          <div class="mac-app-icon icon-gallery">
-            <div class="gallery-prism"></div>
-          </div>
+        <!-- 11. App Store (Gallery) -->
+        <div class="dock-item" data-app="App Store" onclick="playHarmonicChime([880]); openWindow('win-installer')">
+          <svg viewBox="0 0 100 100" class="mac-dock-svg">
+            <defs>
+              <linearGradient id="store-bg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#007aff"/>
+                <stop offset="100%" stop-color="#0051d5"/>
+              </linearGradient>
+            </defs>
+            <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="url(#store-bg)"/>
+            <rect x="46" y="14" width="8" height="72" rx="3" fill="#ffffff" transform="rotate(-30 50 50)"/>
+            <rect x="46" y="14" width="8" height="72" rx="3" fill="#ffffff" transform="rotate(30 50 50)"/>
+            <rect x="22" y="56" width="56" height="8" rx="3" fill="#ffffff"/>
+          </svg>
           <div class="dock-dot hidden" id="dot-installer"></div>
-          <span class="dock-tooltip">Gallery</span>
+          <span class="dock-tooltip">App Store</span>
         </div>
 
-        <!-- System Settings -->
+        <!-- 12. System Settings -->
         <div class="dock-item" data-app="System Settings" onclick="playHarmonicChime([783.99]); openWindow('win-settings')">
-          <div class="mac-app-icon icon-sonata">
-            <div class="gear-outer">
-              <div class="gear-center"></div>
-            </div>
-          </div>
+          <svg viewBox="0 0 100 100" class="mac-dock-svg">
+            <defs>
+              <radialGradient id="gear-metal" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#f2f2f7"/>
+                <stop offset="65%" stop-color="#8e8e93"/>
+                <stop offset="100%" stop-color="#48484a"/>
+              </radialGradient>
+            </defs>
+            <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="#636366"/>
+            <g fill="url(#gear-metal)">
+              <rect x="44" y="8" width="12" height="84" rx="3"/>
+              <rect x="44" y="8" width="12" height="84" rx="3" transform="rotate(30 50 50)"/>
+              <rect x="44" y="8" width="12" height="84" rx="3" transform="rotate(60 50 50)"/>
+              <rect x="44" y="8" width="12" height="84" rx="3" transform="rotate(90 50 50)"/>
+              <rect x="44" y="8" width="12" height="84" rx="3" transform="rotate(120 50 50)"/>
+              <rect x="44" y="8" width="12" height="84" rx="3" transform="rotate(150 50 50)"/>
+            </g>
+            <circle cx="50" cy="50" r="26" fill="#3a3a3c"/>
+            <circle cx="50" cy="50" r="15" fill="#aeaeb2"/>
+            <circle cx="50" cy="50" r="8" fill="#1c1c1e"/>
+          </svg>
           <div class="dock-dot hidden" id="dot-settings"></div>
           <span class="dock-tooltip">System Settings</span>
         </div>
 
         <div class="dock-divider"></div>
 
-        <!-- Dampener / Trash -->
+        <!-- 13. Trash -->
         <div class="dock-item" data-app="Trash" onclick="playHarmonicChime([220]); triggerNotification('Trash is empty')">
-          <div class="mac-app-icon icon-dampener">
-            <div class="trash-rim"></div>
-            <div class="trash-mesh"></div>
-          </div>
+          <svg viewBox="0 0 100 100" class="mac-dock-svg">
+            <defs>
+              <linearGradient id="trash-metal" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#c7c7cc"/>
+                <stop offset="50%" stop-color="#f2f2f7"/>
+                <stop offset="100%" stop-color="#8e8e93"/>
+              </linearGradient>
+            </defs>
+            <ellipse cx="50" cy="26" rx="34" ry="7" fill="url(#trash-metal)"/>
+            <path d="M16 26 L22 86 C22 90 35 94 50 94 C65 94 78 90 78 86 L84 26" fill="url(#trash-metal)" opacity="0.85"/>
+            <ellipse cx="50" cy="86" rx="28" ry="6" fill="#aeaeb2"/>
+            <line x1="30" y1="30" x2="34" y2="86" stroke="#636366" stroke-width="2"/>
+            <line x1="43" y1="32" x2="44" y2="87" stroke="#636366" stroke-width="2"/>
+            <line x1="57" y1="32" x2="56" y2="87" stroke="#636366" stroke-width="2"/>
+            <line x1="70" y1="30" x2="66" y2="86" stroke="#636366" stroke-width="2"/>
+          </svg>
           <span class="dock-tooltip">Trash</span>
         </div>
       </div>

@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
 """
 Toccata OS - Cutefish & macOS Sequoia Native Qt6 Wayland Desktop Shell
-Part of Step 2: Native Wayland Shell with Frosted Top Bar, Floating Dock,
-Control Center, Spotlight Search, and Zorin Adaptive Layouts.
-Renders directly via Direct3D 12 WSLg on Windows 11.
+Engineered to strict Apple Human Interface Guidelines (HIG) and Apple Design Resources:
+Authentic continuous squircles, 12px window geometry, vector iconography, zero emojis,
+and frosted glass vibrancy rendering via Direct3D 12 WSLg on Windows 11.
 """
 
 import sys
 import os
 import subprocess
-from PyQt6.QtCore import Qt, QPoint, QSize, QTimer, QTime, pyqtSlot
+from datetime import datetime
+from PyQt6.QtCore import Qt, QPoint, QPointF, QRectF, QSize, QTimer, QTime, QDateTime, pyqtSlot
 from PyQt6.QtGui import (
-    QColor, QFont, QPainter, QBrush, QPen, QLinearGradient, QAction, QKeySequence, QShortcut
+    QColor, QFont, QPainter, QBrush, QPen, QLinearGradient, QRadialGradient,
+    QPainterPath, QAction, QKeySequence, QShortcut
 )
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QHBoxLayout, QVBoxLayout,
@@ -36,12 +38,12 @@ from apps.tempo import TempoActivityMonitor
 from apps.gallery import GalleryAppStore
 
 
-class VectorLogoButton(QWidget):
-    """Bespoke anti-aliased vector emblem for the top bar (Zero Emojis)."""
+class AppleMenuLogoButton(QWidget):
+    """Authentic Apple monochrome vector glyph for the top menu bar."""
     def __init__(self, on_click_callback, parent=None):
         super().__init__(parent)
         self.on_click_callback = on_click_callback
-        self.setFixedSize(26, 26)
+        self.setFixedSize(28, 26)
         self.setCursor(Qt.CursorShape.PointingHandCursor)
         self.is_hovered = False
 
@@ -63,25 +65,395 @@ class VectorLogoButton(QWidget):
         w, h = self.width(), self.height()
 
         if self.is_hovered:
-            p.setBrush(QBrush(QColor(255, 255, 255, 35)))
+            p.setBrush(QBrush(QColor(255, 255, 255, 30)))
             p.setPen(Qt.PenStyle.NoPen)
-            p.drawRoundedRect(0, 0, w, h, 6, 6)
+            p.drawRoundedRect(QRectF(1, 1, w - 2, h - 2), 5, 5)
 
-        # Draw Apple squircle with vibrant blue gradient
-        grad = QLinearGradient(2, 2, w - 4, h - 4)
-        grad.setColorAt(0, QColor(0, 122, 255))
-        grad.setColorAt(1, QColor(88, 86, 214))
-        p.setBrush(QBrush(grad))
-        p.setPen(QPen(QColor(255, 255, 255, 60), 1.0))
-        p.drawRoundedRect(2, 2, w - 4, h - 4, 6, 6)
-
-        # Elegant audio waveform / tuning fork motif
-        p.setPen(QPen(QColor(255, 255, 255), 1.8, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
+        # Draw Apple Logo Path
+        p.setBrush(QBrush(QColor(255, 255, 255, 230)))
+        p.setPen(Qt.PenStyle.NoPen)
         cx, cy = w / 2, h / 2
-        bars = [-6, -3, 0, 3, 6]
-        heights = [5, 9, 12, 9, 5]
-        for dx, bh in zip(bars, heights):
-            p.drawLine(QPoint(int(cx + dx), int(cy - bh / 2)), QPoint(int(cx + dx), int(cy + bh / 2)))
+
+        # Silhouette Apple Body
+        path = QPainterPath()
+        path.moveTo(cx, cy - 6)
+        path.cubicTo(cx + 4, cy - 7, cx + 7, cy - 4, cx + 7, cy)
+        path.cubicTo(cx + 7, cy + 5, cx + 4, cy + 8, cx, cy + 8)
+        path.cubicTo(cx - 4, cy + 8, cx - 7, cy + 5, cx - 7, cy)
+        path.cubicTo(cx - 7, cy - 4, cx - 4, cy - 7, cx, cy - 6)
+        p.drawPath(path)
+
+        # Leaf
+        leaf = QPainterPath()
+        leaf.moveTo(cx + 1, cy - 7)
+        leaf.quadTo(cx + 4, cy - 10, cx + 5, cy - 8)
+        leaf.quadTo(cx + 2, cy - 6, cx + 1, cy - 7)
+        p.drawPath(leaf)
+
+
+class TopBarStatusVector(QWidget):
+    """Vector icon renderer for Menubar Status Items (Battery, Wi-Fi, Spotlight, Control Center)."""
+    def __init__(self, icon_type="spotlight", on_click=None, tooltip="", parent=None):
+        super().__init__(parent)
+        self.icon_type = icon_type
+        self.on_click = on_click
+        self.setToolTip(tooltip)
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.is_hovered = False
+
+        if icon_type == "battery":
+            self.setFixedSize(62, 24)
+        else:
+            self.setFixedSize(26, 24)
+
+    def enterEvent(self, event):
+        self.is_hovered = True
+        self.update()
+
+    def leaveEvent(self, event):
+        self.is_hovered = False
+        self.update()
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.MouseButton.LeftButton and self.on_click:
+            self.on_click()
+
+    def paintEvent(self, event):
+        p = QPainter(self)
+        p.setRenderHint(QPainter.RenderHint.Antialiasing)
+        w, h = self.width(), self.height()
+
+        if self.is_hovered and self.on_click:
+            p.setBrush(QBrush(QColor(255, 255, 255, 25)))
+            p.setPen(Qt.PenStyle.NoPen)
+            p.drawRoundedRect(QRectF(1, 1, w - 2, h - 2), 4, 4)
+
+        if self.icon_type == "battery":
+            # "100%" text + horizontal battery pill
+            p.setFont(QFont("Inter", 9))
+            p.setPen(QColor(255, 255, 255, 220))
+            p.drawText(QRectF(2, 4, 30, 16), Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignRight, "100%")
+
+            # Battery outline
+            bx, by, bw, bh = 36, 6, 20, 11
+            p.setPen(QPen(QColor(255, 255, 255, 180), 1.2))
+            p.setBrush(Qt.BrushStyle.NoBrush)
+            p.drawRoundedRect(QRectF(bx, by, bw, bh), 2.5, 2.5)
+
+            # Battery tip
+            p.setPen(Qt.PenStyle.NoPen)
+            p.setBrush(QBrush(QColor(255, 255, 255, 180)))
+            p.drawRoundedRect(QRectF(bx + bw + 1, by + 3, 1.5, 5), 0.5, 0.5)
+
+            # Battery Green Charge Fill
+            p.setBrush(QBrush(QColor(52, 199, 89)))
+            p.drawRoundedRect(QRectF(bx + 2, by + 2, bw - 4, bh - 4), 1.5, 1.5)
+
+        elif self.icon_type == "wifi":
+            cx, cy = w / 2, h / 2 + 3
+            p.setPen(QPen(QColor(255, 255, 255, 220), 1.4, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
+            p.drawArc(QRectF(cx - 7, cy - 8, 14, 14), 45 * 16, 90 * 16)
+            p.drawArc(QRectF(cx - 4.5, cy - 5, 9, 9), 45 * 16, 90 * 16)
+            p.setBrush(QBrush(QColor(255, 255, 255, 230)))
+            p.setPen(Qt.PenStyle.NoPen)
+            p.drawEllipse(QPointF(cx, cy + 1), 1.4, 1.4)
+
+        elif self.icon_type == "spotlight":
+            cx, cy = w / 2 - 1, h / 2 - 1
+            p.setPen(QPen(QColor(255, 255, 255, 220), 1.5, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
+            p.setBrush(Qt.BrushStyle.NoBrush)
+            p.drawEllipse(QPointF(cx, cy), 4.5, 4.5)
+            p.drawLine(QPointF(cx + 3.2, cy + 3.2), QPointF(cx + 7.5, cy + 7.5))
+
+        elif self.icon_type == "control_center":
+            # Two horizontal capsule sliders
+            p.setPen(QPen(QColor(255, 255, 255, 200), 1.2))
+            p.setBrush(Qt.BrushStyle.NoBrush)
+            # Top slider
+            p.drawRoundedRect(QRectF(4, 5, 18, 6), 3, 3)
+            p.setBrush(QBrush(QColor(255, 255, 255, 230)))
+            p.drawEllipse(QRectF(7, 6, 4, 4))
+            # Bottom slider
+            p.setBrush(Qt.BrushStyle.NoBrush)
+            p.drawRoundedRect(QRectF(4, 13, 18, 6), 3, 3)
+            p.setBrush(QBrush(QColor(255, 255, 255, 230)))
+            p.drawEllipse(QRectF(15, 14, 4, 4))
+
+
+class AppleDockIcon(QWidget):
+    """Authentic Apple macOS continuous squircle dock icon (Zero Emojis)."""
+    def __init__(self, icon_id, title, on_click, parent=None):
+        super().__init__(parent)
+        self.icon_id = icon_id
+        self.title = title
+        self.on_click = on_click
+        self.setFixedSize(54, 58)
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.setToolTip(title)
+        self.is_hovered = False
+        self.is_running = True
+
+    def enterEvent(self, event):
+        self.is_hovered = True
+        self.update()
+
+    def leaveEvent(self, event):
+        self.is_hovered = False
+        self.update()
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.MouseButton.LeftButton:
+            self.on_click()
+
+    def paintEvent(self, event):
+        p = QPainter(self)
+        p.setRenderHint(QPainter.RenderHint.Antialiasing)
+        p.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
+        w = 48
+        h = 48
+        x = 3
+        y = 0 if self.is_hovered else 4  # 4px lift on hover
+
+        # Base Squircle geometry (approx 22% continuous curvature)
+        squircle_rect = QRectF(x, y, w, h)
+        radius = 11.0
+
+        if self.icon_id == "finder":
+            # Dual-tone smiling face
+            # Left Sky Blue
+            grad_l = QLinearGradient(x, y, x, y + h)
+            grad_l.setColorAt(0, QColor(79, 195, 247))
+            grad_l.setColorAt(1, QColor(2, 136, 209))
+            p.setBrush(QBrush(grad_l))
+            p.setPen(QPen(QColor(255, 255, 255, 50), 1.0))
+            p.drawRoundedRect(squircle_rect, radius, radius)
+
+            # Right Royal Blue split
+            p.setClipRect(QRectF(x + w / 2, y, w / 2, h))
+            grad_r = QLinearGradient(x, y, x, y + h)
+            grad_r.setColorAt(0, QColor(30, 136, 229))
+            grad_r.setColorAt(1, QColor(13, 71, 161))
+            p.setBrush(QBrush(grad_r))
+            p.drawRoundedRect(squircle_rect, radius, radius)
+            p.setClipping(False)
+
+            # Face lines (center dividing nose + smile)
+            p.setPen(QPen(QColor(29, 29, 31), 2.2, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
+            cx = x + w / 2
+            p.drawLine(QPointF(cx, y + 2), QPointF(cx, y + h * 0.52))
+            p.drawLine(QPointF(cx, y + h * 0.52), QPointF(cx - 6, y + h * 0.58))
+
+            # Smiling Eyes
+            p.setBrush(QBrush(QColor(29, 29, 31)))
+            p.setPen(Qt.PenStyle.NoPen)
+            p.drawEllipse(QPointF(x + 15, y + 19), 2.5, 2.5)
+            p.drawEllipse(QPointF(x + 33, y + 19), 2.5, 2.5)
+
+            # Curved Smiling Mouth
+            p.setPen(QPen(QColor(29, 29, 31), 2.4, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
+            p.setBrush(Qt.BrushStyle.NoBrush)
+            p.drawArc(QRectF(x + 12, y + 24, 24, 14), 210 * 16, 120 * 16)
+
+        elif self.icon_id == "settings":
+            # Metallic Gear Wheel
+            p.setBrush(QBrush(QColor(99, 99, 102)))
+            p.setPen(QPen(QColor(255, 255, 255, 40), 1.0))
+            p.drawRoundedRect(squircle_rect, radius, radius)
+
+            # Multi-tooth gear spokes
+            cx, cy = x + w / 2, y + h / 2
+            p.setPen(Qt.PenStyle.NoPen)
+            p.setBrush(QBrush(QColor(220, 220, 225)))
+            for angle in [0, 30, 60, 90, 120, 150]:
+                p.save()
+                p.translate(cx, cy)
+                p.rotate(angle)
+                p.drawRoundedRect(QRectF(-4, -19, 8, 38), 1.5, 1.5)
+                p.restore()
+
+            # Center concentric circles
+            p.setBrush(QBrush(QColor(200, 200, 205)))
+            p.drawEllipse(QPointF(cx, cy), 13, 13)
+            p.setBrush(QBrush(QColor(58, 58, 60)))
+            p.drawEllipse(QPointF(cx, cy), 8, 8)
+            p.setBrush(QBrush(QColor(28, 28, 30)))
+            p.drawEllipse(QPointF(cx, cy), 4, 4)
+
+        elif self.icon_id == "calc":
+            # Dark charcoal calculator with orange operation buttons
+            grad = QLinearGradient(x, y, x, y + h)
+            grad.setColorAt(0, QColor(58, 58, 60))
+            grad.setColorAt(1, QColor(28, 28, 30))
+            p.setBrush(QBrush(grad))
+            p.setPen(QPen(QColor(255, 255, 255, 40), 1.0))
+            p.drawRoundedRect(squircle_rect, radius, radius)
+
+            # Circular operation keys
+            p.setPen(Qt.PenStyle.NoPen)
+            # Top row
+            p.setBrush(QBrush(QColor(90, 90, 95)))
+            p.drawEllipse(QPointF(x + 13, y + 14), 4.5, 4.5)
+            p.drawEllipse(QPointF(x + 24, y + 14), 4.5, 4.5)
+            p.setBrush(QBrush(QColor(255, 159, 10)))
+            p.drawEllipse(QPointF(x + 35, y + 14), 4.5, 4.5)
+
+            # Middle row
+            p.setBrush(QBrush(QColor(110, 110, 115)))
+            p.drawEllipse(QPointF(x + 13, y + 25), 4.5, 4.5)
+            p.drawEllipse(QPointF(x + 24, y + 25), 4.5, 4.5)
+            p.setBrush(QBrush(QColor(255, 159, 10)))
+            p.drawEllipse(QPointF(x + 35, y + 25), 4.5, 4.5)
+
+            # Bottom row
+            p.setBrush(QBrush(QColor(110, 110, 115)))
+            p.drawEllipse(QPointF(x + 13, y + 36), 4.5, 4.5)
+            p.drawEllipse(QPointF(x + 24, y + 36), 4.5, 4.5)
+            p.setBrush(QBrush(QColor(255, 159, 10)))
+            p.drawEllipse(QPointF(x + 35, y + 36), 4.5, 4.5)
+
+        elif self.icon_id == "terminal":
+            # Space gray / obsidian squircle with prompt >_
+            grad = QLinearGradient(x, y, x, y + h)
+            grad.setColorAt(0, QColor(44, 44, 46))
+            grad.setColorAt(1, QColor(18, 18, 20))
+            p.setBrush(QBrush(grad))
+            p.setPen(QPen(QColor(255, 255, 255, 40), 1.0))
+            p.drawRoundedRect(squircle_rect, radius, radius)
+
+            # Top header bar
+            p.setBrush(QBrush(QColor(58, 58, 60)))
+            p.setPen(Qt.PenStyle.NoPen)
+            p.drawRoundedRect(QRectF(x, y, w, 11), radius, radius)
+            p.drawRect(QRectF(x, y + 6, w, 5))
+
+            # Traffic light micro-dots
+            p.setBrush(QBrush(QColor(255, 95, 86)))
+            p.drawEllipse(QPointF(x + 7, y + 5.5), 1.5, 1.5)
+            p.setBrush(QBrush(QColor(255, 189, 46)))
+            p.drawEllipse(QPointF(x + 12, y + 5.5), 1.5, 1.5)
+            p.setBrush(QBrush(QColor(39, 201, 63)))
+            p.drawEllipse(QPointF(x + 17, y + 5.5), 1.5, 1.5)
+
+            # Prompt >_ in phosphor green
+            p.setFont(QFont("SF Mono, Menlo, monospace", 11, QFont.Weight.Bold))
+            p.setPen(QColor(52, 199, 89))
+            p.drawText(QPointF(x + 9, y + 27), ">_")
+            # Cursor block
+            p.fillRect(QRectF(x + 29, y + 17, 4.5, 10), QColor(255, 255, 255, 200))
+
+        elif self.icon_id == "notes":
+            # Lined legal document pad with stitched header and pencil
+            grad = QLinearGradient(x, y, x, y + h)
+            grad.setColorAt(0, QColor(255, 249, 196))
+            grad.setColorAt(1, QColor(255, 241, 118))
+            p.setBrush(QBrush(grad))
+            p.setPen(QPen(QColor(255, 255, 255, 40), 1.0))
+            p.drawRoundedRect(squircle_rect, radius, radius)
+
+            # Stitched brown leather top band
+            p.setBrush(QBrush(QColor(212, 163, 115)))
+            p.setPen(Qt.PenStyle.NoPen)
+            p.drawRoundedRect(QRectF(x, y, w, 11), radius, radius)
+            p.drawRect(QRectF(x, y + 6, w, 5))
+
+            # Notebook blue ruled lines
+            p.setPen(QPen(QColor(144, 202, 249), 1.2))
+            p.drawLine(QPointF(x + 7, y + 20), QPointF(x + 41, y + 20))
+            p.drawLine(QPointF(x + 7, y + 27), QPointF(x + 41, y + 27))
+            p.drawLine(QPointF(x + 7, y + 34), QPointF(x + 41, y + 34))
+            p.drawLine(QPointF(x + 7, y + 41), QPointF(x + 30, y + 41))
+
+            # Angled pencil
+            p.save()
+            p.translate(x + 32, y + 20)
+            p.rotate(35)
+            p.setBrush(QBrush(QColor(255, 183, 77)))
+            p.setPen(Qt.PenStyle.NoPen)
+            p.drawRect(QRectF(0, 0, 4, 24))
+            p.setBrush(QBrush(QColor(229, 115, 115)))
+            p.drawRect(QRectF(0, -4, 4, 4))
+            p.restore()
+
+        elif self.icon_id == "tempo":
+            # Dark technical oscilloscope with neon green ECG heartbeat line
+            grad = QLinearGradient(x, y, x, y + h)
+            grad.setColorAt(0, QColor(36, 36, 38))
+            grad.setColorAt(1, QColor(15, 15, 17))
+            p.setBrush(QBrush(grad))
+            p.setPen(QPen(QColor(255, 255, 255, 40), 1.0))
+            p.drawRoundedRect(squircle_rect, radius, radius)
+
+            # Oscilloscope grid
+            p.setPen(QPen(QColor(51, 51, 54), 1.0))
+            cx, cy = x + w / 2, y + h / 2
+            p.drawLine(QPointF(x + 5, cy), QPointF(x + w - 5, cy))
+            p.drawLine(QPointF(cx, y + 5), QPointF(cx, y + h - 5))
+
+            # Neon Green ECG Wave
+            p.setPen(QPen(QColor(48, 209, 88), 2.2, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap, Qt.PenJoinStyle.RoundJoin))
+            wave = QPainterPath()
+            wave.moveTo(x + 6, cy)
+            wave.lineTo(x + 16, cy)
+            wave.lineTo(x + 20, cy - 8)
+            wave.lineTo(x + 24, cy + 10)
+            wave.lineTo(x + 27, cy - 12)
+            wave.lineTo(x + 31, cy + 13)
+            wave.lineTo(x + 35, cy - 2)
+            wave.lineTo(x + 38, cy)
+            wave.lineTo(x + w - 6, cy)
+            p.drawPath(wave)
+
+        elif self.icon_id == "gallery":
+            # Cobalt Blue App Store squircle with white crossing tools A
+            grad = QLinearGradient(x, y, x, y + h)
+            grad.setColorAt(0, QColor(0, 122, 255))
+            grad.setColorAt(1, QColor(0, 81, 213))
+            p.setBrush(QBrush(grad))
+            p.setPen(QPen(QColor(255, 255, 255, 50), 1.0))
+            p.drawRoundedRect(squircle_rect, radius, radius)
+
+            # Classic crossing A bars
+            cx, cy = x + w / 2, y + h / 2
+            p.setPen(Qt.PenStyle.NoPen)
+            p.setBrush(QBrush(QColor(255, 255, 255)))
+            p.save()
+            p.translate(cx, cy)
+            p.rotate(-30)
+            p.drawRoundedRect(QRectF(-2.2, -18, 4.4, 36), 1.5, 1.5)
+            p.restore()
+
+            p.save()
+            p.translate(cx, cy)
+            p.rotate(30)
+            p.drawRoundedRect(QRectF(-2.2, -18, 4.4, 36), 1.5, 1.5)
+            p.restore()
+
+            # Crossbar
+            p.drawRoundedRect(QRectF(cx - 13, cy + 4, 26, 4.4), 1.5, 1.5)
+
+        elif self.icon_id == "wine":
+            # Azure squircle with 4-pane Windows logo
+            grad = QLinearGradient(x, y, x, y + h)
+            grad.setColorAt(0, QColor(2, 132, 199))
+            grad.setColorAt(1, QColor(3, 105, 161))
+            p.setBrush(QBrush(grad))
+            p.setPen(QPen(QColor(255, 255, 255, 50), 1.0))
+            p.drawRoundedRect(squircle_rect, radius, radius)
+
+            # 4 Blue/White Windows tiles
+            p.setPen(Qt.PenStyle.NoPen)
+            p.setBrush(QBrush(QColor(255, 255, 255, 230)))
+            p.drawRect(QRectF(x + 13, y + 13, 10, 10))
+            p.drawRect(QRectF(x + 25, y + 13, 10, 10))
+            p.drawRect(QRectF(x + 13, y + 25, 10, 10))
+            p.drawRect(QRectF(x + 25, y + 25, 10, 10))
+
+        # Active Application Running Indicator Dot
+        if self.is_running:
+            p.setPen(Qt.PenStyle.NoPen)
+            p.setBrush(QBrush(QColor(255, 255, 255, 200)))
+            p.drawEllipse(QPointF(x + w / 2, 54), 2.0, 2.0)
+
 
 class FrostedTopBar(QWidget):
     """CutefishOS & macOS Sequoia Frosted Glass Top Menu Bar."""
@@ -90,36 +462,36 @@ class FrostedTopBar(QWidget):
         self.dm = desktop_manager
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.SubWindow)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        self.setFixedHeight(32)
+        self.setFixedHeight(28)
 
         layout = QHBoxLayout(self)
-        layout.setContentsMargins(12, 0, 14, 0)
-        layout.setSpacing(10)
+        layout.setContentsMargins(10, 0, 12, 0)
+        layout.setSpacing(8)
 
-        # 1. Toccata Apple-Style Emblem Button (Bespoke Vector)
-        self.logo_btn = VectorLogoButton(self.show_system_menu, self)
+        # 1. Apple Logo Button (Bespoke Monochrome Vector)
+        self.logo_btn = AppleMenuLogoButton(self.show_system_menu, self)
         layout.addWidget(self.logo_btn)
 
-        # 2. Active Application Title
-        self.app_title = QLabel("Toccata OS")
-        self.app_title.setFont(QFont("Inter", 10, QFont.Weight.Bold))
+        # 2. Active Application Title (13pt SemiBold)
+        self.app_title = QLabel("Finder")
+        self.app_title.setFont(QFont("Inter", 10, QFont.Weight.DemiBold))
         self.app_title.setStyleSheet("color: #ffffff; padding-left: 2px;")
         layout.addWidget(self.app_title)
 
-        # 3. Global Menu Bar Items
-        for item in ["File", "Edit", "View", "Window", "Help"]:
+        # 3. Global Menu Bar Items (13pt Regular)
+        for item in ["File", "Edit", "View", "Go", "Window", "Help"]:
             btn = QPushButton(item)
             btn.setStyleSheet("""
                 QPushButton {
                     background: transparent;
                     border: none;
-                    color: rgba(255, 255, 255, 0.85);
-                    font-size: 12px;
-                    padding: 2px 6px;
+                    color: rgba(255, 255, 255, 0.88);
+                    font-size: 13px;
+                    padding: 2px 7px;
                     border-radius: 4px;
                 }
                 QPushButton:hover {
-                    background: rgba(255, 255, 255, 0.12);
+                    background: rgba(255, 255, 255, 0.14);
                     color: #ffffff;
                 }
             """)
@@ -127,48 +499,23 @@ class FrostedTopBar(QWidget):
 
         layout.addStretch()
 
-        # 4. Spotlight Trigger Button
-        self.spotlight_btn = QPushButton("🔍")
-        self.spotlight_btn.setToolTip("Spotlight Search (Ctrl+Space)")
-        self.spotlight_btn.setFixedSize(24, 24)
-        self.spotlight_btn.setStyleSheet("""
-            QPushButton {
-                background: transparent;
-                border: none;
-                font-size: 12px;
-                border-radius: 4px;
-            }
-            QPushButton:hover {
-                background: rgba(255, 255, 255, 0.15);
-            }
-        """)
-        self.spotlight_btn.clicked.connect(self.dm.toggle_spotlight)
+        # 4. Status Indicators: Battery Pill, Wi-Fi, Spotlight, Control Center
+        self.battery_icon = TopBarStatusVector("battery")
+        layout.addWidget(self.battery_icon)
+
+        self.wifi_icon = TopBarStatusVector("wifi", tooltip="Wi-Fi: Connected")
+        layout.addWidget(self.wifi_icon)
+
+        self.spotlight_btn = TopBarStatusVector("spotlight", on_click=self.dm.toggle_spotlight, tooltip="Spotlight (Ctrl+Space)")
         layout.addWidget(self.spotlight_btn)
 
-        # 5. Status Indicators: Battery, Control Center, Clock
-        self.battery_label = QLabel("100% 🔋")
-        self.battery_label.setStyleSheet("color: rgba(255, 255, 255, 0.8); font-size: 11px;")
-        layout.addWidget(self.battery_label)
-
-        self.cc_btn = QPushButton("🎛️")
-        self.cc_btn.setToolTip("Control Center")
-        self.cc_btn.setFixedSize(24, 24)
-        self.cc_btn.setStyleSheet("""
-            QPushButton {
-                background: transparent;
-                border: none;
-                font-size: 13px;
-                border-radius: 4px;
-            }
-            QPushButton:hover {
-                background: rgba(255, 255, 255, 0.15);
-            }
-        """)
-        self.cc_btn.clicked.connect(self.show_control_center)
+        self.cc_btn = TopBarStatusVector("control_center", on_click=self.show_control_center, tooltip="Control Center")
         layout.addWidget(self.cc_btn)
 
+        # 5. Live Clock
         self.clock_label = QLabel()
-        self.clock_label.setStyleSheet("color: #ffffff; font-weight: bold; font-size: 12px;")
+        self.clock_label.setFont(QFont("Inter", 10, QFont.Weight.Medium))
+        self.clock_label.setStyleSheet("color: rgba(255, 255, 255, 0.95); padding-left: 4px;")
         layout.addWidget(self.clock_label)
 
         # Clock Timer
@@ -178,17 +525,17 @@ class FrostedTopBar(QWidget):
         self.update_clock()
 
     def update_clock(self):
-        self.clock_label.setText(QTime.currentTime().toString("h:mm AP"))
+        self.clock_label.setText(QDateTime.currentDateTime().toString("ddd MMM d  h:mm AP"))
 
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        # Apple Frosted Glass Top Bar
+        # Apple Frosted Glass Top Bar (0.5px subtle border bottom)
         gradient = QLinearGradient(0, 0, 0, self.height())
-        gradient.setColorAt(0, QColor(24, 24, 28, 220))
-        gradient.setColorAt(1, QColor(16, 16, 20, 240))
+        gradient.setColorAt(0, QColor(28, 28, 34, 215))
+        gradient.setColorAt(1, QColor(18, 18, 22, 235))
         painter.setBrush(QBrush(gradient))
-        painter.setPen(QPen(QColor(255, 255, 255, 25), 1))
+        painter.setPen(QPen(QColor(255, 255, 255, 22), 0.75))
         painter.drawRect(self.rect())
 
     def show_system_menu(self):
@@ -200,11 +547,11 @@ class FrostedTopBar(QWidget):
                 border-radius: 8px;
                 padding: 4px;
                 color: #ffffff;
-                font-size: 12px;
+                font-size: 13px;
             }
             QMenu::item {
-                padding: 6px 22px 6px 12px;
-                border-radius: 4px;
+                padding: 6px 24px 6px 12px;
+                border-radius: 5px;
             }
             QMenu::item:selected {
                 background-color: #007aff;
@@ -215,14 +562,14 @@ class FrostedTopBar(QWidget):
                 margin: 4px 6px;
             }
         """)
-        about_act = menu.addAction("About Toccata OS")
+        about_act = menu.addAction("About This Mac")
         about_act.triggered.connect(lambda: self.dm.launch_app("settings"))
         menu.addSeparator()
 
         pref_act = menu.addAction("System Settings...")
         pref_act.triggered.connect(lambda: self.dm.launch_app("settings"))
 
-        store_act = menu.addAction("App Store & Sideload...")
+        store_act = menu.addAction("App Store...")
         store_act.triggered.connect(lambda: self.dm.launch_app("gallery"))
 
         menu.addSeparator()
@@ -240,64 +587,46 @@ class FrostedTopBar(QWidget):
 
 
 class FrostedDock(QWidget):
-    """Cutefish & macOS Sequoia Parabolic Floating Dock."""
+    """Cutefish & macOS Sequoia Continuous Floating Dock with Authentic Apple Icons."""
     def __init__(self, desktop_manager, parent=None):
         super().__init__(parent)
         self.dm = desktop_manager
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.SubWindow)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        self.setFixedHeight(66)
+        self.setFixedHeight(68)
 
         self.layout = QHBoxLayout(self)
-        self.layout.setContentsMargins(14, 6, 14, 6)
-        self.layout.setSpacing(10)
+        self.layout.setContentsMargins(14, 4, 14, 4)
+        self.layout.setSpacing(6)
 
-        # 11 First-Party Applications + Windows Sideload
+        # Authentic macOS Icon Lineup
         self.apps = [
-            ("📁", "Cadence", "#007aff", "cadence"),
-            ("⚙️", "Settings", "#8e8e93", "settings"),
-            ("🔢", "Solfege", "#ff9500", "solfege"),
-            ("💻", "Console", "#18181b", "console"),
-            ("📝", "Scribe", "#ff9500", "scribe"),
-            ("⚡", "Tempo", "#34c759", "tempo"),
-            ("🛍️", "Gallery", "#5856d6", "gallery"),
-            ("🪟", "Windows App", "#0284c7", "wine_notepad"),
+            ("finder", "Finder (Cadence)", "cadence"),
+            ("settings", "System Settings", "settings"),
+            ("calc", "Calculator (Solfege)", "solfege"),
+            ("terminal", "Terminal (Console)", "console"),
+            ("notes", "Notes (Scribe)", "scribe"),
+            ("tempo", "Activity Monitor (Tempo)", "tempo"),
+            ("gallery", "App Store & Sideload", "gallery"),
+            ("wine", "Windows Containerizer", "wine_notepad"),
         ]
 
         self.buttons = {}
-        for icon, title, bg, action_id in self.apps:
-            btn = QPushButton(icon)
-            btn.setToolTip(f"{title}")
-            btn.setFixedSize(50, 50)
-            btn.setStyleSheet(f"""
-                QPushButton {{
-                    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 {bg}, stop:1 rgba(0,0,0,0.5));
-                    border: 1px solid rgba(255, 255, 255, 0.28);
-                    border-radius: 13px;
-                    font-size: 22px;
-                }}
-                QPushButton:hover {{
-                    border: 2px solid #ffffff;
-                    margin-bottom: 4px;
-                }}
-                QPushButton:pressed {{
-                    background: {bg};
-                }}
-            """)
-            btn.clicked.connect(lambda ch, a=action_id: self.dm.launch_app(a))
+        for icon_id, title, action_id in self.apps:
+            btn = AppleDockIcon(icon_id, title, lambda a=action_id: self.dm.launch_app(a), self)
             self.buttons[action_id] = btn
             self.layout.addWidget(btn)
 
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        # Frosted glass pill with rim glow
+        # Frosted glass capsule with subtle rim glow
         gradient = QLinearGradient(0, 0, 0, self.height())
-        gradient.setColorAt(0, QColor(32, 32, 38, 220))
-        gradient.setColorAt(1, QColor(18, 18, 24, 245))
+        gradient.setColorAt(0, QColor(36, 36, 44, 210))
+        gradient.setColorAt(1, QColor(18, 18, 24, 240))
         painter.setBrush(QBrush(gradient))
-        painter.setPen(QPen(QColor(255, 255, 255, 45), 1.2))
-        painter.drawRoundedRect(self.rect().adjusted(1, 1, -1, -1), 20, 20)
+        painter.setPen(QPen(QColor(255, 255, 255, 40), 1.0))
+        painter.drawRoundedRect(self.rect().adjusted(1, 1, -1, -1), 22, 22)
 
 
 class ToccataDesktopManager(QMainWindow):
@@ -308,7 +637,7 @@ class ToccataDesktopManager(QMainWindow):
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
-        self.current_layout_mode = "macos"  # macos, win11, win10
+        self.current_layout_mode = "macos"
         self.open_windows = {}
 
         screen = QApplication.primaryScreen().geometry()
@@ -316,7 +645,7 @@ class ToccataDesktopManager(QMainWindow):
 
         # 1. Top Bar
         self.top_bar = FrostedTopBar(self, self)
-        self.top_bar.setGeometry(0, 0, screen.width(), 32)
+        self.top_bar.setGeometry(0, 0, screen.width(), 28)
         self.top_bar.show()
 
         # 2. Bottom Dock (Centered)
@@ -335,64 +664,60 @@ class ToccataDesktopManager(QMainWindow):
         self.shortcut_spotlight = QShortcut(QKeySequence("Ctrl+Space"), self)
         self.shortcut_spotlight.activated.connect(self.toggle_spotlight)
 
+        # Window state tracker timer
+        self.state_timer = QTimer(self)
+        self.state_timer.timeout.connect(self.sync_active_window_title)
+        self.state_timer.start(500)
+
     def update_dock_geometry(self):
         screen = QApplication.primaryScreen().geometry()
-        dock_w = 520
-        if self.current_layout_mode == "macos":
-            # Floating centered bottom dock
-            self.top_bar.show()
-            dock_x = (screen.width() - dock_w) // 2
-            dock_y = screen.height() - 78
-            self.dock.setGeometry(dock_x, dock_y, dock_w, 66)
-        elif self.current_layout_mode == "win11":
-            # Windows 11: Top bar hidden, dock acts as centered taskbar at bottom
-            self.top_bar.hide()
-            dock_x = (screen.width() - dock_w) // 2
-            dock_y = screen.height() - 66
-            self.dock.setGeometry(dock_x, dock_y, dock_w, 66)
-        elif self.current_layout_mode == "win10":
-            # Windows 10: Left-aligned taskbar at very bottom
-            self.top_bar.hide()
-            self.dock.setGeometry(0, screen.height() - 66, screen.width(), 66)
+        dock_width = 54 * len(self.dock.apps) + 40
+        dock_height = 68
+        x = (screen.width() - dock_width) // 2
+        y = screen.height() - dock_height - 10
+        self.dock.setGeometry(x, y, dock_width, dock_height)
 
-    def set_layout_mode(self, mode):
-        self.current_layout_mode = mode
-        self.update_dock_geometry()
+    def toggle_control_center(self, global_pos):
+        if self.control_center.isVisible():
+            self.control_center.hide()
+        else:
+            self.control_center.move(global_pos)
+            self.control_center.show()
+            self.control_center.raise_()
 
     def toggle_spotlight(self):
         if self.spotlight.isVisible():
             self.spotlight.hide()
         else:
-            screen = QApplication.primaryScreen().geometry()
-            x = (screen.width() - self.spotlight.width()) // 2
-            y = 120
-            self.spotlight.move(x, y)
-            self.spotlight.show()
-            self.spotlight.raise_()
+            self.spotlight.show_centered()
 
-    def toggle_control_center(self, pos):
-        if self.control_center.isVisible():
-            self.control_center.hide()
+    def sync_active_window_title(self):
+        active_app = None
+        for name, win in self.open_windows.items():
+            if win.isActiveWindow() and win.isVisible():
+                active_app = name
+                break
+        if active_app:
+            self.top_bar.app_title.setText(active_app.capitalize())
         else:
-            self.control_center.move(pos)
-            self.control_center.show()
-            self.control_center.raise_()
+            self.top_bar.app_title.setText("Finder")
 
     def launch_app(self, action_id):
-        # Bring existing open window to front if running
+        # Bring to front if already open
         if action_id in self.open_windows and self.open_windows[action_id].isVisible():
-            self.open_windows[action_id].raise_()
-            self.open_windows[action_id].activateWindow()
+            win = self.open_windows[action_id]
+            win.raise_()
+            win.activateWindow()
             return
 
+        # Instantiate app
         win = None
-        if action_id == "solfege":
-            win = SolfegeCalculator()
-        elif action_id == "cadence":
+        if action_id == "cadence":
             win = CadenceFileManager()
         elif action_id == "settings":
             win = SystemSettings()
-            win.layout_changed.connect(self.set_layout_mode)
+        elif action_id == "solfege":
+            win = SolfegeCalculator()
         elif action_id == "console":
             win = ToccataConsole()
         elif action_id == "scribe":
@@ -402,39 +727,26 @@ class ToccataDesktopManager(QMainWindow):
         elif action_id == "gallery":
             win = GalleryAppStore()
         elif action_id == "wine_notepad":
-            # Windows app runner
-            runner_script = os.path.join(os.path.dirname(os.path.dirname(__file__)), "toccata-bundle", "toccata-wine-runner.py")
+            # Launch Windows Notepad container directly
+            runner_script = os.path.join(os.path.dirname(__file__), "..", "toccata-bundle", "toccata-wine-runner.py")
             subprocess.Popen([sys.executable, runner_script, "notepad.exe"])
             return
-        elif action_id.startswith("cmd_"):
-            # Launch Console running this specific command
-            cmd = action_id.replace("cmd_", "")
-            win = ToccataConsole()
-            win.cmd_input.setText(cmd)
-            win.run_command()
 
         if win:
             self.open_windows[action_id] = win
-            # Center window nicely on screen
-            screen = QApplication.primaryScreen().geometry()
-            x = (screen.width() - win.width()) // 2 + (len(self.open_windows) * 20) % 100
-            y = (screen.height() - win.height()) // 2 + (len(self.open_windows) * 20) % 100
-            win.move(x, y)
             win.show()
             win.raise_()
+            win.activateWindow()
+            self.top_bar.app_title.setText(action_id.capitalize())
 
 
 def main():
     app = QApplication(sys.argv)
-    app.setFont(QFont("Inter Display, Inter, sans-serif", 10))
-    manager = ToccataDesktopManager()
-    manager.show()
-
-    # Pre-open Cadence Finder and Solfege Calculator for instant live showcase
-    manager.launch_app("cadence")
-    manager.launch_app("solfege")
-
+    app.setFont(QFont("Inter", 10))
+    desktop = ToccataDesktopManager()
+    desktop.show()
     sys.exit(app.exec())
+
 
 if __name__ == "__main__":
     main()

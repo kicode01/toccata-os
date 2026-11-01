@@ -1,18 +1,75 @@
 """
 Toccata OS - Frosted Glass Base Window Frame
-Provides frameless window with macOS Sequoia / Cutefish inset traffic lights and smooth window dragging.
+Provides frameless window with authentic macOS Sequoia inset traffic lights,
+hover micro-glyphs (✕, −, ⤢), and smooth frameless window dragging.
 """
 
-from PyQt6.QtCore import Qt, QPoint
+from PyQt6.QtCore import Qt, QPoint, QPointF, QRectF
 from PyQt6.QtGui import QFont, QColor, QPainter, QBrush, QPen
 from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QFrame
 )
 import theme
 
+class TrafficLightButton(QPushButton):
+    """Authentic Apple macOS Sequoia Inset Traffic Light with Micro-Glyphs on Hover."""
+    def __init__(self, kind="close", tooltip="Close", parent=None):
+        super().__init__(parent)
+        self.kind = kind
+        self.setToolTip(tooltip)
+        self.setFixedSize(12, 12)
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.is_hovered = False
+
+    def enterEvent(self, event):
+        self.is_hovered = True
+        self.update()
+
+    def leaveEvent(self, event):
+        self.is_hovered = False
+        self.update()
+
+    def paintEvent(self, event):
+        p = QPainter(self)
+        p.setRenderHint(QPainter.RenderHint.Antialiasing)
+        w, h = self.width(), self.height()
+
+        if self.kind == "close":
+            bg = QColor(255, 95, 87)
+            border = QColor(224, 68, 62)
+            glyph_color = QColor(74, 0, 2)
+        elif self.kind == "min":
+            bg = QColor(254, 188, 46)
+            border = QColor(216, 158, 36)
+            glyph_color = QColor(85, 51, 0)
+        else: # max/zoom
+            bg = QColor(40, 200, 64)
+            border = QColor(26, 171, 41)
+            glyph_color = QColor(0, 60, 10)
+
+        # Base colored circle
+        p.setBrush(QBrush(bg))
+        p.setPen(QPen(border, 0.75))
+        p.drawEllipse(QRectF(0.5, 0.5, w - 1, h - 1))
+
+        # Micro-glyphs reveal on hover
+        if self.is_hovered:
+            p.setPen(QPen(glyph_color, 1.2, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
+            if self.kind == "close":
+                p.drawLine(QPointF(3.5, 3.5), QPointF(8.5, 8.5))
+                p.drawLine(QPointF(8.5, 3.5), QPointF(3.5, 8.5))
+            elif self.kind == "min":
+                p.drawLine(QPointF(3.0, 6.0), QPointF(9.0, 6.0))
+            else: # zoom (opposing arrows)
+                p.drawLine(QPointF(3.5, 8.5), QPointF(8.5, 3.5))
+                p.drawLine(QPointF(8.5, 3.5), QPointF(6.0, 3.5))
+                p.drawLine(QPointF(8.5, 3.5), QPointF(8.5, 6.0))
+                p.drawLine(QPointF(3.5, 8.5), QPointF(6.0, 8.5))
+                p.drawLine(QPointF(3.5, 8.5), QPointF(3.5, 6.0))
+
 class ToccataWindow(QWidget):
     """Base class for all Toccata first-party Qt6 applications."""
-    def __init__(self, title="Toccata App", width=720, height=520, parent=None):
+    def __init__(self, title="Toccata App", width=740, height=520, parent=None):
         super().__init__(parent)
         self.setWindowTitle(title)
         self.resize(width, height)
@@ -49,33 +106,26 @@ class ToccataWindow(QWidget):
         tb_layout.setContentsMargins(14, 0, 14, 0)
         tb_layout.setSpacing(8)
 
-        # Traffic lights
-        self.btn_close = QPushButton(self.title_bar)
-        self.btn_close.setObjectName("btn_close")
-        self.btn_close.setToolTip("Close")
+        # Authentic Inset Traffic lights
+        self.btn_close = TrafficLightButton("close", "Close", self.title_bar)
         self.btn_close.clicked.connect(self.close)
 
-        self.btn_min = QPushButton(self.title_bar)
-        self.btn_min.setObjectName("btn_min")
-        self.btn_min.setToolTip("Minimize")
+        self.btn_min = TrafficLightButton("min", "Minimize", self.title_bar)
         self.btn_min.clicked.connect(self.showMinimized)
 
-        self.btn_max = QPushButton(self.title_bar)
-        self.btn_max.setObjectName("btn_max")
-        self.btn_max.setToolTip("Zoom / Maximize")
+        self.btn_max = TrafficLightButton("max", "Zoom / Fullscreen", self.title_bar)
         self.btn_max.clicked.connect(self.toggle_maximize)
 
         tb_layout.addWidget(self.btn_close)
         tb_layout.addWidget(self.btn_min)
         tb_layout.addWidget(self.btn_max)
-        self.title_bar.setStyleSheet(self.title_bar.styleSheet() + theme.TRAFFIC_LIGHTS_STYLE)
 
         tb_layout.addSpacing(12)
 
-        # Window Title
+        # Window Title (13pt SemiBold)
         self.lbl_title = QLabel(title, self.title_bar)
-        self.lbl_title.setFont(QFont("Inter", 11, QFont.Weight.Medium))
-        self.lbl_title.setStyleSheet("color: rgba(255, 255, 255, 0.85); background: transparent;")
+        self.lbl_title.setFont(QFont("Inter", 11, QFont.Weight.DemiBold))
+        self.lbl_title.setStyleSheet("color: rgba(255, 255, 255, 0.9); background: transparent;")
         self.lbl_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         tb_layout.addWidget(self.lbl_title)
 
@@ -99,7 +149,7 @@ class ToccataWindow(QWidget):
 
     # Window Dragging
     def mousePressEvent(self, event):
-        if event.button() == Qt.MouseButton.LeftButton and event.position().y() <= 48:
+        if event.button() == Qt.MouseButton.LeftButton and event.position().y() <= 44:
             self._drag_pos = event.globalPosition().toPoint() - self.frameGeometry().topLeft()
             event.accept()
 
