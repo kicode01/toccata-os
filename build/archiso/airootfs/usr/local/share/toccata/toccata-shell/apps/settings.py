@@ -20,6 +20,7 @@ import theme
 
 class SystemSettings(ToccataWindow):
     layout_changed = pyqtSignal(str)
+    wallpaper_changed = pyqtSignal(str)
 
     def __init__(self):
         super().__init__(title="System Settings", width=820, height=540)
@@ -227,6 +228,7 @@ class SystemSettings(ToccataWindow):
 
     def _set_wallpaper(self, filename, name):
         print(f"[SETTINGS] Applying wallpaper: {name} ({filename})")
+        self.wallpaper_changed.emit(filename)
 
     # PAGE 4: Sound & PipeWire
     def create_sound_page(self):

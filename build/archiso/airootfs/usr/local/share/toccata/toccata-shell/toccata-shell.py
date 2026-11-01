@@ -13,7 +13,7 @@ from datetime import datetime
 from PyQt6.QtCore import Qt, QPoint, QPointF, QRectF, QSize, QTimer, QTime, QDateTime, pyqtSlot
 from PyQt6.QtGui import (
     QColor, QFont, QPainter, QBrush, QPen, QLinearGradient, QRadialGradient,
-    QPainterPath, QAction, QKeySequence, QShortcut
+    QPainterPath, QAction, QKeySequence, QShortcut, QPixmap
 )
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QHBoxLayout, QVBoxLayout,
@@ -21,12 +21,22 @@ from PyQt6.QtWidgets import (
 )
 
 # Set Wayland / WSLg Display configuration
+if "XDG_RUNTIME_DIR" not in os.environ and os.path.exists("/mnt/wslg/runtime-dir"):
+    os.environ["XDG_RUNTIME_DIR"] = "/mnt/wslg/runtime-dir"
+if "WAYLAND_DISPLAY" not in os.environ and os.path.exists("/mnt/wslg/runtime-dir/wayland-0"):
+    os.environ["WAYLAND_DISPLAY"] = "wayland-0"
+if "DISPLAY" not in os.environ:
+    os.environ["DISPLAY"] = ":0"
+if "PULSE_SERVER" not in os.environ and os.path.exists("/mnt/wslg/PulseServer"):
+    os.environ["PULSE_SERVER"] = "/mnt/wslg/PulseServer"
+
 os.environ["QT_QPA_PLATFORM"] = "wayland;xcb"
 
 sys.path.insert(0, os.path.dirname(__file__))
 import theme
 from control_center import ControlCenterSheet
 from spotlight import SpotlightSearch
+from maestro_hud import MaestroHUD
 
 # Import native apps
 from apps.solfege import SolfegeCalculator
@@ -104,6 +114,8 @@ class TopBarStatusVector(QWidget):
 
         if icon_type == "battery":
             self.setFixedSize(62, 24)
+        elif icon_type == "maestro":
+            self.setFixedSize(80, 22)
         else:
             self.setFixedSize(26, 24)
 
@@ -181,6 +193,27 @@ class TopBarStatusVector(QWidget):
             p.drawRoundedRect(QRectF(4, 13, 18, 6), 3, 3)
             p.setBrush(QBrush(stroke_color))
             p.drawEllipse(QRectF(15, 14, 4, 4))
+
+        elif self.icon_type == "maestro":
+            # Apple Intelligence glowing pill badge
+            pill_rect = QRectF(1, 1, w - 2, h - 2)
+            p.setPen(QPen(QColor(0, 122, 255, 80), 1.0))
+            p.setBrush(QBrush(QColor(0, 122, 255, 24)))
+            p.drawRoundedRect(pill_rect, 10, 10)
+
+            # Glowing Apple Intelligence Orb
+            grad = QLinearGradient(6, 6, 18, 18)
+            grad.setColorAt(0.0, QColor(255, 45, 85))
+            grad.setColorAt(0.5, QColor(175, 82, 222))
+            grad.setColorAt(1.0, QColor(0, 122, 255))
+            p.setBrush(QBrush(grad))
+            p.setPen(Qt.PenStyle.NoPen)
+            p.drawEllipse(QPointF(13, h / 2), 5.0, 5.0)
+
+            # "Maestro" typography
+            p.setFont(QFont("Inter", 9, QFont.Weight.SemiBold))
+            p.setPen(stroke_color)
+            p.drawText(QRectF(22, 0, w - 24, h), Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft, "Maestro")
 
 
 class AppleDockIcon(QWidget):
@@ -518,6 +551,9 @@ class FrostedTopBar(QWidget):
         self.cc_btn = TopBarStatusVector("control_center", on_click=self.show_control_center, tooltip="Control Center")
         layout.addWidget(self.cc_btn)
 
+        self.maestro_btn = TopBarStatusVector("maestro", on_click=self.dm.toggle_maestro, tooltip="Maestro AI Assistant (Ctrl+M)")
+        layout.addWidget(self.maestro_btn)
+
         # 5. Live Clock
         self.clock_label = QLabel()
         self.clock_label.setFont(QFont("Inter", 10, QFont.Weight.Medium))
@@ -660,45 +696,12 @@ class ToccataDesktopManager(QMainWindow):
         screen = QApplication.primaryScreen().geometry()
         self.setGeometry(screen)
 
-    def paintEvent(self, event):
-        painter = QPainter(self)
-        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        w, h = self.width(), self.height()
-        # macOS Sequoia Light Dynamic Ambient Wallpaper
-        if theme.IS_LIGHT_MODE:
-            gradient = QLinearGradient(0, 0, w, h)
-            gradient.setColorAt(0.0, QColor(239, 244, 250))
-            gradient.setColorAt(0.35, QColor(253, 244, 235))
-            gradient.setColorAt(0.70, QColor(248, 237, 235))
-            gradient.setColorAt(1.0, QColor(234, 242, 248))
-            painter.fillRect(self.rect(), gradient)
-
-            # Layered Fluid Sequoia Amber Ribbon
-            path = QPainterPath()
-            path.moveTo(0, h * 0.45)
-            path.cubicTo(w * 0.3, h * 0.2, w * 0.6, h * 0.65, w, h * 0.3)
-            path.lineTo(w, h)
-            path.lineTo(0, h)
-            path.closeSubpath()
-            ribbon_grad = QLinearGradient(0, h * 0.4, w, h)
-            ribbon_grad.setColorAt(0.0, QColor(255, 122, 24, 160))
-            ribbon_grad.setColorAt(0.5, QColor(255, 184, 51, 150))
-            ribbon_grad.setColorAt(1.0, QColor(255, 214, 102, 110))
-            painter.fillPath(path, ribbon_grad)
-
-            # Coral Accent Ribbon
-            coral_path = QPainterPath()
-            coral_path.moveTo(0, h * 0.7)
-            coral_path.cubicTo(w * 0.35, h * 0.85, w * 0.65, h * 0.5, w, h * 0.65)
-            coral_path.lineTo(w, h)
-            coral_path.lineTo(0, h)
-            coral_path.closeSubpath()
-            coral_grad = QLinearGradient(0, h * 0.7, w, h)
-            coral_grad.setColorAt(0.0, QColor(255, 77, 109, 140))
-            coral_grad.setColorAt(1.0, QColor(255, 168, 186, 90))
-            painter.fillPath(coral_path, coral_grad)
-        else:
-            painter.fillRect(self.rect(), QColor(9, 9, 11))
+        # Authentic High-Resolution Wallpaper
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        self.wallpaper_path = os.path.join(base_dir, "..", "..", "assets", "wallpapers", "pearos-light.jpg")
+        self.wallpaper_pixmap = None
+        if os.path.exists(self.wallpaper_path):
+            self.wallpaper_pixmap = QPixmap(self.wallpaper_path)
 
         # 1. Top Bar
         self.top_bar = FrostedTopBar(self, self)
@@ -717,14 +720,104 @@ class ToccataDesktopManager(QMainWindow):
         self.spotlight = SpotlightSearch(self)
         self.spotlight.app_launched.connect(self.launch_app)
 
-        # 5. Global Shortcut: Ctrl+Space for Spotlight
+        # 5. Maestro On-Device Neural Assistant
+        self.maestro = MaestroHUD(self)
+        self.maestro.action_triggered.connect(self.handle_maestro_action)
+
+        # 6. Global Shortcuts: Ctrl+Space for Spotlight, Ctrl+M for Maestro
         self.shortcut_spotlight = QShortcut(QKeySequence("Ctrl+Space"), self)
         self.shortcut_spotlight.activated.connect(self.toggle_spotlight)
+
+        self.shortcut_maestro = QShortcut(QKeySequence("Ctrl+M"), self)
+        self.shortcut_maestro.activated.connect(self.toggle_maestro)
 
         # Window state tracker timer
         self.state_timer = QTimer(self)
         self.state_timer.timeout.connect(self.sync_active_window_title)
         self.state_timer.start(500)
+
+    def toggle_maestro(self):
+        if self.maestro.isVisible():
+            self.maestro.hide()
+        else:
+            screen = QApplication.primaryScreen().geometry()
+            x = (screen.width() - self.maestro.width()) // 2
+            y = 38
+            self.maestro.move(x, y)
+            self.maestro.show()
+            self.maestro.raise_()
+            self.maestro.activateWindow()
+
+    def handle_maestro_action(self, action_type, param):
+        print(f"[MAESTRO ACTION DISPATCHED]: {action_type} -> {param}")
+        if action_type == "layout":
+            self.apply_layout(str(param))
+        elif action_type == "wallpaper":
+            self.set_wallpaper_image(str(param))
+        elif action_type == "theme":
+            theme.IS_LIGHT_MODE = (str(param).lower() == "light")
+            self.update()
+            self.top_bar.update()
+            self.dock.update()
+        elif action_type == "app":
+            self.launch_app(str(param))
+        elif action_type == "search":
+            self.launch_app("cadence")
+
+    def apply_layout(self, mode):
+        self.current_layout_mode = mode
+        screen = QApplication.primaryScreen().geometry()
+        print(f"[COMPOSITOR] Applying adaptive desktop layout: {mode}")
+
+        if mode in ["macos", "pearos"]:
+            self.top_bar.setGeometry(0, 0, screen.width(), 28)
+            self.top_bar.show()
+            self.update_dock_geometry()
+            if mode == "pearos":
+                self.set_wallpaper_image("pearos-light.jpg")
+            else:
+                self.set_wallpaper_image("sequoia-light.svg")
+        elif mode == "win11":
+            # Centered Windows 11 Taskbar
+            dock_w = min(screen.width() - 40, 54 * len(self.dock.apps) + 120)
+            self.dock.setGeometry((screen.width() - dock_w) // 2, screen.height() - 58, dock_w, 54)
+            self.set_wallpaper_image("zorin-island.jpg")
+        elif mode == "win10":
+            # Classic Windows 10 left-aligned
+            dock_w = min(screen.width(), 54 * len(self.dock.apps) + 200)
+            self.dock.setGeometry(0, screen.height() - 48, screen.width(), 48)
+            self.set_wallpaper_image("zorin-dark.jpg")
+        elif mode == "gnome":
+            # GNOME 47 Overview & Vertical Dash
+            dash_h = 54 * len(self.dock.apps) + 40
+            self.dock.setGeometry(12, (screen.height() - dash_h) // 2, 68, dash_h)
+            self.set_wallpaper_image("zorin-island.jpg")
+        self.dock.update()
+        self.update()
+
+    def set_wallpaper_image(self, filename):
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        path = os.path.join(base_dir, "..", "..", "assets", "wallpapers", filename)
+        if os.path.exists(path):
+            self.wallpaper_pixmap = QPixmap(path)
+            self.update()
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        if self.wallpaper_pixmap and not self.wallpaper_pixmap.isNull():
+            painter.drawPixmap(self.rect(), self.wallpaper_pixmap)
+        else:
+            w, h = self.width(), self.height()
+            if theme.IS_LIGHT_MODE:
+                gradient = QLinearGradient(0, 0, w, h)
+                gradient.setColorAt(0.0, QColor(239, 244, 250))
+                gradient.setColorAt(0.35, QColor(253, 244, 235))
+                gradient.setColorAt(0.70, QColor(248, 237, 235))
+                gradient.setColorAt(1.0, QColor(234, 242, 248))
+                painter.fillRect(self.rect(), gradient)
+            else:
+                painter.fillRect(self.rect(), QColor(26, 27, 38))
 
     def update_dock_geometry(self):
         screen = QApplication.primaryScreen().geometry()
@@ -773,6 +866,8 @@ class ToccataDesktopManager(QMainWindow):
             win = CadenceFileManager()
         elif action_id == "settings":
             win = SystemSettings()
+            win.wallpaper_changed.connect(self.set_wallpaper_image)
+            win.layout_changed.connect(self.apply_layout)
         elif action_id == "solfege":
             win = SolfegeCalculator()
         elif action_id == "console":
