@@ -2961,6 +2961,7 @@ Or search packages in Gallery.app.`;
     if (!lp) return;
     const isHidden = lp.classList.contains('hidden');
     if (isHidden) {
+      document.body.classList.add('launchpad-active');
       lp.classList.remove('hidden');
       const search = document.getElementById('launchpad-search-input');
       if (search) {
@@ -2976,6 +2977,7 @@ Or search packages in Gallery.app.`;
   window.toggleLaunchpad = toggleLaunchpad;
 
   function closeLaunchpad() {
+    document.body.classList.remove('launchpad-active');
     document.getElementById('launchpad-overlay')?.classList.add('hidden');
   }
   window.closeLaunchpad = closeLaunchpad;
@@ -3547,6 +3549,20 @@ Or search packages in Gallery.app.`;
       openWindow('win-settings');
       openWindow('win-installer');
       openWindow('win-calc');
+    } else if (testParam === 'battery') {
+      document.body.classList.remove('dark-mode');
+      document.body.classList.add('light-mode');
+      openWindow('win-settings');
+      switchSettingsTab('battery');
+    } else if (testParam === 'appearance') {
+      document.body.classList.remove('dark-mode');
+      document.body.classList.add('light-mode');
+      openWindow('win-settings');
+      switchSettingsTab('appearance');
+    } else if (testParam === 'launchpad_cadence') {
+      openWindow('win-cadence');
+      openWindow('win-messages');
+      toggleLaunchpad();
     } else if (testParam === 'launchpad') {
       toggleLaunchpad();
     } else if (testParam === 'spotlight') {
