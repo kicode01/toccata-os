@@ -2401,15 +2401,15 @@ Audio Engine:              PipeWire Low-Latency Subsystem (0.7ms ALSA)`;
 
     // 7. Fastfetch & Neofetch
     if (cmd === 'fastfetch' || cmd === 'neofetch') {
-      return '<pre style="color: #38bdf8; font-family: var(--font-mono); line-height: 1.35; margin: 4px 0;">' +
-'   ((  ╦═════╦  ))  <span style="color: #34c759; font-weight: 700;">toccata@core</span>\n' +
-'  ((   ║  ╦  ║   )) <span style="color: var(--text-secondary);">------------</span>\n' +
-' ((    ║  ║  ║    ))<span style="color: #ff9500;">OS:</span> Toccata OS 1.0 "Sonata" (x86_64)\n' +
-'  ((   ╚══╦══╝   )) <span style="color: #ff9500;">Kernel:</span> 6.11.5-bore-xanmod\n' +
-'   ((     ║     ))  <span style="color: #ff9500;">Uptime:</span> 4 hours, 28 mins\n' +
-'          ║         <span style="color: #ff9500;">Shell:</span> ' + currentShell + ' / Windows Bridge\n' +
-'          ●         <span style="color: #ff9500;">Resolution:</span> 3840x2160 @ 120Hz (Retina Display P3)\n' +
-'     <span style="color: #007aff; font-weight: 700;">[TOCCATA]</span>      <span style="color: #ff9500;">DE:</span> KWin Wayland Compositor (Frosted Slate)\n' +
+      return '<pre style="color: #e2e8f0; font-family: var(--font-mono); line-height: 1.35; margin: 4px 0;">' +
+'      ██████████     <span style="color: #34c759; font-weight: 700;">toccata@core</span>\n' +
+'                    <span style="color: var(--text-secondary);">------------</span>\n' +
+'       ██    ██     <span style="color: #ff9500;">OS:</span> Toccata OS 1.0 "Sonata" (x86_64)\n' +
+'       ██    ██     <span style="color: #ff9500;">Kernel:</span> 6.11.5-bore-xanmod\n' +
+'       ╚═╗  ╔═╝     <span style="color: #ff9500;">Uptime:</span> 4 hours, 28 mins\n' +
+'          ██        <span style="color: #ff9500;">Shell:</span> ' + currentShell + ' / Windows Bridge\n' +
+'          ██        <span style="color: #ff9500;">Resolution:</span> 3840x2160 @ 120Hz (Retina Display P3)\n' +
+'     <span style="color: #38bdf8; font-weight: 700;">[TOCCATA]</span>      <span style="color: #ff9500;">DE:</span> KWin Wayland Compositor (Frosted Slate)\n' +
 '                    <span style="color: #ff9500;">Theme:</span> Apple Glass Vibrancy (No Muddy Tones)\n' +
 '                    <span style="color: #ff9500;">CPU:</span> 16 Symphony Cores @ 4.8 GHz (BORE Scheduler)\n' +
 '                    <span style="color: #ff9500;">Memory:</span> 820 MiB / 32 GiB (2.5% Idle Footprint)\n' +
