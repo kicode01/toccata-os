@@ -411,11 +411,39 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  min-width: 420px;
-  min-height: 260px;
+  border-radius: 14px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.14), var(--glass-rim-light);
+  backdrop-filter: blur(40px) saturate(190%);
+  -webkit-backdrop-filter: blur(40px) saturate(190%);
   transform-origin: center center;
   transition: box-shadow 0.25s ease, border-radius 0.25s ease;
   will-change: transform, opacity, left, top;
+}
+
+.window:not(.calc-window) {
+  min-width: min(480px, calc(100vw - 20px));
+  min-height: 320px;
+  max-width: 96vw;
+  max-height: calc(100vh - 100px);
+}
+
+.calc-window {
+  width: 280px !important;
+  min-width: 260px !important;
+  max-width: 320px !important;
+  min-height: 390px !important;
+  max-height: 480px !important;
+}
+
+/* Universal .window-body Contract (Universal flex-1 container for all applications) */
+.window-body {
+  flex: 1 1 auto;
+  display: flex;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+  background: transparent;
 }
 
 .window.active-window {
@@ -458,7 +486,8 @@ body {
 }
 
 .window-titlebar {
-  height: 42px;
+  height: 40px;
+  flex-shrink: 0;
   background: var(--titlebar-bg);
   border-bottom: 1px solid var(--glass-border);
   display: flex;
@@ -655,6 +684,11 @@ body {
   background: var(--sidebar-bg);
   border-right: 1px solid var(--glass-border);
   padding: 12px 8px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+  flex-shrink: 0;
+  scrollbar-width: thin;
 }
 
 .sidebar-category {
@@ -1147,10 +1181,13 @@ body {
 
 /* Tempo Window */
 .tempo-body {
-  padding: 24px;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  min-height: 0;
+  padding: 20px;
+  gap: 16px;
+  overflow: hidden;
 }
 
 .tempo-grid {
@@ -1213,8 +1250,10 @@ body {
 
 /* Settings Window */
 .settings-body {
+  flex: 1 1 auto;
   display: flex;
-  height: calc(100% - 42px);
+  min-height: 0;
+  overflow: hidden;
 }
 
 .settings-sidebar {
@@ -1583,6 +1622,7 @@ body.light-mode .result-item.selected .res-meta {
 
 .finder-pathbar {
   height: 24px;
+  flex-shrink: 0;
   background: var(--titlebar-bg);
   border-top: 1px solid var(--glass-border);
   display: flex;
@@ -2225,10 +2265,13 @@ body.light-mode .slider-leading-icon {
 
 /* 3. Sonata Music & Sound Stage */
 .sonata-body {
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  padding: 24px;
-  gap: 20px;
+  padding: 20px;
+  gap: 16px;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .sonata-stage {
@@ -2376,7 +2419,8 @@ body.light-mode .slider-leading-icon {
 
 /* 4. Tempo Process Table & Force Quit Sheet */
 .process-table-container {
-  max-height: 175px;
+  flex: 1 1 auto;
+  min-height: 140px;
   overflow-y: auto;
   border: 1px solid var(--glass-border);
   border-radius: 10px;
@@ -2443,6 +2487,16 @@ body.light-mode .slider-leading-icon {
   flex: 1;
   display: flex;
   overflow: hidden;
+  min-height: 0;
+  min-width: 0;
+}
+
+.terminal-body,
+.horizon-viewport,
+#messages-chat-history,
+#mail-reader-pane {
+  min-height: 0;
+  min-width: 0;
 }
 
 .scribe-rendered-preview {
@@ -2653,24 +2707,29 @@ body.light-mode .slider-leading-icon {
 
 /* 3. SOLFEGE CALCULATOR (Apple Compact Glass Precision) */
 .calc-window {
-  width: 290px !important;
-  height: 420px !important;
+  width: 280px !important;
+  min-width: 260px !important;
+  max-width: 320px !important;
+  min-height: 390px !important;
+  max-height: 480px !important;
 }
 
 .calc-body {
-  padding: 16px;
+  flex: 1 1 auto;
+  padding: 14px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  height: calc(100% - 42px);
+  gap: 10px;
+  min-height: 0;
 }
 
 .calc-screen {
-  flex: 1;
+  flex: none;
+  height: 72px;
   background: rgba(0, 0, 0, 0.25);
   border-radius: 12px;
   border: 1px solid var(--glass-border);
-  padding: 14px 16px;
+  padding: 8px 14px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -2678,13 +2737,13 @@ body.light-mode .slider-leading-icon {
 }
 
 .calc-screen-sub {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-secondary);
-  min-height: 16px;
+  min-height: 14px;
 }
 
 .calc-screen-main {
-  font-size: 38px;
+  font-size: 32px;
   font-weight: 300;
   letter-spacing: -0.5px;
   color: var(--text-primary);
@@ -2701,10 +2760,10 @@ body.light-mode .slider-leading-icon {
 }
 
 .calc-key {
-  height: 52px;
-  border-radius: 14px;
+  height: 46px;
+  border-radius: 12px;
   border: 1px solid var(--glass-border);
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -2792,8 +2851,10 @@ body.light-mode .slider-leading-icon {
 
 /* 5. CHRONICLE CALENDAR & POMODORO ACOUSTIC CLOCK */
 .chronicle-body {
+  flex: 1 1 auto;
   display: flex;
-  height: calc(100% - 42px);
+  min-height: 0;
+  overflow: hidden;
 }
 
 .chronicle-sidebar {
@@ -2804,6 +2865,10 @@ body.light-mode .slider-leading-icon {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+  flex-shrink: 0;
 }
 
 .pomodoro-box {

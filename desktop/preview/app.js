@@ -155,9 +155,18 @@
     return document.querySelector('.window.active-window:not(.hidden)');
   }
 
+  const WINDOW_Z_MIN = 100;
+  const WINDOW_Z_MAX = 850;
+
   function bringToFront(windowEl) {
     if (!windowEl) return;
     topZIndex += 1;
+    if (topZIndex >= WINDOW_Z_MAX) {
+      const windows = Array.from(document.querySelectorAll('.window'))
+        .sort((a, b) => (parseInt(a.style.zIndex, 10) || WINDOW_Z_MIN) - (parseInt(b.style.zIndex, 10) || WINDOW_Z_MIN));
+      windows.forEach((w, idx) => { w.style.zIndex = WINDOW_Z_MIN + idx; });
+      topZIndex = WINDOW_Z_MIN + windows.length;
+    }
     windowEl.style.zIndex = topZIndex;
 
     const windows = document.querySelectorAll('.window');
@@ -191,9 +200,23 @@
     }, 650);
   }
 
+  function clampSingleWindowToViewport(win) {
+    if (!win || win.dataset.maximized === 'true') return;
+    const maxTop = window.innerHeight - 85;
+    const maxLeft = window.innerWidth - 10;
+    const isCalc = win.classList.contains('calc-window');
+    const w = isCalc ? Math.min(win.offsetWidth || 280, 320) : Math.min(win.offsetWidth || 600, window.innerWidth - 20);
+    const h = isCalc ? Math.min(win.offsetHeight || 420, 480) : Math.min(win.offsetHeight || 400, window.innerHeight - 120);
+    const curLeft = parseInt(win.style.left, 10) || win.offsetLeft;
+    const curTop = parseInt(win.style.top, 10) || win.offsetTop;
+    win.style.left = `${Math.max(10, Math.min(curLeft, Math.max(10, maxLeft - w)))}px`;
+    win.style.top = `${Math.max(34, Math.min(curTop, Math.max(34, maxTop - h)))}px`;
+  }
+
   function openWindow(id) {
     const win = document.getElementById(id);
     if (!win) return;
+    clampSingleWindowToViewport(win);
     const dockItem = windowDockMap[id];
     triggerDockBounce(dockItem);
 
@@ -345,7 +368,7 @@
 
   function maximizeWindow(id) {
     const win = document.getElementById(id);
-    if (!win) return;
+    if (!win || win.classList.contains('calc-window')) return;
 
     win.style.transition = 'top 0.25s cubic-bezier(0.16, 1, 0.3, 1), left 0.25s cubic-bezier(0.16, 1, 0.3, 1), width 0.25s cubic-bezier(0.16, 1, 0.3, 1), height 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-radius 0.25s ease';
 
@@ -362,10 +385,13 @@
       win.dataset.origWidth = win.style.width || `${win.offsetWidth}px`;
       win.dataset.origHeight = win.style.height || `${win.offsetHeight}px`;
 
+      const isDockAutohide = document.body.classList.contains('dock-autohide');
+      const dockClearance = isDockAutohide ? 0 : 84;
+
       win.style.top = '28px';
       win.style.left = '0';
       win.style.width = '100vw';
-      win.style.height = 'calc(100vh - 28px)';
+      win.style.height = `calc(100vh - 28px - ${dockClearance}px)`;
       win.style.borderRadius = '0';
       win.dataset.maximized = 'true';
     }
@@ -447,7 +473,7 @@
   }
 
   function applyWindowSnap(win, zone) {
-    if (!win || !zone) return;
+    if (!win || !zone || win.classList.contains('calc-window')) return;
     if (!win.dataset.origWidth) {
       win.dataset.origTop = win.style.top || `${win.offsetTop}px`;
       win.dataset.origLeft = win.style.left || `${win.offsetLeft}px`;
@@ -462,6 +488,7 @@
       win.style.left = '6px';
       win.style.width = `${Math.floor(vw / 2) - 9}px`;
       win.style.height = `${vh - 116}px`;
+      win.style.borderRadius = '10px';
       win.dataset.maximized = 'false';
       triggerNotification('Window tiled to Left Half');
     } else if (zone === 'right') {
@@ -469,6 +496,7 @@
       win.style.left = `${Math.floor(vw / 2) + 3}px`;
       win.style.width = `${Math.floor(vw / 2) - 9}px`;
       win.style.height = `${vh - 116}px`;
+      win.style.borderRadius = '10px';
       win.dataset.maximized = 'false';
       triggerNotification('Window tiled to Right Half');
     } else if (zone === 'max') {
@@ -487,8 +515,15 @@
       dragLastX = e.clientX;
       dragSmoothedVx = dragSmoothedVx * 0.65 + instantVx * 0.35;
 
-      dragCurX = dragInitLeft + dx;
-      dragCurY = Math.max(28, dragInitTop + dy); // Clamp below top bar
+      const winW = activeDragWin.offsetWidth || 600;
+      const winH = activeDragWin.offsetHeight || 400;
+      const minTop = 28; // Menu bar clearance
+      const maxTop = Math.max(minTop, window.innerHeight - 85 - 40); // 85px dock zone + 40px minimum titlebar visibility
+      const minLeft = 10;
+      const maxLeft = Math.max(minLeft, window.innerWidth - winW - 10);
+
+      dragCurX = Math.max(minLeft, Math.min(dragInitLeft + dx, maxLeft));
+      dragCurY = Math.max(minTop, Math.min(dragInitTop + dy, maxTop));
 
       updateSnapPreview(e.clientX, e.clientY);
 
@@ -496,14 +531,22 @@
         dragRafId = requestAnimationFrame(updateDragFrame);
       }
     } else if (activeResizeWin) {
-      const minW = activeResizeWin.classList.contains('calc-window') ? 270 : 380;
-      const minH = activeResizeWin.classList.contains('calc-window') ? 380 : 240;
+      const isCalc = activeResizeWin.classList.contains('calc-window');
+      const minW = isCalc ? 260 : 480;
+      const maxW = isCalc ? 320 : Math.floor(window.innerWidth * 0.96);
+      const minH = isCalc ? 390 : 320;
+      const maxH = isCalc ? 480 : (window.innerHeight - 100);
+
+      const winLeft = activeResizeWin.offsetLeft;
+      const winTop = activeResizeWin.offsetTop;
+      const maxAllowedW = Math.min(maxW, window.innerWidth - winLeft - 10);
+      const maxAllowedH = Math.min(maxH, window.innerHeight - winTop - 85);
 
       if (resizeHandleType.includes('r')) {
-        resizeCurW = Math.max(minW, resizeStartW + (e.clientX - resizeStartX));
+        resizeCurW = Math.max(minW, Math.min(maxAllowedW, resizeStartW + (e.clientX - resizeStartX)));
       }
       if (resizeHandleType.includes('b')) {
-        resizeCurH = Math.max(minH, resizeStartH + (e.clientY - resizeStartY));
+        resizeCurH = Math.max(minH, Math.min(maxAllowedH, resizeStartH + (e.clientY - resizeStartY)));
       }
 
       if (!resizeRafId) {
@@ -620,7 +663,16 @@
     });
   }
 
-  window.addEventListener('resize', cacheDockMetrics, { passive: true });
+  function clampAllWindowsToViewport() {
+    document.querySelectorAll('.window:not(.hidden)').forEach(win => {
+      clampSingleWindowToViewport(win);
+    });
+  }
+
+  window.addEventListener('resize', () => {
+    cacheDockMetrics();
+    clampAllWindowsToViewport();
+  }, { passive: true });
   dock?.addEventListener('mouseenter', cacheDockMetrics, { passive: true });
 
   dock?.addEventListener('mousemove', (e) => {
