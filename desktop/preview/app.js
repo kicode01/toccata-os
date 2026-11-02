@@ -318,6 +318,13 @@
       const dot = windowDotMap[id];
       if (dot) dot.classList.add('hidden');
 
+      if (win.dataset.maximized === 'true') {
+        win.classList.remove('is-maximized');
+        win.dataset.maximized = 'false';
+        const otherMax = document.querySelector('.window.is-maximized:not(.hidden)');
+        if (!otherMax) document.body.classList.remove('has-fullscreen-window', 'dock-peek');
+      }
+
       // Re-assign active window title
       const visibleWindows = Array.from(document.querySelectorAll('.window:not(.hidden)'));
       if (visibleWindows.length > 0) {
@@ -361,6 +368,11 @@
         setTimeout(() => dockItem.classList.remove('dock-absorbed'), 350);
       }
 
+      if (win.dataset.maximized === 'true') {
+        const otherMax = Array.from(document.querySelectorAll('.window.is-maximized:not(.hidden)')).filter(w => w !== win);
+        if (otherMax.length === 0) document.body.classList.remove('has-fullscreen-window', 'dock-peek');
+      }
+
       // Re-assign active window title
       const visibleWindows = Array.from(document.querySelectorAll('.window:not(.hidden)'));
       if (visibleWindows.length > 0) {
@@ -380,34 +392,60 @@
     win.style.transition = 'top 0.25s cubic-bezier(0.16, 1, 0.3, 1), left 0.25s cubic-bezier(0.16, 1, 0.3, 1), width 0.25s cubic-bezier(0.16, 1, 0.3, 1), height 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-radius 0.25s ease';
 
     if (win.dataset.maximized === 'true') {
-      win.style.top = win.dataset.origTop;
-      win.style.left = win.dataset.origLeft;
-      win.style.width = win.dataset.origWidth;
-      win.style.height = win.dataset.origHeight;
-      win.style.borderRadius = '14px';
+      // Exit Full Screen -> Restore to exact original floating window state
+      win.classList.remove('is-maximized');
       win.dataset.maximized = 'false';
+
+      const otherMax = Array.from(document.querySelectorAll('.window.is-maximized:not(.hidden)')).filter(w => w !== win);
+      if (otherMax.length === 0) {
+        document.body.classList.remove('has-fullscreen-window', 'dock-peek');
+      }
+
+      win.style.top = win.dataset.origTop || '56px';
+      win.style.left = win.dataset.origLeft || 'calc(50% - 470px)';
+      win.style.width = win.dataset.origWidth || '940px';
+      win.style.height = win.dataset.origHeight || '580px';
+      win.style.borderRadius = '18px';
+      win.style.boxShadow = '';
+
+      playHarmonicChime([480, 360], 0.16);
     } else {
+      // Enter Full Screen -> 100vw x 100vh workspace fill, hide dock, square corners
       win.dataset.origTop = win.style.top || `${win.offsetTop}px`;
       win.dataset.origLeft = win.style.left || `${win.offsetLeft}px`;
       win.dataset.origWidth = win.style.width || `${win.offsetWidth}px`;
       win.dataset.origHeight = win.style.height || `${win.offsetHeight}px`;
 
-      const isDockAutohide = document.body.classList.contains('dock-autohide');
-      const dockClearance = isDockAutohide ? 0 : 84;
+      win.classList.add('is-maximized');
+      win.dataset.maximized = 'true';
+      document.body.classList.add('has-fullscreen-window');
 
       win.style.top = '28px';
       win.style.left = '0';
       win.style.width = '100vw';
-      win.style.height = `calc(100vh - 28px - ${dockClearance}px)`;
+      win.style.height = 'calc(100vh - 28px)';
       win.style.borderRadius = '0';
-      win.dataset.maximized = 'true';
+      win.style.boxShadow = 'none';
+
+      bringToFront(win);
+      playHarmonicChime([523.25, 659.25, 783.99], 0.18);
     }
 
     setTimeout(() => {
       win.style.transition = '';
-    }, 260);
+    }, 280);
   }
   window.maximizeWindow = maximizeWindow;
+
+  // Dynamic Dock Peek in macOS Full Screen Mode
+  window.addEventListener('mousemove', (e) => {
+    if (!document.body.classList.contains('has-fullscreen-window')) return;
+    if (e.clientY >= window.innerHeight - 15) {
+      document.body.classList.add('dock-peek');
+    } else if (e.clientY < window.innerHeight - 85) {
+      document.body.classList.remove('dock-peek');
+    }
+  });
 
   // ==========================================================================
   // ==========================================================================
