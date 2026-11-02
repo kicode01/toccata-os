@@ -69,7 +69,11 @@
       { name: 'Console.app', type: 'app', size: '32 MB', date: 'Today at 1:40 AM', app: 'win-console' },
       { name: 'Calculator.app', type: 'app', size: '18 MB', date: 'Today at 1:40 AM', app: 'win-calc' },
       { name: 'Prism.app', type: 'app', size: '76 MB', date: 'Today at 1:40 AM', app: 'win-prism' },
-      { name: 'Chronicle.app', type: 'app', size: '54 MB', date: 'Today at 1:40 AM', app: 'win-chronicle' }
+      { name: 'Chronicle.app', type: 'app', size: '54 MB', date: 'Today at 1:40 AM', app: 'win-chronicle' },
+      { name: 'Reminders.app', type: 'app', size: '19 MB', date: 'Today at 1:40 AM', app: 'win-todo' },
+      { name: 'Contacts.app', type: 'app', size: '21 MB', date: 'Today at 1:40 AM', app: 'win-contacts' },
+      { name: 'Zorin Connect.app', type: 'app', size: '34 MB', date: 'Today at 1:40 AM', app: 'win-connect' },
+      { name: 'Welcome Tour.app', type: 'app', size: '15 MB', date: 'Today at 1:40 AM', app: 'win-tour' }
     ],
     '/Documents': [
       { name: 'Toccata Manifesto.md', type: 'doc', size: '4.2 KB', date: 'Today at 1:40 AM', app: 'win-scribe' },
@@ -101,7 +105,7 @@
     modal.innerHTML = `
       <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--glass-border);padding-bottom:10px;">
         <span style="font-weight:700;font-size:13px;">${file.name} Info</span>
-        <button class="btn btn-secondary" onclick="this.closest('#cadence-file-info-modal').remove()" style="padding:2px 8px;font-size:11px;">✕</button>
+        <button class="btn btn-secondary" onclick="this.closest('#cadence-file-info-modal').remove()" style="padding:2px 8px;font-size:11px;"><svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></button>
       </div>
       <div style="display:flex;align-items:center;gap:14px;padding:6px 0;">
         <div style="width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,#007aff,#5856d6);display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 8px 20px rgba(0,122,255,0.25);">
@@ -402,7 +406,7 @@ function computeSpectrum(timeDomainBuffer) {
     if (statusEl) {
       statusEl.innerHTML = `
         <span>${words} words &bull; ${chars} characters &bull; ~${readTime} min read</span>
-        <span style="color:#34c759;font-weight:600;">✓ Synced to Core NVMe</span>
+        <span style="color:#34c759;font-weight:600;display:inline-flex;align-items:center;gap:4px;"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#34c759" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 8 6.5 12 13 4"/></svg> Synced to Core NVMe</span>
       `;
     }
   }
@@ -479,7 +483,7 @@ function computeSpectrum(timeDomainBuffer) {
       tabEl.innerHTML = `
         <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
         <span style="max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${tab.title}</span>
-        <span onclick="event.stopPropagation(); closeHorizonTab('${tab.id}')" style="opacity:0.6;font-size:11px;padding:0 2px;">✕</span>
+        <span onclick="event.stopPropagation(); closeHorizonTab('${tab.id}')" style="opacity:0.6;font-size:11px;padding:0 2px;"><svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></span>
       `;
       tabEl.onclick = () => selectHorizonTab(tab.id);
       tabBar.appendChild(tabEl);
@@ -589,6 +593,79 @@ function computeSpectrum(timeDomainBuffer) {
           </div>
         </div>
       `;
+    } else if (url.includes('github.com')) {
+      viewport.innerHTML = `
+        <div style="background: #0d1117; color: #c9d1d9; font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 13px; min-height: 100%; padding: 24px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #30363d; padding-bottom:14px; margin-bottom:16px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <svg viewBox="0 0 16 16" width="22" height="22" fill="#f0f6fc"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>
+              <span style="font-size:16px; font-weight:700;"><span style="color:#58a6ff;">kicode01</span> / <span style="color:#f0f6fc;">toccata-os</span></span>
+              <span style="font-size:11px; padding:2px 8px; border-radius:12px; border:1px solid #30363d; color:#8b949e;">Public</span>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button class="btn btn-secondary" style="font-size:11px; padding:3px 10px; display:inline-flex; align-items:center; gap:4px;"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25z"/></svg> Star (1.2k)</button>
+              <button class="btn btn-secondary" style="font-size:11px; padding:3px 10px;">⑂ Fork (142)</button>
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns: 2fr 1fr; gap:18px;">
+            <div>
+              <div style="background:#161b22; border:1px solid #30363d; border-radius:8px; overflow:hidden;">
+                <div style="background:#21262d; padding:10px 14px; font-weight:600; font-size:12px; border-bottom:1px solid #30363d;">Latest Commits &bull; Branch: main</div>
+                <div style="padding:10px 14px; font-size:12px; border-bottom:1px solid #21262d;">feat(apps): reverse engineer and integrate zorin os and pearos application suites</div>
+                <div style="padding:10px 14px; font-size:12px; border-bottom:1px solid #21262d;">fix(ui): eliminate finder vertical stretch and window bleed-through</div>
+                <div style="padding:10px 14px; font-size:12px;">feat(kernel): XanMod 6.11 BORE scheduler with bit-perfect PipeWire 0.7ms</div>
+              </div>
+            </div>
+            <div>
+              <div style="background:#161b22; border:1px solid #30363d; border-radius:8px; padding:14px;">
+                <div style="font-weight:700; margin-bottom:8px;">About</div>
+                <p style="font-size:12px; color:#8b949e; line-height:1.5;">Sovereign desktop operating system fusing the audio latency of PipeWire, the UI responsiveness of 120Hz Wayland, and 2,220 Windows app compatibility rules.</p>
+                <div style="margin-top:12px; display:flex; flex-direction:column; gap:6px; font-size:11px; color:#8b949e;">
+                  <div><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="vertical-align:-1px;margin-right:4px;"><polyline points="5 4 1 8 5 12"/><polyline points="11 4 15 8 11 12"/></svg>Rust &bull; C++ &bull; Python &bull; Shell &bull; WebKit</div>
+                  <div style="display: flex; align-items: center; gap: 4px;"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v12M2 6l6-4 6 4M2 6l3 6M5 12h-6M14 6l-3 6M11 12h6"/></svg> MIT License</div>
+                  <div><svg width="12" height="12" viewBox="0 0 16 16" fill="#f59e0b" style="vertical-align:-1px;margin-right:4px;"><polygon points="8.5 1 2 9 7.5 9 6.5 15 13 7 7.5 7 8.5 1"/></svg>120 FPS Wayland Compositing</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    } else if (url.includes('wikipedia.org')) {
+      viewport.innerHTML = `
+        <div style="background: #ffffff; color: #202122; font-family: -apple-system, BlinkMacSystemFont, serif; font-size: 14px; line-height: 1.6; min-height: 100%; padding: 28px 36px; max-width: 820px; margin: 0 auto;">
+          <h1 style="font-size: 28px; font-weight: 400; border-bottom: 1px solid #a2a9b1; padding-bottom: 8px; margin-bottom: 16px;">Toccata and Fugue</h1>
+          <div style="font-size: 12px; color: #54595d; margin-bottom: 18px;">From Wikipedia, the free encyclopedia &bull; Horizon Sovereign Mirror</div>
+          <p><strong>Toccata</strong> (from Italian <em>toccare</em>, 'to touch') is a virtuosic piece of music typically for a keyboard instrument or plucked string instrument featuring fast-moving, lightly fingered or otherwise virtuosic passages or sections, emphasizing the dexterity of the performer's fingers.</p>
+          <p>In operating systems architecture, <strong>Toccata OS</strong> derives its name from this philosophy: every pointer click and audio pulse has immediate tactile resonance ("to touch") without buffer delay, operating at 0.7ms real-time audio latency.</p>
+        </div>
+      `;
+    } else if (url.includes('protondb.com')) {
+      viewport.innerHTML = `
+        <div style="background: #111317; color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 13px; min-height: 100%; padding: 24px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+            <h2 style="font-size: 20px; font-weight: 800; margin: 0; color: #ff5722;">ProtonDB &bull; Toccata Compatibility Ledger</h2>
+            <div style="background: rgba(255,87,34,0.15); color: #ff5722; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 700;">Zorin Exec Guard 1.5 Active</div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;">
+            <div style="background: #1a1e24; border-radius: 10px; padding: 14px; border-left: 4px solid #00c853;">
+              <div style="display:flex; justify-content:space-between;"><span style="font-weight:700;">Ableton Live 12</span><span style="color:#00c853; font-weight:700;">PLATINUM</span></div>
+              <div style="font-size:11px; color:#8b949e; margin-top:4px;">Wine-ASIO + PipeWire 0.7ms ALSA &bull; VST3 100% stable</div>
+            </div>
+            <div style="background: #1a1e24; border-radius: 10px; padding: 14px; border-left: 4px solid #00c853;">
+              <div style="display:flex; justify-content:space-between;"><span style="font-weight:700;">FL Studio 24</span><span style="color:#00c853; font-weight:700;">PLATINUM</span></div>
+              <div style="font-size:11px; color:#8b949e; margin-top:4px;">Direct low-latency ASIO bridge &bull; Zero audio dropouts</div>
+            </div>
+            <div style="background: #1a1e24; border-radius: 10px; padding: 14px; border-left: 4px solid #ffd600;">
+              <div style="display:flex; justify-content:space-between;"><span style="font-weight:700;">Adobe Photoshop 2024</span><span style="color:#ffd600; font-weight:700;">GOLD</span></div>
+              <div style="font-size:11px; color:#8b949e; margin-top:4px;">DXVK 2.3 Direct3D 11 &bull; Hardware acceleration verified</div>
+            </div>
+            <div style="background: #1a1e24; border-radius: 10px; padding: 14px; border-left: 4px solid #00c853;">
+              <div style="display:flex; justify-content:space-between;"><span style="font-weight:700;">Steam + Proton GE 9.14</span><span style="color:#00c853; font-weight:700;">NATIVE</span></div>
+              <div style="font-size:11px; color:#8b949e; margin-top:4px;">Vulkan direct presentation &bull; 120 FPS variable refresh</div>
+            </div>
+          </div>
+        </div>
+      `;
     } else if (url.includes('ycombinator.com')) {
       viewport.innerHTML = `
         <div style="background: #f6f6ef; color: #222; font-family: Verdana, sans-serif; font-size: 13px; min-height: 100%; padding: 14px;">
@@ -606,7 +683,7 @@ function computeSpectrum(timeDomainBuffer) {
     } else {
       viewport.innerHTML = `
         <div style="padding: 30px; text-align: center; color: var(--text-primary);">
-          <div style="font-size: 28px; margin-bottom: 10px;">🌐</div>
+          <div style="margin-bottom: 12px; display:flex; justify-content:center;"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
           <div style="font-size: 16px; font-weight: 700;">${url}</div>
           <div style="font-size: 12px; color: var(--text-secondary); margin-top: 6px;">Zero Telemetry Shield Active &bull; 100% Tracking Scripts Blocked</div>
         </div>
@@ -674,7 +751,7 @@ function computeSpectrum(timeDomainBuffer) {
           <span style="opacity:0.7;">Network (0.4ms)</span>
           <span style="opacity:0.7;">Performance 120Hz</span>
         </div>
-        <button class="toolbar-icon-btn" onclick="this.closest('#horizon-web-inspector').remove()" style="font-size:12px;width:18px;height:18px;">✕</button>
+        <button class="toolbar-icon-btn" onclick="this.closest('#horizon-web-inspector').remove()" style="font-size:12px;width:18px;height:18px;"><svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></button>
       </div>
       <div style="flex:1;padding:8px 12px;overflow-y:auto;line-height:1.6;">
         <div>&lt;<span style="color:#ff2d55;">html</span> <span style="color:#ffd60a;">lang</span>=<span style="color:#34c759;">"en"</span> <span style="color:#ffd60a;">data-toccata-bore</span>=<span style="color:#34c759;">"6.11"</span>&gt;</div>
@@ -1322,7 +1399,7 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
       <div class="toccata-modal-sheet" style="width: 380px; padding: 22px; display: flex; flex-direction: column; gap: 14px;">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <span style="font-weight: 700; font-size: 14px;">Add Calendar Event</span>
-          <button class="btn btn-secondary" onclick="this.closest('#chronicle-add-event-modal').remove()" style="padding: 2px 8px;">✕</button>
+          <button class="btn btn-secondary" onclick="this.closest('#chronicle-add-event-modal').remove()" style="padding: 2px 8px;"><svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></button>
         </div>
         <div>
           <label style="font-size: 11px; color: var(--text-secondary); font-weight: 600;">Event Title</label>
@@ -1380,7 +1457,7 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
       version: 'v12.0.5 Studio Pro',
       size: '4.1 GB',
       dev: 'Ableton AG',
-      rating: '4.9 ★★★★★ (1,248 reviews)',
+      rating: '4.9 5/5 (1,248 reviews)',
       desc: 'The industry-standard Digital Audio Workstation, featuring native PipeWire ALSA Direct 0.7ms low latency integration, bit-perfect audio export, and high-DPI Wayland scaling.',
       iconBg: 'linear-gradient(135deg, #ff2d55, #ff9500)'
     },
@@ -1388,7 +1465,7 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
       version: 'v1.95.0 Sovereign Build',
       size: '210 MB',
       dev: 'Microsoft / Sovereign Core',
-      rating: '4.8 ★★★★★ (3,420 reviews)',
+      rating: '4.8 5/5 (3,420 reviews)',
       desc: 'Zero-telemetry build with pre-configured Rust-Analyzer, Clangd, and JetBrains Mono fonts. Integrated Wayland drag-and-drop file trees.',
       iconBg: 'linear-gradient(135deg, #007aff, #00c6ff)'
     },
@@ -1396,7 +1473,7 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
       version: 'v4.2.3 LTS',
       size: '520 MB',
       dev: 'Blender Foundation',
-      rating: '4.9 ★★★★★ (890 reviews)',
+      rating: '4.9 5/5 (890 reviews)',
       desc: 'Open-source 3D creation suite powered by Vulkan HipRT compute kernels with real-time viewport raytracing.',
       iconBg: 'linear-gradient(135deg, #ff9500, #ea580c)'
     },
@@ -1404,7 +1481,7 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
       version: 'v9.0-3 GE Custom',
       size: '850 MB',
       dev: 'Valve & GloriousEggroll',
-      rating: '4.9 ★★★★★ (5,120 reviews)',
+      rating: '4.9 5/5 (5,120 reviews)',
       desc: 'Windows Gaming & DXVK 2.4 DirectX-to-Vulkan translation layer. Run your full Windows Steam catalog on Toccata OS.',
       iconBg: 'linear-gradient(135deg, #1e293b, #3b82f6)'
     }
@@ -1415,7 +1492,7 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
       version: 'v1.0.0 Native',
       size: '128 MB',
       dev: 'Toccata Studio Developer',
-      rating: '4.8 ★★★★★',
+      rating: '4.8 5/5',
       desc: 'Optimized native package built for Toccata OS with zero runtime overhead.',
       iconBg: 'linear-gradient(135deg, #007aff, #5856d6)'
     };
@@ -1441,7 +1518,7 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
               <div style="font-size:12px;color:#ffd60a;margin-top:2px;">${details.rating}</div>
             </div>
           </div>
-          <button class="btn btn-secondary" onclick="this.closest('#store-product-sheet-modal').remove()" style="padding:4px 10px;font-size:12px;">✕</button>
+          <button class="btn btn-secondary" onclick="this.closest('#store-product-sheet-modal').remove()" style="padding:4px 10px;font-size:12px;"><svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></button>
         </div>
 
         <div style="font-size:13px;color:var(--text-secondary);line-height:1.6;background:rgba(0,0,0,0.12);padding:14px;border-radius:10px;">
@@ -1543,7 +1620,7 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
       <div class="toccata-modal-sheet" style="width: 480px; max-width: 90vw; padding: 22px; display: flex; flex-direction: column; gap: 12px;">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <span style="font-weight: 700; font-size: 14px;">New Message &mdash; Sovereign Mail</span>
-          <button class="btn btn-secondary" onclick="this.closest('#mail-compose-modal').remove()" style="padding: 2px 8px;">✕</button>
+          <button class="btn btn-secondary" onclick="this.closest('#mail-compose-modal').remove()" style="padding: 2px 8px;"><svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></button>
         </div>
         <div style="display: flex; flex-direction: column; gap: 8px;">
           <input type="text" id="mail-compose-to" placeholder="To: recipient@toccata.os" style="width:100%; padding:8px 10px; background:rgba(0,0,0,0.15); border:1px solid var(--glass-border); border-radius:8px; color:var(--text-primary); font-size:12px; outline:none;">
@@ -1645,7 +1722,7 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
               <div style="font-size:11px;color:var(--text-secondary);">${sizeStr} &bull; ${mimeType || 'application/octet-stream'}</div>
             </div>
           </div>
-          <button class="btn btn-secondary" onclick="this.closest('#hex-inspector-modal').remove()" style="padding:4px 10px;font-size:12px;">✕</button>
+          <button class="btn btn-secondary" onclick="this.closest('#hex-inspector-modal').remove()" style="padding:4px 10px;font-size:12px;"><svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></button>
         </div>
 
         <div style="background:rgba(0,122,255,0.1); border:1px solid rgba(0,122,255,0.25); border-radius:8px; padding:10px 14px; font-size:12px; display:flex; justify-content:space-between; align-items:center;">
@@ -1711,7 +1788,7 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
                 <div style="font-size:11px;color:var(--text-secondary);">${fileName} &bull; ${sizeStr}</div>
               </div>
             </div>
-            <button class="btn btn-secondary" onclick="this.closest('#proton-exec-modal').remove()" style="padding:2px 8px;">✕</button>
+            <button class="btn btn-secondary" onclick="this.closest('#proton-exec-modal').remove()" style="padding:2px 8px;"><svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></button>
           </div>
 
           <div style="font-size:12.5px;color:var(--text-primary);line-height:1.6;background:rgba(0,122,255,0.08);border:1px solid rgba(0,122,255,0.22);padding:14px;border-radius:10px;">
@@ -1738,7 +1815,7 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
                 <div style="font-size:11px;color:var(--text-secondary);">${fileName} &bull; ${sizeStr}</div>
               </div>
             </div>
-            <button class="btn btn-secondary" onclick="this.closest('#proton-exec-modal').remove()" style="padding:2px 8px;">✕</button>
+            <button class="btn btn-secondary" onclick="this.closest('#proton-exec-modal').remove()" style="padding:2px 8px;"><svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></button>
           </div>
 
           <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;background:rgba(0,0,0,0.12);padding:14px;border-radius:10px;">
@@ -1784,7 +1861,7 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#ff2d55" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
             ${fileName} <span style="font-size:11px; color:var(--text-secondary); font-weight:normal;">(${sizeStr})</span>
           </div>
-          <button class="btn btn-secondary" onclick="this.closest('#pdf-viewer-modal').remove()" style="padding:2px 8px;">✕</button>
+          <button class="btn btn-secondary" onclick="this.closest('#pdf-viewer-modal').remove()" style="padding:2px 8px;"><svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></button>
         </div>
         <iframe src="${dataUrl}" style="flex:1; width:100%; border:none; background:#525659;"></iframe>
       </div>
@@ -1808,7 +1885,7 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#34c759" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
             ${fileName} <span style="font-size:11px; color:var(--text-secondary); font-weight:normal;">(${sizeStr})</span>
           </div>
-          <button class="btn btn-secondary" onclick="this.closest('#video-player-modal').remove()" style="padding:2px 8px;">✕</button>
+          <button class="btn btn-secondary" onclick="this.closest('#video-player-modal').remove()" style="padding:2px 8px;"><svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></button>
         </div>
         <div style="background:#000; display:flex; align-items:center; justify-content:center; max-height:480px;">
           <video src="${dataUrl}" controls autoplay style="max-width:100%; max-height:460px; outline:none;"></video>
@@ -1970,11 +2047,389 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
   // ==========================================================================
   // INITIALIZATION ON DOM READY
   // ==========================================================================
+
+  // ==========================================================================
+  // 14. REMINDERS SUITE (pearOS NiceC0re todo)
+  // ==========================================================================
+  const TODO_ITEMS = [
+    { id: 1, text: 'Master Bit-Perfect Audio Passthrough in PipeWire', list: 'today', cat: 'studio', priority: 'High', due: '4:00 PM', completed: false },
+    { id: 2, text: 'Benchmark KWin 120Hz Wayland compositing latency', list: 'today', cat: 'kernel', priority: 'Medium', due: '6:30 PM', completed: false },
+    { id: 3, text: 'Verify pearOS Cupertino squircle layout on Retina', list: 'today', cat: 'ui', priority: 'Normal', due: '8:00 PM', completed: false },
+    { id: 4, text: 'Package Zorin Exec Guard for native Linux runtime', list: 'scheduled', cat: 'kernel', priority: 'High', due: 'Tomorrow', completed: true },
+    { id: 5, text: 'Calibrate XanMod BORE scheduler burst dynamics', list: 'scheduled', cat: 'kernel', priority: 'High', due: 'Nov 6', completed: false },
+    { id: 6, text: 'Tune 432Hz acoustic feedback harmonic resonance', list: 'studio', cat: 'studio', priority: 'Normal', due: 'Nov 7', completed: false },
+    { id: 7, text: 'Audit 2,220 Windows app regex patterns', list: 'all', cat: 'kernel', priority: 'Low', due: 'Nov 8', completed: true },
+    { id: 8, text: 'Test dynamic island audio visualizer with Sonata', list: 'ui', cat: 'ui', priority: 'Normal', due: 'Nov 9', completed: true },
+  ];
+
+  let currentTodoFilter = 'today';
+
+  function renderTodoList(filter = currentTodoFilter) {
+    const listEl = document.getElementById('todo-items-list');
+    if (!listEl) return;
+
+    let filtered = TODO_ITEMS;
+    if (filter === 'today') filtered = TODO_ITEMS.filter(t => t.list === 'today' || !t.completed);
+    else if (filter === 'scheduled') filtered = TODO_ITEMS.filter(t => t.list === 'scheduled' || t.due);
+    else if (filter === 'completed') filtered = TODO_ITEMS.filter(t => t.completed);
+    else if (filter === 'studio') filtered = TODO_ITEMS.filter(t => t.cat === 'studio');
+    else if (filter === 'ui') filtered = TODO_ITEMS.filter(t => t.cat === 'ui');
+
+    listEl.innerHTML = '';
+    filtered.forEach(item => {
+      const row = document.createElement('div');
+      row.className = `todo-item ${item.completed ? 'completed' : ''}`;
+      row.innerHTML = `
+        <div class="todo-item-check" onclick="toggleTodoItem(${item.id})"></div>
+        <div class="todo-item-body">
+          <div class="todo-text-title">${item.text}</div>
+          <div class="todo-text-meta">
+            ${item.due ? `<span><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:3px;"><circle cx="8" cy="8" r="6.5"/><polyline points="8 4 8 8 11 9.5"/></svg>${item.due}</span>` : ''}
+            ${item.priority ? `<span style="color:${item.priority === 'High' ? '#ff3b30' : 'var(--text-secondary)'}; font-weight:600;">${item.priority}</span>` : ''}
+          </div>
+        </div>
+      `;
+      listEl.appendChild(row);
+    });
+
+    updateTodoCounts();
+  }
+
+  function updateTodoCounts() {
+    const todayEl = document.getElementById('todo-count-today');
+    if (todayEl) todayEl.textContent = TODO_ITEMS.filter(t => !t.completed).length;
+    const schedEl = document.getElementById('todo-count-sched');
+    if (schedEl) schedEl.textContent = TODO_ITEMS.filter(t => t.due && !t.completed).length;
+    const allEl = document.getElementById('todo-count-all');
+    if (allEl) allEl.textContent = TODO_ITEMS.length;
+    const doneEl = document.getElementById('todo-count-done');
+    if (doneEl) doneEl.textContent = TODO_ITEMS.filter(t => t.completed).length;
+  }
+
+  function toggleTodoItem(id) {
+    const item = TODO_ITEMS.find(t => t.id === id);
+    if (!item) return;
+    item.completed = !item.completed;
+    playUiTone(item.completed ? [523.25, 659.25] : [330], 0.12, 'sine', 0.05);
+    renderTodoList();
+  }
+  window.toggleTodoItem = toggleTodoItem;
+
+  function switchTodoFilter(filter, el) {
+    currentTodoFilter = filter;
+    document.querySelectorAll('.todo-smart-card, .todo-sidebar .sidebar-row').forEach(c => c.classList.remove('active'));
+    if (el) el.classList.add('active');
+
+    const titleEl = document.getElementById('todo-current-title');
+    if (titleEl) {
+      const titles = { today: 'Today', scheduled: 'Scheduled', all: 'All Reminders', completed: 'Completed', studio: 'Studio DSP & Audio', ui: 'Cupertino & Zorin UI' };
+      titleEl.textContent = titles[filter] || 'Reminders';
+    }
+    renderTodoList(filter);
+    playUiTone([659.25], 0.1, 'sine', 0.04);
+  }
+  window.switchTodoFilter = switchTodoFilter;
+
+  function addTodoFromInput() {
+    const input = document.getElementById('todo-new-input');
+    if (!input || !input.value.trim()) return;
+    TODO_ITEMS.unshift({
+      id: Date.now(),
+      text: input.value.trim(),
+      list: currentTodoFilter,
+      cat: 'user',
+      priority: 'Normal',
+      due: 'Today',
+      completed: false
+    });
+    input.value = '';
+    playUiTone([523.25, 783.99], 0.15, 'sine', 0.06);
+    renderTodoList();
+    if (typeof window.triggerNotification === 'function') {
+      window.triggerNotification('Reminder added');
+    }
+  }
+  window.addTodoFromInput = addTodoFromInput;
+
+  function handleTodoInputKey(e) {
+    if (e.key === 'Enter') addTodoFromInput();
+  }
+  window.handleTodoInputKey = handleTodoInputKey;
+
+  function focusTodoInput() {
+    const input = document.getElementById('todo-new-input');
+    if (input) input.focus();
+  }
+  window.focusTodoInput = focusTodoInput;
+
+  // ==========================================================================
+  // 15. CONTACTS SUITE (pearOS NiceC0re contacts)
+  // ==========================================================================
+  const CONTACTS_DATA = [
+    { id: 'ada', name: 'Ada Lovelace', role: 'Computing Pioneer & Mathematician', phone: '+1 (555) 019-2834', email: 'ada@toccata.os', avatarBg: 'linear-gradient(135deg, #af52de, #ff2d55)', initials: 'AL', notes: 'First computer programmer. Wrote the first algorithm intended for processing on Charles Babbage\'s Analytical Engine.' },
+    { id: 'kian', name: 'Kian B.', role: 'Founder & System Architect', phone: '+1 (555) 018-9921', email: 'kian@toccata.os', avatarBg: 'linear-gradient(135deg, #007aff, #00c6ff)', initials: 'KB', notes: 'Architect of Toccata OS, fusing Linux XanMod kernel performance with macOS Cupertino elegance and Zorin Windows app compatibility.' },
+    { id: 'linus', name: 'Linus Torvalds', role: 'Linux Kernel Lead Architect', phone: '+1 (555) 012-4820', email: 'torvalds@kernel.org', avatarBg: 'linear-gradient(135deg, #34c759, #30d158)', initials: 'LT', notes: 'Creator of the Linux kernel and Git. Advocate for clean, pragmatic, zero-overhead systems programming.' },
+    { id: 'steve', name: 'Steve Wozniak', role: 'Computing Hardware Engineer', phone: '+1 (555) 014-3829', email: 'woz@apple.com', avatarBg: 'linear-gradient(135deg, #ff9500, #ffcc00)', initials: 'SW', notes: 'Pioneer of personal computing and single-board computer design. Pure hardware elegance.' },
+    { id: 'zorin', name: 'Zorin OS Team', role: 'Desktop Compatibility Specialists', phone: '+353 (1) 489-1022', email: 'support@zorinos.com', avatarBg: 'linear-gradient(135deg, #00a3ff, #0051d5)', initials: 'ZO', notes: 'Creators of Zorin OS and the 2,220-rule Windows App Support Exec Guard intelligence engine.' },
+    { id: 'pearos', name: 'pearOS Developers', role: 'Cupertino UI & Qt6 Artisans', phone: '+33 (1) 942-8821', email: 'team@pearos.xyz', avatarBg: 'linear-gradient(135deg, #5856d6, #af52de)', initials: 'PO', notes: 'Craftsmen behind pearOS NiceC0re Qt6 applications and the Wayland dynamic island notch.' },
+  ];
+
+  let currentContactId = 'ada';
+
+  function renderContactsList(query = '') {
+    const listEl = document.getElementById('contacts-list');
+    if (!listEl) return;
+
+    const filtered = CONTACTS_DATA.filter(c => c.name.toLowerCase().includes(query.toLowerCase()) || c.role.toLowerCase().includes(query.toLowerCase()));
+    listEl.innerHTML = '';
+    filtered.forEach(c => {
+      const row = document.createElement('div');
+      row.className = `contact-row ${c.id === currentContactId ? 'active' : ''}`;
+      row.innerHTML = `
+        <div class="contact-avatar-small" style="background:${c.avatarBg};">${c.initials}</div>
+        <div class="contact-row-info">
+          <div class="contact-row-name">${c.name}</div>
+          <div class="contact-row-sub">${c.role}</div>
+        </div>
+      `;
+      row.onclick = () => selectContact(c.id);
+      listEl.appendChild(row);
+    });
+
+    renderContactDetail(currentContactId);
+  }
+
+  function selectContact(id) {
+    currentContactId = id;
+    document.querySelectorAll('.contact-row').forEach(r => r.classList.remove('active'));
+    const rows = document.querySelectorAll('.contact-row');
+    const idx = CONTACTS_DATA.findIndex(c => c.id === id);
+    if (rows[idx]) rows[idx].classList.add('active');
+    renderContactDetail(id);
+    playUiTone([659.25], 0.1, 'sine', 0.04);
+  }
+  window.selectContact = selectContact;
+
+  function renderContactDetail(id) {
+    const pane = document.getElementById('contacts-detail-pane');
+    if (!pane) return;
+    const c = CONTACTS_DATA.find(x => x.id === id) || CONTACTS_DATA[0];
+
+    pane.innerHTML = `
+      <div class="contact-hero">
+        <div class="contact-avatar-large" style="background:${c.avatarBg};">${c.initials}</div>
+        <div>
+          <div style="font-size:22px; font-weight:800; letter-spacing:-0.3px;">${c.name}</div>
+          <div style="font-size:13px; color:var(--text-secondary); margin-top:2px;">${c.role}</div>
+          <div style="font-size:11px; color:#34c759; font-weight:700; margin-top:6px;">● Available &bull; Local Peer</div>
+        </div>
+      </div>
+
+      <div class="contact-actions-bar">
+        <button class="contact-action-btn" onclick="contactMessage('${c.id}')">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+          <span>Message</span>
+        </button>
+        <button class="contact-action-btn" onclick="contactCall('${c.id}')">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+          <span>Call</span>
+        </button>
+        <button class="contact-action-btn" onclick="contactMail('${c.id}')">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          <span>Email</span>
+        </button>
+      </div>
+
+      <div class="settings-group-card" style="margin-bottom:14px;">
+        <div class="settings-row">
+          <div>
+            <div class="row-title">Mobile Phone</div>
+            <div class="row-desc" style="color:var(--accent-color); font-weight:600;">${c.phone}</div>
+          </div>
+          <button class="btn btn-secondary" onclick="contactCall('${c.id}')" style="font-size:11px; padding:3px 8px;">Call</button>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="row-title">Email Address</div>
+            <div class="row-desc" style="color:var(--accent-color); font-weight:600;">${c.email}</div>
+          </div>
+          <button class="btn btn-secondary" onclick="contactMail('${c.id}')" style="font-size:11px; padding:3px 8px;">Compose</button>
+        </div>
+      </div>
+
+      <div class="settings-group-card">
+        <div style="padding:14px;">
+          <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-secondary); margin-bottom:6px;">Notes</div>
+          <div style="font-size:13px; line-height:1.6; color:var(--text-primary);">${c.notes}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  function filterContactsList(query) {
+    renderContactsList(query);
+  }
+  window.filterContactsList = filterContactsList;
+
+  function contactMessage(id) {
+    if (typeof window.openWindow === 'function') window.openWindow('win-messages');
+    playUiTone([523.25, 659.25], 0.12, 'sine', 0.05);
+  }
+  window.contactMessage = contactMessage;
+
+  function contactCall(id) {
+    const c = CONTACTS_DATA.find(x => x.id === id);
+    if (!c) return;
+    playUiTone([440, 480], 0.4, 'sine', 0.08);
+    if (typeof window.triggerNotification === 'function') {
+      window.triggerNotification(`Calling ${c.name} (${c.phone})...`);
+    }
+  }
+  window.contactCall = contactCall;
+
+  function contactMail(id) {
+    const c = CONTACTS_DATA.find(x => x.id === id);
+    if (!c) return;
+    if (typeof window.openWindow === 'function') window.openWindow('win-mail');
+    const replyInput = document.getElementById('mail-quick-reply');
+    if (replyInput) replyInput.value = `Hello ${c.name}, `;
+  }
+  window.contactMail = contactMail;
+
+  // ==========================================================================
+  // 16. ZORIN CONNECT SUITE (zorin-connect Mobile Bridge)
+  // ==========================================================================
+  function ringPhoneAction() {
+    playUiTone([880, 1174.66, 880, 1174.66], 0.5, 'triangle', 0.1);
+    if (typeof window.triggerNotification === 'function') {
+      window.triggerNotification('Zorin Connect: iPhone 16 Pro is ringing!');
+    }
+  }
+  window.ringPhoneAction = ringPhoneAction;
+
+  function sendMobileFileAction() {
+    playUiTone([587.33, 880], 0.15, 'sine', 0.06);
+    if (typeof window.triggerNotification === 'function') {
+      window.triggerNotification('Zorin Connect: File sent to iPhone 16 Pro via Wi-Fi 6E (12.4 MB/s)');
+    }
+  }
+  window.sendMobileFileAction = sendMobileFileAction;
+
+  function syncClipboardAction() {
+    playUiTone([523.25, 659.25], 0.12, 'sine', 0.05);
+    if (typeof window.triggerNotification === 'function') {
+      window.triggerNotification('Zorin Connect: Clipboard synchronized with mobile device');
+    }
+  }
+  window.syncClipboardAction = syncClipboardAction;
+
+  // ==========================================================================
+  // 17. WELCOME TOUR SUITE (zorin-os-tour & pearos-welcome)
+  // ==========================================================================
+  const TOUR_SLIDES = [
+    {
+      badge: 'Welcome to Toccata OS',
+      title: 'The Resonant Operating System',
+      desc: 'Crafted from the architectural foundations of Arch Linux, pearOS NiceC0re, and Zorin OS 18. Enjoy 120Hz Wayland fluid animations, zero telemetry tracking, and 0.7ms low-latency studio audio passthrough.',
+      icon: `<div style="width:72px; height:72px; border-radius:18px; background:linear-gradient(135deg, #007aff, #af52de); display:flex; align-items:center; justify-content:center; color:white;"><svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>`,
+      action: '<button class="btn btn-primary" onclick="openWindow(\'win-settings\'); switchSettingsTab(\'appearance\');">Explore Appearance</button>'
+    },
+    {
+      badge: 'Desktop Personalities',
+      title: 'Switch Layouts Instantly',
+      desc: 'Choose between pearOS macOS Sequoia, Windows 11 with Zorin Start Menu, or GNOME 47 Activities without restarting. All your windows and audio graphs preserve state seamlessly.',
+      icon: `<div style="width:72px; height:72px; border-radius:18px; background:linear-gradient(135deg, #ff9500, #ff2d55); display:flex; align-items:center; justify-content:center; color:white;"><svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg></div>`,
+      action: '<button class="btn btn-primary" onclick="openWindow(\'win-settings\'); switchSettingsTab(\'desktopdock\');">Switch Layouts</button>'
+    },
+    {
+      badge: 'Compatibility Engine',
+      title: 'Zorin Windows App Support',
+      desc: 'Drag and drop any Windows installer (.exe / .msi). The reverse-engineered 2,220-rule Exec Guard identifies native Linux alternatives or automatically executes in a hardened Proton GE wine container.',
+      icon: `<div style="width:72px; height:72px; border-radius:18px; background:linear-gradient(135deg, #00a3ff, #0051d5); display:flex; align-items:center; justify-content:center; color:white;"><svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="3"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>`,
+      action: '<button class="btn btn-primary" onclick="openWindow(\'win-installer\');">Browse Software Gallery</button>'
+    },
+    {
+      badge: 'Acoustic Sound Architecture',
+      title: 'Bit-Perfect PipeWire 0.7ms DSP',
+      desc: 'Hardware passthrough directly into low-jitter memory buffers. Test musical synthesizers with Sonata, Solfege, and feel the porcelain acoustic touch feedback on every interaction.',
+      icon: `<div style="width:72px; height:72px; border-radius:18px; background:linear-gradient(135deg, #ff2d55, #fa114f); display:flex; align-items:center; justify-content:center; color:white;"><svg viewBox="0 0 24 24" width="38" height="38" fill="currentColor"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>`,
+      action: '<button class="btn btn-primary" onclick="openWindow(\'win-sonata\');">Open Sonata Music</button>'
+    }
+  ];
+
+  let currentTourSlide = 0;
+
+  function renderTourSlide(index = currentTourSlide) {
+    const container = document.getElementById('tour-slide-container');
+    if (!container) return;
+    const slide = TOUR_SLIDES[index];
+
+    container.innerHTML = `
+      ${slide.icon}
+      <span style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--accent-color); letter-spacing:1px;">${slide.badge}</span>
+      <h2 style="font-size:24px; font-weight:800; margin:0; letter-spacing:-0.5px;">${slide.title}</h2>
+      <p style="color:var(--text-secondary); font-size:13px; line-height:1.6; max-width:480px; margin:0;">${slide.desc}</p>
+      <div style="margin-top:8px;">${slide.action}</div>
+    `;
+
+    document.querySelectorAll('.tour-dot').forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === index);
+    });
+
+    const prevBtn = document.getElementById('tour-prev-btn');
+    if (prevBtn) prevBtn.style.visibility = index === 0 ? 'hidden' : 'visible';
+    const nextBtn = document.getElementById('tour-next-btn');
+    if (nextBtn) nextBtn.textContent = index === TOUR_SLIDES.length - 1 ? 'Finish' : 'Next →';
+  }
+
+  function nextTourSlide() {
+    if (currentTourSlide < TOUR_SLIDES.length - 1) {
+      currentTourSlide++;
+      renderTourSlide(currentTourSlide);
+      playUiTone([659.25], 0.1, 'sine', 0.05);
+    } else {
+      if (typeof window.closeWindow === 'function') window.closeWindow('win-tour');
+      playUiTone([523.25, 659.25, 1046.5], 0.2, 'sine', 0.06);
+    }
+  }
+  window.nextTourSlide = nextTourSlide;
+
+  function prevTourSlide() {
+    if (currentTourSlide > 0) {
+      currentTourSlide--;
+      renderTourSlide(currentTourSlide);
+      playUiTone([440], 0.1, 'sine', 0.05);
+    }
+  }
+  window.prevTourSlide = prevTourSlide;
+
+  function gotoTourSlide(index) {
+    currentTourSlide = index;
+    renderTourSlide(currentTourSlide);
+    playUiTone([523.25], 0.1, 'sine', 0.05);
+  }
+  window.gotoTourSlide = gotoTourSlide;
+
+  // ==========================================================================
+  // 18. DYNAMIC ISLAND NOTCH (pearOS NiceC0re notch)
+  // ==========================================================================
+  function toggleDynamicIsland() {
+    const island = document.getElementById('pearos-dynamic-island');
+    if (!island) return;
+    island.classList.toggle('expanded');
+    playUiTone([783.99, 1046.5], 0.12, 'sine', 0.05);
+  }
+  window.toggleDynamicIsland = toggleDynamicIsland;
+
+
   function initSuite() {
     initCadenceContextMenu();
     initScribeNotebook();
     initHorizonTabBar();
     initGlobalDropzone();
+    renderTodoList();
+    renderContactsList();
+    renderTourSlide();
   }
 
   if (document.readyState === 'loading') {

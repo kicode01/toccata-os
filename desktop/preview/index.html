@@ -190,6 +190,12 @@
           </svg>
         </div>
 
+        <!-- pearOS Dynamic Island Notch -->
+        <div id="pearos-dynamic-island" onclick="toggleDynamicIsland()" title="pearOS Dynamic Island Notch">
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: #34c759;" id="island-dot"></span>
+          <span id="island-label">Toccata 120Hz</span>
+        </div>
+
         <!-- Apple Intelligence Siri Orb -->
         <div class="menu-item status-icon-item" onclick="playHarmonicChime([523.25, 659.25, 783.99]); toggleLaunchpad();" title="Launchpad &amp; GNOME Workspaces Overview">
           <svg viewBox="0 0 24 24" width="16" height="16">
@@ -331,6 +337,22 @@
           <div class="launchpad-item" data-name="System Settings Zorin Appearance PearOS" onclick="openWindow('win-settings'); closeLaunchpad();">
             <div class="lp-icon-box" style="background: linear-gradient(135deg, #8e8e93, #48484a);"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
             <span>System Settings</span>
+          </div>
+          <div class="launchpad-item" data-name="Reminders Todo Tasks PearOS" onclick="openWindow('win-todo'); closeLaunchpad();">
+            <div class="lp-icon-box" style="background: linear-gradient(135deg, #007aff, #34c759);"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="white" stroke-width="2"><circle cx="6" cy="6" r="2"/><line x1="12" y1="6" x2="20" y2="6"/><circle cx="6" cy="12" r="2"/><line x1="12" y1="12" x2="20" y2="12"/><circle cx="6" cy="18" r="2"/><line x1="12" y1="18" x2="20" y2="18"/></svg></div>
+            <span>Reminders</span>
+          </div>
+          <div class="launchpad-item" data-name="Contacts People Address Book PearOS" onclick="openWindow('win-contacts'); closeLaunchpad();">
+            <div class="lp-icon-box" style="background: linear-gradient(135deg, #af52de, #5856d6);"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a6 6 0 0 1 12 0v2"/></svg></div>
+            <span>Contacts</span>
+          </div>
+          <div class="launchpad-item" data-name="Zorin Connect Mobile Phone Sync" onclick="openWindow('win-connect'); closeLaunchpad();">
+            <div class="lp-icon-box" style="background: linear-gradient(135deg, #00a3ff, #0051d5);"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="white" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="3"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+            <span>Zorin Connect</span>
+          </div>
+          <div class="launchpad-item" data-name="Welcome Tour Onboarding Guide" onclick="openWindow('win-tour'); closeLaunchpad();">
+            <div class="lp-icon-box" style="background: linear-gradient(135deg, #ff9500, #ff2d55);"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="white" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+            <span>System Tour</span>
           </div>
           <div class="launchpad-item" data-name="Trash Bin Recycle" onclick="openWindow('win-cadence'); switchCadenceFolder('trash'); closeLaunchpad();">
             <div class="lp-icon-box" style="background: linear-gradient(135deg, #c7c7cc, #636366);"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="white" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></div>
@@ -692,6 +714,52 @@
               <text x="50" y="72" fill="#1c1c1e" font-size="40" font-weight="300" text-anchor="middle" id="finder-cal-day">1</text>
             </svg>
             <span class="app-title">Chronicle.app</span>
+          </div>
+
+          <!-- pearOS Reminders / To-Do -->
+          <div class="app-card" ondblclick="openWindow('win-todo')" onclick="selectFile(this, 'Reminders.app', 'Task & Reminders Suite', '19 MB')">
+            <svg viewBox="0 0 100 100" width="48" height="48" style="filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));">
+              <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="#ffffff"/>
+              <circle cx="28" cy="32" r="10" fill="#007aff"/>
+              <line x1="46" y1="32" x2="82" y2="32" stroke="#d1d1d6" stroke-width="6" stroke-linecap="round"/>
+              <circle cx="28" cy="54" r="10" fill="#ff9500"/>
+              <line x1="46" y1="54" x2="82" y2="54" stroke="#d1d1d6" stroke-width="6" stroke-linecap="round"/>
+              <circle cx="28" cy="76" r="10" fill="#34c759"/>
+              <line x1="46" y1="76" x2="82" y2="76" stroke="#d1d1d6" stroke-width="6" stroke-linecap="round"/>
+            </svg>
+            <span class="app-title">Reminders.app</span>
+          </div>
+
+          <!-- pearOS Contacts -->
+          <div class="app-card" ondblclick="openWindow('win-contacts')" onclick="selectFile(this, 'Contacts.app', 'Address Book & People', '21 MB')">
+            <svg viewBox="0 0 100 100" width="48" height="48" style="filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));">
+              <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="#c792ea"/>
+              <circle cx="50" cy="40" r="18" fill="#ffffff"/>
+              <path d="M22 84c0-15.464 12.536-26 28-26s28 10.536 28 26" fill="#ffffff"/>
+            </svg>
+            <span class="app-title">Contacts.app</span>
+          </div>
+
+          <!-- Zorin Connect -->
+          <div class="app-card" ondblclick="openWindow('win-connect')" onclick="selectFile(this, 'Zorin Connect.app', 'Mobile Phone Integration Bridge', '34 MB')">
+            <svg viewBox="0 0 100 100" width="48" height="48" style="filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));">
+              <defs><linearGradient id="zc-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00a3ff"/><stop offset="100%" stop-color="#0051d5"/></linearGradient></defs>
+              <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="url(#zc-grad)"/>
+              <rect x="28" y="20" width="44" height="60" rx="8" fill="none" stroke="#ffffff" stroke-width="5"/>
+              <circle cx="50" cy="70" r="3" fill="#ffffff"/>
+              <path d="M42 36l8 8 8-8" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="app-title">Zorin Connect.app</span>
+          </div>
+
+          <!-- Zorin / Toccata Welcome Tour -->
+          <div class="app-card" ondblclick="openWindow('win-tour')" onclick="selectFile(this, 'Welcome Tour.app', 'System Tour & Feature Guide', '15 MB')">
+            <svg viewBox="0 0 100 100" width="48" height="48" style="filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));">
+              <defs><linearGradient id="tour-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff9500"/><stop offset="100%" stop-color="#ff2d55"/></linearGradient></defs>
+              <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="url(#tour-grad)"/>
+              <polygon points="50 18 59 38 81 40 65 55 70 77 50 65 30 77 35 55 19 40 41 38" fill="#ffffff"/>
+            </svg>
+            <span class="app-title">Welcome Tour.app</span>
           </div>
         </main>
 
@@ -2375,6 +2443,243 @@ Type 'help' to view available commands.</div>
       </div>
 
       <!-- Window Resizer Handles -->
+      <div class="window-resizer window-resizer-r"></div>
+      <div class="window-resizer window-resizer-b"></div>
+      <div class="window-resizer window-resizer-rb" title="Drag to Resize"></div>
+    </div>
+
+    <!-- ====================================================================
+         WINDOW 14: REMINDERS (pearOS NiceC0re todo)
+         ==================================================================== -->
+    <div class="window glass-panel hidden" id="win-todo" style="top: 80px; left: calc(50% - 370px); width: 740px; height: 500px;">
+      <div class="window-titlebar">
+        <div class="traffic-lights">
+          <button class="tl-btn tl-close" onclick="closeWindow('win-todo')"></button>
+          <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-todo')"></button>
+          <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-todo')"></button>
+        </div>
+        <div class="window-title"><span class="proxy-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2"/><line x1="12" y1="6" x2="20" y2="6"/><circle cx="6" cy="12" r="2"/><line x1="12" y1="12" x2="20" y2="12"/><circle cx="6" cy="18" r="2"/><line x1="12" y1="18" x2="20" y2="18"/></svg></span>Reminders</div>
+        <div class="titlebar-placeholder"></div>
+      </div>
+      <div class="window-body todo-body">
+        <aside class="todo-sidebar">
+          <div class="todo-smart-grid">
+            <div class="todo-smart-card active" onclick="switchTodoFilter('today', this)">
+              <div class="todo-smart-top">
+                <div class="todo-icon-circle" style="background:#007aff;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+                <span class="todo-smart-count" id="todo-count-today">3</span>
+              </div>
+              <span class="todo-smart-label">Today</span>
+            </div>
+            <div class="todo-smart-card" onclick="switchTodoFilter('scheduled', this)">
+              <div class="todo-smart-top">
+                <div class="todo-icon-circle" style="background:#ff3b30;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                <span class="todo-smart-count" id="todo-count-sched">5</span>
+              </div>
+              <span class="todo-smart-label">Scheduled</span>
+            </div>
+            <div class="todo-smart-card" onclick="switchTodoFilter('all', this)">
+              <div class="todo-smart-top">
+                <div class="todo-icon-circle" style="background:#8e8e93;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg></div>
+                <span class="todo-smart-count" id="todo-count-all">8</span>
+              </div>
+              <span class="todo-smart-label">All</span>
+            </div>
+            <div class="todo-smart-card" onclick="switchTodoFilter('completed', this)">
+              <div class="todo-smart-top">
+                <div class="todo-icon-circle" style="background:#34c759;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+                <span class="todo-smart-count" id="todo-count-done">4</span>
+              </div>
+              <span class="todo-smart-label">Completed</span>
+            </div>
+          </div>
+
+          <div style="font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 6px;">My Lists</div>
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <div class="sidebar-row active" onclick="switchTodoFilter('today', this)">
+              <span style="width: 8px; height: 8px; border-radius: 50%; background: #007aff; margin-right: 8px;"></span>
+              <span>Kernel &amp; Architecture</span>
+            </div>
+            <div class="sidebar-row" onclick="switchTodoFilter('studio', this)">
+              <span style="width: 8px; height: 8px; border-radius: 50%; background: #ff9500; margin-right: 8px;"></span>
+              <span>Studio DSP &amp; Audio</span>
+            </div>
+            <div class="sidebar-row" onclick="switchTodoFilter('ui', this)">
+              <span style="width: 8px; height: 8px; border-radius: 50%; background: #af52de; margin-right: 8px;"></span>
+              <span>Cupertino &amp; Zorin UI</span>
+            </div>
+          </div>
+        </aside>
+
+        <main class="todo-content">
+          <div class="todo-header">
+            <div>
+              <div class="todo-header-title" id="todo-current-title">Today</div>
+              <div class="todo-header-sub" id="todo-current-sub">3 Reminders &bull; High Priority</div>
+            </div>
+            <button class="btn btn-primary" onclick="focusTodoInput()" style="font-size: 11px; padding: 4px 10px;">+ New</button>
+          </div>
+
+          <div class="todo-items-list" id="todo-items-list">
+            <!-- Dynamically populated reminders -->
+          </div>
+
+          <div class="todo-input-bar">
+            <input type="text" id="todo-new-input" placeholder="+ Add a reminder, press Enter to commit..." style="flex: 1; background: rgba(0,0,0,0.06); border: 1px solid var(--glass-border); border-radius: 8px; padding: 7px 12px; font-size: 12px; color: var(--text-primary); outline: none;" onkeydown="handleTodoInputKey(event)">
+            <button class="btn btn-secondary" onclick="addTodoFromInput()" style="font-size: 11px; padding: 6px 12px;">Add</button>
+          </div>
+        </main>
+      </div>
+      <div class="window-resizer window-resizer-r"></div>
+      <div class="window-resizer window-resizer-b"></div>
+      <div class="window-resizer window-resizer-rb" title="Drag to Resize"></div>
+    </div>
+
+    <!-- ====================================================================
+         WINDOW 15: CONTACTS (pearOS NiceC0re contacts)
+         ==================================================================== -->
+    <div class="window glass-panel hidden" id="win-contacts" style="top: 70px; left: calc(50% - 390px); width: 780px; height: 510px;">
+      <div class="window-titlebar">
+        <div class="traffic-lights">
+          <button class="tl-btn tl-close" onclick="closeWindow('win-contacts')"></button>
+          <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-contacts')"></button>
+          <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-contacts')"></button>
+        </div>
+        <div class="window-title"><span class="proxy-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a6 6 0 0 1 12 0v2"/></svg></span>Contacts</div>
+        <div class="titlebar-placeholder"></div>
+      </div>
+      <div class="window-body contacts-body">
+        <aside class="contacts-sidebar">
+          <div class="contacts-search-box">
+            <input type="text" id="contacts-search-input" placeholder="Search contacts..." oninput="filterContactsList(this.value)" style="width: 100%; box-sizing: border-box; background: rgba(0,0,0,0.06); border: 1px solid var(--glass-border); border-radius: 7px; padding: 6px 10px; font-size: 12px; color: var(--text-primary); outline: none;">
+          </div>
+          <div class="contacts-list" id="contacts-list">
+            <!-- Dynamically populated contacts -->
+          </div>
+        </aside>
+
+        <main class="contacts-detail-pane" id="contacts-detail-pane">
+          <!-- Dynamically populated contact detail -->
+        </main>
+      </div>
+      <div class="window-resizer window-resizer-r"></div>
+      <div class="window-resizer window-resizer-b"></div>
+      <div class="window-resizer window-resizer-rb" title="Drag to Resize"></div>
+    </div>
+
+    <!-- ====================================================================
+         WINDOW 16: ZORIN CONNECT (zorin-connect Mobile Bridge)
+         ==================================================================== -->
+    <div class="window glass-panel hidden" id="win-connect" style="top: 90px; left: calc(50% - 360px); width: 720px; height: 500px;">
+      <div class="window-titlebar">
+        <div class="traffic-lights">
+          <button class="tl-btn tl-close" onclick="closeWindow('win-connect')"></button>
+          <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-connect')"></button>
+          <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-connect')"></button>
+        </div>
+        <div class="window-title"><span class="proxy-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="3"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span>Zorin Connect &mdash; Mobile Bridge</div>
+        <div class="titlebar-placeholder"></div>
+      </div>
+      <div class="window-body connect-body">
+        <div class="connect-device-card">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="width: 50px; height: 50px; border-radius: 12px; background: linear-gradient(135deg, #007aff, #00c6ff); display: flex; align-items: center; justify-content: center; color: white;">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="3"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+            </div>
+            <div>
+              <div style="font-size: 17px; font-weight: 700;">iPhone 16 Pro</div>
+              <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">Connected via Wi-Fi 6E (192.168.1.182) &bull; Battery 92% (Charging)</div>
+              <div style="display: flex; gap: 6px; margin-top: 6px;">
+                <span style="font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 5px; background: rgba(52, 199, 89, 0.15); color: #34c759;">Paired &amp; Encrypted</span>
+                <span style="font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 5px; background: rgba(0, 122, 255, 0.15); color: #007aff;">Clipboard Sync Active</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-secondary" onclick="triggerNotification('Zorin Connect: Ping sent to iPhone 16 Pro')" style="font-size: 11px;">Ping Device</button>
+        </div>
+
+        <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary);">Quick Actions</div>
+        <div class="connect-actions-grid">
+          <div class="connect-tile" onclick="ringPhoneAction()">
+            <div class="connect-tile-icon" style="background: linear-gradient(135deg, #ff3b30, #ff9500);"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+            <div style="font-size: 12px; font-weight: 700;">Ring Phone</div>
+            <div style="font-size: 10px; color: var(--text-secondary);">Locate misplaced device</div>
+          </div>
+          <div class="connect-tile" onclick="sendMobileFileAction()">
+            <div class="connect-tile-icon" style="background: linear-gradient(135deg, #007aff, #5856d6);"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+            <div style="font-size: 12px; font-weight: 700;">Send File</div>
+            <div style="font-size: 10px; color: var(--text-secondary);">Direct AirDrop bridge</div>
+          </div>
+          <div class="connect-tile" onclick="syncClipboardAction()">
+            <div class="connect-tile-icon" style="background: linear-gradient(135deg, #34c759, #30d158);"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></div>
+            <div style="font-size: 12px; font-weight: 700;">Sync Clipboard</div>
+            <div style="font-size: 10px; color: var(--text-secondary);">Share text &amp; images</div>
+          </div>
+          <div class="connect-tile" onclick="openWindow('win-messages'); closeWindow('win-connect');">
+            <div class="connect-tile-icon" style="background: linear-gradient(135deg, #af52de, #ff2d55);"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <div style="font-size: 12px; font-weight: 700;">SMS Messaging</div>
+            <div style="font-size: 10px; color: var(--text-secondary);">Send &amp; receive SMS</div>
+          </div>
+        </div>
+
+        <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary);">Bridge Settings</div>
+        <div class="settings-group-card" style="margin-bottom: 0;">
+          <div class="settings-row">
+            <div>
+              <div class="row-title">Notification Mirroring</div>
+              <div class="row-desc">Show iOS / Android notifications in Toccata Top Bar</div>
+            </div>
+            <label class="switch"><input type="checkbox" checked onchange="triggerNotification('Zorin Connect: Notifications toggled')"><span class="slider round"></span></label>
+          </div>
+          <div class="settings-row">
+            <div>
+              <div class="row-title">Multimedia Remote Control</div>
+              <div class="row-desc">Automatically pause Sonata music when phone receives an incoming call</div>
+            </div>
+            <label class="switch"><input type="checkbox" checked onchange="triggerNotification('Zorin Connect: Media pause toggled')"><span class="slider round"></span></label>
+          </div>
+          <div class="settings-row">
+            <div>
+              <div class="row-title">Trackpad / Mouse Remote</div>
+              <div class="row-desc">Use smartphone screen as a precision multi-touch trackpad</div>
+            </div>
+            <label class="switch"><input type="checkbox" checked onchange="triggerNotification('Zorin Connect: Mouse remote toggled')"><span class="slider round"></span></label>
+          </div>
+        </div>
+      </div>
+      <div class="window-resizer window-resizer-r"></div>
+      <div class="window-resizer window-resizer-b"></div>
+      <div class="window-resizer window-resizer-rb" title="Drag to Resize"></div>
+    </div>
+
+    <!-- ====================================================================
+         WINDOW 17: WELCOME TOUR (zorin-os-tour & pearos-welcome)
+         ==================================================================== -->
+    <div class="window glass-panel hidden" id="win-tour" style="top: 75px; left: calc(50% - 380px); width: 760px; height: 530px;">
+      <div class="window-titlebar">
+        <div class="traffic-lights">
+          <button class="tl-btn tl-close" onclick="closeWindow('win-tour')"></button>
+          <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-tour')"></button>
+          <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-tour')"></button>
+        </div>
+        <div class="window-title"><span class="proxy-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>Welcome to Toccata OS</div>
+        <div class="titlebar-placeholder"></div>
+      </div>
+      <div class="window-body tour-body">
+        <div class="tour-slide" id="tour-slide-container">
+          <!-- Dynamically populated tour slides -->
+        </div>
+        <div class="tour-footer">
+          <button class="btn btn-secondary" id="tour-prev-btn" onclick="prevTourSlide()" style="font-size: 11px; padding: 6px 14px;">Previous</button>
+          <div class="tour-dots" id="tour-dots-container">
+            <span class="tour-dot active" onclick="gotoTourSlide(0)"></span>
+            <span class="tour-dot" onclick="gotoTourSlide(1)"></span>
+            <span class="tour-dot" onclick="gotoTourSlide(2)"></span>
+            <span class="tour-dot" onclick="gotoTourSlide(3)"></span>
+          </div>
+          <button class="btn btn-primary" id="tour-next-btn" onclick="nextTourSlide()" style="font-size: 11px; padding: 6px 16px;">Next &rarr;</button>
+        </div>
+      </div>
       <div class="window-resizer window-resizer-r"></div>
       <div class="window-resizer window-resizer-b"></div>
       <div class="window-resizer window-resizer-rb" title="Drag to Resize"></div>

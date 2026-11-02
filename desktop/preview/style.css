@@ -4105,3 +4105,538 @@ body.true-tone-active #desktop {
 
 
 
+
+
+/* ==========================================================================
+   REVERSE-ENGINEERED APPS SUITE (pearOS NiceC0re + Zorin OS 18 Core)
+   1. Reminders (pearos-todo)
+   2. Contacts (pearos-contacts)
+   3. Zorin Connect (zorin-connect)
+   4. Welcome Tour (zorin-os-tour & pearos-welcome)
+   5. Dynamic Island Notch (pearos-notch)
+   ========================================================================== */
+
+/* 1. Reminders (pearos-todo) */
+.todo-body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.todo-sidebar {
+  width: 220px;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--glass-border);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.todo-smart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.todo-smart-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.todo-smart-card:hover, .todo-smart-card.active {
+  background: rgba(0, 122, 255, 0.16);
+  border-color: rgba(0, 122, 255, 0.4);
+}
+
+body.light-mode .todo-smart-card {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+}
+
+body.light-mode .todo-smart-card:hover,
+body.light-mode .todo-smart-card.active {
+  background: rgba(0, 122, 255, 0.1);
+  border-color: #007aff;
+}
+
+.todo-smart-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.todo-icon-circle {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.todo-smart-count {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.todo-smart-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.todo-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--bg-window);
+}
+
+body.light-mode .todo-content {
+  background: #ffffff;
+}
+
+.todo-header {
+  padding: 20px 24px 12px;
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.todo-header-title {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--accent-color);
+}
+
+.todo-header-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.todo-items-list {
+  flex: 1;
+  padding: 16px 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.todo-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--glass-border);
+  transition: all 0.15s ease;
+}
+
+body.light-mode .todo-item {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.05);
+}
+
+.todo-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.todo-item.completed .todo-text-title {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.todo-item-check {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: all 0.15s ease;
+}
+
+.todo-item-check:hover {
+  border-color: var(--accent-color);
+}
+
+.todo-item.completed .todo-item-check {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.todo-item.completed .todo-item-check::after {
+  content: '';
+  width: 6px;
+  height: 9px;
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-bottom: 2px;
+}
+
+.todo-item-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.todo-text-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.todo-text-meta {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 3px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.todo-input-bar {
+  padding: 12px 24px;
+  border-top: 1px solid var(--glass-border);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode .todo-input-bar {
+  background: #f8f8fa;
+}
+
+/* 2. Contacts (pearos-contacts) */
+.contacts-body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.contacts-sidebar {
+  width: 250px;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--glass-border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.contacts-search-box {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.contacts-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 0;
+}
+
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.contact-row:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.contact-row.active {
+  background: var(--accent-color) !important;
+  color: #ffffff !important;
+}
+
+.contact-row.active .contact-row-sub {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.contact-avatar-small {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.contact-row-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.contact-row-name {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.contact-row-sub {
+  font-size: 11px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.contacts-detail-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 32px 36px;
+  background: var(--bg-window);
+}
+
+body.light-mode .contacts-detail-pane {
+  background: #ffffff;
+}
+
+.contact-hero {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.contact-avatar-large {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 800;
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+.contact-actions-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.contact-action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  min-width: 72px;
+}
+
+.contact-action-btn:hover {
+  background: rgba(0, 122, 255, 0.15);
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+/* 3. Zorin Connect (zorin-connect) */
+.connect-body {
+  flex: 1;
+  padding: 24px 28px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: var(--bg-window);
+}
+
+body.light-mode .connect-body {
+  background: #ffffff;
+}
+
+.connect-device-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+body.light-mode .connect-device-card {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+}
+
+.connect-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.connect-tile {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+body.light-mode .connect-tile {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.connect-tile:hover {
+  transform: translateY(-2px);
+  background: rgba(0, 122, 255, 0.12);
+  border-color: var(--accent-color);
+}
+
+.connect-tile-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+/* 4. Welcome Tour (zorin-os-tour & pearos-welcome) */
+.tour-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 32px 40px 24px;
+  background: var(--bg-window);
+}
+
+body.light-mode .tour-body {
+  background: #ffffff;
+}
+
+.tour-slide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+  max-width: 580px;
+  margin: auto;
+}
+
+.tour-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--glass-border);
+  padding-top: 18px;
+}
+
+.tour-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.tour-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-secondary);
+  opacity: 0.35;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.tour-dot.active {
+  width: 22px;
+  border-radius: 4px;
+  background: var(--accent-color);
+  opacity: 1;
+}
+
+/* 5. Dynamic Island Notch (pearos-notch) */
+#pearos-dynamic-island {
+  position: fixed;
+  top: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 24px;
+  min-width: 130px;
+  background: #000000;
+  border-radius: 14px;
+  z-index: 100001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 12px;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#pearos-dynamic-island:hover,
+#pearos-dynamic-island.expanded {
+  height: 48px;
+  min-width: 320px;
+  border-radius: 20px;
+  padding: 0 18px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+}
