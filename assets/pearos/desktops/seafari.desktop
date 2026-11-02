@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Seafari
+Exec=seafari %u
+Icon=seafari
+Terminal=false
+Type=Application
+Categories=Network;WebBrowser;
+StartupWMClass=seafari

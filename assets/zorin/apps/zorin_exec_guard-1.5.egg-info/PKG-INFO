@@ -1,0 +1,11 @@
+Metadata-Version: 2.1
+Name: zorin-exec-guard
+Version: 1.5
+Summary: Zorin Exec Guard
+Home-page: http://zorin.com
+Author: Zorin OS Technologies Ltd.
+Author-email: os@zoringroup.com
+License: GPL-3.0
+License-File: LICENSE_GPL
+
+Zorin Exec Guard shows a warning when attempting to run unknown Linux or Windows executables and offers more trusted alternatives.

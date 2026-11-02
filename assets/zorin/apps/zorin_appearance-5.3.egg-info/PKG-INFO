@@ -1,0 +1,21 @@
+Metadata-Version: 2.1
+Name: zorin-appearance
+Version: 5.3
+Summary: Zorin Appearance
+Home-page: http://zorin.com
+Author: Zorin OS Technologies Ltd.
+Author-email: os@zoringroup.com
+License: GPL-2.0
+Keywords: appearance,desktop,panel,theme,extension,settings,tweak
+Platform: any
+Classifier: Programming Language :: Python
+Classifier: Environment :: X11 Applications :: GTK
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: End Users/Desktop
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Topic :: Desktop Environment
+License-File: LICENSE_CCBYSA
+License-File: LICENSE_GPL
+
+Modify the look and feel of your Zorin OS desktop.

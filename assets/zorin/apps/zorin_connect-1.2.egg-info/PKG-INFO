@@ -1,0 +1,13 @@
+Metadata-Version: 2.1
+Name: zorin-connect
+Version: 1.2
+Summary: Zorin Connect
+Home-page: http://zorin.com
+Author: Zorin OS Technologies Ltd.
+Author-email: os@zoringroup.com
+License: GPL-3.0
+Keywords: mobile,sync,android,phone,device
+Platform: any
+License-File: LICENSE_GPL
+
+Zorin Connect allows devices to securely share content like notifications or files and other features like SMS messaging and remote control.

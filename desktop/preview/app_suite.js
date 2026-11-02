@@ -1671,6 +1671,22 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
     playUiTone([659.25], 0.12, 'sine', 0.05);
   }
 
+  // Zorin Exec Guard Rule Database (Reverse-engineered from zorin-exec-guard 1.5)
+  const ZORIN_EXEC_GUARD_DB = [
+    { pattern: /firefox.*setup/i, name: 'Mozilla Firefox', altName: 'Horizon Web Browser', cat: 'dev', app: 'win-horizon', pkg: 'org.mozilla.firefox' },
+    { pattern: /chrome.*setup|google.*chrome/i, name: 'Google Chrome', altName: 'Horizon Web Browser', cat: 'dev', app: 'win-horizon', pkg: 'com.google.Chrome' },
+    { pattern: /spotify.*setup/i, name: 'Spotify Native', altName: 'Sonata Acoustic Engine', cat: 'audio', app: 'win-sonata', pkg: 'com.spotify.Client' },
+    { pattern: /vlc.*setup|vlc.*installer/i, name: 'VLC Media Player', altName: 'Sonata Hi-Fi / Video Player', cat: 'audio', app: 'win-sonata', pkg: 'org.videolan.VLC' },
+    { pattern: /code.*setup|vscode.*setup/i, name: 'Visual Studio Code', altName: 'VS Code (Sovereign Build)', cat: 'dev', app: 'win-scribe', pkg: 'com.visualstudio.code' },
+    { pattern: /discord.*setup/i, name: 'Discord for Linux', altName: 'Toccata Messages Bridge', cat: 'dev', app: 'win-messages', pkg: 'com.discordapp.Discord' },
+    { pattern: /slack.*setup/i, name: 'Slack for Linux', altName: 'Toccata Messages Bridge', cat: 'dev', app: 'win-messages', pkg: 'com.slack.Slack' },
+    { pattern: /steam.*setup/i, name: 'Steam Native Wayland', altName: 'Steam + Proton GE 9', cat: 'proton', app: 'win-tempo', pkg: 'com.valvesoftware.Steam' },
+    { pattern: /blender/i, name: 'Blender 3D Suite', altName: 'Blender 4.2 LTS', cat: 'audio', app: 'win-prism', pkg: 'org.blender.Blender' },
+    { pattern: /obs.*studio|obs.*setup/i, name: 'OBS Studio', altName: 'OBS Studio (Wayland PipeWire)', cat: 'audio', app: 'win-tempo', pkg: 'com.obsproject.Studio' },
+    { pattern: /libreoffice/i, name: 'LibreOffice Suite', altName: 'Scribe Document Studio', cat: 'dev', app: 'win-scribe', pkg: 'org.libreoffice.LibreOffice' },
+    { pattern: /gimp/i, name: 'GIMP Image Editor', altName: 'Prism Photos & Vector Studio', cat: 'audio', app: 'win-prism', pkg: 'org.gimp.GIMP' }
+  ];
+
   function openProtonExecutionModal(fileName, sizeStr) {
     let modal = document.getElementById('proton-exec-modal');
     if (!modal) {
@@ -1680,32 +1696,63 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
       document.body.appendChild(modal);
     }
 
-    modal.innerHTML = `
-      <div class="toccata-modal-sheet" style="width: 480px; max-width: 90vw; padding: 24px; display: flex; flex-direction: column; gap: 14px;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#ff2d55,#ff9500);display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 8px 20px rgba(255,45,85,0.3);">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+    const matched = ZORIN_EXEC_GUARD_DB.find(rule => rule.pattern.test(fileName));
+
+    if (matched) {
+      modal.innerHTML = `
+        <div class="toccata-modal-sheet" style="width: 520px; max-width: 90vw; padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#007aff,#00c6ff);display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 8px 20px rgba(0,122,255,0.35);">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <div>
+                <div style="font-weight:700;font-size:15px;">Zorin Windows App Support &mdash; Intelligence Engine</div>
+                <div style="font-size:11px;color:var(--text-secondary);">${fileName} &bull; ${sizeStr}</div>
+              </div>
             </div>
-            <div>
-              <div style="font-weight:700;font-size:15px;">Proton GE 9.0-3 Windows Subsystem</div>
-              <div style="font-size:11px;color:var(--text-secondary);">${fileName} &bull; ${sizeStr}</div>
-            </div>
+            <button class="btn btn-secondary" onclick="this.closest('#proton-exec-modal').remove()" style="padding:2px 8px;">✕</button>
           </div>
-          <button class="btn btn-secondary" onclick="this.closest('#proton-exec-modal').remove()" style="padding:2px 8px;">✕</button>
-        </div>
 
-        <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;background:rgba(0,0,0,0.12);padding:14px;border-radius:10px;">
-          Toccata OS intercepts Windows PE <code>.exe</code> and <code>.msi</code> binaries using a pre-configured <strong>Proton GE</strong> container with <strong>Wine-ASIO 0.7ms low latency</strong> and <strong>DXVK 2.4 DirectX-to-Vulkan</strong> acceleration.
-        </div>
+          <div style="font-size:12.5px;color:var(--text-primary);line-height:1.6;background:rgba(0,122,255,0.08);border:1px solid rgba(0,122,255,0.22);padding:14px;border-radius:10px;">
+            <strong style="color:var(--accent-color);">Native Linux Alternative Available:</strong> A high-performance native Linux package for <strong>${matched.name}</strong> is available in Software Gallery. Running native Linux apps provides smooth 120Hz Wayland rendering, native PipeWire 0.7ms audio, and lower battery drain than running Windows binaries.
+          </div>
 
-        <div style="display:flex; justify-content:flex-end; gap:10px; border-top:1px solid var(--glass-border); padding-top:12px;">
-          <button class="btn btn-secondary" onclick="this.closest('#proton-exec-modal').remove()">Cancel</button>
-          <button class="btn btn-primary" onclick="simulateProtonLaunch('${fileName}'); this.closest('#proton-exec-modal').remove();" style="font-weight:700;padding:6px 18px;">Run in Proton Container</button>
+          <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--glass-border); padding-top:14px; margin-top:4px;">
+            <button class="btn btn-secondary" onclick="simulateProtonLaunch('${fileName}'); this.closest('#proton-exec-modal').remove();" style="font-size:11px;padding:6px 12px;">Run in Proton Anyway</button>
+            <button class="btn btn-primary" onclick="if(typeof openWindow === 'function') openWindow('${matched.app || 'win-installer'}'); if(typeof installStoreApp === 'function') installStoreApp(null, '${matched.altName || matched.name}', '${matched.app || 'win-installer'}'); this.closest('#proton-exec-modal').remove();" style="font-weight:700;padding:6px 18px;">Install Native App (${matched.name})</button>
+          </div>
         </div>
-      </div>
-    `;
-    playUiTone([523.25, 783.99], 0.15, 'sine', 0.05);
+      `;
+      playUiTone([523.25, 659.25, 783.99], 0.2, 'sine', 0.06);
+    } else {
+      modal.innerHTML = `
+        <div class="toccata-modal-sheet" style="width: 480px; max-width: 90vw; padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#ff2d55,#ff9500);display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 8px 20px rgba(255,45,85,0.3);">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              </div>
+              <div>
+                <div style="font-weight:700;font-size:15px;">Proton GE 9.0-3 Windows Subsystem</div>
+                <div style="font-size:11px;color:var(--text-secondary);">${fileName} &bull; ${sizeStr}</div>
+              </div>
+            </div>
+            <button class="btn btn-secondary" onclick="this.closest('#proton-exec-modal').remove()" style="padding:2px 8px;">✕</button>
+          </div>
+
+          <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;background:rgba(0,0,0,0.12);padding:14px;border-radius:10px;">
+            Toccata OS intercepts Windows PE <code>.exe</code> and <code>.msi</code> binaries using a pre-configured <strong>Proton GE</strong> container with <strong>Wine-ASIO 0.7ms low latency</strong> and <strong>DXVK 2.4 DirectX-to-Vulkan</strong> acceleration.
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:10px; border-top:1px solid var(--glass-border); padding-top:12px;">
+            <button class="btn btn-secondary" onclick="this.closest('#proton-exec-modal').remove()">Cancel</button>
+            <button class="btn btn-primary" onclick="simulateProtonLaunch('${fileName}'); this.closest('#proton-exec-modal').remove();" style="font-weight:700;padding:6px 18px;">Run in Proton Container</button>
+          </div>
+        </div>
+      `;
+      playUiTone([523.25, 783.99], 0.15, 'sine', 0.05);
+    }
   }
 
   function simulateProtonLaunch(fileName) {

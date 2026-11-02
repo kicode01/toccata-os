@@ -124,6 +124,33 @@ body.is-window-dragging *,
   cursor: var(--cursor-resize-nesw), nesw-resize !important;
 }
 
+/* Sleek macOS / pearOS Custom Scrollbars */
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(140, 140, 145, 0.35);
+  border-radius: 9999px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(140, 140, 145, 0.55);
+}
+*::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+body.light-mode *::-webkit-scrollbar-thumb {
+  background: rgba(60, 60, 67, 0.25);
+}
+body.light-mode *::-webkit-scrollbar-thumb:hover {
+  background: rgba(60, 60, 67, 0.45);
+}
+
 body {
   font-family: var(--font-system);
   background-color: #1a1b26;
@@ -1410,7 +1437,7 @@ body.light-mode .app-card.selected {
 
 .settings-content {
   flex: 1;
-  padding: 24px 28px;
+  padding: 24px 28px 48px;
   overflow-y: auto;
 }
 
