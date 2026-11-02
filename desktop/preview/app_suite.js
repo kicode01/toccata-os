@@ -1582,12 +1582,352 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
   window.sendComposedMail = sendComposedMail;
 
   // ==========================================================================
+  // 13. UNIVERSAL FILE ENGINE & HOST DRAG-AND-DROP INGESTION
+  // ==========================================================================
+  function formatBytes(bytes) {
+    if (!bytes || bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  }
+
+  function detectMagicSignature(bytes) {
+    if (!bytes || bytes.length < 4) return 'Unknown Binary Stream';
+    const b = Array.from(bytes.slice(0, 8));
+    const hex = b.map(x => x.toString(16).padStart(2, '0').toUpperCase()).join(' ');
+
+    if (b[0] === 0x4D && b[1] === 0x5A) return 'Windows PE Executable / DLL (MZ)';
+    if (b[0] === 0x7F && b[1] === 0x45 && b[2] === 0x4C && b[3] === 0x46) return 'Linux ELF Executable / Shared Object';
+    if (b[0] === 0x50 && b[1] === 0x4B && b[2] === 0x03 && b[3] === 0x04) return 'ZIP / JAR / OpenXML Compressed Archive';
+    if (b[0] === 0x25 && b[1] === 0x50 && b[2] === 0x44 && b[3] === 0x46) return 'Adobe Portable Document Format (PDF)';
+    if (b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4E && b[3] === 0x47) return 'PNG Lossless Raster Image';
+    if (b[0] === 0xFF && b[1] === 0xD8 && b[2] === 0xFF) return 'JPEG Photo / EXIF Stream';
+    if (b[0] === 0x47 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x38) return 'GIF Animated Graphics Image';
+    if (b[0] === 0x1F && b[1] === 0x8B) return 'GZIP Compressed Archive';
+    if (b[0] === 0x4F && b[1] === 0x67 && b[2] === 0x67 && b[3] === 0x53) return 'Ogg Vorbis / Opus Multimedia Container';
+    if (b[0] === 0x1A && b[1] === 0x45 && b[2] === 0xDF && b[3] === 0xA3) return 'Matroska / WebM Multimedia Container';
+    if (b[0] === 0x66 && b[1] === 0x74 && b[2] === 0x79 && b[3] === 0x70) return 'MP4 / QuickTime ISO Media Container';
+
+    return `Raw Binary (${hex.slice(0, 11)}...)`;
+  }
+
+  function openUniversalHexInspector(fileName, sizeStr, mimeType, arrayBuffer) {
+    const bytes = new Uint8Array(arrayBuffer);
+    const magic = detectMagicSignature(bytes);
+
+    let hexRows = [];
+    for (let offset = 0; offset < Math.min(bytes.length, 256); offset += 16) {
+      const slice = bytes.slice(offset, offset + 16);
+      const hexPart = Array.from(slice).map(b => b.toString(16).padStart(2, '0').toUpperCase()).join(' ').padEnd(48, ' ');
+      const asciiPart = Array.from(slice).map(b => (b >= 32 && b <= 126) ? String.fromCharCode(b) : '.').join('');
+      const offHex = offset.toString(16).padStart(8, '0').toUpperCase();
+      hexRows.push(`<span style="color:#007aff;">${offHex}</span>  <span style="color:#38bdf8;">${hexPart}</span>  <span style="color:#34c759;">|${asciiPart}|</span>`);
+    }
+
+    let modal = document.getElementById('hex-inspector-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'hex-inspector-modal';
+      modal.className = 'toccata-modal-backdrop';
+      document.body.appendChild(modal);
+    }
+
+    modal.innerHTML = `
+      <div class="toccata-modal-sheet" style="width: 720px; max-width: 95vw; padding: 22px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--glass-border); padding-bottom:12px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#007aff,#5856d6);display:flex;align-items:center;justify-content:center;color:#fff;">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+            <div>
+              <div style="font-weight:700;font-size:15px;">${fileName} &mdash; Binary &amp; Hex Analyzer</div>
+              <div style="font-size:11px;color:var(--text-secondary);">${sizeStr} &bull; ${mimeType || 'application/octet-stream'}</div>
+            </div>
+          </div>
+          <button class="btn btn-secondary" onclick="this.closest('#hex-inspector-modal').remove()" style="padding:4px 10px;font-size:12px;">✕</button>
+        </div>
+
+        <div style="background:rgba(0,122,255,0.1); border:1px solid rgba(0,122,255,0.25); border-radius:8px; padding:10px 14px; font-size:12px; display:flex; justify-content:space-between; align-items:center;">
+          <span><strong>Detected Signature:</strong> ${magic}</span>
+          <span style="color:#34c759;font-weight:700;">Entropy: Normal (Unencrypted)</span>
+        </div>
+
+        <div style="background:rgba(0,0,0,0.45); border:1px solid var(--glass-border); border-radius:8px; padding:14px; font-family:monospace; font-size:11px; line-height:1.6; overflow-x:auto; max-height:240px; overflow-y:auto; color:#f8fafc;">
+          ${hexRows.join('<br>')}
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--glass-border); padding-top:12px;">
+          <span style="font-size:11px;color:var(--text-secondary);">Open with installed application:</span>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-secondary" onclick="openWindow('win-scribe'); this.closest('#hex-inspector-modal').remove();">Scribe</button>
+            <button class="btn btn-secondary" onclick="openWindow('win-prism'); this.closest('#hex-inspector-modal').remove();">Prism</button>
+            <button class="btn btn-secondary" onclick="openWindow('win-console'); this.closest('#hex-inspector-modal').remove();">Console</button>
+            <button class="btn btn-primary" onclick="this.closest('#hex-inspector-modal').remove()">Done</button>
+          </div>
+        </div>
+      </div>
+    `;
+    playUiTone([659.25], 0.12, 'sine', 0.05);
+  }
+
+  function openProtonExecutionModal(fileName, sizeStr) {
+    let modal = document.getElementById('proton-exec-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'proton-exec-modal';
+      modal.className = 'toccata-modal-backdrop';
+      document.body.appendChild(modal);
+    }
+
+    modal.innerHTML = `
+      <div class="toccata-modal-sheet" style="width: 480px; max-width: 90vw; padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#ff2d55,#ff9500);display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 8px 20px rgba(255,45,85,0.3);">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <div>
+              <div style="font-weight:700;font-size:15px;">Proton GE 9.0-3 Windows Subsystem</div>
+              <div style="font-size:11px;color:var(--text-secondary);">${fileName} &bull; ${sizeStr}</div>
+            </div>
+          </div>
+          <button class="btn btn-secondary" onclick="this.closest('#proton-exec-modal').remove()" style="padding:2px 8px;">✕</button>
+        </div>
+
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;background:rgba(0,0,0,0.12);padding:14px;border-radius:10px;">
+          Toccata OS intercepts Windows PE <code>.exe</code> and <code>.msi</code> binaries using a pre-configured <strong>Proton GE</strong> container with <strong>Wine-ASIO 0.7ms low latency</strong> and <strong>DXVK 2.4 DirectX-to-Vulkan</strong> acceleration.
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px; border-top:1px solid var(--glass-border); padding-top:12px;">
+          <button class="btn btn-secondary" onclick="this.closest('#proton-exec-modal').remove()">Cancel</button>
+          <button class="btn btn-primary" onclick="simulateProtonLaunch('${fileName}'); this.closest('#proton-exec-modal').remove();" style="font-weight:700;padding:6px 18px;">Run in Proton Container</button>
+        </div>
+      </div>
+    `;
+    playUiTone([523.25, 783.99], 0.15, 'sine', 0.05);
+  }
+
+  function simulateProtonLaunch(fileName) {
+    if (typeof window.triggerNotification === 'function') {
+      window.triggerNotification(`Proton GE: Launching ${fileName}...`);
+    }
+    playUiTone([440, 554.37, 659.25], 0.25, 'sine', 0.06);
+    setTimeout(() => {
+      if (typeof window.triggerNotification === 'function') {
+        window.triggerNotification(`${fileName} initialized successfully in Wine-ASIO sandbox.`);
+      }
+      playUiTone([523.25, 659.25, 1046.5], 0.3, 'sine', 0.08);
+    }, 1200);
+  }
+
+  function openPdfViewerModal(fileName, sizeStr, dataUrl) {
+    let modal = document.getElementById('pdf-viewer-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'pdf-viewer-modal';
+      modal.className = 'toccata-modal-backdrop';
+      document.body.appendChild(modal);
+    }
+
+    modal.innerHTML = `
+      <div class="toccata-modal-sheet" style="width: 780px; max-width: 95vw; height: 560px; max-height: 90vh; display: flex; flex-direction: column;">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 18px; border-bottom:1px solid var(--glass-border);">
+          <div style="font-weight:700; font-size:14px; display:flex; align-items:center; gap:8px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#ff2d55" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            ${fileName} <span style="font-size:11px; color:var(--text-secondary); font-weight:normal;">(${sizeStr})</span>
+          </div>
+          <button class="btn btn-secondary" onclick="this.closest('#pdf-viewer-modal').remove()" style="padding:2px 8px;">✕</button>
+        </div>
+        <iframe src="${dataUrl}" style="flex:1; width:100%; border:none; background:#525659;"></iframe>
+      </div>
+    `;
+    playUiTone([659.25], 0.12, 'sine', 0.05);
+  }
+
+  function openVideoPlayerModal(fileName, sizeStr, dataUrl) {
+    let modal = document.getElementById('video-player-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'video-player-modal';
+      modal.className = 'toccata-modal-backdrop';
+      document.body.appendChild(modal);
+    }
+
+    modal.innerHTML = `
+      <div class="toccata-modal-sheet" style="width: 740px; max-width: 95vw; display: flex; flex-direction: column; overflow:hidden;">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 18px; border-bottom:1px solid var(--glass-border);">
+          <div style="font-weight:700; font-size:14px; display:flex; align-items:center; gap:8px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#34c759" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+            ${fileName} <span style="font-size:11px; color:var(--text-secondary); font-weight:normal;">(${sizeStr})</span>
+          </div>
+          <button class="btn btn-secondary" onclick="this.closest('#video-player-modal').remove()" style="padding:2px 8px;">✕</button>
+        </div>
+        <div style="background:#000; display:flex; align-items:center; justify-content:center; max-height:480px;">
+          <video src="${dataUrl}" controls autoplay style="max-width:100%; max-height:460px; outline:none;"></video>
+        </div>
+      </div>
+    `;
+    playUiTone([659.25], 0.12, 'sine', 0.05);
+  }
+
+  function handleExternalFiles(files) {
+    if (!files || files.length === 0) return;
+
+    const imgExts = ['png', 'jpg', 'jpeg', 'webp', 'svg', 'gif', 'bmp', 'ico', 'heic'];
+    const audioExts = ['mp3', 'wav', 'ogg', 'flac', 'aac', 'm4a', 'opus', 'mid', 'midi'];
+    const videoExts = ['mp4', 'webm', 'mov', 'mkv', 'avi'];
+    const codeExts = ['txt', 'md', 'js', 'ts', 'jsx', 'tsx', 'json', 'html', 'css', 'py', 'rs', 'c', 'cpp', 'h', 'sh', 'bash', 'zsh', 'bat', 'ps1', 'xml', 'yaml', 'yml', 'toml', 'ini', 'sql', 'csv'];
+    const pdfExts = ['pdf'];
+    const exeExts = ['exe', 'msi'];
+
+    Array.from(files).forEach(file => {
+      const ext = (file.name.split('.').pop() || '').toLowerCase();
+      const sizeStr = formatBytes(file.size);
+
+      if (imgExts.includes(ext) || file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const dataUrl = e.target.result;
+          VFS['/Downloads'].unshift({ name: file.name, type: 'img', size: sizeStr, date: 'Just now', app: 'win-prism' });
+          if (typeof window.openWindow === 'function') window.openWindow('win-prism');
+          const frame = document.getElementById('prism-frame');
+          if (frame) {
+            frame.innerHTML = `<img src="${dataUrl}" style="max-width:100%; max-height:280px; object-fit:contain; border-radius:10px; box-shadow:0 12px 30px rgba(0,0,0,0.5);" alt="${file.name}">`;
+          }
+          const title = document.getElementById('prism-window-title');
+          if (title) title.innerHTML = `<span class="proxy-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21" stroke="currentColor" stroke-width="2" fill="none"/></svg></span>Prism &mdash; ${file.name}`;
+          const exif = document.getElementById('prism-exif-pill');
+          if (exif) exif.innerHTML = `<span>${sizeStr}</span><span>${file.type || ext.toUpperCase()}</span><span>Host Imported</span><span>Display P3</span>`;
+          if (typeof window.triggerNotification === 'function') window.triggerNotification(`Imported ${file.name} to Prism Photos`);
+          playUiTone([659.25, 783.99], 0.15, 'sine', 0.05);
+        };
+        reader.readAsDataURL(file);
+      } else if (audioExts.includes(ext) || file.type.startsWith('audio/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const dataUrl = e.target.result;
+          VFS['/Downloads'].unshift({ name: file.name, type: 'audio', size: sizeStr, date: 'Just now', app: 'win-sonata' });
+          if (typeof window.openWindow === 'function') window.openWindow('win-sonata');
+          let customAudio = document.getElementById('sonata-custom-audio-el');
+          if (!customAudio) {
+            customAudio = document.createElement('audio');
+            customAudio.id = 'sonata-custom-audio-el';
+            document.body.appendChild(customAudio);
+          }
+          customAudio.src = dataUrl;
+          customAudio.play().catch(() => {});
+          const titleEl = document.querySelector('#win-sonata .sonata-title');
+          if (titleEl) titleEl.textContent = file.name;
+          const artistEl = document.querySelector('#win-sonata .sonata-artist');
+          if (artistEl) artistEl.textContent = `Local File (${sizeStr}) • PipeWire Direct Sink`;
+          document.getElementById('sonata-vinyl')?.classList.add('playing');
+          document.getElementById('sonata-spectrum')?.classList.add('playing');
+          if (typeof window.triggerNotification === 'function') window.triggerNotification(`Playing ${file.name} via PipeWire 0.7ms DSP`);
+          playUiTone([523.25, 659.25, 1046.5], 0.2, 'sine', 0.06);
+        };
+        reader.readAsDataURL(file);
+      } else if (codeExts.includes(ext) || file.type.startsWith('text/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const text = e.target.result;
+          const newDoc = {
+            id: 'doc-' + Date.now(),
+            title: file.name,
+            date: 'Just now',
+            content: text
+          };
+          SCRIBE_DOCS.unshift(newDoc);
+          VFS['/Documents'].unshift({ name: file.name, type: 'doc', size: sizeStr, date: 'Just now', app: 'win-scribe' });
+          if (typeof window.openWindow === 'function') window.openWindow('win-scribe');
+          switchScribeDoc(newDoc.id);
+          if (typeof window.triggerNotification === 'function') window.triggerNotification(`Loaded ${file.name} in Scribe (${sizeStr})`);
+        };
+        reader.readAsText(file);
+      } else if (pdfExts.includes(ext)) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const dataUrl = e.target.result;
+          VFS['/Documents'].unshift({ name: file.name, type: 'pdf', size: sizeStr, date: 'Just now', app: 'win-scribe' });
+          openPdfViewerModal(file.name, sizeStr, dataUrl);
+        };
+        reader.readAsDataURL(file);
+      } else if (videoExts.includes(ext) || file.type.startsWith('video/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const dataUrl = e.target.result;
+          openVideoPlayerModal(file.name, sizeStr, dataUrl);
+        };
+        reader.readAsDataURL(file);
+      } else if (exeExts.includes(ext)) {
+        VFS['/Downloads'].unshift({ name: file.name, type: 'exe', size: sizeStr, date: 'Just now', app: 'win-installer' });
+        openProtonExecutionModal(file.name, sizeStr);
+      } else {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const buffer = e.target.result;
+          openUniversalHexInspector(file.name, sizeStr, file.type, buffer);
+        };
+        reader.readAsArrayBuffer(file.slice(0, 512));
+      }
+    });
+  }
+  window.handleExternalFiles = handleExternalFiles;
+
+  function initGlobalDropzone() {
+    let overlay = document.getElementById('desktop-dropzone-overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'desktop-dropzone-overlay';
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,122,255,0.18);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:3px dashed var(--accent-color);z-index:999999;display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;color:#fff;pointer-events:none;transition:opacity 0.2s ease;';
+      overlay.innerHTML = `
+        <div style="width:84px;height:84px;border-radius:22px;background:var(--accent-color);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 40px var(--accent-glow);">
+          <svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="#fff" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        </div>
+        <div style="font-size:22px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 4px 12px rgba(0,0,0,0.5);">Drop files into Toccata OS</div>
+        <div style="font-size:13px;opacity:0.85;text-shadow:0 2px 6px rgba(0,0,0,0.5);">Universal Dispatcher: Text, Audio, Video, Images, PDFs, Archives &amp; Windows Binaries</div>
+      `;
+      document.body.appendChild(overlay);
+    }
+
+    let dragCounter = 0;
+    window.addEventListener('dragenter', (e) => {
+      e.preventDefault();
+      dragCounter++;
+      overlay.style.display = 'flex';
+    });
+
+    window.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      dragCounter--;
+      if (dragCounter <= 0) {
+        dragCounter = 0;
+        overlay.style.display = 'none';
+      }
+    });
+
+    window.addEventListener('dragover', (e) => {
+      e.preventDefault();
+    });
+
+    window.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dragCounter = 0;
+      overlay.style.display = 'none';
+      if (e.dataTransfer && e.dataTransfer.files) {
+        handleExternalFiles(e.dataTransfer.files);
+      }
+    });
+  }
+
+  // ==========================================================================
   // INITIALIZATION ON DOM READY
   // ==========================================================================
   function initSuite() {
     initCadenceContextMenu();
     initScribeNotebook();
     initHorizonTabBar();
+    initGlobalDropzone();
   }
 
   if (document.readyState === 'loading') {
