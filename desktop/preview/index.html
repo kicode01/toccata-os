@@ -2661,37 +2661,38 @@ Type 'help' to view available commands.</div>
       <div style="color: rgba(255,255,255,0.4); font-size: 13px; font-weight: 500;">Display in Sleep Mode &bull; Click anywhere to wake</div>
     </div>
 
-    <!-- Toccata OS Animated Welcome / Boot Splash Overlay (Apple After-Effects Style Pill -> Morph -> Volumetric Light Rays) -->
+    <!-- Toccata OS Animated Welcome / Boot Splash Overlay (True CC Radial Fast Blur Volumetric Silhouettes) -->
     <div id="toccata-boot-splash" onclick="dismissBootSplash()">
       <div class="boot-logo-stage">
         <!-- Stage 1: Morphing Seed Pill (Bounces & expands into Monolith) -->
         <div class="boot-seed-pill"></div>
 
-        <!-- Stage 2: Volumetric Light Rays & Sweeping Backlight Cone behind Monolith -->
-        <div class="boot-light-sweep"></div>
-        <div class="boot-god-rays"></div>
-
-        <!-- Stage 3: Pure Monolith Silhouette with Orbiting Rim-Light & Crisp Fill -->
-        <svg class="boot-svg-emblem" viewBox="0 0 256 256" width="124" height="124" role="img" aria-label="Toccata OS Glowing Monolith">
+        <!-- Stage 2 & 3: True Volumetric Extrusion Stack + Razor-Sharp Foreground Monolith -->
+        <svg class="boot-svg-emblem" viewBox="0 0 256 256" width="136" height="136" role="img" aria-label="Toccata OS Glowing Monolith" style="overflow: visible;">
           <defs>
-            <filter id="boot-volumetric-bloom" x="-60%" y="-60%" width="220%" height="220%">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="14" result="blur1"/>
-              <feGaussianBlur in="SourceGraphic" stdDeviation="28" result="blur2"/>
-              <feMerge>
-                <feMergeNode in="blur2"/>
-                <feMergeNode in="blur1"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
+            <g id="toccata-monolith-shape">
+              <path d="M 64 56 H 192 A 15 15 0 0 1 207 71 V 73 A 15 15 0 0 1 192 88 H 64 A 15 15 0 0 1 49 73 V 71 A 15 15 0 0 1 64 56 Z"/>
+              <path d="M 83 106 A 15 15 0 0 1 98 121 V 136 A 30 30 0 0 0 158 136 V 121 A 15 15 0 0 1 188 121 V 136 A 60 60 0 0 1 143 194.1 V 206 A 15 15 0 0 1 113 206 V 194.1 A 60 60 0 0 1 68 136 V 121 A 15 15 0 0 1 83 106 Z"/>
+            </g>
           </defs>
-          <!-- Volumetric Bloom Double Behind Silhouette -->
-          <g class="boot-monolith-bloom" filter="url(#boot-volumetric-bloom)">
-            <path fill="#FFFFFF" d="M 64 56 H 192 A 15 15 0 0 1 207 71 V 73 A 15 15 0 0 1 192 88 H 64 A 15 15 0 0 1 49 73 V 71 A 15 15 0 0 1 64 56 Z"/>
-            <path fill="#FFFFFF" d="M 83 106 A 15 15 0 0 1 98 121 V 136 A 30 30 0 0 0 158 136 V 121 A 15 15 0 0 1 188 121 V 136 A 60 60 0 0 1 143 194.1 V 206 A 15 15 0 0 1 113 206 V 194.1 A 60 60 0 0 1 68 136 V 121 A 15 15 0 0 1 83 106 Z"/>
+
+          <!-- CC Radial Fast Blur Extrusion Stack (8 Progressive Silhouette Echoes Orbiting Opposite the Light Source) -->
+          <g class="boot-volumetric-stack" fill="#FFFFFF">
+            <use href="#toccata-monolith-shape" class="boot-echo echo-8"/>
+            <use href="#toccata-monolith-shape" class="boot-echo echo-7"/>
+            <use href="#toccata-monolith-shape" class="boot-echo echo-6"/>
+            <use href="#toccata-monolith-shape" class="boot-echo echo-5"/>
+            <use href="#toccata-monolith-shape" class="boot-echo echo-4"/>
+            <use href="#toccata-monolith-shape" class="boot-echo echo-3"/>
+            <use href="#toccata-monolith-shape" class="boot-echo echo-2"/>
+            <use href="#toccata-monolith-shape" class="boot-echo echo-1"/>
           </g>
+
           <!-- Razor-Sharp Pure White Foreground Monolith -->
-          <path class="boot-part-bar" fill="#FFFFFF" d="M 64 56 H 192 A 15 15 0 0 1 207 71 V 73 A 15 15 0 0 1 192 88 H 64 A 15 15 0 0 1 49 73 V 71 A 15 15 0 0 1 64 56 Z"/>
-          <path class="boot-part-fork" fill="#FFFFFF" d="M 83 106 A 15 15 0 0 1 98 121 V 136 A 30 30 0 0 0 158 136 V 121 A 15 15 0 0 1 188 121 V 136 A 60 60 0 0 1 143 194.1 V 206 A 15 15 0 0 1 113 206 V 194.1 A 60 60 0 0 1 68 136 V 121 A 15 15 0 0 1 83 106 Z"/>
+          <g class="boot-foreground-monolith" fill="#FFFFFF">
+            <path class="boot-part-bar" d="M 64 56 H 192 A 15 15 0 0 1 207 71 V 73 A 15 15 0 0 1 192 88 H 64 A 15 15 0 0 1 49 73 V 71 A 15 15 0 0 1 64 56 Z"/>
+            <path class="boot-part-fork" d="M 83 106 A 15 15 0 0 1 98 121 V 136 A 30 30 0 0 0 158 136 V 121 A 15 15 0 0 1 188 121 V 136 A 60 60 0 0 1 143 194.1 V 206 A 15 15 0 0 1 113 206 V 194.1 A 60 60 0 0 1 68 136 V 121 A 15 15 0 0 1 83 106 Z"/>
+          </g>
         </svg>
       </div>
     </div>
