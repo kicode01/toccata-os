@@ -51,6 +51,10 @@ xorg-xwayland
 xf86-video-qxl
 cage
 chromium
+webkit2gtk-6.0
+python-gobject
+gtk4
+libadwaita
 seatd
 python-psutil
 

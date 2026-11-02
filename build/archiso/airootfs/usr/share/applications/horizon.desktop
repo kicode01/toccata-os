@@ -1,0 +1,25 @@
+[Desktop Entry]
+Type=Application
+Version=1.5
+Name=Horizon
+GenericName=Sovereign Private Web Browser
+Comment=Dual-Engine WebKit & Chromium Sovereign Browser
+Icon=web-browser
+Exec=toccata-open /Applications/Horizon.app
+Terminal=false
+Categories=Network;WebBrowser;
+StartupNotify=true
+X-Toccata-ZeroBloat=true
+Actions=NewWindow;NewPrivateWindow;ChromiumMode;
+
+[Desktop Action NewWindow]
+Name=New Window
+Exec=toccata-open /Applications/Horizon.app
+
+[Desktop Action NewPrivateWindow]
+Name=New Private Window
+Exec=toccata-open /Applications/Horizon.app --private
+
+[Desktop Action ChromiumMode]
+Name=Open in Chromium Compatibility Mode
+Exec=toccata-open /Applications/Horizon.app --engine=chromium

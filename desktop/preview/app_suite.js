@@ -448,6 +448,41 @@ function computeSpectrum(timeDomainBuffer) {
   // Complete Multi-Tab, Omnibox Search, Facebook, Google, YouTube, GitHub,
   // Wikipedia, Reddit, Hacker News, & Live IFrame Engine
   // ==========================================================================
+  // Dual-Engine Architecture (Apple WebKit 605 Safari vs Chromium 131 Blink)
+  let currentHorizonEngine = 'webkit';
+
+  function updateHorizonEngineUI() {
+    const btn = document.getElementById('horizon-engine-btn');
+    const label = document.getElementById('horizon-engine-label');
+    if (!btn || !label) return;
+    if (currentHorizonEngine === 'webkit') {
+      btn.className = 'engine-switcher-btn';
+      label.textContent = 'WebKit';
+      btn.title = 'Active Engine: Apple WebKit 605.1.15 (Safari Engine) - 82MB RAM • Zero Telemetry. Click to switch to Chromium';
+    } else {
+      btn.className = 'engine-switcher-btn engine-chromium';
+      label.textContent = 'Chromium';
+      btn.title = 'Active Engine: Chromium 131.0 (Blink Compatibility Engine) - Extensions & DRM. Click to switch to WebKit';
+    }
+  }
+
+  function toggleHorizonEngine() {
+    currentHorizonEngine = currentHorizonEngine === 'webkit' ? 'chromium' : 'webkit';
+    updateHorizonEngineUI();
+    if (typeof playHarmonicChime === 'function') {
+      playHarmonicChime([currentHorizonEngine === 'webkit' ? 523.25 : 659.25], 0.15);
+    }
+    if (typeof triggerNotification === 'function') {
+      triggerNotification(`Horizon Engine: Switched to ${currentHorizonEngine === 'webkit' ? 'Apple WebKit 605 (Safari Engine)' : 'Chromium 131 (Blink Compatibility Engine)'}`);
+    }
+    const currentTab = HORIZON_TABS.find(t => t.id === currentHorizonTabId);
+    if (currentTab) {
+      navigateHorizon(currentTab.url, false);
+    }
+  }
+  window.toggleHorizonEngine = toggleHorizonEngine;
+  window.currentHorizonEngine = currentHorizonEngine;
+
   const HORIZON_TABS = [
     { id: 'tab-1', title: 'Speed & Latency', url: 'toccata://speed-benchmark' },
     { id: 'tab-2', title: 'Google Search', url: 'https://www.google.com' },
@@ -1418,22 +1453,38 @@ function computeSpectrum(timeDomainBuffer) {
 
   // 13. LIVE WEB PAGE VIEW
   function renderLiveWebPage(container, url, domain) {
+    const isWebKit = currentHorizonEngine === 'webkit';
+    const proxyUrl = `/api/proxy?url=${encodeURIComponent(url)}&engine=${currentHorizonEngine}`;
+    const engineColor = isWebKit ? '#007aff' : '#af52de';
+    const engineName = isWebKit ? 'Apple WebKit 605.1.15 (Safari)' : 'Chromium 131.0 (Blink Turbo)';
+
     container.innerHTML = `
       <div style="height:100%; display:flex; flex-direction:column; background:#ffffff;">
-        <div style="padding:8px 16px; background:#f8f9fa; border-bottom:1px solid #e9ecef; display:flex; justify-content:space-between; align-items:center; font-size:12px; color:#6c757d;">
+        <div style="padding:6px 16px; background:#f8f9fa; border-bottom:1px solid #e9ecef; display:flex; justify-content:space-between; align-items:center; font-size:11px; color:#6c757d;">
           <div style="display:flex; align-items:center; gap:8px;">
-            <span style="color:#198754; font-weight:600;"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#34c759" stroke-width="2" style="vertical-align:-1px;display:inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> TLS 1.3 Verified</span>
+            <span style="color:#198754; font-weight:600; display:inline-flex; align-items:center; gap:4px;">
+              <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="#34c759" stroke-width="2" style="vertical-align:-1px;display:inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              TLS 1.3 Verified
+            </span>
+            <span>&bull;</span>
+            <span style="background:${engineColor}18; color:${engineColor}; font-weight:700; padding:1px 6px; border-radius:4px;">${engineName}</span>
             <span>&bull;</span>
             <span>Host: <strong>${domain}</strong></span>
           </div>
-          <div>Zero Telemetry &bull; Tracking Blocked</div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="color:#059669; font-weight:600;">Zero Telemetry Shield Active</span>
+            <a href="${url}" target="_blank" style="color:#007aff; text-decoration:none; font-weight:600;">Open Direct &rarr;</a>
+          </div>
         </div>
         <div style="flex:1; position:relative; min-height:0;">
-          <iframe src="${url}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" style="width:100%; height:100%; border:none;" onerror="this.style.display='none'; document.getElementById('iframe-fallback').style.display='block';"></iframe>
+          <iframe src="${proxyUrl}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" style="width:100%; height:100%; border:none;" onerror="this.style.display='none'; document.getElementById('iframe-fallback').style.display='block';"></iframe>
           <div id="iframe-fallback" style="display:none; padding:40px; text-align:center; color:#212529;">
             <h3 style="margin-bottom:8px;">${domain}</h3>
-            <p style="color:#6c757d; font-size:13px; max-width:500px; margin:0 auto 20px;">This domain restricts embedded frame loading via security policies. You can read its sovereign snapshot or open in a native window.</p>
-            <button onclick="navigateHorizon('https://www.google.com/search?q=${encodeURIComponent(domain)}')" style="background:#0d6efd; color:#fff; border:none; padding:8px 18px; border-radius:6px; font-weight:600; cursor:pointer;">Search on Google</button>
+            <p style="color:#6c757d; font-size:13px; max-width:500px; margin:0 auto 20px;">This domain restricts direct iframe rendering via security policies. You can toggle engines or open directly.</p>
+            <div style="display:flex; justify-content:center; gap:10px;">
+              <button onclick="toggleHorizonEngine()" style="background:${engineColor}; color:#fff; border:none; padding:8px 18px; border-radius:6px; font-weight:600; cursor:pointer;">Switch to ${isWebKit ? 'Chromium' : 'WebKit'} Engine</button>
+              <a href="${url}" target="_blank" style="display:inline-block; background:#6c757d; color:#fff; padding:8px 18px; border-radius:6px; font-weight:600; text-decoration:none;">Open in External Tab</a>
+            </div>
           </div>
         </div>
       </div>
