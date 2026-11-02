@@ -747,10 +747,14 @@ body {
 
 .finder-grid-view {
   flex: 1;
-  padding: 24px;
+  padding: 20px 24px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
-  gap: 24px 16px;
+  grid-template-columns: repeat(auto-fill, 96px);
+  grid-auto-rows: max-content;
+  gap: 16px 20px;
+  align-content: start;
+  align-items: start;
+  justify-content: start;
   overflow-y: auto;
 }
 
@@ -758,10 +762,15 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
   cursor: pointer;
-  padding: 8px;
-  border-radius: 10px;
+  padding: 10px 6px 8px;
+  border-radius: 8px;
   transition: all 0.15s ease;
+  width: 96px;
+  height: max-content;
+  align-self: start;
+  box-sizing: border-box;
 }
 
 .app-card:hover {
@@ -770,8 +779,13 @@ body {
 }
 
 .app-card.selected {
-  background: rgba(0, 122, 255, 0.16);
-  box-shadow: inset 0 0 0 1px rgba(0, 122, 255, 0.45);
+  background: rgba(0, 122, 255, 0.14) !important;
+  box-shadow: inset 0 0 0 1px rgba(0, 122, 255, 0.35);
+}
+
+body.light-mode .app-card.selected {
+  background: rgba(0, 0, 0, 0.07) !important;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
 }
 
 .app-card.selected .app-title {
@@ -782,11 +796,13 @@ body {
 }
 
 .app-title {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
-  margin-top: 8px;
+  margin-top: 6px;
   text-align: center;
   word-break: break-word;
+  line-height: 1.25;
+  max-width: 90px;
 }
 
 .finder-statusbar {

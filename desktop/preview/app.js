@@ -939,6 +939,16 @@
         cancelForceQuit();
         return;
       }
+      const lp = document.getElementById('launchpad-overlay');
+      if (lp && !lp.classList.contains('hidden')) {
+        closeLaunchpad();
+        return;
+      }
+      const startMenu = document.getElementById('zorin-start-menu');
+      if (startMenu && !startMenu.classList.contains('hidden')) {
+        closeZorinStartMenu();
+        return;
+      }
       if (isToccataMenuOpen) closeToccataMenu();
       if (isSpotlightOpen) toggleSpotlight();
       if (isControlCenterOpen) {
