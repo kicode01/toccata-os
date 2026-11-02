@@ -89,3 +89,14 @@ git
 fastfetch
 pciutils
 usbutils
+
+# 10. Native Application Engines & Upstream Open-Source Suites
+nautilus
+amberol
+gnome-text-editor
+gnome-system-monitor
+gnome-console
+loupe
+gnome-calendar
+gnome-calculator
+gnome-software

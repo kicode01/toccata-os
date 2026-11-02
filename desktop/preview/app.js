@@ -1826,6 +1826,64 @@
     if (fillEl) fillEl.style.width = `${pct}%`;
   }
 
+  function selectSonataTrack(idx) {
+    if (typeof sonataTracks === 'undefined' || idx < 0 || idx >= sonataTracks.length) return;
+    currentTrackIdx = idx;
+    const track = sonataTracks[currentTrackIdx];
+    const titleEl = document.querySelector('.sonata-title');
+    const artistEl = document.querySelector('.sonata-artist');
+    if (titleEl) titleEl.textContent = track.title;
+    if (artistEl) artistEl.textContent = track.artist;
+
+    sonataStep = 0;
+    sonataElapsedSec = 0;
+    sonataTotalSec = track.totalSec;
+    updateSonataProgressUI();
+    renderSonataPlaylist();
+
+    triggerNotification(`Sonata: ${track.title}`);
+    playHarmonicChime([523.25, 659.25], 0.15);
+    renderSonataPlaylist();
+
+    if (!sonataPlaying) {
+      toggleSonataPlayback();
+    } else {
+      if (sonataInterval) clearInterval(sonataInterval);
+      const curTrack = sonataTracks[currentTrackIdx];
+      playSonataNote(curTrack.phrase[sonataStep], curTrack.stepSpeed / 1000, curTrack.waveform);
+      sonataInterval = setInterval(() => {
+        sonataStep = (sonataStep + 1) % curTrack.phrase.length;
+        sonataElapsedSec = (sonataElapsedSec + (curTrack.stepSpeed / 1000)) % sonataTotalSec;
+        updateSonataProgressUI();
+        const isChord = curTrack.phrase[sonataStep].length > 1;
+        playSonataNote(curTrack.phrase[sonataStep], isChord ? 0.45 : 0.22, curTrack.waveform);
+      }, curTrack.stepSpeed);
+    }
+  }
+  window.selectSonataTrack = selectSonataTrack;
+
+  function renderSonataPlaylist() {
+    const listEl = document.getElementById('sonata-playlist-list');
+    if (!listEl || typeof sonataTracks === 'undefined') return;
+    listEl.innerHTML = '';
+    sonataTracks.forEach((t, i) => {
+      const isCur = i === currentTrackIdx;
+      const row = document.createElement('div');
+      row.className = `sonata-track-row ${isCur ? 'active' : ''}`;
+      row.onclick = () => selectSonataTrack(i);
+      row.innerHTML = `
+        <div class="sonata-track-num">${isCur && sonataPlaying ? '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><rect x="3" y="10" width="4" height="10" rx="1"/><rect x="10" y="4" width="4" height="16" rx="1"/><rect x="17" y="8" width="4" height="12" rx="1"/></svg>' : (i + 1)}</div>
+        <div class="sonata-track-meta">
+          <div class="sonata-track-name">${t.title}</div>
+          <div class="sonata-track-sub">${t.artist}</div>
+        </div>
+        <div class="sonata-track-dur">${t.durationStr}</div>
+      `;
+      listEl.appendChild(row);
+    });
+  }
+  window.renderSonataPlaylist = renderSonataPlaylist;
+
   function changeSonataTrack(direction) {
     currentTrackIdx = (currentTrackIdx + direction + sonataTracks.length) % sonataTracks.length;
     const track = sonataTracks[currentTrackIdx];
@@ -1841,6 +1899,7 @@
 
     triggerNotification(`Sonata: ${track.title}`);
     playHarmonicChime([523.25, 659.25], 0.15);
+    renderSonataPlaylist();
 
     if (sonataPlaying) {
       if (sonataInterval) clearInterval(sonataInterval);
@@ -1911,6 +1970,7 @@
       vinyl?.classList.add('playing');
       spectrum?.classList.add('playing');
       triggerNotification(`Sonata: Playing ${curTrack.title} (PipeWire 0.7ms)`);
+      renderSonataPlaylist();
 
       playSonataNote(curTrack.phrase[sonataStep], curTrack.stepSpeed / 1000, curTrack.waveform);
       sonataInterval = setInterval(() => {
@@ -1929,6 +1989,7 @@
         sonataInterval = null;
       }
       triggerNotification('Sonata: Paused');
+      renderSonataPlaylist();
     }
   }
   window.toggleSonataPlayback = toggleSonataPlayback;
@@ -2745,6 +2806,85 @@ Or search packages in Gallery.app.`;
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
+  const DEFAULT_CAL_EVENTS = [
+    { id: 1, title: 'Toccata Phase 2 Review', date: '2026-11-01', time: '16:00', cat: 'work', color: '#007aff' },
+    { id: 2, title: 'PipeWire Studio Jam', date: '2026-11-02', time: '19:30', cat: 'studio', color: '#af52de' },
+    { id: 3, title: 'Architecture Audit', date: '2026-11-05', time: '14:00', cat: 'work', color: '#007aff' },
+    { id: 4, title: 'Alpha Release Milestone', date: '2026-11-12', time: '10:00', cat: 'personal', color: '#34c759' }
+  ];
+
+  let CAL_EVENTS = [];
+  try {
+    const savedCal = localStorage.getItem('toccata_cal_events');
+    CAL_EVENTS = savedCal ? JSON.parse(savedCal) : DEFAULT_CAL_EVENTS;
+  } catch (e) {
+    CAL_EVENTS = DEFAULT_CAL_EVENTS;
+  }
+  window.CAL_EVENTS = CAL_EVENTS;
+
+  function saveCalEventsToStorage() {
+    try {
+      localStorage.setItem('toccata_cal_events', JSON.stringify(CAL_EVENTS));
+    } catch (e) {}
+  }
+  window.saveCalEventsToStorage = saveCalEventsToStorage;
+
+  let selectedCalDay = 1;
+
+  function selectCalDate(year, month, day) {
+    selectedCalDay = day;
+    renderCalendar(year, month);
+    renderCalSidebarEvents(year, month, day);
+    playHarmonicChime([440 + day * 15], 0.1);
+  }
+  window.selectCalDate = selectCalDate;
+
+  function renderCalSidebarEvents(year = currentCalYear, month = currentCalMonth, day = selectedCalDay) {
+    const sidebarContainer = document.querySelector('.chronicle-sidebar > div:last-child');
+    if (!sidebarContainer) return;
+
+    const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const dayEvents = CAL_EVENTS.filter(e => e.date === dateKey);
+
+    sidebarContainer.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Events &bull; ${monthNames[month].slice(0, 3)} ${day}</span>
+        <button class="btn btn-secondary" onclick="promptAddCalEvent('${dateKey}')" style="padding:2px 6px;font-size:10px;font-weight:700;">+ Add</button>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; max-height: 190px; overflow-y: auto;">
+        ${dayEvents.length === 0 ? '<div style="color:var(--text-secondary);font-size:11px;padding:8px 2px;opacity:0.75;">No events scheduled for this day</div>' : dayEvents.map(ev => `
+          <div class="cal-event-item" style="background: rgba(255,255,255,0.06); border-left: 3px solid ${ev.color || '#007aff'};">
+            <div>
+              <div style="font-weight: 600;">${ev.title}</div>
+              <div style="color: var(--text-secondary); font-size: 10px;">${ev.time || 'All Day'} &bull; ${ev.cat || 'General'}</div>
+            </div>
+            <button class="cal-event-del" onclick="deleteCalEvent(${ev.id}, event)" title="Delete Event">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+            </button>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+  window.renderCalSidebarEvents = renderCalSidebarEvents;
+
+  function deleteCalEvent(id, event) {
+    if (event) event.stopPropagation();
+    const idx = CAL_EVENTS.findIndex(e => e.id === id);
+    if (idx === -1) return;
+    const removedTitle = CAL_EVENTS[idx].title;
+    CAL_EVENTS.splice(idx, 1);
+    saveCalEventsToStorage();
+    renderCalendar(currentCalYear, currentCalMonth);
+  renderCalSidebarEvents(currentCalYear, currentCalMonth, 1);
+    renderCalSidebarEvents(currentCalYear, currentCalMonth, selectedCalDay);
+    if (typeof window.triggerNotification === 'function') {
+      window.triggerNotification(`Removed event: ${removedTitle}`);
+    }
+    playHarmonicChime([330, 220], 0.12);
+  }
+  window.deleteCalEvent = deleteCalEvent;
+
   function renderCalendar(year, month) {
     const titleEl = document.getElementById('cal-month-title');
     const gridEl = document.getElementById('cal-grid-cells');
@@ -2768,7 +2908,11 @@ Or search packages in Gallery.app.`;
     const isThisMonth = now.getFullYear() === year && now.getMonth() === month;
     for (let d = 1; d <= daysInMonth; d++) {
       const isToday = isThisMonth && now.getDate() === d;
-      html += `<div class="cal-cell ${isToday ? 'today' : ''}" onclick="playHarmonicChime([440 + ${d} * 15]); triggerNotification('Selected ${monthNames[month]} ${d}, ${year}')">${d}</div>`;
+      const isSelected = selectedCalDay === d;
+      const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      const dayEvents = CAL_EVENTS.filter(e => e.date === dateKey);
+      const dots = dayEvents.length ? '<div class="cal-event-dots">' + dayEvents.map(e => `<span class="cal-event-dot" style="background:${e.color || '#007aff'}"></span>`).join('') + '</div>' : '';
+      html += `<div class="cal-cell ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}" onclick="selectCalDate(${year}, ${month}, ${d})"><span>${d}</span>${dots}</div>`;
     }
 
     // Next month padding

@@ -2063,7 +2063,7 @@ Every administrative task is accessible visually:
     <!-- ====================================================================
          WINDOW 6: SONATA (The Acoustic Player & Sound Engine)
          ==================================================================== -->
-    <div class="window glass-panel hidden" id="win-sonata" style="top: 85px; left: calc(50% - 350px); width: 700px; height: 460px;">
+    <div class="window glass-panel hidden" id="win-sonata" style="top: 85px; left: calc(50% - 350px); width: 700px; height: 540px;">
       <div class="window-titlebar">
         <div class="traffic-lights">
           <button class="tl-btn tl-close" onclick="closeWindow('win-sonata')"></button>
@@ -2119,6 +2119,16 @@ Every administrative task is accessible visually:
             <div class="eq-band-col"><span>+12</span><input type="range" min="-12" max="12" value="0" step="0.5" oninput="setSonataEqGain(2, this.value)"><span>1kHz</span></div>
             <div class="eq-band-col"><span>+12</span><input type="range" min="-12" max="12" value="0" step="0.5" oninput="setSonataEqGain(3, this.value)"><span>4kHz</span></div>
             <div class="eq-band-col"><span>+12</span><input type="range" min="-12" max="12" value="0" step="0.5" oninput="setSonataEqGain(4, this.value)"><span>12kHz</span></div>
+          </div>
+        </div>
+
+                <div class="sonata-playlist-section" id="sonata-playlist-container">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text-secondary);letter-spacing:0.5px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;">
+            <span>Current Album &bull; PipeWire Studio Masters</span>
+            <span style="font-size:10px;opacity:0.8;">4 Tracks &bull; Lossless 24-bit 96kHz</span>
+          </div>
+          <div class="sonata-playlist" id="sonata-playlist-list">
+            <!-- Dynamically populated playlist rows -->
           </div>
         </div>
 

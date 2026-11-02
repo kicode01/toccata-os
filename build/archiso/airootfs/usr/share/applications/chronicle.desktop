@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Version=1.5
+Name=Chronicle
+GenericName=Calendar & Acoustic Focus Clock
+Comment=Calendar & Acoustic Focus Clock
+Icon=office-calendar
+Exec=toccata-open /Applications/Chronicle.app
+Terminal=false
+Categories=Office;Calendar;
+StartupNotify=true
+X-Toccata-ZeroBloat=true

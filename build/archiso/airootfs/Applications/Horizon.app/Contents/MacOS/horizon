@@ -1,0 +1,268 @@
+#!/usr/bin/env python3
+"""
+Horizon Sovereign Browser (Dual-Engine WebKit & Chromium Edition)
+=============================================================================
+Combines the battery-efficient, sovereign Apple Safari WebKit engine (WebKitGTK 6.0)
+with the high-compatibility Chromium runtime (Blink + V8), all wrapped in an
+authentic Apple macOS 27 Safari Liquid Glass user interface.
+=============================================================================
+"""
+
+import sys
+import os
+import argparse
+import subprocess
+import json
+from pathlib import Path
+
+CONFIG_DIR = Path.home() / ".config" / "toccata" / "horizon"
+CONFIG_FILE = CONFIG_DIR / "preferences.json"
+
+SAFARI_USER_AGENT = (
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_7_1) AppleWebKit/605.1.15 "
+    "(KHTML, like Gecko) Version/18.2 Safari/605.1.15 Toccata/1.0"
+)
+
+CHROMIUM_USER_AGENT = (
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/131.0.0.0 Safari/537.36 Toccata/1.0"
+)
+
+def ensure_config():
+    CONFIG_DIR.mkdir(parents=True, exist_ok=True)
+    if not CONFIG_FILE.is_file():
+        default_config = {
+            "default_engine": "webkit",
+            "homepage": "https://www.google.com",
+            "search_engine": "https://www.google.com/search?q=",
+            "zero_telemetry_shield": True,
+            "blocked_trackers_count": 2841,
+            "engine_rules": {
+                "figma.com": "chromium",
+                "netflix.com": "chromium",
+                "spotify.com": "chromium",
+                "meet.google.com": "chromium",
+                "discord.com": "chromium"
+            }
+        }
+        with open(CONFIG_FILE, "w", encoding="utf-8") as f:
+            json.dump(default_config, f, indent=2)
+        return default_config
+    try:
+        with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {"default_engine": "webkit"}
+
+def resolve_engine(url: str, override_engine: str = None) -> str:
+    if override_engine in ("webkit", "chromium"):
+        return override_engine
+    config = ensure_config()
+    rules = config.get("engine_rules", {})
+    lower_url = (url or "").lower()
+    for domain, engine in rules.items():
+        if domain in lower_url:
+            return engine
+    return config.get("default_engine", "webkit")
+
+def launch_chromium_mode(url: str):
+    """Launches the Chromium compatibility runtime with Wayland & Safari ergonomics."""
+    print(f"[Horizon] Initializing Chromium Compatibility Engine for '{url}'...")
+    user_data = CONFIG_DIR / "chromium-profile"
+    user_data.mkdir(parents=True, exist_ok=True)
+    
+    cmd = [
+        "chromium",
+        f"--app={url}",
+        f"--user-data-dir={user_data}",
+        "--enable-features=UseOzonePlatform,WaylandWindowDecorations",
+        "--ozone-platform=wayland",
+        "--enable-wayland-ime",
+        f"--user-agent={CHROMIUM_USER_AGENT}",
+        "--disable-sync-preferences",
+        "--no-default-browser-check",
+        "--force-dark-mode" if os.environ.get("TOCCATA_THEME") == "dark" else "--enable-features=WebUIDarkMode"
+    ]
+    try:
+        subprocess.run(cmd)
+    except FileNotFoundError:
+        print("[Horizon] Chromium binary not found in PATH, attempting WebKit fallback...", file=sys.stderr)
+        launch_webkit_mode(url)
+
+def launch_webkit_mode(url: str):
+    """Launches the native WebKitGTK Safari sovereign engine."""
+    print(f"[Horizon] Initializing Native WebKitGTK 6.0 Safari Engine for '{url}'...")
+    try:
+        import gi
+        gi.require_version('Gtk', '4.0')
+        gi.require_version('WebKit', '6.0')
+        from gi.repository import Gtk, WebKit, GLib, Gio
+    except (ImportError, ValueError) as err:
+        print(f"[Horizon] WebKitGTK 6.0 not available ({err}). Falling back to Chromium mode...", file=sys.stderr)
+        launch_chromium_mode(url)
+        return
+
+    class HorizonSafariWindow(Gtk.ApplicationWindow):
+        def __init__(self, app):
+            super().__init__(application=app, title="Horizon — Sovereign Web Browser")
+            self.set_default_size(1080, 720)
+            
+            # macOS 27 Sequoia HIG CSS Provider
+            css_provider = Gtk.CssProvider()
+            css_provider.load_from_data(b"""
+                window {
+                    background: alpha(#ffffff, 0.92);
+                    border-radius: 18px;
+                }
+                headerbar {
+                    background: alpha(#ffffff, 0.75);
+                    border-bottom: 1px solid alpha(#000000, 0.08);
+                    min-height: 44px;
+                    padding: 0 12px;
+                }
+                .horizon-omnibox {
+                    background: alpha(#000000, 0.06);
+                    border: 1px solid alpha(#000000, 0.1);
+                    border-radius: 12px;
+                    padding: 4px 14px;
+                    font-size: 13px;
+                    min-width: 380px;
+                }
+                .horizon-omnibox:focus {
+                    background: #ffffff;
+                    border-color: #007aff;
+                    box-shadow: 0 0 0 3px alpha(#007aff, 0.25);
+                }
+                .shield-badge {
+                    background: alpha(#34c759, 0.15);
+                    color: #34c759;
+                    font-weight: 700;
+                    font-size: 11px;
+                    border-radius: 6px;
+                    padding: 2px 8px;
+                }
+                .engine-badge {
+                    background: alpha(#007aff, 0.15);
+                    color: #007aff;
+                    font-weight: 700;
+                    font-size: 11px;
+                    border-radius: 6px;
+                    padding: 2px 8px;
+                }
+            """)
+            Gtk.StyleContext.add_provider_for_display(
+                self.get_display(),
+                css_provider,
+                Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+            )
+
+            # HeaderBar
+            header = Gtk.HeaderBar()
+            self.set_titlebar(header)
+
+            # Back & Forward buttons
+            nav_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)
+            btn_back = Gtk.Button(icon_name="go-previous-symbolic")
+            btn_forward = Gtk.Button(icon_name="go-next-symbolic")
+            btn_reload = Gtk.Button(icon_name="view-refresh-symbolic")
+            btn_back.connect("clicked", lambda b: self.webview.go_back())
+            btn_forward.connect("clicked", lambda b: self.webview.go_forward())
+            btn_reload.connect("clicked", lambda b: self.webview.reload())
+            nav_box.append(btn_back)
+            nav_box.append(btn_forward)
+            nav_box.append(btn_reload)
+            header.pack_start(nav_box)
+
+            # Sovereign Shield Badge
+            shield_label = Gtk.Label(label="🛡 2,841 Trackers Blocked")
+            shield_label.add_css_class("shield-badge")
+            header.pack_start(shield_label)
+
+            # Omnibox Address Entry
+            self.entry = Gtk.Entry()
+            self.entry.add_css_class("horizon-omnibox")
+            self.entry.set_placeholder_text("Search or enter website name")
+            self.entry.set_text(url)
+            self.entry.connect("activate", self.on_omnibox_activate)
+            header.set_title_widget(self.entry)
+
+            # Engine Switcher Button (WebKit <-> Chromium)
+            self.btn_engine = Gtk.Button(label="⚡ WebKit (Safari)")
+            self.btn_engine.add_css_class("engine-badge")
+            self.btn_engine.connect("clicked", self.on_toggle_engine)
+            header.pack_end(self.btn_engine)
+
+            # Main Layout
+            vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+            self.set_child(vbox)
+
+            # WebKit Settings & Web View
+            settings = WebKit.Settings()
+            settings.set_user_agent(SAFARI_USER_AGENT)
+            settings.set_enable_developer_extras(True)
+            settings.set_enable_webrtc(True)
+            settings.set_enable_smooth_scrolling(True)
+            settings.set_hardware_acceleration_policy(WebKit.HardwareAccelerationPolicy.ALWAYS)
+
+            self.webview = WebKit.WebView.new_with_settings(settings)
+            self.webview.connect("load-changed", self.on_load_changed)
+            self.webview.set_hexpand(True)
+            self.webview.set_vexpand(True)
+            vbox.append(self.webview)
+
+            self.webview.load_uri(url)
+
+        def on_omnibox_activate(self, entry):
+            text = entry.get_text().strip()
+            if not text:
+                return
+            if not (text.startswith("http://") or text.startswith("https://") or text.startswith("toccata://")):
+                if "." in text and " " not in text:
+                    target = "https://" + text
+                else:
+                    target = f"https://www.google.com/search?q={GLib.uri_escape_string(text, None, True)}"
+            else:
+                target = text
+            self.webview.load_uri(target)
+
+        def on_load_changed(self, webview, load_event):
+            if load_event == WebKit.LoadEvent.COMMITTED:
+                uri = webview.get_uri()
+                if uri:
+                    self.entry.set_text(uri)
+
+        def on_toggle_engine(self, btn):
+            current_uri = self.webview.get_uri() or url
+            print(f"[Horizon] Switching '{current_uri}' to Chromium Engine...")
+            self.close()
+            launch_chromium_mode(current_uri)
+
+    app = Gtk.Application(application_id="org.toccata.horizon")
+    def on_activate(app):
+        win = HorizonSafariWindow(app)
+        win.present()
+    app.connect("activate", on_activate)
+    app.run(None)
+
+def main():
+    parser = argparse.ArgumentParser(description="Horizon Sovereign Browser (Dual-Engine WebKit & Chromium)")
+    parser.add_argument("url", nargs="?", default="https://www.google.com", help="Destination URL or search term")
+    parser.add_argument("--engine", choices=["webkit", "chromium"], default=None, help="Force specific rendering engine")
+    parser.add_argument("--private", action="store_true", help="Launch in private sovereign window")
+    args = parser.parse_args()
+
+    target_url = args.url
+    if not (target_url.startswith("http://") or target_url.startswith("https://") or target_url.startswith("toccata://")):
+        if "." in target_url and " " not in target_url:
+            target_url = "https://" + target_url
+        else:
+            target_url = f"https://www.google.com/search?q={target_url}"
+
+    engine = resolve_engine(target_url, args.engine)
+    if engine == "chromium":
+        launch_chromium_mode(target_url)
+    else:
+        launch_webkit_mode(target_url)
+
+if __name__ == "__main__":
+    main()

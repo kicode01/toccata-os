@@ -4817,3 +4817,239 @@ body.light-mode .workspace-pill.active {
 .engine-switcher-btn.engine-chromium:hover {
   background: rgba(175, 82, 222, 0.24);
 }
+
+
+/* ==========================================================================
+   APP SUITE PROFESSIONAL ENHANCEMENTS: PERSISTENCE & INTERACTIVITY
+   ========================================================================== */
+
+/* Sonata Interactive Playlist */
+.sonata-playlist-section {
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.16);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-top: 4px;
+  gap: 6px;
+}
+body.light-mode .sonata-playlist-section {
+  background: rgba(0, 0, 0, 0.04);
+}
+.sonata-playlist {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-height: 140px;
+  overflow-y: auto;
+}
+.sonata-track-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.14s ease;
+  font-size: 12px;
+  user-select: none;
+}
+.sonata-track-row:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+body.light-mode .sonata-track-row:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+.sonata-track-row.active {
+  background: rgba(255, 45, 85, 0.18) !important;
+  color: #ff2d55;
+  font-weight: 600;
+}
+body.light-mode .sonata-track-row.active {
+  background: rgba(255, 45, 85, 0.12) !important;
+  color: #fa114f;
+}
+.sonata-track-num {
+  font-size: 11px;
+  color: var(--text-secondary);
+  width: 16px;
+  text-align: center;
+}
+.sonata-track-row.active .sonata-track-num {
+  color: #ff2d55;
+}
+.sonata-track-meta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.sonata-track-name {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sonata-track-sub {
+  font-size: 10px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sonata-track-dur {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Scribe Search & Delete */
+.scribe-search-box {
+  width: 100%;
+  padding: 5px 8px;
+  background: rgba(0, 0, 0, 0.14);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 11px;
+  outline: none;
+  box-sizing: border-box;
+  margin-bottom: 4px;
+}
+body.light-mode .scribe-search-box {
+  background: rgba(0, 0, 0, 0.05);
+}
+.scribe-note-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.12s ease;
+  position: relative;
+}
+.scribe-note-item:hover .scribe-del-btn {
+  opacity: 1;
+}
+.scribe-del-btn {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  background: transparent;
+  border: none;
+  color: #ff453a;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+.scribe-del-btn:hover {
+  background: rgba(255, 69, 58, 0.18);
+}
+
+/* Chronicle Calendar Interactive Selection & Event Dots */
+.cal-cell {
+  position: relative;
+}
+.cal-cell.selected {
+  outline: 2px solid var(--accent-color);
+  outline-offset: -2px;
+  background: rgba(0, 122, 255, 0.18) !important;
+  font-weight: 700;
+}
+.cal-event-dots {
+  position: absolute;
+  bottom: 2px;
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+}
+.cal-event-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+.cal-event-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  transition: background 0.12s ease;
+}
+.cal-event-item:hover .cal-event-del {
+  opacity: 1;
+}
+.cal-event-del {
+  opacity: 0;
+  background: transparent;
+  border: none;
+  color: #ff453a;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+.cal-event-del:hover {
+  background: rgba(255, 69, 58, 0.18);
+}
+
+/* Reminders Delete Button */
+.todo-item {
+  position: relative;
+}
+.todo-item:hover .todo-delete-btn {
+  opacity: 1;
+}
+.todo-delete-btn {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  background: transparent;
+  border: none;
+  color: #ff453a;
+  cursor: pointer;
+  padding: 3px 6px;
+  border-radius: 4px;
+  margin-left: auto;
+}
+.todo-delete-btn:hover {
+  background: rgba(255, 69, 58, 0.18);
+}
+
+/* Prism Color Presets Bar */
+.prism-presets-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.prism-preset-btn {
+  padding: 3px 9px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+.prism-preset-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+.prism-preset-btn.active {
+  background: var(--accent-color);
+  color: #ffffff;
+  border-color: var(--accent-color);
+}
+body.light-mode .prism-preset-btn {
+  background: rgba(0, 0, 0, 0.05);
+}
+body.light-mode .prism-preset-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+body.light-mode .prism-preset-btn.active {
+  background: var(--accent-color);
+  color: #ffffff;
+}

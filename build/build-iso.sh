@@ -85,6 +85,10 @@ echo "      Syncing latest Toccata Shell, IPC Bridge, and first-party applicatio
 mkdir -p "$BUILD_PROFILE/airootfs/usr/local/share/toccata"
 cp -r "$PROJECT_ROOT/core"/* "$BUILD_PROFILE/airootfs/usr/local/share/toccata/"
 
+echo "      Staging /Applications native .app bundles..."
+mkdir -p "$BUILD_PROFILE/airootfs/Applications"
+cp -r "$PROJECT_ROOT/core/toccata-bundle/sample"/*.app "$BUILD_PROFILE/airootfs/Applications/"
+
 echo "      Staging Toccata Sovereign Web Desktop to /usr/share/toccata/desktop/preview..."
 mkdir -p "$BUILD_PROFILE/airootfs/usr/share/toccata/desktop/preview"
 cp -a "$PROJECT_ROOT/desktop/preview"/* "$BUILD_PROFILE/airootfs/usr/share/toccata/desktop/preview/"

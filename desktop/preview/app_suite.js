@@ -240,9 +240,9 @@
   }
 
   // ==========================================================================
-  // 2. SCRIBE: MULTI-NOTE NOTEBOOK & LIVE MARKDOWN ENGINE
+  // 2. SCRIBE: MULTI-NOTE NOTEBOOK & LIVE MARKDOWN ENGINE (PERSISTENT & INTERACTIVE)
   // ==========================================================================
-  const SCRIBE_DOCS = [
+  const DEFAULT_SCRIBE_DOCS = [
     {
       id: 'doc-manifesto',
       title: 'Toccata Manifesto.md',
@@ -299,7 +299,22 @@ function computeSpectrum(timeDomainBuffer) {
     }
   ];
 
-  let currentScribeDocId = 'doc-manifesto';
+  let SCRIBE_DOCS = [];
+  try {
+    const savedScribe = localStorage.getItem('toccata_scribe_docs');
+    SCRIBE_DOCS = savedScribe ? JSON.parse(savedScribe) : DEFAULT_SCRIBE_DOCS;
+  } catch (e) {
+    SCRIBE_DOCS = DEFAULT_SCRIBE_DOCS;
+  }
+
+  function saveScribeToStorage() {
+    try {
+      localStorage.setItem('toccata_scribe_docs', JSON.stringify(SCRIBE_DOCS));
+    } catch (e) {}
+  }
+
+  let currentScribeDocId = SCRIBE_DOCS[0] ? SCRIBE_DOCS[0].id : 'doc-manifesto';
+  let scribeSearchFilter = '';
 
   function initScribeNotebook() {
     const splitContainer = document.querySelector('.scribe-split-container');
@@ -310,10 +325,13 @@ function computeSpectrum(timeDomainBuffer) {
       sidebar = document.createElement('div');
       sidebar.id = 'scribe-docs-sidebar';
       sidebar.className = 'finder-sidebar';
-      sidebar.style.cssText = 'width: 190px; min-width: 170px; border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; padding: 10px; gap: 4px; overflow-y: auto;';
+      sidebar.style.cssText = 'width: 200px; min-width: 180px; border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; padding: 10px; gap: 4px; overflow-y: auto;';
       splitContainer.prepend(sidebar);
     }
     renderScribeDocsList();
+    if (SCRIBE_DOCS.length > 0) {
+      switchScribeDoc(currentScribeDocId);
+    }
   }
 
   function renderScribeDocsList() {
@@ -323,30 +341,52 @@ function computeSpectrum(timeDomainBuffer) {
     sidebar.innerHTML = `
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; padding: 2px 4px;">
         <span style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary);">Notebook Files</span>
-        <button class="toolbar-icon-btn" onclick="addNewScribeDoc()" title="Create New Document" style="width: 20px; height: 20px; font-size: 13px;">+</button>
+        <button class="toolbar-icon-btn" onclick="addNewScribeDoc()" title="Create New Document (Ctrl+N)" style="width: 22px; height: 22px; font-size: 14px; font-weight: 700;">+</button>
       </div>
+      <input type="text" class="scribe-search-box" placeholder="Search notes..." value="${scribeSearchFilter}" oninput="filterScribeDocs(this.value)">
+      <div id="scribe-docs-rows" style="display:flex;flex-direction:column;gap:3px;overflow-y:auto;flex:1;"></div>
     `;
 
-    SCRIBE_DOCS.forEach(doc => {
+    const rowsContainer = document.getElementById('scribe-docs-rows');
+    if (!rowsContainer) return;
+
+    const filtered = scribeSearchFilter ? SCRIBE_DOCS.filter(d => d.title.toLowerCase().includes(scribeSearchFilter.toLowerCase()) || d.content.toLowerCase().includes(scribeSearchFilter.toLowerCase())) : SCRIBE_DOCS;
+
+    if (filtered.length === 0) {
+      rowsContainer.innerHTML = '<div style="font-size:11px;color:var(--text-secondary);padding:10px 4px;text-align:center;">No matching notes</div>';
+      return;
+    }
+
+    filtered.forEach(doc => {
       const row = document.createElement('div');
-      row.className = `sidebar-row ${doc.id === currentScribeDocId ? 'active' : ''}`;
-      row.style.cssText = 'padding: 6px 8px; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; gap: 2px;';
+      row.className = `scribe-note-item ${doc.id === currentScribeDocId ? 'active' : ''}`;
       row.onclick = () => switchScribeDoc(doc.id);
       row.innerHTML = `
-        <div style="font-weight: 600; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${doc.title}</div>
-        <div style="font-size: 10px; color: var(--text-secondary);">${doc.date}</div>
+        <div style="display:flex;flex-direction:column;gap:2px;min-width:0;flex:1;">
+          <div style="font-weight: 600; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${doc.title}</div>
+          <div style="font-size: 10px; color: var(--text-secondary);">${doc.date}</div>
+        </div>
+        <button class="scribe-del-btn" onclick="deleteScribeDoc('${doc.id}', event)" title="Delete Note">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+        </button>
       `;
-      sidebar.appendChild(row);
+      rowsContainer.appendChild(row);
     });
   }
 
-  function switchScribeDoc(docId) {
-    const doc = SCRIBE_DOCS.find(d => d.id === docId);
-    if (!doc) return;
+  function filterScribeDocs(query) {
+    scribeSearchFilter = query || '';
+    renderScribeDocsList();
+  }
+  window.filterScribeDocs = filterScribeDocs;
 
+  function switchScribeDoc(docId) {
     const input = document.getElementById('scribe-input');
     const cur = SCRIBE_DOCS.find(d => d.id === currentScribeDocId);
     if (cur && input) cur.content = input.value;
+
+    const doc = SCRIBE_DOCS.find(d => d.id === docId);
+    if (!doc) return;
 
     currentScribeDocId = docId;
     if (input) input.value = doc.content;
@@ -358,6 +398,7 @@ function computeSpectrum(timeDomainBuffer) {
 
     renderScribeDocsList();
     renderLiveMarkdownPreview();
+    saveScribeToStorage();
     playUiTone([659.25], 0.1, 'sine', 0.04);
   }
   window.switchScribeDoc = switchScribeDoc;
@@ -371,12 +412,37 @@ function computeSpectrum(timeDomainBuffer) {
       content: `# Untitled Document\n\nDraft your notes, thoughts, or code here...`
     };
     SCRIBE_DOCS.unshift(newDoc);
+    saveScribeToStorage();
     switchScribeDoc(newId);
     if (typeof window.triggerNotification === 'function') {
       window.triggerNotification(`Created ${newDoc.title}`);
     }
   }
   window.addNewScribeDoc = addNewScribeDoc;
+
+  function deleteScribeDoc(docId, event) {
+    if (event) event.stopPropagation();
+    if (SCRIBE_DOCS.length <= 1) {
+      if (typeof window.triggerNotification === 'function') {
+        window.triggerNotification('Cannot delete the last remaining note');
+      }
+      return;
+    }
+    const idx = SCRIBE_DOCS.findIndex(d => d.id === docId);
+    if (idx === -1) return;
+    const removedTitle = SCRIBE_DOCS[idx].title;
+    SCRIBE_DOCS.splice(idx, 1);
+    saveScribeToStorage();
+    if (currentScribeDocId === docId) {
+      currentScribeDocId = SCRIBE_DOCS[0].id;
+    }
+    switchScribeDoc(currentScribeDocId);
+    if (typeof window.triggerNotification === 'function') {
+      window.triggerNotification(`Deleted ${removedTitle}`);
+    }
+    playUiTone([330, 220], 0.12, 'sine', 0.04);
+  }
+  window.deleteScribeDoc = deleteScribeDoc;
 
   function renderLiveMarkdownPreview() {
     const input = document.getElementById('scribe-input');
@@ -436,9 +502,15 @@ function computeSpectrum(timeDomainBuffer) {
   }
   window.exportScribeDocument = exportScribeDocument;
 
-  // Intercept scribe input for live markdown
+  // Intercept scribe input for live markdown & storage sync
   document.addEventListener('input', (e) => {
     if (e.target && e.target.id === 'scribe-input') {
+      const cur = SCRIBE_DOCS.find(d => d.id === currentScribeDocId);
+      if (cur) {
+        cur.content = e.target.value;
+        cur.date = 'Just now';
+        saveScribeToStorage();
+      }
       renderLiveMarkdownPreview();
     }
   });
@@ -1530,7 +1602,7 @@ function computeSpectrum(timeDomainBuffer) {
   window.toggleWebInspector = toggleWebInspector;
 
   // ==========================================================================
-  // 4. SONATA: REAL WEB AUDIO DSP & 5-BAND GRAPHIC EQUALIZER
+  // 4. SONATA: REAL WEB AUDIO DSP, 5-BAND EQUALIZER & INTERACTIVE PLAYLIST
   // ==========================================================================
   let sonataEqFilters = [];
   const EQ_FREQS = [60, 250, 1000, 4000, 12000];
@@ -1568,7 +1640,7 @@ function computeSpectrum(timeDomainBuffer) {
     if (!drawer) return;
     drawer.classList.toggle('hidden');
     if (win) {
-      win.style.height = drawer.classList.contains('hidden') ? '460px' : '545px';
+      win.style.height = drawer.classList.contains('hidden') ? '540px' : '620px';
     }
     playUiTone([523.25, 659.25], 0.1, 'sine', 0.04);
   }
@@ -1590,7 +1662,7 @@ function computeSpectrum(timeDomainBuffer) {
   window.resetSonataEq = resetSonataEq;
 
   // ==========================================================================
-  // 5. TEMPO: REAL-TIME ROLLING SYSTEM MONITOR ENGINE
+  // 5. TEMPO: REAL-TIME ROLLING SYSTEM MONITOR ENGINE (INTERACTIVE PROCESS TREE)
   // ==========================================================================
   const TEMPO_PROCESSES = [
     { name: 'KWin Wayland Compositor', pid: 1042, cpu: 3.2, mem: '128 MB', user: 'toccata' },
@@ -1605,21 +1677,29 @@ function computeSpectrum(timeDomainBuffer) {
     { name: 'dbus-daemon', pid: 840, cpu: 0.2, mem: '16 MB', user: 'messagebus' }
   ];
 
+  let tempoSearchFilter = '';
+
   function renderTempoProcessTable() {
     const list = document.getElementById('tempo-process-list');
     if (!list) return;
 
     list.innerHTML = '';
-    TEMPO_PROCESSES.forEach(proc => {
+    const filtered = tempoSearchFilter ? TEMPO_PROCESSES.filter(p => p.name.toLowerCase().includes(tempoSearchFilter.toLowerCase()) || String(p.pid).includes(tempoSearchFilter)) : TEMPO_PROCESSES;
+
+    filtered.forEach(proc => {
       const jitterCpu = Math.max(0.1, proc.cpu + (Math.random() * 0.8 - 0.4)).toFixed(1);
       const tr = document.createElement('tr');
-      tr.className = 'process-row';
+      tr.className = 'process-row' + (window.selectedTempoProcess && window.selectedTempoProcess.pid === proc.pid ? ' selected' : '');
       tr.onclick = function () {
         document.querySelectorAll('#tempo-process-list .process-row').forEach(r => r.classList.remove('selected'));
         tr.classList.add('selected');
         window.selectedTempoProcess = proc;
         const nameEl = document.getElementById('fq-process-name');
         if (nameEl) nameEl.textContent = proc.name;
+      };
+      tr.ondblclick = function () {
+        window.selectedTempoProcess = proc;
+        promptForceQuit();
       };
       tr.innerHTML = `
         <td style="font-weight:600;">${proc.name}</td>
@@ -1631,6 +1711,12 @@ function computeSpectrum(timeDomainBuffer) {
       list.appendChild(tr);
     });
   }
+
+  function filterProcesses(query) {
+    tempoSearchFilter = query ? query.trim() : '';
+    renderTempoProcessTable();
+  }
+  window.filterProcesses = filterProcesses;
 
   setInterval(() => {
     const tempoWin = document.getElementById('win-tempo');
@@ -1644,6 +1730,26 @@ function computeSpectrum(timeDomainBuffer) {
     }
   }, 1600);
 
+  function promptForceQuit() {
+    if (!window.selectedTempoProcess && TEMPO_PROCESSES.length > 0) {
+      window.selectedTempoProcess = TEMPO_PROCESSES[0];
+    }
+    const nameEl = document.getElementById('fq-process-name');
+    if (nameEl && window.selectedTempoProcess) {
+      nameEl.textContent = window.selectedTempoProcess.name;
+    }
+    const sheet = document.getElementById('tempo-force-quit-sheet');
+    if (sheet) sheet.classList.remove('hidden');
+    playUiTone([440, 330], 0.12, 'sawtooth', 0.04);
+  }
+  window.promptForceQuit = promptForceQuit;
+
+  function cancelForceQuit() {
+    const sheet = document.getElementById('tempo-force-quit-sheet');
+    if (sheet) sheet.classList.add('hidden');
+  }
+  window.cancelForceQuit = cancelForceQuit;
+
   function terminateSelectedProcess() {
     if (!window.selectedTempoProcess) {
       if (typeof window.triggerNotification === 'function') {
@@ -1655,6 +1761,7 @@ function computeSpectrum(timeDomainBuffer) {
     const idx = TEMPO_PROCESSES.findIndex(p => p.pid === proc.pid);
     if (idx !== -1) {
       TEMPO_PROCESSES.splice(idx, 1);
+      window.selectedTempoProcess = null;
       renderTempoProcessTable();
       if (typeof window.triggerNotification === 'function') {
         window.triggerNotification(`Force quit ${proc.name} (PID ${proc.pid})`);
@@ -1664,6 +1771,8 @@ function computeSpectrum(timeDomainBuffer) {
       if (proc.name.includes('Horizon') && typeof window.closeWindow === 'function') window.closeWindow('win-horizon');
       if (proc.name.includes('Scribe') && typeof window.closeWindow === 'function') window.closeWindow('win-scribe');
       if (proc.name.includes('Sonata') && typeof window.closeWindow === 'function') window.closeWindow('win-sonata');
+      if (proc.name.includes('Cadence') && typeof window.closeWindow === 'function') window.closeWindow('win-cadence');
+      if (proc.name.includes('Settings') && typeof window.closeWindow === 'function') window.closeWindow('win-settings');
     }
     const sheet = document.getElementById('tempo-force-quit-sheet');
     if (sheet) sheet.classList.add('hidden');
@@ -1852,34 +1961,60 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
   };
 
   // ==========================================================================
-  // 7. SOLFEGE: SCIENTIFIC KEYPAD, PAPER TAPE & FULL KEYBOARD INPUT
+  // 7. SOLFEGE: SCIENTIFIC KEYPAD, PAPER TAPE & FULL KEYBOARD INPUT (PERSISTENT)
   // ==========================================================================
-  const CALC_TAPE = [];
+  let CALC_TAPE = [];
+  try {
+    const savedTape = localStorage.getItem('toccata_calc_tape');
+    CALC_TAPE = savedTape ? JSON.parse(savedTape) : [];
+  } catch (e) {
+    CALC_TAPE = [];
+  }
+
+  function saveCalcTape() {
+    try {
+      localStorage.setItem('toccata_calc_tape', JSON.stringify(CALC_TAPE));
+    } catch (e) {}
+  }
 
   function addCalcTapeEntry(expr, result) {
     CALC_TAPE.unshift({ expr, result, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
+    if (CALC_TAPE.length > 30) CALC_TAPE.pop();
+    saveCalcTape();
     renderCalcTape();
   }
+
+  function clearCalcTape() {
+    CALC_TAPE = [];
+    saveCalcTape();
+    renderCalcTape();
+    playUiTone([330], 0.1, 'sine', 0.04);
+  }
+  window.clearCalcTape = clearCalcTape;
 
   function renderCalcTape() {
     let tapeEl = document.getElementById('calc-tape-drawer');
     if (!tapeEl) return;
 
     tapeEl.innerHTML = `
-      <div style="font-weight: 700; font-size: 11px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 8px;">History Tape</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-weight: 700; font-size: 11px; text-transform: uppercase; color: var(--text-secondary);">History Tape</span>
+        <button class="btn btn-secondary" onclick="clearCalcTape()" style="padding:1px 6px;font-size:10px;">Clear</button>
+      </div>
     `;
 
     if (CALC_TAPE.length === 0) {
-      tapeEl.innerHTML += `<div style="font-size:11px;color:var(--text-secondary);opacity:0.7;">No recent calculations</div>`;
+      tapeEl.innerHTML += `<div style="font-size:11px;color:var(--text-secondary);opacity:0.7;padding:12px 0;text-align:center;">No recent calculations</div>`;
       return;
     }
 
-    CALC_TAPE.slice(0, 10).forEach(entry => {
+    CALC_TAPE.slice(0, 15).forEach(entry => {
       const row = document.createElement('div');
-      row.style.cssText = 'padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.06); cursor: pointer;';
+      row.style.cssText = 'padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.06); cursor: pointer;';
       row.onclick = () => {
         const main = document.getElementById('calc-main-display');
         if (main) main.textContent = entry.result;
+        playUiTone([659.25], 0.08, 'sine', 0.03);
       };
       row.innerHTML = `
         <div style="font-size: 10px; color: var(--text-secondary);">${entry.expr} =</div>
@@ -1935,7 +2070,6 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
       const display = document.getElementById('calc-main-display');
       let cur = parseFloat(display ? display.textContent : '0');
       let res = cur;
-      let label = val;
 
       if (val === 'sin') res = Math.sin(cur);
       else if (val === 'cos') res = Math.cos(cur);
@@ -1991,15 +2125,17 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
   });
 
   // ==========================================================================
-  // 8. PRISM: PHOTO LIBRARY, ADJUSTMENTS & WALLPAPER SETTER
+  // 8. PRISM: PHOTO LIBRARY, PRESET COLOR GRADING & ZOOM STUDIO
   // ==========================================================================
   const PRISM_PHOTOS = [
-    { id: 'sonata', title: 'Sonata Dynamic Topography', res: '3840 × 2160', color: 'Display P3', bg: 'wallpapers/pearos-light.jpg', grad: 'radial-gradient(circle at 30% 30%, #38bdf8 0%, #007aff 40%, #af52de 85%, #ff2d55 100%)' },
-    { id: 'dark-nebula', title: 'Deep Space Nebula HDR', res: '5120 × 2880', color: 'Rec. 2020 HDR', bg: 'wallpapers/pearos-dark.jpg', grad: 'radial-gradient(circle at 70% 30%, #1e1b4b 0%, #0f172a 60%, #000000 100%)' },
-    { id: 'abstract', title: 'Acoustic Wave Resonance', res: '4096 × 2304', color: 'Display P3', bg: 'wallpapers/abstract.jpg', grad: 'linear-gradient(135deg, #ec4899 0%, #8b5cf6 50%, #3b82f6 100%)' }
+    { id: 'sonata', title: 'Sonata Dynamic Topography', res: '3840 x 2160', color: 'Display P3', bg: 'wallpapers/pearos-light.jpg', grad: 'radial-gradient(circle at 30% 30%, #38bdf8 0%, #007aff 40%, #af52de 85%, #ff2d55 100%)' },
+    { id: 'dark-nebula', title: 'Deep Space Nebula HDR', res: '5120 x 2880', color: 'Rec. 2020 HDR', bg: 'wallpapers/pearos-dark.jpg', grad: 'radial-gradient(circle at 70% 30%, #1e1b4b 0%, #0f172a 60%, #000000 100%)' },
+    { id: 'abstract', title: 'Acoustic Wave Resonance', res: '4096 x 2304', color: 'Display P3', bg: 'wallpapers/abstract.jpg', grad: 'linear-gradient(135deg, #ec4899 0%, #8b5cf6 50%, #3b82f6 100%)' }
   ];
 
   let currentPrismPhotoIdx = 0;
+  let prismZoomLevel = 1.0;
+  let prismRotation = 0;
 
   function setPrismActivePhoto(idx) {
     if (!PRISM_PHOTOS[idx]) return;
@@ -2034,6 +2170,69 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
   }
   window.setPrismActivePhoto = setPrismActivePhoto;
 
+  function prismZoom(delta) {
+    prismZoomLevel = Math.max(0.5, Math.min(3.0, prismZoomLevel + delta));
+    applyPrismTransforms();
+    playUiTone([659.25], 0.06, 'sine', 0.03);
+  }
+  window.prismZoom = prismZoom;
+
+  function prismRotate() {
+    prismRotation = (prismRotation + 90) % 360;
+    applyPrismTransforms();
+    playUiTone([523.25], 0.08, 'sine', 0.03);
+  }
+  window.prismRotate = prismRotate;
+
+  function applyPrismTransforms() {
+    const frame = document.getElementById('prism-frame');
+    if (frame) {
+      const box = frame.querySelector('div');
+      if (box) {
+        box.style.transform = `scale(${prismZoomLevel}) rotate(${prismRotation}deg)`;
+        box.style.transition = 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)';
+      }
+    }
+  }
+
+  function setPrismFilter(el, filterType) {
+    if (el) {
+      el.parentElement.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    const exp = document.getElementById('prism-slider-exp');
+    const con = document.getElementById('prism-slider-con');
+    const sat = document.getElementById('prism-slider-sat');
+    const blur = document.getElementById('prism-slider-blur');
+
+    if (filterType === 'vivid') {
+      if (exp) exp.value = 108;
+      if (con) con.value = 120;
+      if (sat) sat.value = 135;
+      if (blur) blur.value = 0;
+    } else if (filterType === 'mono') {
+      if (exp) exp.value = 100;
+      if (con) con.value = 130;
+      if (sat) sat.value = 0;
+      if (blur) blur.value = 0;
+    } else if (filterType === 'warm') {
+      if (exp) exp.value = 105;
+      if (con) con.value = 105;
+      if (sat) sat.value = 120;
+      if (blur) blur.value = 0;
+    } else {
+      // Normal
+      if (exp) exp.value = 100;
+      if (con) con.value = 100;
+      if (sat) sat.value = 100;
+      if (blur) blur.value = 0;
+    }
+    updatePrismAdjustments();
+    playUiTone([587.33], 0.08, 'sine', 0.03);
+  }
+  window.setPrismFilter = setPrismFilter;
+
   function updatePrismAdjustments() {
     const exp = document.getElementById('prism-slider-exp')?.value || 100;
     const con = document.getElementById('prism-slider-con')?.value || 100;
@@ -2056,10 +2255,20 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
     if (con) con.value = 100;
     if (sat) sat.value = 100;
     if (blur) blur.value = 0;
+    prismZoomLevel = 1.0;
+    prismRotation = 0;
+    applyPrismTransforms();
     updatePrismAdjustments();
     playUiTone([440], 0.08, 'sine', 0.03);
   }
   window.resetPrismAdjustments = resetPrismAdjustments;
+
+  function togglePrismExif() {
+    const exif = document.getElementById('prism-exif-pill');
+    if (exif) exif.classList.toggle('hidden');
+    playUiTone([659.25], 0.06, 'sine', 0.03);
+  }
+  window.togglePrismExif = togglePrismExif;
 
   function setPrismAsWallpaper() {
     const photo = PRISM_PHOTOS[currentPrismPhotoIdx];
@@ -2074,7 +2283,7 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
   window.setPrismAsWallpaper = setPrismAsWallpaper;
 
   // ==========================================================================
-  // 9. CHRONICLE: CALENDAR AGENDA & POMODORO FOCUS TIMER
+  // 9. CHRONICLE: CALENDAR AGENDA & POMODORO FOCUS TIMER (PERSISTENT & INTERACTIVE)
   // ==========================================================================
   let pomoMins = 25;
   let pomoSecs = 0;
@@ -2147,8 +2356,8 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
   }
   window.resetPomodoro = resetPomodoro;
 
-  // Add Calendar Event Modal
-  function promptAddCalEvent() {
+  // Add Calendar Event Modal (Prefill Supported)
+  function promptAddCalEvent(prefillDate) {
     let modal = document.getElementById('chronicle-add-event-modal');
     if (!modal) {
       modal = document.createElement('div');
@@ -2156,6 +2365,8 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
       modal.className = 'toccata-modal-backdrop';
       document.body.appendChild(modal);
     }
+
+    const defaultDate = prefillDate || '2026-11-01';
 
     modal.innerHTML = `
       <div class="toccata-modal-sheet" style="width: 380px; padding: 22px; display: flex; flex-direction: column; gap: 14px;">
@@ -2170,12 +2381,20 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
         <div style="display: flex; gap: 10px;">
           <div style="flex: 1;">
             <label style="font-size: 11px; color: var(--text-secondary); font-weight: 600;">Date</label>
-            <input type="date" id="cal-new-date" value="2026-11-04" style="width: 100%; margin-top: 4px; padding: 6px 8px; background: rgba(0,0,0,0.15); border: 1px solid var(--glass-border); border-radius: 8px; color: var(--text-primary); outline: none;">
+            <input type="date" id="cal-new-date" value="${defaultDate}" style="width: 100%; margin-top: 4px; padding: 6px 8px; background: rgba(0,0,0,0.15); border: 1px solid var(--glass-border); border-radius: 8px; color: var(--text-primary); outline: none;">
           </div>
           <div style="flex: 1;">
             <label style="font-size: 11px; color: var(--text-secondary); font-weight: 600;">Time</label>
             <input type="time" id="cal-new-time" value="16:00" style="width: 100%; margin-top: 4px; padding: 6px 8px; background: rgba(0,0,0,0.15); border: 1px solid var(--glass-border); border-radius: 8px; color: var(--text-primary); outline: none;">
           </div>
+        </div>
+        <div>
+          <label style="font-size: 11px; color: var(--text-secondary); font-weight: 600;">Category</label>
+          <select id="cal-new-cat" style="width: 100%; margin-top: 4px; padding: 6px 8px; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 8px; color: var(--text-primary); outline: none;">
+            <option value="work">Work & Milestone (Blue)</option>
+            <option value="studio">Music & Studio (Purple)</option>
+            <option value="personal">Personal & Focus (Green)</option>
+          </select>
         </div>
         <button class="btn btn-primary" onclick="saveNewCalEvent()" style="padding: 8px; font-weight: 700; margin-top: 6px;">Save Event</button>
       </div>
@@ -2188,19 +2407,35 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
     const titleInput = document.getElementById('cal-new-title');
     const dateInput = document.getElementById('cal-new-date');
     const timeInput = document.getElementById('cal-new-time');
+    const catInput = document.getElementById('cal-new-cat');
     const title = titleInput ? titleInput.value.trim() : '';
 
     if (!title) return;
 
-    const milestonesList = document.querySelector('.chronicle-sidebar > div:last-child > div:last-child');
-    if (milestonesList) {
-      const card = document.createElement('div');
-      card.style.cssText = 'padding: 6px 10px; background: rgba(52, 199, 89, 0.15); border-left: 3px solid #34c759; border-radius: 4px;';
-      card.innerHTML = `
-        <div style="font-weight: 600;">${title}</div>
-        <div style="color: var(--text-secondary); font-size: 10px;">${dateInput?.value || 'Nov 4'} &bull; ${timeInput?.value || '4:00 PM'}</div>
-      `;
-      milestonesList.prepend(card);
+    const cat = catInput ? catInput.value : 'work';
+    const colorMap = { work: '#007aff', studio: '#af52de', personal: '#34c759' };
+
+    const newEv = {
+      id: Date.now(),
+      title,
+      date: dateInput ? dateInput.value : '2026-11-01',
+      time: timeInput ? timeInput.value : '16:00',
+      cat: cat.charAt(0).toUpperCase() + cat.slice(1),
+      color: colorMap[cat] || '#007aff'
+    };
+
+    if (window.CAL_EVENTS) {
+      window.CAL_EVENTS.unshift(newEv);
+      if (typeof window.saveCalEventsToStorage === 'function') window.saveCalEventsToStorage();
+    }
+
+    if (typeof window.renderCalendar === 'function' && typeof currentCalYear !== 'undefined') {
+      window.renderCalendar(currentCalYear, currentCalMonth);
+    }
+    if (typeof window.renderCalSidebarEvents === 'function') {
+      const parts = newEv.date.split('-');
+      const d = parseInt(parts[2], 10);
+      window.renderCalSidebarEvents(currentCalYear, currentCalMonth, d);
     }
 
     document.getElementById('chronicle-add-event-modal')?.remove();
@@ -2811,9 +3046,9 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
   // ==========================================================================
 
   // ==========================================================================
-  // 14. REMINDERS SUITE (pearOS NiceC0re todo)
+  // 14. REMINDERS SUITE (PERSISTENT & INTERACTIVE TASK MANAGER)
   // ==========================================================================
-  const TODO_ITEMS = [
+  const DEFAULT_TODO_ITEMS = [
     { id: 1, text: 'Master Bit-Perfect Audio Passthrough in PipeWire', list: 'today', cat: 'studio', priority: 'High', due: '4:00 PM', completed: false },
     { id: 2, text: 'Benchmark KWin 120Hz Wayland compositing latency', list: 'today', cat: 'kernel', priority: 'Medium', due: '6:30 PM', completed: false },
     { id: 3, text: 'Verify pearOS Cupertino squircle layout on Retina', list: 'today', cat: 'ui', priority: 'Normal', due: '8:00 PM', completed: false },
@@ -2823,6 +3058,20 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
     { id: 7, text: 'Audit 2,220 Windows app regex patterns', list: 'all', cat: 'kernel', priority: 'Low', due: 'Nov 8', completed: true },
     { id: 8, text: 'Test dynamic island audio visualizer with Sonata', list: 'ui', cat: 'ui', priority: 'Normal', due: 'Nov 9', completed: true },
   ];
+
+  let TODO_ITEMS = [];
+  try {
+    const savedTodo = localStorage.getItem('toccata_todo_items');
+    TODO_ITEMS = savedTodo ? JSON.parse(savedTodo) : DEFAULT_TODO_ITEMS;
+  } catch (e) {
+    TODO_ITEMS = DEFAULT_TODO_ITEMS;
+  }
+
+  function saveTodoToStorage() {
+    try {
+      localStorage.setItem('toccata_todo_items', JSON.stringify(TODO_ITEMS));
+    } catch (e) {}
+  }
 
   let currentTodoFilter = 'today';
 
@@ -2850,6 +3099,9 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
             ${item.priority ? `<span style="color:${item.priority === 'High' ? '#ff3b30' : 'var(--text-secondary)'}; font-weight:600;">${item.priority}</span>` : ''}
           </div>
         </div>
+        <button class="todo-delete-btn" onclick="deleteTodoItem(${item.id})" title="Delete Reminder">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+        </button>
       `;
       listEl.appendChild(row);
     });
@@ -2872,10 +3124,25 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
     const item = TODO_ITEMS.find(t => t.id === id);
     if (!item) return;
     item.completed = !item.completed;
+    saveTodoToStorage();
     playUiTone(item.completed ? [523.25, 659.25] : [330], 0.12, 'sine', 0.05);
     renderTodoList();
   }
   window.toggleTodoItem = toggleTodoItem;
+
+  function deleteTodoItem(id) {
+    const idx = TODO_ITEMS.findIndex(t => t.id === id);
+    if (idx === -1) return;
+    const removedText = TODO_ITEMS[idx].text;
+    TODO_ITEMS.splice(idx, 1);
+    saveTodoToStorage();
+    renderTodoList();
+    if (typeof window.triggerNotification === 'function') {
+      window.triggerNotification(`Deleted: ${removedText.slice(0, 24)}...`);
+    }
+    playUiTone([330, 220], 0.12, 'sine', 0.04);
+  }
+  window.deleteTodoItem = deleteTodoItem;
 
   function switchTodoFilter(filter, el) {
     currentTodoFilter = filter;
@@ -2904,6 +3171,7 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
       due: 'Today',
       completed: false
     });
+    saveTodoToStorage();
     input.value = '';
     playUiTone([523.25, 783.99], 0.15, 'sine', 0.06);
     renderTodoList();
@@ -3192,7 +3460,14 @@ Ethernet adapter toccata0 (10 GbE High-Bandwidth):
     renderTodoList();
     renderContactsList();
     renderTourSlide();
+    if (typeof window.renderSonataPlaylist === 'function') {
+      window.renderSonataPlaylist();
+    }
+    if (typeof window.renderCalcTape === 'function') {
+      window.renderCalcTape();
+    }
   }
+
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initSuite);

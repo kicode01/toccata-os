@@ -1,10 +1,12 @@
 [Desktop Entry]
-Name=System Settings
-GenericName=Settings
-Comment=Apple macOS Sequoia System Preferences & Hardware Tuning
-Exec=toccata-settings
-Icon=preferences-system
-Terminal=false
 Type=Application
-Categories=Settings;Preferences;System;
-Keywords=preferences;settings;desktop;theme;display;sound;
+Version=1.5
+Name=System Settings
+GenericName=Toccata Control Center & Preferences
+Comment=Toccata Control Center & Preferences
+Icon=preferences-system
+Exec=toccata-open /Applications/SystemSettings.app
+Terminal=false
+Categories=Settings;HardwareSettings;
+StartupNotify=true
+X-Toccata-ZeroBloat=true
