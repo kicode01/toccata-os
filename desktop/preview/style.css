@@ -848,12 +848,12 @@ body.dark-mode .seg-btn.active {
   flex: 1;
   padding: 20px 24px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, 96px);
-  grid-auto-rows: max-content;
-  gap: 16px 20px;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 104px));
+  grid-auto-rows: min-content;
   align-content: start;
   align-items: start;
   justify-content: start;
+  gap: 16px 20px;
   overflow-y: auto;
 }
 
@@ -863,12 +863,14 @@ body.dark-mode .seg-btn.active {
   align-items: center;
   justify-content: flex-start;
   cursor: pointer;
-  padding: 10px 6px 8px;
-  border-radius: 8px;
+  padding: 10px 8px 8px;
+  border-radius: 10px;
   transition: all 0.15s ease;
-  width: 96px;
-  height: max-content;
-  align-self: start;
+  width: 100px;
+  max-width: 100px;
+  height: auto !important;
+  max-height: 98px !important;
+  align-self: start !important;
   box-sizing: border-box;
 }
 
@@ -1883,8 +1885,8 @@ body.light-mode .result-item.selected .res-meta {
 }
 
 body.light-mode .slider.round {
-  background-color: #e5e5ea;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: #d1d1d6 !important;
+  border: 1px solid rgba(0, 0, 0, 0.14) !important;
 }
 
 .slider.round:before {
@@ -2765,12 +2767,23 @@ body.light-mode .slider-leading-icon {
 
 .horizon-viewport {
   flex: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
   overflow-y: auto;
-  background: var(--glass-bg);
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  overflow-x: hidden;
+  background: #f0f2f5;
+  padding: 0;
+  display: block;
+  position: relative;
+}
+
+body.light-mode .horizon-viewport {
+  background: #f0f2f5;
+}
+
+body.dark-mode .horizon-viewport {
+  background: #18191a;
 }
 
 .horizon-page-card {
@@ -3302,6 +3315,7 @@ body.layout-gnome .dock-item:hover {
 /* Hide background windows when Launchpad is active so zero ghost window lines cut through workspaces or app grid */
 body.launchpad-active .window {
   opacity: 0 !important;
+  visibility: hidden !important;
   pointer-events: none !important;
   transform: scale(0.96) !important;
   transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
@@ -4711,4 +4725,62 @@ body.light-mode .tour-body {
   border-radius: 20px;
   padding: 0 18px;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+}
+
+
+/* Precision Settings Divider and Container Fixes */
+.settings-content {
+  flex: 1;
+  padding: 24px 32px 64px !important;
+  overflow-y: auto !important;
+}
+
+.settings-group-card {
+  margin-bottom: 24px !important;
+}
+
+.settings-row:last-child::after {
+  display: none !important;
+}
+
+/* Light mode launchpad search refinement */
+body.light-mode .launchpad-search-bar {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(0, 0, 0, 0.14) !important;
+  color: #1d1d1f !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
+}
+
+body.light-mode .launchpad-search-bar input {
+  color: #1d1d1f !important;
+}
+
+body.light-mode .launchpad-search-bar input::placeholder {
+  color: rgba(60, 60, 67, 0.6) !important;
+}
+
+body.light-mode .launchpad-item span {
+  color: #1d1d1f !important;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8) !important;
+}
+
+body.light-mode .workspace-pill {
+  background: rgba(255, 255, 255, 0.65) !important;
+  border: 1.5px solid rgba(0, 0, 0, 0.12) !important;
+  color: #1d1d1f !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06) !important;
+}
+
+body.light-mode .workspace-pill .ws-title {
+  color: #1d1d1f !important;
+}
+
+body.light-mode .workspace-pill .ws-sub {
+  color: rgba(60, 60, 67, 0.7) !important;
+}
+
+body.light-mode .workspace-pill.active {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-color: var(--accent-color) !important;
+  box-shadow: 0 4px 18px rgba(0, 122, 255, 0.25) !important;
 }

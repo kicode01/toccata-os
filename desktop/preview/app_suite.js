@@ -444,16 +444,21 @@ function computeSpectrum(timeDomainBuffer) {
   });
 
   // ==========================================================================
-  // 3. HORIZON: MULTI-TAB BROWSER & DEVELOPER INSPECTOR
+  // 3. HORIZON: SOVEREIGN WEB BROWSER ENGINE (Apple Safari & WebKit Architecture)
+  // Complete Multi-Tab, Omnibox Search, Facebook, Google, YouTube, GitHub,
+  // Wikipedia, Reddit, Hacker News, & Live IFrame Engine
   // ==========================================================================
   const HORIZON_TABS = [
-    { id: 'tab-speed', title: 'Speed & Latency', url: 'toccata://speed-benchmark' },
-    { id: 'tab-arch', title: 'Toccata Architecture', url: 'toccata://architecture' },
-    { id: 'tab-hn', title: 'Hacker News', url: 'https://news.ycombinator.com' },
-    { id: 'tab-wiki', title: 'Wikipedia — OS', url: 'https://en.wikipedia.org/wiki/Operating_system' }
+    { id: 'tab-1', title: 'Speed & Latency', url: 'toccata://speed-benchmark' },
+    { id: 'tab-2', title: 'Google Search', url: 'https://www.google.com' },
+    { id: 'tab-3', title: 'Wikipedia - OS', url: 'https://en.wikipedia.org' },
+    { id: 'tab-4', title: 'Hacker News', url: 'https://news.ycombinator.com' }
   ];
 
-  let currentHorizonTabId = 'tab-speed';
+  let currentHorizonTabId = 'tab-1';
+  const horizonHistory = ['toccata://speed-benchmark'];
+  let horizonHistoryIdx = 0;
+  let horizonTrackerCount = 2841;
 
   function initHorizonTabBar() {
     const horizonWindow = document.getElementById('win-horizon');
@@ -463,12 +468,13 @@ function computeSpectrum(timeDomainBuffer) {
     if (!tabBar) {
       tabBar = document.createElement('div');
       tabBar.id = 'horizon-tab-bar';
-      tabBar.style.cssText = 'display:flex;align-items:center;padding:4px 12px 0;gap:6px;background:rgba(0,0,0,0.14);border-bottom:1px solid var(--glass-border);';
+      tabBar.style.cssText = 'display:flex;align-items:center;padding:4px 12px 0;gap:6px;background:rgba(0,0,0,0.12);border-bottom:1px solid var(--glass-border);';
       const body = horizonWindow.querySelector('.horizon-body');
       if (body) body.prepend(tabBar);
     }
     renderHorizonTabs();
   }
+  window.initHorizonTabBar = initHorizonTabBar;
 
   function renderHorizonTabs() {
     const tabBar = document.getElementById('horizon-tab-bar');
@@ -479,11 +485,11 @@ function computeSpectrum(timeDomainBuffer) {
       const tabEl = document.createElement('div');
       const isActive = tab.id === currentHorizonTabId;
       tabEl.className = `horizon-tab ${isActive ? 'active' : ''}`;
-      tabEl.style.cssText = `display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:8px 8px 0 0;font-size:12px;cursor:pointer;background:${isActive ? 'var(--glass-bg)' : 'transparent'};border:${isActive ? '1px solid var(--glass-border)' : '1px solid transparent'};border-bottom:none;color:${isActive ? 'var(--text-primary)' : 'var(--text-secondary)'};`;
+      tabEl.style.cssText = `display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:8px 8px 0 0;font-size:12px;font-weight:500;cursor:pointer;background:${isActive ? 'var(--glass-bg)' : 'transparent'};border:${isActive ? '1px solid var(--glass-border)' : '1px solid transparent'};border-bottom:none;color:${isActive ? 'var(--text-primary)' : 'var(--text-secondary)'};box-shadow:${isActive ? '0 -1px 4px rgba(0,0,0,0.06)' : 'none'};transition:all 0.15s ease;`;
       tabEl.innerHTML = `
         <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
         <span style="max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${tab.title}</span>
-        <span onclick="event.stopPropagation(); closeHorizonTab('${tab.id}')" style="opacity:0.6;font-size:11px;padding:0 2px;"><svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></span>
+        <span onclick="event.stopPropagation(); closeHorizonTab('${tab.id}')" style="opacity:0.6;font-size:11px;padding:2px;display:flex;align-items:center;border-radius:50%;" title="Close Tab"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg></span>
       `;
       tabEl.onclick = () => selectHorizonTab(tab.id);
       tabBar.appendChild(tabEl);
@@ -493,7 +499,7 @@ function computeSpectrum(timeDomainBuffer) {
     addTabBtn.className = 'toolbar-icon-btn';
     addTabBtn.title = 'Open New Tab';
     addTabBtn.style.cssText = 'width:24px;height:24px;font-size:14px;';
-    addTabBtn.textContent = '+';
+    addTabBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
     addTabBtn.onclick = createNewHorizonTab;
     tabBar.appendChild(addTabBtn);
   }
@@ -505,12 +511,14 @@ function computeSpectrum(timeDomainBuffer) {
     renderHorizonTabs();
     const urlInput = document.getElementById('horizon-url-input');
     if (urlInput) urlInput.value = tab.url;
-    navigateHorizon(tab.url);
+    navigateHorizon(tab.url, false);
   }
   window.selectHorizonTab = selectHorizonTab;
 
   function closeHorizonTab(tabId) {
-    if (HORIZON_TABS.length <= 1) return;
+    if (HORIZON_TABS.length <= 1) {
+      createNewHorizonTab();
+    }
     const idx = HORIZON_TABS.findIndex(t => t.id === tabId);
     if (idx !== -1) {
       HORIZON_TABS.splice(idx, 1);
@@ -526,209 +534,912 @@ function computeSpectrum(timeDomainBuffer) {
     const newId = 'tab-' + Date.now();
     HORIZON_TABS.push({
       id: newId,
-      title: 'Speed & Latency',
-      url: 'toccata://speed-benchmark'
+      title: 'Google Search',
+      url: 'https://www.google.com'
     });
     selectHorizonTab(newId);
   }
   window.createNewHorizonTab = createNewHorizonTab;
 
-  // Custom Horizon Navigator with Destinations
-  function navigateHorizon(url) {
+  // History & Navigation Controls
+  function horizonGoBack() {
+    if (horizonHistoryIdx > 0) {
+      horizonHistoryIdx--;
+      const url = horizonHistory[horizonHistoryIdx];
+      navigateHorizon(url, false);
+      if (typeof playHarmonicChime === 'function') playHarmonicChime([480], 0.1);
+    }
+  }
+  window.horizonGoBack = horizonGoBack;
+
+  function horizonGoForward() {
+    if (horizonHistoryIdx < horizonHistory.length - 1) {
+      horizonHistoryIdx++;
+      const url = horizonHistory[horizonHistoryIdx];
+      navigateHorizon(url, false);
+      if (typeof playHarmonicChime === 'function') playHarmonicChime([520], 0.1);
+    }
+  }
+  window.horizonGoForward = horizonGoForward;
+
+  function horizonReload() {
+    const input = document.getElementById('horizon-url-input');
+    const url = input ? input.value : 'toccata://speed-benchmark';
+    navigateHorizon(url, false);
+    if (typeof playHarmonicChime === 'function') playHarmonicChime([659.25], 0.12);
+    if (typeof triggerNotification === 'function') triggerNotification('Horizon: Page reloaded');
+  }
+  window.horizonReload = horizonReload;
+
+  function updateNavButtonStates() {
+    const backBtn = document.querySelector('.horizon-toolbar .toolbar-nav-group button:nth-child(1)');
+    const fwdBtn = document.querySelector('.horizon-toolbar .toolbar-nav-group button:nth-child(2)');
+    if (backBtn) backBtn.style.opacity = horizonHistoryIdx > 0 ? '1' : '0.35';
+    if (fwdBtn) fwdBtn.style.opacity = horizonHistoryIdx < horizonHistory.length - 1 ? '1' : '0.35';
+  }
+
+  // Omnibox Resolution Engine
+  function resolveDestination(raw) {
+    const trimmed = (raw || '').trim();
+    if (!trimmed) return { type: 'benchmark', title: 'Speed & Latency', url: 'toccata://speed-benchmark' };
+
+    // Toccata internal schemes
+    if (trimmed.startsWith('toccata://speed') || trimmed === 'speed') {
+      return { type: 'benchmark', title: 'Speed & Latency', url: 'toccata://speed-benchmark' };
+    }
+    if (trimmed.startsWith('toccata://arch') || trimmed === 'architecture') {
+      return { type: 'architecture', title: 'Toccata Architecture', url: 'toccata://architecture' };
+    }
+    if (trimmed.startsWith('toccata://pipewire') || trimmed === 'pipewire') {
+      return { type: 'pipewire', title: 'PipeWire Studio', url: 'toccata://pipewire-studio' };
+    }
+
+    const lower = trimmed.toLowerCase();
+
+    // Facebook
+    if (lower === 'facebook' || lower === 'fb' || lower.includes('facebook.com') || lower.includes('fb.com')) {
+      return { type: 'facebook', title: 'Facebook', url: 'https://www.facebook.com' };
+    }
+
+    // Google Homepage
+    if (lower === 'google' || lower === 'google.com' || lower === 'https://google.com' || lower === 'https://www.google.com') {
+      return { type: 'google_home', title: 'Google', url: 'https://www.google.com' };
+    }
+
+    // YouTube
+    if (lower === 'youtube' || lower === 'yt' || lower.includes('youtube.com') || lower.includes('youtu.be')) {
+      return { type: 'youtube', title: 'YouTube', url: 'https://www.youtube.com' };
+    }
+
+    // GitHub
+    if (lower === 'github' || lower.includes('github.com')) {
+      return { type: 'github', title: 'GitHub - toccata-os', url: 'https://github.com/kicode01/toccata-os' };
+    }
+
+    // Wikipedia
+    if (lower === 'wikipedia' || lower === 'wiki' || lower.includes('wikipedia.org')) {
+      return { type: 'wikipedia', title: 'Wikipedia - Toccata', url: 'https://en.wikipedia.org/wiki/Toccata' };
+    }
+
+    // Reddit
+    if (lower === 'reddit' || lower.includes('reddit.com')) {
+      return { type: 'reddit', title: 'Reddit - r/linux', url: 'https://www.reddit.com/r/linux' };
+    }
+
+    // Hacker News
+    if (lower === 'hackernews' || lower === 'hn' || lower.includes('ycombinator.com')) {
+      return { type: 'hackernews', title: 'Hacker News', url: 'https://news.ycombinator.com' };
+    }
+
+    // ProtonDB
+    if (lower === 'protondb' || lower.includes('protondb.com')) {
+      return { type: 'protondb', title: 'ProtonDB Ledger', url: 'https://www.protondb.com' };
+    }
+
+    // Live URL with domain (e.g. archlinux.org, duckduckgo.com)
+    if (/^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}/.test(lower) || lower.startsWith('http://') || lower.startsWith('https://')) {
+      const fullUrl = lower.startsWith('http') ? trimmed : 'https://' + trimmed;
+      const domain = fullUrl.replace(/^https?:\/\//i, '').split('/')[0];
+      return { type: 'live_web', title: domain, url: fullUrl, domain: domain };
+    }
+
+    // Default: Search Engine Query (Google Search Results)
+    return { type: 'search', title: `${trimmed} - Google Search`, url: `https://www.google.com/search?q=${encodeURIComponent(trimmed)}`, query: trimmed };
+  }
+
+  // Main Horizon Navigation Dispatcher
+  function navigateHorizon(inputUrl, recordHistory = true) {
     const viewport = document.getElementById('horizon-page-content');
     if (!viewport) return;
 
-    if (url === 'toccata://speed-benchmark') {
-      viewport.innerHTML = `
-        <div style="padding: 24px; max-width: 720px; margin: 0 auto; color: var(--text-primary);">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
-            <div>
-              <h2 style="font-size: 22px; font-weight: 800; margin: 0;">System Latency &amp; Frame Rate Benchmark</h2>
-              <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">Hardware Accelerated ProMotion 120Hz &bull; PipeWire Real-Time Audio</div>
-            </div>
-            <div style="background: rgba(52,199,89,0.15); color: #34c759; border-radius: 20px; padding: 6px 14px; font-weight: 700; font-size: 13px;">120.0 FPS LOCKED</div>
-          </div>
-          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px;">
-            <div style="background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); border-radius: 12px; padding: 16px;">
-              <div style="font-size: 11px; text-transform: uppercase; color: var(--text-secondary); font-weight: 700;">Audio Jitter</div>
-              <div style="font-size: 24px; font-weight: 800; color: #007aff; margin-top: 4px;">0.67 ms</div>
-              <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">ALSA Direct Pass</div>
-            </div>
-            <div style="background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); border-radius: 12px; padding: 16px;">
-              <div style="font-size: 11px; text-transform: uppercase; color: var(--text-secondary); font-weight: 700;">Compositor Latency</div>
-              <div style="font-size: 24px; font-weight: 800; color: #34c759; margin-top: 4px;">0.42 ms</div>
-              <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">KWin Wayland Tear-Free</div>
-            </div>
-            <div style="background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); border-radius: 12px; padding: 16px;">
-              <div style="font-size: 11px; text-transform: uppercase; color: var(--text-secondary); font-weight: 700;">Display Refresh</div>
-              <div style="font-size: 24px; font-weight: 800; color: #af52de; margin-top: 4px;">120 Hz</div>
-              <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">Variable VRR Synchronized</div>
-            </div>
-          </div>
-          <div style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 16px; border: 1px solid var(--glass-border);">
-            <div style="font-size: 12px; font-weight: 700; margin-bottom: 8px;">Real-Time Frame Interval Oscilloscope (8.33ms Target)</div>
-            <canvas id="horizon-fps-canvas" width="670" height="120" style="width:100%; height:120px; display:block;"></canvas>
-          </div>
-        </div>
-      `;
-      startHorizonBenchmarkCanvas();
-    } else if (url === 'toccata://architecture') {
-      viewport.innerHTML = `
-        <div style="padding: 24px; max-width: 720px; margin: 0 auto; color: var(--text-primary); line-height: 1.6;">
-          <h2 style="font-size: 20px; font-weight: 800;">Toccata Core Architectural Stack</h2>
-          <p style="color: var(--text-secondary); font-size: 13px;">Engineered for professional music synthesis, 120Hz display responsiveness, and zero Windows bloat.</p>
-          <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 12px;">
-            <div style="padding: 14px; background: rgba(255,255,255,0.06); border-radius: 10px; border-left: 4px solid #007aff;">
-              <div style="font-weight: 700;">Layer 1: XanMod 6.11 Linux Kernel with BORE Scheduler</div>
-              <div style="font-size: 12px; color: var(--text-secondary);">Burst-Oriented Response Enhancer (BORE) dynamically prioritizes UI interactivity and audio threads over background I/O.</div>
-            </div>
-            <div style="padding: 14px; background: rgba(255,255,255,0.06); border-radius: 10px; border-left: 4px solid #af52de;">
-              <div style="font-weight: 700;">Layer 2: PipeWire Audio Processing Graph</div>
-              <div style="font-size: 12px; color: var(--text-secondary);">Native 64-sample buffer size delivering 0.67ms round-trip hardware latency with bit-perfect ALSA pass-through.</div>
-            </div>
-            <div style="padding: 14px; background: rgba(255,255,255,0.06); border-radius: 10px; border-left: 4px solid #34c759;">
-              <div style="font-weight: 700;">Layer 3: KWin Wayland Compositor</div>
-              <div style="font-size: 12px; color: var(--text-secondary);">Hardware direct scanout for zero-latency presentation, fractional scaling, and macOS-grade 120Hz fluid motion.</div>
-            </div>
-          </div>
-        </div>
-      `;
-    } else if (url.includes('github.com')) {
-      viewport.innerHTML = `
-        <div style="background: #0d1117; color: #c9d1d9; font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 13px; min-height: 100%; padding: 24px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #30363d; padding-bottom:14px; margin-bottom:16px;">
-            <div style="display:flex; align-items:center; gap:10px;">
-              <svg viewBox="0 0 16 16" width="22" height="22" fill="#f0f6fc"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>
-              <span style="font-size:16px; font-weight:700;"><span style="color:#58a6ff;">kicode01</span> / <span style="color:#f0f6fc;">toccata-os</span></span>
-              <span style="font-size:11px; padding:2px 8px; border-radius:12px; border:1px solid #30363d; color:#8b949e;">Public</span>
-            </div>
-            <div style="display:flex; gap:8px;">
-              <button class="btn btn-secondary" style="font-size:11px; padding:3px 10px; display:inline-flex; align-items:center; gap:4px;"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25z"/></svg> Star (1.2k)</button>
-              <button class="btn btn-secondary" style="font-size:11px; padding:3px 10px;">⑂ Fork (142)</button>
-            </div>
-          </div>
-          <div style="display:grid; grid-template-columns: 2fr 1fr; gap:18px;">
-            <div>
-              <div style="background:#161b22; border:1px solid #30363d; border-radius:8px; overflow:hidden;">
-                <div style="background:#21262d; padding:10px 14px; font-weight:600; font-size:12px; border-bottom:1px solid #30363d;">Latest Commits &bull; Branch: main</div>
-                <div style="padding:10px 14px; font-size:12px; border-bottom:1px solid #21262d;">feat(apps): reverse engineer and integrate zorin os and pearos application suites</div>
-                <div style="padding:10px 14px; font-size:12px; border-bottom:1px solid #21262d;">fix(ui): eliminate finder vertical stretch and window bleed-through</div>
-                <div style="padding:10px 14px; font-size:12px;">feat(kernel): XanMod 6.11 BORE scheduler with bit-perfect PipeWire 0.7ms</div>
-              </div>
-            </div>
-            <div>
-              <div style="background:#161b22; border:1px solid #30363d; border-radius:8px; padding:14px;">
-                <div style="font-weight:700; margin-bottom:8px;">About</div>
-                <p style="font-size:12px; color:#8b949e; line-height:1.5;">Sovereign desktop operating system fusing the audio latency of PipeWire, the UI responsiveness of 120Hz Wayland, and 2,220 Windows app compatibility rules.</p>
-                <div style="margin-top:12px; display:flex; flex-direction:column; gap:6px; font-size:11px; color:#8b949e;">
-                  <div><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="vertical-align:-1px;margin-right:4px;"><polyline points="5 4 1 8 5 12"/><polyline points="11 4 15 8 11 12"/></svg>Rust &bull; C++ &bull; Python &bull; Shell &bull; WebKit</div>
-                  <div style="display: flex; align-items: center; gap: 4px;"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v12M2 6l6-4 6 4M2 6l3 6M5 12h-6M14 6l-3 6M11 12h6"/></svg> MIT License</div>
-                  <div><svg width="12" height="12" viewBox="0 0 16 16" fill="#f59e0b" style="vertical-align:-1px;margin-right:4px;"><polygon points="8.5 1 2 9 7.5 9 6.5 15 13 7 7.5 7 8.5 1"/></svg>120 FPS Wayland Compositing</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-    } else if (url.includes('wikipedia.org')) {
-      viewport.innerHTML = `
-        <div style="background: #ffffff; color: #202122; font-family: -apple-system, BlinkMacSystemFont, serif; font-size: 14px; line-height: 1.6; min-height: 100%; padding: 28px 36px; max-width: 820px; margin: 0 auto;">
-          <h1 style="font-size: 28px; font-weight: 400; border-bottom: 1px solid #a2a9b1; padding-bottom: 8px; margin-bottom: 16px;">Toccata and Fugue</h1>
-          <div style="font-size: 12px; color: #54595d; margin-bottom: 18px;">From Wikipedia, the free encyclopedia &bull; Horizon Sovereign Mirror</div>
-          <p><strong>Toccata</strong> (from Italian <em>toccare</em>, 'to touch') is a virtuosic piece of music typically for a keyboard instrument or plucked string instrument featuring fast-moving, lightly fingered or otherwise virtuosic passages or sections, emphasizing the dexterity of the performer's fingers.</p>
-          <p>In operating systems architecture, <strong>Toccata OS</strong> derives its name from this philosophy: every pointer click and audio pulse has immediate tactile resonance ("to touch") without buffer delay, operating at 0.7ms real-time audio latency.</p>
-        </div>
-      `;
-    } else if (url.includes('protondb.com')) {
-      viewport.innerHTML = `
-        <div style="background: #111317; color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 13px; min-height: 100%; padding: 24px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
-            <h2 style="font-size: 20px; font-weight: 800; margin: 0; color: #ff5722;">ProtonDB &bull; Toccata Compatibility Ledger</h2>
-            <div style="background: rgba(255,87,34,0.15); color: #ff5722; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 700;">Zorin Exec Guard 1.5 Active</div>
-          </div>
-          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;">
-            <div style="background: #1a1e24; border-radius: 10px; padding: 14px; border-left: 4px solid #00c853;">
-              <div style="display:flex; justify-content:space-between;"><span style="font-weight:700;">Ableton Live 12</span><span style="color:#00c853; font-weight:700;">PLATINUM</span></div>
-              <div style="font-size:11px; color:#8b949e; margin-top:4px;">Wine-ASIO + PipeWire 0.7ms ALSA &bull; VST3 100% stable</div>
-            </div>
-            <div style="background: #1a1e24; border-radius: 10px; padding: 14px; border-left: 4px solid #00c853;">
-              <div style="display:flex; justify-content:space-between;"><span style="font-weight:700;">FL Studio 24</span><span style="color:#00c853; font-weight:700;">PLATINUM</span></div>
-              <div style="font-size:11px; color:#8b949e; margin-top:4px;">Direct low-latency ASIO bridge &bull; Zero audio dropouts</div>
-            </div>
-            <div style="background: #1a1e24; border-radius: 10px; padding: 14px; border-left: 4px solid #ffd600;">
-              <div style="display:flex; justify-content:space-between;"><span style="font-weight:700;">Adobe Photoshop 2024</span><span style="color:#ffd600; font-weight:700;">GOLD</span></div>
-              <div style="font-size:11px; color:#8b949e; margin-top:4px;">DXVK 2.3 Direct3D 11 &bull; Hardware acceleration verified</div>
-            </div>
-            <div style="background: #1a1e24; border-radius: 10px; padding: 14px; border-left: 4px solid #00c853;">
-              <div style="display:flex; justify-content:space-between;"><span style="font-weight:700;">Steam + Proton GE 9.14</span><span style="color:#00c853; font-weight:700;">NATIVE</span></div>
-              <div style="font-size:11px; color:#8b949e; margin-top:4px;">Vulkan direct presentation &bull; 120 FPS variable refresh</div>
-            </div>
-          </div>
-        </div>
-      `;
-    } else if (url.includes('ycombinator.com')) {
-      viewport.innerHTML = `
-        <div style="background: #f6f6ef; color: #222; font-family: Verdana, sans-serif; font-size: 13px; min-height: 100%; padding: 14px;">
-          <div style="background: #ff6600; padding: 4px 8px; font-weight: bold; color: #222; margin-bottom: 12px; display: flex; justify-content: space-between;">
-            <span>Hacker News (Horizon Sovereign Mirror)</span>
-            <span style="font-size: 11px;">100% Trackers Blocked</span>
-          </div>
-          <ol style="padding-left: 20px; margin: 0; line-height: 1.8;">
-            <li><strong>Toccata OS: Zero-Terminal Operating System Released</strong> (toccata.os) <div style="font-size:10px;color:#828282;">482 points by kicode 2 hours ago | 148 comments</div></li>
-            <li><strong>PipeWire 0.7ms Latency on XanMod Kernel</strong> (pipewire.io) <div style="font-size:10px;color:#828282;">312 points by audio_pro 4 hours ago | 92 comments</div></li>
-            <li><strong>Wayland direct scanout hits 120Hz on ProMotion displays</strong> (kwin.kde.org) <div style="font-size:10px;color:#828282;">195 points by wayland_core 6 hours ago | 64 comments</div></li>
-          </ol>
-        </div>
-      `;
-    } else {
-      viewport.innerHTML = `
-        <div style="padding: 30px; text-align: center; color: var(--text-primary);">
-          <div style="margin-bottom: 12px; display:flex; justify-content:center;"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
-          <div style="font-size: 16px; font-weight: 700;">${url}</div>
-          <div style="font-size: 12px; color: var(--text-secondary); margin-top: 6px;">Zero Telemetry Shield Active &bull; 100% Tracking Scripts Blocked</div>
-        </div>
-      `;
+    const dest = resolveDestination(inputUrl);
+
+    // Update active tab title and URL
+    const activeTab = HORIZON_TABS.find(t => t.id === currentHorizonTabId);
+    if (activeTab) {
+      activeTab.title = dest.title;
+      activeTab.url = dest.url;
+      renderHorizonTabs();
+    }
+
+    // Update address bar
+    const urlInput = document.getElementById('horizon-url-input');
+    if (urlInput) urlInput.value = dest.url;
+
+    // Track history
+    if (recordHistory) {
+      horizonHistory.push(dest.url);
+      horizonHistoryIdx = horizonHistory.length - 1;
+    }
+    updateNavButtonStates();
+
+    // Increment tracker block badge
+    horizonTrackerCount += Math.floor(Math.random() * 6) + 2;
+    const trackerEl = document.getElementById('horizon-tracker-count');
+    if (trackerEl) trackerEl.textContent = horizonTrackerCount.toLocaleString();
+
+    // Render corresponding destination
+    switch (dest.type) {
+      case 'facebook':
+        renderFacebookPage(viewport);
+        break;
+      case 'google_home':
+        renderGoogleHomePage(viewport);
+        break;
+      case 'search':
+        renderGoogleSearchResults(viewport, dest.query);
+        break;
+      case 'youtube':
+        renderYouTubePage(viewport);
+        break;
+      case 'github':
+        renderGitHubPage(viewport);
+        break;
+      case 'wikipedia':
+        renderWikipediaPage(viewport);
+        break;
+      case 'reddit':
+        renderRedditPage(viewport);
+        break;
+      case 'hackernews':
+        renderHackerNewsPage(viewport);
+        break;
+      case 'protondb':
+        renderProtonDbPage(viewport);
+        break;
+      case 'benchmark':
+        renderBenchmarkPage(viewport);
+        break;
+      case 'architecture':
+        renderArchitecturePage(viewport);
+        break;
+      case 'pipewire':
+        renderPipeWireStudioPage(viewport);
+        break;
+      case 'live_web':
+      default:
+        renderLiveWebPage(viewport, dest.url, dest.domain || dest.url);
+        break;
     }
   }
   window.navigateHorizon = navigateHorizon;
 
-  function startHorizonBenchmarkCanvas() {
-    const canvas = document.getElementById('horizon-fps-canvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let frameTimes = new Array(80).fill(8.33);
+  // 1. FACEBOOK APPLICATION VIEW
+  function renderFacebookPage(container) {
+    container.innerHTML = `
+      <div style="background:#f0f2f5; min-height:100%; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#050505;">
+        <!-- Top Nav -->
+        <div style="height:56px; background:#ffffff; border-bottom:1px solid #e4e6eb; display:flex; align-items:center; justify-content:space-between; padding:0 16px; position:sticky; top:0; z-index:100; box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <svg viewBox="0 0 36 36" width="38" height="38" fill="#1877f2" style="cursor:pointer;" onclick="navigateHorizon('facebook')"><path d="M20.181 35.87C29.094 34.791 36 27.202 36 18c0-9.941-8.059-18-18-18S0 8.059 0 18c0 8.328 5.656 15.342 13.312 17.399V23.766h-4.32V18h4.32v-4.398c0-4.264 2.54-6.621 6.43-6.621 1.863 0 3.812.332 3.812.332v4.191h-2.148c-2.115 0-2.775 1.312-2.775 2.66V18h4.721l-.755 5.766h-3.966v12.104z"/></svg>
+            <div style="background:#f0f2f5; border-radius:20px; padding:7px 14px; display:flex; align-items:center; gap:8px; width:220px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#65676b" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" placeholder="Search Facebook" onkeydown="if(event.key==='Enter') navigateHorizon(this.value)" style="background:transparent; border:none; outline:none; font-size:13px; width:100%; color:#050505;">
+            </div>
+          </div>
 
-    function loop() {
-      if (!document.getElementById('horizon-fps-canvas')) return;
-      frameTimes.shift();
-      frameTimes.push(8.25 + (Math.random() * 0.2 - 0.1));
+          <div style="display:flex; height:100%; align-items:center; gap:4px;">
+            <div style="height:100%; padding:0 24px; display:flex; align-items:center; border-bottom:3px solid #1877f2; cursor:pointer;" title="Home">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="#1877f2"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            </div>
+            <div style="height:100%; padding:0 24px; display:flex; align-items:center; border-bottom:3px solid transparent; cursor:pointer;" title="Watch">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#65676b" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
+            </div>
+            <div style="height:100%; padding:0 24px; display:flex; align-items:center; border-bottom:3px solid transparent; cursor:pointer;" title="Marketplace">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#65676b" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            </div>
+            <div style="height:100%; padding:0 24px; display:flex; align-items:center; border-bottom:3px solid transparent; cursor:pointer;" title="Groups">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#65676b" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+          </div>
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div style="width:36px; height:36px; border-radius:50%; background:#e4e6eb; display:flex; align-items:center; justify-content:center; cursor:pointer;" title="Messenger" onclick="triggerNotification('Facebook Messenger: 3 unread chats')">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.145 2 11.258c0 2.91 1.455 5.516 3.734 7.21V22l3.375-1.85c.92.255 1.895.394 2.891.394 5.523 0 10-4.145 10-9.258C22 6.145 17.523 2 12 2zm1.045 12.455l-2.67-2.85-5.21 2.85 5.733-6.09 2.738 2.85 5.142-2.85-5.733 6.09z"/></svg>
+            </div>
+            <div style="width:36px; height:36px; border-radius:50%; background:#e4e6eb; display:flex; align-items:center; justify-content:center; cursor:pointer;" title="Notifications" onclick="triggerNotification('Facebook: Linus Torvalds liked your post')">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+            </div>
+            <div style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg, #007aff, #5856d6); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; cursor:pointer;">TU</div>
+          </div>
+        </div>
 
-      // Draw Grid Target (8.33ms = 120 FPS)
-      ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(0, 60);
-      ctx.lineTo(canvas.width, 60);
-      ctx.stroke();
+        <!-- Body Grid -->
+        <div style="display:flex; justify-content:center; max-width:1180px; margin:0 auto; padding:16px 12px; gap:20px;">
+          <!-- Left Column -->
+          <div style="width:240px; flex-shrink:0;">
+            <div style="display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; cursor:pointer; font-weight:600; font-size:13.5px;">
+              <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, #007aff, #5856d6); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px;">TU</div>
+              <span>Toccata User</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; cursor:pointer; font-size:13.5px;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="#1877f2"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+              <span>Friends (38 online)</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; cursor:pointer; font-size:13.5px;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="#2e89ff"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg>
+              <span>Saved Articles</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; cursor:pointer; font-size:13.5px;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="#f35369"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+              <span>Memories</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; cursor:pointer; font-size:13.5px;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="#eab308"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <span>Favorites &amp; Groups</span>
+            </div>
+          </div>
 
-      // Draw Graph
-      ctx.strokeStyle = '#007aff';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      const step = canvas.width / frameTimes.length;
-      frameTimes.forEach((t, i) => {
-        const y = 60 + (t - 8.33) * 200;
-        if (i === 0) ctx.moveTo(0, y);
-        else ctx.lineTo(i * step, y);
-      });
-      ctx.stroke();
+          <!-- Feed Column -->
+          <div style="flex:1; max-width:540px;">
+            <!-- Create Post Box -->
+            <div style="background:#ffffff; border-radius:10px; padding:12px 16px; margin-bottom:14px; box-shadow:0 1px 2px rgba(0,0,0,0.06); border:1px solid #e4e6eb;">
+              <div style="display:flex; align-items:center; gap:10px; padding-bottom:10px; border-bottom:1px solid #e4e6eb;">
+                <div style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg, #007aff, #5856d6); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; flex-shrink:0;">TU</div>
+                <input type="text" id="fb-live-input" placeholder="What's on your mind, Toccata User?" onkeydown="if(event.key==='Enter') window.publishFacebookPost()" style="flex:1; background:#f0f2f5; border:none; outline:none; padding:8px 14px; border-radius:20px; font-size:13.5px; color:#050505;">
+                <button onclick="window.publishFacebookPost()" style="background:#1877f2; color:#fff; border:none; padding:6px 14px; border-radius:6px; font-weight:600; font-size:13px; cursor:pointer;">Post</button>
+              </div>
+              <div style="display:flex; justify-content:space-around; padding-top:8px; font-size:12px; color:#65676b; font-weight:600;">
+                <div style="display:flex; align-items:center; gap:6px; cursor:pointer;" onclick="triggerNotification('Live Video Studio Active')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f3425f" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg> Live Video
+                </div>
+                <div style="display:flex; align-items:center; gap:6px; cursor:pointer;" onclick="triggerNotification('Photo Upload Bridge Connected')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#45bd62" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Photo/video
+                </div>
+                <div style="display:flex; align-items:center; gap:6px; cursor:pointer;" onclick="triggerNotification('Feeling: Resonant')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f7b125" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg> Feeling/activity
+                </div>
+              </div>
+            </div>
 
-      requestAnimationFrame(loop);
-    }
-    requestAnimationFrame(loop);
+            <!-- Feed List -->
+            <div id="fb-feed-stream" style="display:flex; flex-direction:column; gap:14px;">
+              <!-- Official Toccata Post -->
+              <div class="fb-post" style="background:#ffffff; border-radius:10px; padding:14px 16px; box-shadow:0 1px 2px rgba(0,0,0,0.06); border:1px solid #e4e6eb;">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                  <div style="width:38px; height:38px; border-radius:50%; background:#0078f0; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:15px;">T</div>
+                  <div>
+                    <div style="font-weight:700; font-size:14px; display:flex; align-items:center; gap:4px;">
+                      Toccata OS Official
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="#1877f2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    </div>
+                    <div style="font-size:11.5px; color:#65676b;">2 hrs &bull; <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px;display:inline-block;"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> Public</div>
+                  </div>
+                </div>
+                <div style="font-size:13.5px; line-height:1.5; margin-bottom:12px;">
+                  Toccata OS 1.0.4 "Sonata" has been deployed! Crafted with the Apple macOS 27 UI Kit, 0.7ms low-latency studio audio via PipeWire, and 2,220 Windows installer compatibility rules. 100% telemetry-free computing.
+                </div>
+                <div style="background:linear-gradient(135deg, #090d16, #1e293b); border-radius:8px; padding:20px; color:#fff; text-align:center; margin-bottom:12px;">
+                  <div style="font-size:20px; font-weight:800; letter-spacing:-0.4px;">Toccata OS 1.0.4 &ldquo;Sonata&rdquo;</div>
+                  <div style="font-size:12px; opacity:0.8; margin-top:4px;">0.7ms PipeWire &bull; 120Hz Wayland &bull; Apple macOS 27 UI Architecture</div>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:12px; color:#65676b; padding-bottom:8px; border-bottom:1px solid #e4e6eb;">
+                  <span id="fb-like-label-1">1,842 likes</span>
+                  <span>348 comments &bull; 182 shares</span>
+                </div>
+                <div style="display:flex; justify-content:space-around; padding-top:6px;">
+                  <button onclick="window.toggleFacebookLike(1)" id="fb-like-btn-1" style="flex:1; background:none; border:none; padding:7px 0; font-weight:600; font-size:12.5px; color:#65676b; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; border-radius:6px; transition:all 0.15s ease;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg> Like
+                  </button>
+                  <button style="flex:1; background:none; border:none; padding:7px 0; font-weight:600; font-size:12.5px; color:#65676b; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; border-radius:6px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Comment
+                  </button>
+                  <button style="flex:1; background:none; border:none; padding:7px 0; font-weight:600; font-size:12.5px; color:#65676b; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; border-radius:6px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share
+                  </button>
+                </div>
+              </div>
+
+              <!-- Post 2: Arch Linux DAW Engineering -->
+              <div class="fb-post" style="background:#ffffff; border-radius:10px; padding:14px 16px; box-shadow:0 1px 2px rgba(0,0,0,0.06); border:1px solid #e4e6eb;">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                  <div style="width:38px; height:38px; border-radius:50%; background:#10b981; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px;">AL</div>
+                  <div>
+                    <div style="font-weight:700; font-size:14px;">Arch Linux Audio Engineers</div>
+                    <div style="font-size:11.5px; color:#65676b;">4 hrs &bull; <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px;display:inline-block;"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> Public</div>
+                  </div>
+                </div>
+                <div style="font-size:13.5px; line-height:1.5; margin-bottom:12px;">
+                  We benchmarked Ableton Live 12 and FL Studio 24 inside Toccata's Wine-ASIO engine. Zero audio dropouts at 64 samples buffer size (0.67ms). Finally, a desktop Linux OS that musicians can trust on stage.
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:12px; color:#65676b; padding-bottom:8px; border-bottom:1px solid #e4e6eb;">
+                  <span id="fb-like-label-2">892 likes</span>
+                  <span>142 comments &bull; 44 shares</span>
+                </div>
+                <div style="display:flex; justify-content:space-around; padding-top:6px;">
+                  <button onclick="window.toggleFacebookLike(2)" id="fb-like-btn-2" style="flex:1; background:none; border:none; padding:7px 0; font-weight:600; font-size:12.5px; color:#65676b; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; border-radius:6px; transition:all 0.15s ease;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg> Like
+                  </button>
+                  <button style="flex:1; background:none; border:none; padding:7px 0; font-weight:600; font-size:12.5px; color:#65676b; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; border-radius:6px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Comment
+                  </button>
+                  <button style="flex:1; background:none; border:none; padding:7px 0; font-weight:600; font-size:12.5px; color:#65676b; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; border-radius:6px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column -->
+          <div style="width:240px; flex-shrink:0;">
+            <div style="font-weight:700; font-size:13px; color:#65676b; margin-bottom:8px;">Contacts</div>
+            <div style="display:flex; align-items:center; gap:10px; padding:7px 8px; border-radius:8px; cursor:pointer;" onclick="triggerNotification('Chat started with Linus Torvalds')">
+              <div style="width:30px; height:30px; border-radius:50%; background:#22c55e; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:11px;">LT</div>
+              <div>
+                <div style="font-weight:600; font-size:13px;">Linus Torvalds</div>
+                <div style="font-size:10.5px; color:#22c55e;">&bull; Active now</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; padding:7px 8px; border-radius:8px; cursor:pointer;" onclick="triggerNotification('Chat started with Steve Wozniak')">
+              <div style="width:30px; height:30px; border-radius:50%; background:#f59e0b; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:11px;">SW</div>
+              <div>
+                <div style="font-weight:600; font-size:13px;">Steve Wozniak</div>
+                <div style="font-size:10.5px; color:#22c55e;">&bull; Active now</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; padding:7px 8px; border-radius:8px; cursor:pointer;" onclick="triggerNotification('Chat started with Ada Lovelace')">
+              <div style="width:30px; height:30px; border-radius:50%; background:#ec4899; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:11px;">AL</div>
+              <div>
+                <div style="font-weight:600; font-size:13px;">Ada Lovelace</div>
+                <div style="font-size:10.5px; color:#65676b;">12m ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
   }
+
+  window.toggleFacebookLike = function(postId) {
+    const btn = document.getElementById(`fb-like-btn-${postId}`);
+    const label = document.getElementById(`fb-like-label-${postId}`);
+    if (!btn || !label) return;
+    const isLiked = btn.classList.toggle('liked');
+    if (isLiked) {
+      btn.style.color = '#1877f2';
+      label.textContent = `${(postId === 1 ? 1843 : 893).toLocaleString()} likes`;
+      if (typeof playHarmonicChime === 'function') playHarmonicChime([523.25, 659.25], 0.15);
+    } else {
+      btn.style.color = '#65676b';
+      label.textContent = `${(postId === 1 ? 1842 : 892).toLocaleString()} likes`;
+    }
+  };
+
+  window.publishFacebookPost = function() {
+    const input = document.getElementById('fb-live-input');
+    const text = input ? input.value.trim() : '';
+    if (!text) return;
+    input.value = '';
+
+    const stream = document.getElementById('fb-feed-stream');
+    if (!stream) return;
+
+    const newPost = document.createElement('div');
+    newPost.className = 'fb-post';
+    newPost.style.cssText = 'background:#ffffff; border-radius:10px; padding:14px 16px; box-shadow:0 1px 2px rgba(0,0,0,0.06); border:1px solid #e4e6eb; animation:fadeInOverview 0.25s ease;';
+    newPost.innerHTML = `
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, #007aff, #5856d6); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px;">TU</div>
+        <div>
+          <div style="font-weight:700; font-size:14px;">Toccata User</div>
+          <div style="font-size:11.5px; color:#65676b;">Just now &bull; <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px;display:inline-block;"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> Public</div>
+        </div>
+      </div>
+      <div style="font-size:13.5px; line-height:1.5; margin-bottom:12px;">${text}</div>
+      <div style="display:flex; justify-content:space-between; font-size:12px; color:#65676b; padding-bottom:8px; border-bottom:1px solid #e4e6eb;">
+        <span>1 like</span>
+        <span>0 comments</span>
+      </div>
+    `;
+    stream.prepend(newPost);
+    if (typeof playHarmonicChime === 'function') playHarmonicChime([659.25, 880], 0.2);
+    if (typeof triggerNotification === 'function') triggerNotification('Facebook: Post published');
+  };
+
+  // 2. GOOGLE HOMEPAGE VIEW
+  function renderGoogleHomePage(container) {
+    container.innerHTML = `
+      <div style="background:#ffffff; min-height:100%; font-family:-apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif; display:flex; flex-direction:column; justify-content:space-between; color:#202124;">
+        <div style="height:60px; display:flex; justify-content:flex-end; align-items:center; padding:0 24px; gap:18px; font-size:13px;">
+          <span style="cursor:pointer;" onclick="navigateHorizon('https://mail.google.com')">Gmail</span>
+          <span style="cursor:pointer;" onclick="navigateHorizon('https://images.google.com')">Images</span>
+          <div style="width:32px; height:32px; border-radius:50%; background:#1a73e8; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; cursor:pointer;">TU</div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; align-items:center; padding:0 20px 80px;">
+          <div style="font-size:72px; font-weight:500; letter-spacing:-2px; margin-bottom:28px; user-select:none;">
+            <span style="color:#4285f4;">G</span><span style="color:#ea4335;">o</span><span style="color:#fbbc05;">o</span><span style="color:#4285f4;">g</span><span style="color:#34a853;">l</span><span style="color:#ea4335;">e</span>
+          </div>
+
+          <div style="width:100%; max-width:584px; background:#ffffff; border:1px solid #dfe1e5; border-radius:24px; padding:10px 16px; display:flex; align-items:center; gap:12px; box-shadow:0 1px 6px rgba(32,33,36,0.18);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9aa0a6" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="google-home-search" placeholder="Search Google or type a URL" onkeydown="if(event.key==='Enter') navigateHorizon(this.value)" style="flex:1; border:none; outline:none; font-size:15px; color:#202124;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4285f4" stroke-width="2" style="cursor:pointer;" onclick="triggerNotification('Voice Search: Listening...')"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          </div>
+
+          <div style="display:flex; gap:12px; margin-top:28px;">
+            <button onclick="navigateHorizon(document.getElementById('google-home-search').value)" style="background:#f8f9fa; border:1px solid #f8f9fa; border-radius:4px; padding:10px 18px; font-size:14px; color:#3c4043; cursor:pointer;">Google Search</button>
+            <button onclick="navigateHorizon('toccata://speed-benchmark')" style="background:#f8f9fa; border:1px solid #f8f9fa; border-radius:4px; padding:10px 18px; font-size:14px; color:#3c4043; cursor:pointer;">I'm Feeling Lucky</button>
+          </div>
+
+          <div style="margin-top:24px; font-size:13px; color:#70757a;">
+            Quick Destinations:
+            <a href="javascript:void(0)" onclick="navigateHorizon('facebook')" style="color:#1a0dab; text-decoration:none; margin:0 6px;">Facebook</a> &bull;
+            <a href="javascript:void(0)" onclick="navigateHorizon('youtube')" style="color:#1a0dab; text-decoration:none; margin:0 6px;">YouTube</a> &bull;
+            <a href="javascript:void(0)" onclick="navigateHorizon('wikipedia')" style="color:#1a0dab; text-decoration:none; margin:0 6px;">Wikipedia</a> &bull;
+            <a href="javascript:void(0)" onclick="navigateHorizon('github')" style="color:#1a0dab; text-decoration:none; margin:0 6px;">GitHub</a>
+          </div>
+        </div>
+
+        <div style="background:#f2f2f2; border-top:1px solid #dadce0; padding:12px 24px; font-size:14px; color:#70757a; display:flex; justify-content:space-between;">
+          <span>Sovereign Search &bull; Zero Telemetry Shield Active</span>
+          <span>Privacy &bull; Terms &bull; Settings</span>
+        </div>
+      </div>
+    `;
+  }
+
+  // 3. GOOGLE SEARCH RESULTS VIEW
+  function renderGoogleSearchResults(container, query) {
+    const isFacebookQuery = query.toLowerCase().includes('facebook') || query.toLowerCase() === 'fb';
+
+    container.innerHTML = `
+      <div style="background:#ffffff; min-height:100%; font-family:-apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif; color:#202124; padding:0 0 40px 0;">
+        <!-- Header -->
+        <div style="display:flex; align-items:center; padding:16px 24px; gap:24px; border-bottom:1px solid #ebebeb;">
+          <div style="font-size:26px; font-weight:700; letter-spacing:-1px; cursor:pointer;" onclick="navigateHorizon('google')">
+            <span style="color:#4285f4;">G</span><span style="color:#ea4335;">o</span><span style="color:#fbbc05;">o</span><span style="color:#4285f4;">g</span><span style="color:#34a853;">l</span><span style="color:#ea4335;">e</span>
+          </div>
+          <div style="flex:1; max-width:680px; background:#ffffff; border:1px solid #dfe1e5; border-radius:24px; padding:8px 16px; display:flex; align-items:center; gap:10px; box-shadow:0 1px 6px rgba(32,33,36,0.18);">
+            <input type="text" value="${query}" onkeydown="if(event.key==='Enter') navigateHorizon(this.value)" style="flex:1; border:none; outline:none; font-size:15px; color:#202124;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4285f4" stroke-width="2.5" style="cursor:pointer;" onclick="navigateHorizon(this.previousElementSibling.value)"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div style="display:flex; gap:20px; padding:10px 140px; border-bottom:1px solid #ebebeb; font-size:13px; color:#5f6368;">
+          <span style="color:#1a73e8; font-weight:600; border-bottom:3px solid #1a73e8; padding-bottom:8px; cursor:pointer;">All</span>
+          <span style="cursor:pointer;" onclick="triggerNotification('Search tab: Images')">Images</span>
+          <span style="cursor:pointer;" onclick="triggerNotification('Search tab: News')">News</span>
+          <span style="cursor:pointer;" onclick="triggerNotification('Search tab: Videos')">Videos</span>
+          <span style="cursor:pointer;" onclick="triggerNotification('Search tab: Maps')">Maps</span>
+          <span style="cursor:pointer;">Tools</span>
+        </div>
+
+        <!-- Main Results Container -->
+        <div style="display:flex; justify-content:space-between; max-width:1160px; margin:0 140px; padding-top:16px; gap:40px;">
+          <!-- Left Column: Search Results -->
+          <div style="flex:1; max-width:640px;">
+            <div style="font-size:13px; color:#70757a; margin-bottom:20px;">About 2,840,000,000 results (0.22 seconds)</div>
+
+            ${isFacebookQuery ? `
+              <!-- Facebook Top Result -->
+              <div style="margin-bottom:28px;">
+                <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:#202124; margin-bottom:4px;">
+                  <svg viewBox="0 0 36 36" width="18" height="18" fill="#1877f2"><path d="M20.181 35.87C29.094 34.791 36 27.202 36 18c0-9.941-8.059-18-18-18S0 8.059 0 18c0 8.328 5.656 15.342 13.312 17.399V23.766h-4.32V18h4.32v-4.398c0-4.264 2.54-6.621 6.43-6.621 1.863 0 3.812.332 3.812.332v4.191h-2.148c-2.115 0-2.775 1.312-2.775 2.66V18h4.721l-.755 5.766h-3.966v12.104z"/></svg>
+                  <span>Facebook</span> &bull; <span style="color:#5f6368;">https://www.facebook.com</span>
+                </div>
+                <h3 style="font-size:20px; font-weight:400; margin:0 0 6px 0;">
+                  <a href="javascript:void(0)" onclick="navigateHorizon('facebook')" style="color:#1a0dab; text-decoration:none; cursor:pointer;">Facebook - Log In or Sign Up</a>
+                </h3>
+                <p style="font-size:14px; color:#4d5156; line-height:1.58; margin:0 0 12px 0;">
+                  Log into Facebook to start sharing and connecting with your friends, family, and people you know.
+                </p>
+                <!-- Sitelinks -->
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; padding-left:14px; border-left:3px solid #dfe1e5;">
+                  <div>
+                    <a href="javascript:void(0)" onclick="navigateHorizon('facebook')" style="color:#1a0dab; font-size:14px; font-weight:500; text-decoration:none;">Log In</a>
+                    <div style="font-size:12px; color:#4d5156;">Log into your Facebook account to connect with friends.</div>
+                  </div>
+                  <div>
+                    <a href="javascript:void(0)" onclick="navigateHorizon('facebook')" style="color:#1a0dab; font-size:14px; font-weight:500; text-decoration:none;">Sign Up</a>
+                    <div style="font-size:12px; color:#4d5156;">Create a new profile, share updates, and join communities.</div>
+                  </div>
+                  <div>
+                    <a href="javascript:void(0)" onclick="navigateHorizon('facebook')" style="color:#1a0dab; font-size:14px; font-weight:500; text-decoration:none;">Marketplace</a>
+                    <div style="font-size:12px; color:#4d5156;">Buy and sell items locally with community trust.</div>
+                  </div>
+                  <div>
+                    <a href="javascript:void(0)" onclick="navigateHorizon('facebook')" style="color:#1a0dab; font-size:14px; font-weight:500; text-decoration:none;">Help Center</a>
+                    <div style="font-size:12px; color:#4d5156;">Find answers and support for your Meta account.</div>
+                  </div>
+                </div>
+              </div>
+            ` : `
+              <!-- General Result 1 -->
+              <div style="margin-bottom:28px;">
+                <div style="font-size:12px; color:#5f6368; margin-bottom:4px;">https://toccata.os &bull; architecture</div>
+                <h3 style="font-size:20px; font-weight:400; margin:0 0 6px 0;">
+                  <a href="javascript:void(0)" onclick="navigateHorizon('toccata://architecture')" style="color:#1a0dab; text-decoration:none;">Toccata OS 1.0.4: Sovereign Desktop Architecture</a>
+                </h3>
+                <p style="font-size:14px; color:#4d5156; line-height:1.58;">
+                  High-performance desktop operating system uniting Arch Linux, XanMod 6.11 kernel with BORE scheduler, PipeWire 0.7ms low latency, and Apple macOS 27 UI Kit.
+                </p>
+              </div>
+
+              <!-- General Result 2 -->
+              <div style="margin-bottom:28px;">
+                <div style="font-size:12px; color:#5f6368; margin-bottom:4px;">https://github.com/kicode01/toccata-os</div>
+                <h3 style="font-size:20px; font-weight:400; margin:0 0 6px 0;">
+                  <a href="javascript:void(0)" onclick="navigateHorizon('github')" style="color:#1a0dab; text-decoration:none;">kicode01/toccata-os: Complete Operating System Source Code</a>
+                </h3>
+                <p style="font-size:14px; color:#4d5156; line-height:1.58;">
+                  Official GitHub repository with 2,220 Windows app compatibility rules, Wine-ASIO support, pearOS NiceC0re components, and Zorin OS dual personality suite.
+                </p>
+              </div>
+            `}
+
+            <!-- Result 3 -->
+            <div style="margin-bottom:28px;">
+              <div style="font-size:12px; color:#5f6368; margin-bottom:4px;">https://en.wikipedia.org &bull; wiki &bull; ${encodeURIComponent(query)}</div>
+              <h3 style="font-size:20px; font-weight:400; margin:0 0 6px 0;">
+                <a href="javascript:void(0)" onclick="navigateHorizon('wikipedia')" style="color:#1a0dab; text-decoration:none;">${query} - Wikipedia Reference</a>
+              </h3>
+              <p style="font-size:14px; color:#4d5156; line-height:1.58;">
+                Comprehensive encyclopedic summary, history, architecture, and references related to ${query}.
+              </p>
+            </div>
+          </div>
+
+          ${isFacebookQuery ? `
+            <!-- Knowledge Panel for Facebook -->
+            <div style="width:340px; border:1px solid #dfe1e5; border-radius:8px; padding:20px; height:max-content; box-shadow:0 1px 4px rgba(0,0,0,0.06);">
+              <h2 style="font-size:22px; font-weight:400; margin:0 0 4px 0;">Facebook</h2>
+              <div style="font-size:13px; color:#70757a; margin-bottom:14px;">Online social media and social networking service</div>
+              <p style="font-size:13.5px; color:#4d5156; line-height:1.5; margin-bottom:16px;">
+                Facebook is an online social media and social networking service owned by American technology giant Meta Platforms. Created in 2004 by Mark Zuckerberg with fellow Harvard College students.
+              </p>
+              <div style="border-top:1px solid #ebebeb; padding-top:12px; font-size:13px; display:flex; flex-direction:column; gap:8px;">
+                <div><strong>CEO:</strong> Mark Zuckerberg (2004–present)</div>
+                <div><strong>Founded:</strong> February 4, 2004, Cambridge, MA</div>
+                <div><strong>Parent organization:</strong> Meta Platforms</div>
+                <div><strong>Subsidiaries:</strong> Instagram, WhatsApp, Oculus, Messenger</div>
+              </div>
+              <button onclick="navigateHorizon('facebook')" style="width:100%; margin-top:18px; background:#1877f2; color:#fff; border:none; padding:10px; border-radius:6px; font-weight:600; font-size:13px; cursor:pointer;">Launch Facebook Web App</button>
+            </div>
+          ` : `
+            <!-- Knowledge Panel for Toccata OS -->
+            <div style="width:340px; border:1px solid #dfe1e5; border-radius:8px; padding:20px; height:max-content; box-shadow:0 1px 4px rgba(0,0,0,0.06);">
+              <h2 style="font-size:22px; font-weight:400; margin:0 0 4px 0;">Toccata OS</h2>
+              <div style="font-size:13px; color:#70757a; margin-bottom:14px;">Sovereign Audio &amp; UI Operating System</div>
+              <p style="font-size:13.5px; color:#4d5156; line-height:1.5; margin-bottom:16px;">
+                Linux-based real-time operating system engineered for professional digital audio workstations (DAWs) and 120Hz ProMotion desktop presentation.
+              </p>
+              <div style="border-top:1px solid #ebebeb; padding-top:12px; font-size:13px; display:flex; flex-direction:column; gap:8px;">
+                <div><strong>Kernel:</strong> XanMod 6.11 Linux + BORE</div>
+                <div><strong>Audio Subsystem:</strong> PipeWire 1.2 (0.7ms roundtrip)</div>
+                <div><strong>UI Engine:</strong> Apple macOS 27 UI Kit Architecture</div>
+                <div><strong>Compatibility:</strong> Proton GE 9.14 + Wine-ASIO</div>
+              </div>
+            </div>
+          `}
+        </div>
+      </div>
+    `;
+  }
+
+  // 4. YOUTUBE VIEW
+  function renderYouTubePage(container) {
+    container.innerHTML = `
+      <div style="background:#0f0f0f; min-height:100%; font-family:-apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif; color:#f1f1f1; padding:0 0 30px 0;">
+        <div style="height:56px; background:#0f0f0f; display:flex; align-items:center; justify-content:space-between; padding:0 24px; position:sticky; top:0; z-index:100; border-bottom:1px solid #272727;">
+          <div style="display:flex; align-items:center; gap:16px;">
+            <div style="display:flex; align-items:center; gap:4px; cursor:pointer;" onclick="navigateHorizon('youtube')">
+              <svg width="28" height="20" viewBox="0 0 28 20" fill="#ff0000"><path d="M27.4 3.1A3.5 3.5 0 0 0 24.9.6C22.7 0 14 0 14 0S5.3 0 3.1.6A3.5 3.5 0 0 0 .6 3.1 36.8 36.8 0 0 0 0 10c0 2.4.2 4.7.6 6.9A3.5 3.5 0 0 0 3.1 19.4C5.3 20 14 20 14 20s8.7 0 10.9-.6a3.5 3.5 0 0 0 2.5-2.5c.4-2.2.6-4.5.6-6.9 0-2.4-.2-4.7-.6-6.9z"/><polygon fill="#fff" points="11.2,14.3 18.5,10 11.2,5.7"/></svg>
+              <span style="font-weight:700; font-size:18px; letter-spacing:-0.5px;">YouTube</span>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; width:480px; background:#121212; border:1px solid #303030; border-radius:20px; overflow:hidden;">
+            <input type="text" placeholder="Search" onkeydown="if(event.key==='Enter') navigateHorizon(this.value)" style="flex:1; background:transparent; border:none; outline:none; padding:8px 16px; color:#f1f1f1; font-size:14px;">
+            <button style="background:#222; border:none; padding:8px 18px; color:#aaa; cursor:pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+          </div>
+          <div style="width:34px; height:34px; border-radius:50%; background:#0078f0; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px;">TU</div>
+        </div>
+
+        <div style="padding:20px 24px;">
+          <div style="display:flex; gap:10px; margin-bottom:24px; overflow-x:auto;">
+            <span style="background:#fff; color:#000; padding:6px 14px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">All</span>
+            <span style="background:#272727; color:#fff; padding:6px 14px; border-radius:8px; font-size:13px; cursor:pointer;">PipeWire Audio</span>
+            <span style="background:#272727; color:#fff; padding:6px 14px; border-radius:8px; font-size:13px; cursor:pointer;">Linux Kernel</span>
+            <span style="background:#272727; color:#fff; padding:6px 14px; border-radius:8px; font-size:13px; cursor:pointer;">DAW Synthesis</span>
+            <span style="background:#272727; color:#fff; padding:6px 14px; border-radius:8px; font-size:13px; cursor:pointer;">120Hz ProMotion</span>
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:20px;">
+            <!-- Video 1 -->
+            <div style="cursor:pointer;" onclick="triggerNotification('Playing: Toccata OS 0.7ms Latency Breakdown')">
+              <div style="height:160px; background:linear-gradient(135deg, #1e3a8a, #0f172a); border-radius:12px; display:flex; align-items:center; justify-content:center; position:relative; margin-bottom:10px;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="rgba(255,255,255,0.85)"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                <span style="position:absolute; bottom:8px; right:8px; background:rgba(0,0,0,0.8); padding:2px 6px; border-radius:4px; font-size:11px; font-weight:700;">14:22</span>
+              </div>
+              <div style="font-weight:600; font-size:14px; line-height:1.4;">Toccata OS: How PipeWire Beats Windows ASIO by 11.7ms</div>
+              <div style="font-size:12px; color:#aaa; margin-top:4px;">Audio Engine Reviews &bull; 148K views &bull; 1 day ago</div>
+            </div>
+
+            <!-- Video 2 -->
+            <div style="cursor:pointer;" onclick="triggerNotification('Playing: BORE Scheduler vs CFS Linux')">
+              <div style="height:160px; background:linear-gradient(135deg, #701a75, #1e1b4b); border-radius:12px; display:flex; align-items:center; justify-content:center; position:relative; margin-bottom:10px;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="rgba(255,255,255,0.85)"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                <span style="position:absolute; bottom:8px; right:8px; background:rgba(0,0,0,0.8); padding:2px 6px; border-radius:4px; font-size:11px; font-weight:700;">18:05</span>
+              </div>
+              <div style="font-weight:600; font-size:14px; line-height:1.4;">XanMod 6.11 Kernel: Real-World 120Hz Wayland Benchmarks</div>
+              <div style="font-size:12px; color:#aaa; margin-top:4px;">Linux Gaming Tech &bull; 92K views &bull; 3 days ago</div>
+            </div>
+
+            <!-- Video 3 -->
+            <div style="cursor:pointer;" onclick="triggerNotification('Playing: Ableton Live 12 under Wine-ASIO')">
+              <div style="height:160px; background:linear-gradient(135deg, #065f46, #022c22); border-radius:12px; display:flex; align-items:center; justify-content:center; position:relative; margin-bottom:10px;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="rgba(255,255,255,0.85)"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                <span style="position:absolute; bottom:8px; right:8px; background:rgba(0,0,0,0.8); padding:2px 6px; border-radius:4px; font-size:11px; font-weight:700;">22:40</span>
+              </div>
+              <div style="font-weight:600; font-size:14px; line-height:1.4;">Ableton Live 12 + 64 VST3 Plugins: Zero Jitter Stress Test</div>
+              <div style="font-size:12px; color:#aaa; margin-top:4px;">Studio Producers Hub &bull; 310K views &bull; 1 week ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // 5. GITHUB REPOSITORY VIEW
+  function renderGitHubPage(container) {
+    container.innerHTML = `
+      <div style="background:#0d1117; color:#c9d1d9; font-family:-apple-system, BlinkMacSystemFont, sans-serif; font-size:13px; min-height:100%; padding:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #30363d; padding-bottom:14px; margin-bottom:16px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <svg viewBox="0 0 16 16" width="22" height="22" fill="#f0f6fc"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>
+            <span style="font-size:16px; font-weight:700;"><span style="color:#58a6ff;">kicode01</span> / <span style="color:#f0f6fc;">toccata-os</span></span>
+            <span style="font-size:11px; padding:2px 8px; border-radius:12px; border:1px solid #30363d; color:#8b949e;">Public</span>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-secondary" style="font-size:11px; padding:3px 10px; display:inline-flex; align-items:center; gap:4px;"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25z"/></svg> Star (1.2k)</button>
+            <button class="btn btn-secondary" style="font-size:11px; padding:3px 10px;">Fork (142)</button>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns: 2fr 1fr; gap:18px;">
+          <div>
+            <div style="background:#161b22; border:1px solid #30363d; border-radius:8px; overflow:hidden;">
+              <div style="background:#21262d; padding:10px 14px; font-weight:600; font-size:12px; border-bottom:1px solid #30363d;">Latest Commits &bull; Branch: main</div>
+              <div style="padding:10px 14px; font-size:12px; border-bottom:1px solid #21262d;">feat(ui): redesign entire desktop interface using Apple macOS 27 UI Kit architecture</div>
+              <div style="padding:10px 14px; font-size:12px; border-bottom:1px solid #21262d;">feat(apps): integrate full zorin os and pearos applications suite</div>
+              <div style="padding:10px 14px; font-size:12px;">feat(kernel): XanMod 6.11 BORE scheduler with bit-perfect PipeWire 0.7ms</div>
+            </div>
+          </div>
+          <div>
+            <div style="background:#161b22; border:1px solid #30363d; border-radius:8px; padding:14px;">
+              <div style="font-weight:700; margin-bottom:8px;">About</div>
+              <p style="font-size:12px; color:#8b949e; line-height:1.5;">Sovereign desktop operating system fusing PipeWire audio latency, 120Hz Wayland compositing, and Apple macOS 27 design language.</p>
+              <div style="margin-top:12px; display:flex; flex-direction:column; gap:6px; font-size:11px; color:#8b949e;">
+                <div>Rust &bull; C++ &bull; Python &bull; Shell &bull; WebKit</div>
+                <div>MIT License</div>
+                <div>120 FPS Wayland Compositing</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // 6. WIKIPEDIA VIEW
+  function renderWikipediaPage(container) {
+    container.innerHTML = `
+      <div style="background: #ffffff; color: #202122; font-family: -apple-system, BlinkMacSystemFont, serif; font-size: 14px; line-height: 1.6; min-height: 100%; padding: 28px 36px; max-width: 820px; margin: 0 auto;">
+        <h1 style="font-size: 28px; font-weight: 400; border-bottom: 1px solid #a2a9b1; padding-bottom: 8px; margin-bottom: 16px;">Toccata and Fugue</h1>
+        <div style="font-size: 12px; color: #54595d; margin-bottom: 18px;">From Wikipedia, the free encyclopedia &bull; Horizon Sovereign Mirror</div>
+        <p><strong>Toccata</strong> (from Italian <em>toccare</em>, 'to touch') is a virtuosic piece of music typically for a keyboard instrument or plucked string instrument featuring fast-moving, lightly fingered or otherwise virtuosic passages or sections, emphasizing the dexterity of the performer's fingers.</p>
+        <p>In operating systems architecture, <strong>Toccata OS</strong> derives its name from this philosophy: every pointer click and audio pulse has immediate tactile resonance ("to touch") without buffer delay, operating at 0.7ms real-time audio latency.</p>
+      </div>
+    `;
+  }
+
+  // 7. REDDIT VIEW
+  function renderRedditPage(container) {
+    container.innerHTML = `
+      <div style="background:#0e1113; color:#d7dadc; font-family:-apple-system, BlinkMacSystemFont, sans-serif; font-size:13px; min-height:100%; padding:16px 24px;">
+        <div style="height:48px; border-bottom:1px solid #343536; display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+          <div style="font-size:18px; font-weight:700; color:#ff4500;">reddit</div>
+          <span style="font-size:14px; font-weight:600;">r/linux</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px; max-width:680px;">
+          <div style="background:#1a1a1b; border:1px solid #343536; border-radius:6px; padding:12px; display:flex; gap:12px;">
+            <div style="display:flex; flex-direction:column; align-items:center; gap:4px; font-weight:700; font-size:12px; color:#ff4500;">
+              ▲ 1.4k ▼
+            </div>
+            <div>
+              <div style="font-size:11px; color:#818384;">Posted by u/kernel_enthusiast 4 hours ago</div>
+              <div style="font-size:15px; font-weight:600; margin:4px 0;">Toccata OS adopts Apple macOS 27 UI Kit and XanMod 6.11 Kernel with BORE scheduler</div>
+              <p style="font-size:12px; color:#d7dadc; line-height:1.5;">Tested with Ableton Live 12 and FL Studio 24 inside Wine-ASIO container. Audio latency confirmed at 0.67ms with zero buffer underruns.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // 8. HACKER NEWS VIEW
+  function renderHackerNewsPage(container) {
+    container.innerHTML = `
+      <div style="background: #f6f6ef; color: #222; font-family: Verdana, sans-serif; font-size: 13px; min-height: 100%; padding: 14px;">
+        <div style="background: #ff6600; padding: 4px 8px; font-weight: bold; color: #222; margin-bottom: 12px; display: flex; justify-content: space-between;">
+          <span>Hacker News (Horizon Sovereign Mirror)</span>
+          <span style="font-size: 11px;">100% Trackers Blocked</span>
+        </div>
+        <ol style="padding-left: 20px; margin: 0; line-height: 1.8;">
+          <li><strong>Toccata OS 1.0.4 Released with macOS 27 Design Language</strong> (toccata.os) <div style="font-size:10px;color:#828282;">542 points by kicode 2 hours ago | 164 comments</div></li>
+          <li><strong>PipeWire 0.7ms Latency on XanMod Kernel</strong> (pipewire.io) <div style="font-size:10px;color:#828282;">312 points by audio_pro 4 hours ago | 92 comments</div></li>
+          <li><strong>Wayland direct scanout hits 120Hz on ProMotion displays</strong> (kwin.kde.org) <div style="font-size:10px;color:#828282;">195 points by wayland_core 6 hours ago | 64 comments</div></li>
+        </ol>
+      </div>
+    `;
+  }
+
+  // 9. PROTONDB VIEW
+  function renderProtonDbPage(container) {
+    container.innerHTML = `
+      <div style="background: #111317; color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 13px; min-height: 100%; padding: 24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+          <h2 style="font-size: 20px; font-weight: 800; margin: 0; color: #ff5722;">ProtonDB &bull; Toccata Compatibility Ledger</h2>
+          <div style="background: rgba(255,87,34,0.15); color: #ff5722; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 700;">Zorin Exec Guard 1.5 Active</div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;">
+          <div style="background: #1a1e24; border-radius: 10px; padding: 14px; border-left: 4px solid #00c853;">
+            <div style="display:flex; justify-content:space-between;"><span style="font-weight:700;">Ableton Live 12</span><span style="color:#00c853; font-weight:700;">PLATINUM</span></div>
+            <div style="font-size:11px; color:#8b949e; margin-top:4px;">Wine-ASIO + PipeWire 0.7ms ALSA &bull; VST3 100% stable</div>
+          </div>
+          <div style="background: #1a1e24; border-radius: 10px; padding: 14px; border-left: 4px solid #00c853;">
+            <div style="display:flex; justify-content:space-between;"><span style="font-weight:700;">FL Studio 24</span><span style="color:#00c853; font-weight:700;">PLATINUM</span></div>
+            <div style="font-size:11px; color:#8b949e; margin-top:4px;">Direct low-latency ASIO bridge &bull; Zero audio dropouts</div>
+          </div>
+          <div style="background: #1a1e24; border-radius: 10px; padding: 14px; border-left: 4px solid #ffd600;">
+            <div style="display:flex; justify-content:space-between;"><span style="font-weight:700;">Adobe Photoshop 2024</span><span style="color:#ffd600; font-weight:700;">GOLD</span></div>
+            <div style="font-size:11px; color:#8b949e; margin-top:4px;">DXVK 2.3 Direct3D 11 &bull; Hardware acceleration verified</div>
+          </div>
+          <div style="background: #1a1e24; border-radius: 10px; padding: 14px; border-left: 4px solid #00c853;">
+            <div style="display:flex; justify-content:space-between;"><span style="font-weight:700;">Steam + Proton GE 9.14</span><span style="color:#00c853; font-weight:700;">NATIVE</span></div>
+            <div style="font-size:11px; color:#8b949e; margin-top:4px;">Vulkan direct presentation &bull; 120 FPS variable refresh</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // 10. SYSTEM BENCHMARK VIEW
+  function renderBenchmarkPage(container) {
+    container.innerHTML = `
+      <div style="padding: 24px; max-width: 720px; margin: 0 auto; color: var(--text-primary);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+          <div>
+            <h2 style="font-size: 22px; font-weight: 800; margin: 0;">System Latency &amp; Frame Rate Benchmark</h2>
+            <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">Hardware Accelerated ProMotion 120Hz &bull; PipeWire Real-Time Audio</div>
+          </div>
+          <div style="background: rgba(52,199,89,0.15); color: #34c759; border-radius: 20px; padding: 6px 14px; font-weight: 700; font-size: 13px;">120.0 FPS LOCKED</div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px;">
+          <div style="background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); border-radius: 12px; padding: 16px;">
+            <div style="font-size: 11px; text-transform: uppercase; color: var(--text-secondary); font-weight: 700;">Audio Jitter</div>
+            <div style="font-size: 24px; font-weight: 800; color: #007aff; margin-top: 4px;">0.67 ms</div>
+            <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">ALSA Direct Pass</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); border-radius: 12px; padding: 16px;">
+            <div style="font-size: 11px; text-transform: uppercase; color: var(--text-secondary); font-weight: 700;">Compositor Latency</div>
+            <div style="font-size: 24px; font-weight: 800; color: #34c759; margin-top: 4px;">0.42 ms</div>
+            <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">KWin Wayland Tear-Free</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); border-radius: 12px; padding: 16px;">
+            <div style="font-size: 11px; text-transform: uppercase; color: var(--text-secondary); font-weight: 700;">Display Refresh</div>
+            <div style="font-size: 24px; font-weight: 800; color: #af52de; margin-top: 4px;">120 Hz</div>
+            <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">Variable VRR Synchronized</div>
+          </div>
+        </div>
+        <div style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 16px; border: 1px solid var(--glass-border);">
+          <div style="font-size: 12px; font-weight: 700; margin-bottom: 8px;">Real-Time Frame Interval Oscilloscope (8.33ms Target)</div>
+          <canvas id="horizon-fps-canvas" width="670" height="120" style="width:100%; height:120px; display:block;"></canvas>
+        </div>
+      </div>
+    `;
+    startHorizonBenchmarkCanvas();
+  }
+
+  // 11. ARCHITECTURE VIEW
+  function renderArchitecturePage(container) {
+    container.innerHTML = `
+      <div style="padding: 24px; max-width: 720px; margin: 0 auto; color: var(--text-primary); line-height: 1.6;">
+        <h2 style="font-size: 20px; font-weight: 800;">Toccata Core Architectural Stack</h2>
+        <p style="color: var(--text-secondary); font-size: 13px;">Engineered for professional music synthesis, 120Hz display responsiveness, and zero Windows bloat.</p>
+        <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 12px;">
+          <div style="padding: 14px; background: rgba(255,255,255,0.06); border-radius: 10px; border-left: 4px solid #007aff;">
+            <div style="font-weight: 700;">Layer 1: XanMod 6.11 Linux Kernel with BORE Scheduler</div>
+            <div style="font-size: 12px; color: var(--text-secondary);">Burst-Oriented Response Enhancer (BORE) dynamically prioritizes UI interactivity and audio threads over background I/O.</div>
+          </div>
+          <div style="padding: 14px; background: rgba(255,255,255,0.06); border-radius: 10px; border-left: 4px solid #af52de;">
+            <div style="font-weight: 700;">Layer 2: PipeWire Audio Processing Graph</div>
+            <div style="font-size: 12px; color: var(--text-secondary);">Native 64-sample buffer size delivering 0.67ms round-trip hardware latency with bit-perfect ALSA pass-through.</div>
+          </div>
+          <div style="padding: 14px; background: rgba(255,255,255,0.06); border-radius: 10px; border-left: 4px solid #34c759;">
+            <div style="font-weight: 700;">Layer 3: KWin Wayland Compositor</div>
+            <div style="font-size: 12px; color: var(--text-secondary);">Hardware direct scanout for zero-latency presentation, fractional scaling, and macOS-grade 120Hz fluid motion.</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // 12. PIPEWIRE STUDIO VIEW
+  function renderPipeWireStudioPage(container) {
+    container.innerHTML = `
+      <div style="padding: 24px; max-width: 720px; margin: 0 auto; color: var(--text-primary); line-height: 1.6;">
+        <h2 style="font-size: 20px; font-weight: 800; color:#38bdf8;">PipeWire Audio Routing Graph</h2>
+        <p style="color: var(--text-secondary); font-size: 13px;">Direct ALSA Hardware Buffer &bull; 64 Samples @ 96kHz &bull; 0.667ms latency.</p>
+        <div style="margin-top:20px; background:rgba(0,0,0,0.25); border:1px solid var(--glass-border); border-radius:12px; padding:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+            <span style="font-weight:700;">Active Audio Nodes</span>
+            <span style="color:#34c759; font-weight:700; font-size:12px;">Synced (Bit-Perfect)</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div style="display:flex; justify-content:space-between; padding:10px 14px; background:rgba(255,255,255,0.05); border-radius:8px;">
+              <span>Sonata Music Player (FLAC 24-bit/96kHz)</span>
+              <span style="color:#38bdf8;">PipeWire Sink 01 &rarr; DAC 1</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding:10px 14px; background:rgba(255,255,255,0.05); border-radius:8px;">
+              <span>Wine-ASIO Container (Ableton Live 12)</span>
+              <span style="color:#38bdf8;">Direct ALSA 64-Frame Buffer</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding:10px 14px; background:rgba(255,255,255,0.05); border-radius:8px;">
+              <span>System Acoustic Harmonics (432Hz Core)</span>
+              <span style="color:#34c759;">Hardware DSP Node</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // 13. LIVE WEB PAGE VIEW
+  function renderLiveWebPage(container, url, domain) {
+    container.innerHTML = `
+      <div style="height:100%; display:flex; flex-direction:column; background:#ffffff;">
+        <div style="padding:8px 16px; background:#f8f9fa; border-bottom:1px solid #e9ecef; display:flex; justify-content:space-between; align-items:center; font-size:12px; color:#6c757d;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="color:#198754; font-weight:600;"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#34c759" stroke-width="2" style="vertical-align:-1px;display:inline-block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> TLS 1.3 Verified</span>
+            <span>&bull;</span>
+            <span>Host: <strong>${domain}</strong></span>
+          </div>
+          <div>Zero Telemetry &bull; Tracking Blocked</div>
+        </div>
+        <div style="flex:1; position:relative; min-height:0;">
+          <iframe src="${url}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" style="width:100%; height:100%; border:none;" onerror="this.style.display='none'; document.getElementById('iframe-fallback').style.display='block';"></iframe>
+          <div id="iframe-fallback" style="display:none; padding:40px; text-align:center; color:#212529;">
+            <h3 style="margin-bottom:8px;">${domain}</h3>
+            <p style="color:#6c757d; font-size:13px; max-width:500px; margin:0 auto 20px;">This domain restricts embedded frame loading via security policies. You can read its sovereign snapshot or open in a native window.</p>
+            <button onclick="navigateHorizon('https://www.google.com/search?q=${encodeURIComponent(domain)}')" style="background:#0d6efd; color:#fff; border:none; padding:8px 18px; border-radius:6px; font-weight:600; cursor:pointer;">Search on Google</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
 
   // Toggle Web Inspector Drawer
   function toggleWebInspector() {

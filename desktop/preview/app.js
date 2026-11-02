@@ -256,7 +256,14 @@
         win.style.filter = '';
       }, 340);
 
-      bringToFront(win);
+      if (id === 'win-horizon') {
+      if (window.initHorizonTabBar) window.initHorizonTabBar();
+      const page = document.getElementById('horizon-page-content');
+      if (page && (!page.innerHTML || page.innerHTML.trim() === '')) {
+        if (window.navigateHorizon) window.navigateHorizon('https://www.google.com');
+      }
+    }
+    bringToFront(win);
       return;
     }
 
