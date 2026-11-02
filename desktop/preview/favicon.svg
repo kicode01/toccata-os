@@ -1,18 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="title">
   <title id="title">Toccata OS — Resonant Squircle Icon</title>
   <g id="toccata-logo-root">
-    <!-- Layer 1: Squircle OS Tile -->
+    <!-- Layer 1: Squircle OS Tile (224x224, rx=52) -->
     <rect id="toccata-tile" x="16" y="16" width="224" height="224" rx="52" fill="#007AFF"/>
-    <!-- Layer 2: Acoustic Harmonic Wave Arcs -->
+    <!-- Layer 2: Parallel Vertical Harmonic Bars (w=18, rx=9, gap=16 from U-prongs, outer x=46..210) -->
     <g id="toccata-waves" fill="#38BDF8">
-      <path id="toccata-wave-left" d="M 48 106 A 92 92 0 0 0 48 182 A 10 10 0 0 0 64 170 A 72 72 0 0 1 64 118 A 10 10 0 0 0 48 106 Z"/>
-      <path id="toccata-wave-right" d="M 208 106 A 10 10 0 0 0 192 118 A 72 72 0 0 1 192 170 A 10 10 0 0 0 208 182 A 92 92 0 0 0 208 106 Z"/>
+      <rect id="toccata-wave-left" x="46" y="96" width="18" height="44" rx="9"/>
+      <rect id="toccata-wave-right" x="192" y="96" width="18" height="44" rx="9"/>
     </g>
-    <!-- Layer 3: Geometric 'T' Top Bar -->
-    <path id="toccata-t-bar" fill="#FFFFFF" d="M 68 52 H 188 A 14 14 0 0 1 202 66 V 72 A 14 14 0 0 1 188 86 H 68 A 14 14 0 0 1 54 72 V 66 A 14 14 0 0 1 68 52 Z"/>
-    <!-- Layer 4: Tuning Fork U-Resonator + Stem -->
-    <path id="toccata-fork-u" fill="#FFFFFF" d="M 86 102 A 14 14 0 0 1 100 116 V 134 A 28 28 0 0 0 156 134 V 116 A 14 14 0 0 1 184 116 V 134 A 56 56 0 0 1 142 188.3 V 206 A 14 14 0 0 1 114 206 V 188.3 A 56 56 0 0 1 72 134 V 116 A 14 14 0 0 1 86 102 Z"/>
-    <!-- Layer 5: Harmonic Core Pulse -->
-    <path id="toccata-core-pulse" fill="#38BDF8" d="M 128 102 A 11 11 0 0 1 139 113 V 135 A 11 11 0 0 1 117 135 V 113 A 11 11 0 0 1 128 102 Z"/>
+    <!-- Layer 3: Geometric 'T' Top Bar (w=164, h=30, rx=15, x=46..210 — exact alignment with outer bars) -->
+    <rect id="toccata-t-bar" x="46" y="48" width="164" height="30" rx="15" fill="#FFFFFF"/>
+    <!-- Layer 4: Tuning Fork U-Resonator + Stem (w=28, r_outer=48, r_inner=20, x=80..176) -->
+    <path id="toccata-fork-u" fill="#FFFFFF" d="M 94 96 A 14 14 0 0 1 108 110 V 132 A 20 20 0 0 0 148 132 V 110 A 14 14 0 0 1 176 110 V 132 A 48 48 0 0 1 142 177.9 V 202 A 14 14 0 0 1 114 202 V 177.9 A 48 48 0 0 1 80 132 V 110 A 14 14 0 0 1 94 96 Z"/>
+    <!-- Layer 5: Central Harmonic Core Pill (w=18, rx=9, gap=11 inside U-channel) -->
+    <rect id="toccata-core-pulse" x="119" y="96" width="18" height="36" rx="9" fill="#38BDF8"/>
   </g>
 </svg>

@@ -3536,15 +3536,15 @@ body.true-tone-active #desktop {
 }
 
 .boot-svg-emblem .boot-part-wave-l {
-  transform-origin: 56px 144px;
+  transform-origin: 55px 118px;
   animation: bootWaveLeft 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.56s both,
-             bootWaveBreatheLeft 1.6s ease-in-out 1.2s infinite alternate;
+             bootWaveEqualizer 1.2s ease-in-out 1.2s infinite alternate;
 }
 
 .boot-svg-emblem .boot-part-wave-r {
-  transform-origin: 200px 144px;
+  transform-origin: 201px 118px;
   animation: bootWaveRight 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.56s both,
-             bootWaveBreatheRight 1.6s ease-in-out 1.2s infinite alternate;
+             bootWaveEqualizer 1.2s ease-in-out 1.2s infinite alternate;
 }
 
 .boot-ripple-ring {
@@ -3670,6 +3670,11 @@ body.true-tone-active #desktop {
 @keyframes bootWaveBreatheLeft {
   0% { transform: translateX(0); opacity: 0.82; }
   100% { transform: translateX(-5px); opacity: 1; }
+}
+
+@keyframes bootWaveEqualizer {
+  0% { transform: scaleY(0.84); opacity: 0.85; }
+  100% { transform: scaleY(1.18); opacity: 1; }
 }
 
 @keyframes bootWaveBreatheRight {
