@@ -52,19 +52,104 @@
           </div>
         </div>
 
-        <div class="menu-item active-app-name" id="active-app-title">Finder</div>
-        <div class="menu-item">File</div>
-        <div class="menu-item">Edit</div>
-        <div class="menu-item">View</div>
-        <div class="menu-item">Go</div>
-        <div class="menu-item">Window</div>
-        <div class="menu-item">Help</div>
+        <div class="menu-item active-app-name" id="active-app-title" onclick="toggleTopBarDropdown('app')">Finder</div>
+        <div class="menu-item top-menu-trigger" data-menu="file" onclick="toggleTopBarDropdown('file')">File</div>
+        <div class="menu-item top-menu-trigger" data-menu="edit" onclick="toggleTopBarDropdown('edit')">Edit</div>
+        <div class="menu-item top-menu-trigger" data-menu="view" onclick="toggleTopBarDropdown('view')">View</div>
+        <div class="menu-item top-menu-trigger" data-menu="go" onclick="toggleTopBarDropdown('go')">Go</div>
+        <div class="menu-item top-menu-trigger" data-menu="window" onclick="toggleTopBarDropdown('window')">Window</div>
+        <div class="menu-item top-menu-trigger" data-menu="help" onclick="toggleTopBarDropdown('help')">Help</div>
+
+        <!-- Global Top Menu Bar Contextual Dropdowns -->
+        <div class="toccata-system-dropdown topbar-sub-dropdown hidden" id="topbar-dropdown-file" style="left: 112px;">
+          <div class="menu-dropdown-item" onclick="createNewCadenceFolder(); closeAllTopBarDropdowns();"><span>New Folder</span><span class="menu-shortcut">⇧⌘N</span></div>
+          <div class="menu-dropdown-item" onclick="openWindow('win-scribe'); createNewScribeDoc(); closeAllTopBarDropdowns();"><span>New Markdown Document</span><span class="menu-shortcut">⌘N</span></div>
+          <div class="menu-dropdown-item" onclick="openWindow('win-cadence'); closeAllTopBarDropdowns();"><span>New Finder Window</span><span class="menu-shortcut">⌥⌘N</span></div>
+          <div class="menu-dropdown-separator"></div>
+          <div class="menu-dropdown-item" onclick="openQuickLook(); closeAllTopBarDropdowns();"><span>Quick Look Selected Item</span><span class="menu-shortcut">Space</span></div>
+          <div class="menu-dropdown-item" onclick="moveSelectedToTrash(); closeAllTopBarDropdowns();"><span>Move to Trash</span><span class="menu-shortcut">⌘⌫</span></div>
+          <div class="menu-dropdown-separator"></div>
+          <div class="menu-dropdown-item" onclick="closeFocusedWindow(); closeAllTopBarDropdowns();"><span>Close Window</span><span class="menu-shortcut">⌘W</span></div>
+        </div>
+
+        <div class="toccata-system-dropdown topbar-sub-dropdown hidden" id="topbar-dropdown-edit" style="left: 152px;">
+          <div class="menu-dropdown-item" onclick="document.execCommand('undo'); triggerNotification('Undo'); closeAllTopBarDropdowns();"><span>Undo</span><span class="menu-shortcut">⌘Z</span></div>
+          <div class="menu-dropdown-item" onclick="document.execCommand('redo'); triggerNotification('Redo'); closeAllTopBarDropdowns();"><span>Redo</span><span class="menu-shortcut">⇧⌘Z</span></div>
+          <div class="menu-dropdown-separator"></div>
+          <div class="menu-dropdown-item" onclick="copyCurrentSelection(); closeAllTopBarDropdowns();"><span>Copy</span><span class="menu-shortcut">⌘C</span></div>
+          <div class="menu-dropdown-item" onclick="pasteToFocusedInput(); closeAllTopBarDropdowns();"><span>Paste</span><span class="menu-shortcut">⌘V</span></div>
+          <div class="menu-dropdown-item" onclick="selectAllInActiveApp(); closeAllTopBarDropdowns();"><span>Select All</span><span class="menu-shortcut">⌘A</span></div>
+          <div class="menu-dropdown-separator"></div>
+          <div class="menu-dropdown-item" onclick="toggleSpotlight(); closeAllTopBarDropdowns();"><span>Find with Spotlight...</span><span class="menu-shortcut">⌘F</span></div>
+        </div>
+
+        <div class="toccata-system-dropdown topbar-sub-dropdown hidden" id="topbar-dropdown-view" style="left: 196px;">
+          <div class="menu-dropdown-item" onclick="openWindow('win-cadence'); setCadenceViewMode('grid'); closeAllTopBarDropdowns();"><span>as Icons</span><span class="menu-shortcut">⌘1</span></div>
+          <div class="menu-dropdown-item" onclick="openWindow('win-cadence'); setCadenceViewMode('list'); closeAllTopBarDropdowns();"><span>as List</span><span class="menu-shortcut">⌘2</span></div>
+          <div class="menu-dropdown-separator"></div>
+          <div class="menu-dropdown-item" onclick="toggleLaunchpad(); closeAllTopBarDropdowns();"><span>Enter Mission Control / Activities</span><span class="menu-shortcut">F3</span></div>
+          <div class="menu-dropdown-item" onclick="toggleTheme(); closeAllTopBarDropdowns();"><span>Toggle Dark / Light Glass</span><span class="menu-shortcut">⇧⌘D</span></div>
+          <div class="menu-dropdown-separator"></div>
+          <div class="menu-dropdown-item" onclick="maximizeFocusedWindow(); closeAllTopBarDropdowns();"><span>Enter Full Screen</span><span class="menu-shortcut">⌃⌘F</span></div>
+        </div>
+
+        <div class="toccata-system-dropdown topbar-sub-dropdown hidden" id="topbar-dropdown-go" style="left: 246px;">
+          <div class="menu-dropdown-item" onclick="openWindow('win-cadence'); switchCadenceFolder('apps'); closeAllTopBarDropdowns();"><span>Applications</span><span class="menu-shortcut">⇧⌘A</span></div>
+          <div class="menu-dropdown-item" onclick="openWindow('win-cadence'); switchCadenceFolder('docs'); closeAllTopBarDropdowns();"><span>Documents</span><span class="menu-shortcut">⇧⌘O</span></div>
+          <div class="menu-dropdown-item" onclick="openWindow('win-cadence'); switchCadenceFolder('downloads'); closeAllTopBarDropdowns();"><span>Downloads</span><span class="menu-shortcut">⌥⌘L</span></div>
+          <div class="menu-dropdown-item" onclick="openWindow('win-cadence'); switchCadenceFolder('disk'); closeAllTopBarDropdowns();"><span>Toccata Core NVMe</span><span class="menu-shortcut">⇧⌘C</span></div>
+          <div class="menu-dropdown-item" onclick="openWindow('win-cadence'); switchCadenceFolder('trash'); closeAllTopBarDropdowns();"><span>Trash</span><span class="menu-shortcut">⇧⌘T</span></div>
+          <div class="menu-dropdown-separator"></div>
+          <div class="menu-dropdown-item" onclick="openWindow('win-console'); closeAllTopBarDropdowns();"><span>Terminal &amp; Command Bridge</span><span class="menu-shortcut">⇧⌘U</span></div>
+        </div>
+
+        <div class="toccata-system-dropdown topbar-sub-dropdown hidden" id="topbar-dropdown-window" style="left: 284px;">
+          <div class="menu-dropdown-item" onclick="minimizeFocusedWindow(); closeAllTopBarDropdowns();"><span>Minimize</span><span class="menu-shortcut">⌘M</span></div>
+          <div class="menu-dropdown-item" onclick="maximizeFocusedWindow(); closeAllTopBarDropdowns();"><span>Zoom / Maximize</span></div>
+          <div class="menu-dropdown-separator"></div>
+          <div class="menu-dropdown-item" onclick="snapFocusedWindow('left'); closeAllTopBarDropdowns();"><span>Tile Window to Left of Screen</span><span class="menu-shortcut">⌃⌥←</span></div>
+          <div class="menu-dropdown-item" onclick="snapFocusedWindow('right'); closeAllTopBarDropdowns();"><span>Tile Window to Right of Screen</span><span class="menu-shortcut">⌃⌥→</span></div>
+          <div class="menu-dropdown-item" onclick="centerFocusedWindow(); closeAllTopBarDropdowns();"><span>Center Window</span><span class="menu-shortcut">⌃⌥C</span></div>
+          <div class="menu-dropdown-separator"></div>
+          <div class="menu-dropdown-item" onclick="bringAllWindowsToFront(); closeAllTopBarDropdowns();"><span>Bring All to Front</span></div>
+        </div>
+
+        <div class="toccata-system-dropdown topbar-sub-dropdown hidden" id="topbar-dropdown-help" style="left: 350px;">
+          <div class="menu-dropdown-item" onclick="openWindow('win-scribe'); closeAllTopBarDropdowns();"><span>Toccata OS Architecture Handbook</span></div>
+          <div class="menu-dropdown-item" onclick="openWindow('win-settings'); switchSettingsTab(' desktopdock'.trim()); closeAllTopBarDropdowns();"><span>Switch Desktop Layout (pearOS / Zorin / GNOME)</span></div>
+          <div class="menu-dropdown-item" onclick="openWindow('win-console'); executeCommand('help'); closeAllTopBarDropdowns();"><span>CLI &amp; Proton Command Reference</span></div>
+          <div class="menu-dropdown-separator"></div>
+          <div class="menu-dropdown-item" onclick="openWindow('win-settings'); switchSettingsTab('general'); closeAllTopBarDropdowns();"><span>System Diagnostics &amp; Kernel Info</span></div>
+        </div>
+      </div>
+
+      <!-- GNOME 47 Center Workspace / Activities Pill (Visible in GNOME Layout or clickable anytime) -->
+      <div class="gnome-top-center-pill" id="gnome-activities-pill" onclick="toggleLaunchpad()" title="Activities &amp; Workspaces Overview">
+        <span class="ws-dot active" id="top-ws-dot-1"></span>
+        <span class="ws-dot" id="top-ws-dot-2"></span>
+        <span class="ws-dot" id="top-ws-dot-3"></span>
+        <span class="gnome-activities-label">Activities</span>
       </div>
 
       <div class="menu-right">
+        <!-- Sound Status Icon -->
+        <div class="menu-item status-icon-item" id="menubar-sound-item" onclick="openWindow('win-settings'); switchSettingsTab('sound');" title="Sound: PipeWire Studio (0.7ms)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" width="15" height="15">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"/>
+            <path d="M15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14"/>
+          </svg>
+        </div>
+
+        <!-- Bluetooth Status Icon -->
+        <div class="menu-item status-icon-item" id="menubar-bt-item" onclick="openWindow('win-settings'); switchSettingsTab('bluetooth');" title="Bluetooth: AirPods Pro Connected">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="14" height="14">
+            <path d="m7 7 10 10-5 5V2l5 5L7 17"/>
+          </svg>
+        </div>
+
         <!-- Battery with Percentage -->
-        <div class="menu-item status-icon-item" title="Battery: 100% • Power Connected">
-          <span class="status-text">100%</span>
+        <div class="menu-item status-icon-item" id="menubar-battery-item" onclick="openWindow('win-settings'); switchSettingsTab('battery');" title="Battery: 100% • Power Connected">
+          <span class="status-text" id="menubar-battery-pct">100%</span>
           <svg class="battery-icon" viewBox="0 0 24 24" fill="currentColor">
             <rect x="2" y="6" width="18" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>
             <rect x="4" y="8" width="14" height="8" rx="1.5" fill="currentColor"/>
@@ -73,7 +158,7 @@
         </div>
 
         <!-- Wi-Fi Waves -->
-        <div class="menu-item status-icon-item" title="Wi-Fi: Connected">
+        <div class="menu-item status-icon-item" id="menubar-wifi-item" onclick="openWindow('win-settings'); switchSettingsTab('wifi');" title="Wi-Fi: Toccata-5G Fiber">
           <svg class="wifi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
             <path d="M5 12.55a11 11 0 0114.08 0"/>
             <path d="M1.42 9a16 16 0 0121.16 0"/>
@@ -101,7 +186,7 @@
         </div>
 
         <!-- Apple Intelligence Siri Orb -->
-        <div class="menu-item status-icon-item" onclick="playHarmonicChime([523.25, 659.25, 783.99]); triggerNotification('Apple Intelligence / Maestro Active')" title="Apple Intelligence">
+        <div class="menu-item status-icon-item" onclick="playHarmonicChime([523.25, 659.25, 783.99]); toggleLaunchpad();" title="Launchpad &amp; GNOME Workspaces Overview">
           <svg viewBox="0 0 24 24" width="16" height="16">
             <defs>
               <linearGradient id="siri-orb" x1="0" y1="0" x2="1" y2="1">
@@ -114,9 +199,184 @@
           </svg>
         </div>
 
-        <div class="menu-item clock" id="clock-display">Sun Nov 1 1:50 AM</div>
+        <div class="menu-item clock" id="clock-display" onclick="openWindow('win-chronicle')" title="Open Chronicle Calendar &amp; Focus Timer">Sun Nov 1 1:50 AM</div>
       </div>
     </header>
+
+    <!-- Window Edge Snap Preview Zone (Zorin / GNOME / Sequoia Window Tiling) -->
+    <div id="snap-preview-overlay" class="hidden"></div>
+
+    <!-- Desktop Right-Click Context Menu -->
+    <div id="desktop-context-menu" class="toccata-system-dropdown hidden" style="z-index: 95000; width: 230px;">
+      <div class="menu-dropdown-item" onclick="createNewCadenceFolder(); closeDesktopContextMenu();">
+        <span>📁 New Folder</span>
+        <span class="menu-shortcut">⇧⌘N</span>
+      </div>
+      <div class="menu-dropdown-item" onclick="openWindow('win-scribe'); createNewScribeDoc(); closeDesktopContextMenu();">
+        <span>📝 New Markdown Note</span>
+        <span class="menu-shortcut">⌘N</span>
+      </div>
+      <div class="menu-dropdown-separator"></div>
+      <div class="menu-dropdown-item" onclick="openWindow('win-settings'); switchSettingsTab('wallpaper'); closeDesktopContextMenu();">
+        <span>🖼️ Change Wallpaper...</span>
+      </div>
+      <div class="menu-dropdown-item" onclick="openWindow('win-settings'); switchSettingsTab('desktopdock'); closeDesktopContextMenu();">
+        <span>🎛️ Desktop Layout (pearOS / Zorin)...</span>
+      </div>
+      <div class="menu-dropdown-item" onclick="openWindow('win-settings'); switchSettingsTab('appearance'); closeDesktopContextMenu();">
+        <span>✨ Appearance &amp; Theme...</span>
+      </div>
+      <div class="menu-dropdown-separator"></div>
+      <div class="menu-dropdown-item" onclick="toggleLaunchpad(); closeDesktopContextMenu();">
+        <span>🚀 Open Activities / Launchpad</span>
+      </div>
+      <div class="menu-dropdown-item" onclick="openWindow('win-console'); closeDesktopContextMenu();">
+        <span>💻 Open Terminal Here</span>
+      </div>
+      <div class="menu-dropdown-separator"></div>
+      <div class="menu-dropdown-item" onclick="cleanUpDesktopIcons(); closeDesktopContextMenu();">
+        <span>🧹 Clean Up By Name</span>
+      </div>
+    </div>
+
+    <!-- Full-Screen pearOS Launchpad & GNOME 47 Workspaces Overview -->
+    <div id="launchpad-overlay" class="hidden" onclick="if(event.target === this) closeLaunchpad();">
+      <div class="launchpad-container">
+        <!-- GNOME 47 / Mission Control Virtual Workspaces Strip -->
+        <div class="workspaces-strip">
+          <div class="workspace-pill active" id="ws-pill-1" onclick="switchWorkspace(1)">
+            <div class="ws-preview ws-bg-1"></div>
+            <div class="ws-meta">
+              <span class="ws-title">Workspace 1</span>
+              <span class="ws-sub">Main Desktop</span>
+            </div>
+          </div>
+          <div class="workspace-pill" id="ws-pill-2" onclick="switchWorkspace(2)">
+            <div class="ws-preview ws-bg-2"></div>
+            <div class="ws-meta">
+              <span class="ws-title">Workspace 2</span>
+              <span class="ws-sub">Creative &amp; Audio</span>
+            </div>
+          </div>
+          <div class="workspace-pill" id="ws-pill-3" onclick="switchWorkspace(3)">
+            <div class="ws-preview ws-bg-3"></div>
+            <div class="ws-meta">
+              <span class="ws-title">Workspace 3</span>
+              <span class="ws-sub">Dev &amp; Terminal</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Search Input inside Launchpad -->
+        <div class="launchpad-search-bar">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
+          <input type="text" id="launchpad-search-input" placeholder="Search Applications, Settings, or Workspaces..." oninput="filterLaunchpadApps(this.value)">
+        </div>
+
+        <!-- Full App Grid -->
+        <div class="launchpad-grid" id="launchpad-app-grid">
+          <div class="launchpad-item" data-name="Finder Cadence Files" onclick="openWindow('win-cadence'); closeLaunchpad();">
+            <div class="lp-icon-box" style="background: linear-gradient(135deg, #4fc3f7, #0288d1);">📁</div>
+            <span>Finder (Cadence)</span>
+          </div>
+          <div class="launchpad-item" data-name="Safari Horizon Web Browser" onclick="openWindow('win-horizon'); closeLaunchpad();">
+            <div class="lp-icon-box" style="background: linear-gradient(135deg, #00c6ff, #0072ff);">🧭</div>
+            <span>Horizon Browser</span>
+          </div>
+          <div class="launchpad-item" data-name="Messages Chat iMessage" onclick="openWindow('win-messages'); closeLaunchpad();">
+            <div class="lp-icon-box" style="background: linear-gradient(135deg, #34c759, #248a3d);">💬</div>
+            <span>Messages</span>
+          </div>
+          <div class="launchpad-item" data-name="Mail Inbox Email" onclick="openWindow('win-mail'); closeLaunchpad();">
+            <div class="lp-icon-box" style="background: linear-gradient(135deg, #29b6f6, #0288d1);">✉️</div>
+            <span>Mail</span>
+          </div>
+          <div class="launchpad-item" data-name="Music Sonata Audio PipeWire" onclick="openWindow('win-sonata'); closeLaunchpad();">
+            <div class="lp-icon-box" style="background: linear-gradient(135deg, #ff2d55, #fa114f);">🎵</div>
+            <span>Sonata Music</span>
+          </div>
+          <div class="launchpad-item" data-name="Notes Scribe Markdown Code" onclick="openWindow('win-scribe'); closeLaunchpad();">
+            <div class="lp-icon-box" style="background: linear-gradient(135deg, #ffd60a, #ff9f0a);">📝</div>
+            <span>Scribe Notes</span>
+          </div>
+          <div class="launchpad-item" data-name="Activity Monitor Tempo Processes CPU" onclick="openWindow('win-tempo'); closeLaunchpad();">
+            <div class="lp-icon-box" style="background: linear-gradient(135deg, #242426, #0f0f11); border: 1px solid #30d158;">📈</div>
+            <span>Tempo Monitor</span>
+          </div>
+          <div class="launchpad-item" data-name="Calculator Solfege Math" onclick="openWindow('win-calc'); closeLaunchpad();">
+            <div class="lp-icon-box" style="background: linear-gradient(135deg, #3a3a3c, #1c1c1e);">🧮</div>
+            <span>Calculator</span>
+          </div>
+          <div class="launchpad-item" data-name="Terminal Console Bash Shell" onclick="openWindow('win-console'); closeLaunchpad();">
+            <div class="lp-icon-box" style="background: linear-gradient(135deg, #2c2c2e, #121214); color: #30d158; font-family: monospace; font-weight: 800;">&gt;_</div>
+            <span>Terminal</span>
+          </div>
+          <div class="launchpad-item" data-name="App Store Software Gallery Installer" onclick="openWindow('win-installer'); closeLaunchpad();">
+            <div class="lp-icon-box" style="background: linear-gradient(135deg, #007aff, #0051d5);">🛍️</div>
+            <span>Software Gallery</span>
+          </div>
+          <div class="launchpad-item" data-name="Photos Prism Vector Gallery" onclick="openWindow('win-prism'); closeLaunchpad();">
+            <div class="lp-icon-box" style="background: linear-gradient(135deg, #af52de, #ff2d55);">🌈</div>
+            <span>Prism Photos</span>
+          </div>
+          <div class="launchpad-item" data-name="Calendar Chronicle Pomodoro Focus" onclick="openWindow('win-chronicle'); closeLaunchpad();">
+            <div class="lp-icon-box" style="background: linear-gradient(135deg, #ff3b30, #ff9500);">📅</div>
+            <span>Chronicle</span>
+          </div>
+          <div class="launchpad-item" data-name="System Settings Zorin Appearance PearOS" onclick="openWindow('win-settings'); closeLaunchpad();">
+            <div class="lp-icon-box" style="background: linear-gradient(135deg, #8e8e93, #48484a);">⚙️</div>
+            <span>System Settings</span>
+          </div>
+          <div class="launchpad-item" data-name="Trash Bin Recycle" onclick="openWindow('win-cadence'); switchCadenceFolder('trash'); closeLaunchpad();">
+            <div class="lp-icon-box" style="background: linear-gradient(135deg, #c7c7cc, #636366);">🗑️</div>
+            <span>Trash</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Zorin OS Start Menu (Populated for Windows 11 / Windows 10 Zorin Layouts) -->
+    <div id="zorin-start-menu" class="glass-panel hidden">
+      <div class="zorin-start-search">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
+        <input type="text" placeholder="Type here to search apps, files, settings..." oninput="filterZorinStartApps(this.value)">
+      </div>
+      <div class="zorin-start-body">
+        <div class="zorin-start-left" id="zorin-start-app-list">
+          <div class="zorin-app-row" onclick="openWindow('win-cadence'); closeZorinStartMenu();"><span>📁</span> <span>Files (Cadence)</span></div>
+          <div class="zorin-app-row" onclick="openWindow('win-horizon'); closeZorinStartMenu();"><span>🧭</span> <span>Horizon Web Browser</span></div>
+          <div class="zorin-app-row" onclick="openWindow('win-messages'); closeZorinStartMenu();"><span>💬</span> <span>Messages</span></div>
+          <div class="zorin-app-row" onclick="openWindow('win-mail'); closeZorinStartMenu();"><span>✉️</span> <span>Mail Client</span></div>
+          <div class="zorin-app-row" onclick="openWindow('win-sonata'); closeZorinStartMenu();"><span>🎵</span> <span>Sonata Music &amp; PipeWire</span></div>
+          <div class="zorin-app-row" onclick="openWindow('win-scribe'); closeZorinStartMenu();"><span>📝</span> <span>Scribe Code &amp; Markdown</span></div>
+          <div class="zorin-app-row" onclick="openWindow('win-installer'); closeZorinStartMenu();"><span>🛍️</span> <span>Software Store (Flatpak / Proton)</span></div>
+          <div class="zorin-app-row" onclick="openWindow('win-prism'); closeZorinStartMenu();"><span>🌈</span> <span>Prism Photos</span></div>
+          <div class="zorin-app-row" onclick="openWindow('win-chronicle'); closeZorinStartMenu();"><span>📅</span> <span>Chronicle Calendar</span></div>
+          <div class="zorin-app-row" onclick="openWindow('win-calc'); closeZorinStartMenu();"><span>🧮</span> <span>Calculator</span></div>
+          <div class="zorin-app-row" onclick="openWindow('win-tempo'); closeZorinStartMenu();"><span>📈</span> <span>System Monitor</span></div>
+          <div class="zorin-app-row" onclick="openWindow('win-console'); closeZorinStartMenu();"><span>💻</span> <span>Terminal</span></div>
+        </div>
+        <div class="zorin-start-right">
+          <div class="zorin-user-card">
+            <div class="zorin-avatar">T</div>
+            <div>
+              <div style="font-weight: 700; font-size: 13px;">Toccata Studio</div>
+              <div style="font-size: 10px; color: var(--text-secondary);">Zorin Pro / pearOS Hybrid</div>
+            </div>
+          </div>
+          <div class="zorin-place-item" onclick="openWindow('win-cadence'); switchCadenceFolder('docs'); closeZorinStartMenu();">📄 Documents</div>
+          <div class="zorin-place-item" onclick="openWindow('win-cadence'); switchCadenceFolder('downloads'); closeZorinStartMenu();">⬇️ Downloads</div>
+          <div class="zorin-place-item" onclick="openWindow('win-cadence'); switchCadenceFolder('apps'); closeZorinStartMenu();">📦 Applications</div>
+          <div class="zorin-place-item" onclick="openWindow('win-settings'); switchSettingsTab('desktopdock'); closeZorinStartMenu();">🎨 Zorin Appearance</div>
+          <div class="zorin-place-item" onclick="openWindow('win-settings'); closeZorinStartMenu();">⚙️ Settings</div>
+          <div class="zorin-power-row">
+            <button class="btn btn-secondary" onclick="toggleSleepMode(); closeZorinStartMenu();" style="flex:1; font-size: 11px;">🌙 Sleep</button>
+            <button class="btn btn-secondary" onclick="restartSystem(); closeZorinStartMenu();" style="flex:1; font-size: 11px;">🔄 Restart</button>
+            <button class="btn btn-primary" onclick="promptShutdown(); closeZorinStartMenu();" style="flex:1; font-size: 11px; background:#ff3b30;">⏻ Power</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Desktop Mounted Volumes (Top-Right) -->
     <div id="desktop-icons">
@@ -242,26 +502,29 @@
         </div>
 
         <div class="toolbar-nav-group">
-          <button class="toolbar-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg></button>
-          <button class="toolbar-icon-btn" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></button>
+          <button class="toolbar-icon-btn" id="cadence-back-btn" onclick="cadenceGoBack()" title="Back" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg></button>
+          <button class="toolbar-icon-btn" id="cadence-fwd-btn" onclick="cadenceGoForward()" title="Forward" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></button>
           <span class="toolbar-title" id="cadence-toolbar-title"><span class="proxy-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M10 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V8a2 2 0 00-2-2h-8l-2-2z"/></svg></span>Cadence &mdash; Applications</span>
         </div>
 
         <!-- Quick Look & View Controls -->
         <div style="display: flex; align-items: center; gap: 8px;">
+          <button class="toolbar-icon-btn" onclick="createNewCadenceFolder()" title="New Folder (Shift+Cmd+N)" style="background: rgba(255,255,255,0.1); border-radius: 6px; width: 28px; height: 26px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 11v6M9 14h6M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          </button>
           <button class="toolbar-icon-btn" onclick="openQuickLook()" title="Quick Look (Spacebar)" style="background: rgba(255,255,255,0.1); border-radius: 6px; width: 28px; height: 26px;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
 
           <div class="segmented-control">
-            <button class="seg-btn active" title="Icons View"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="5" height="5" rx="1.5"/><rect x="10" y="1" width="5" height="5" rx="1.5"/><rect x="1" y="10" width="5" height="5" rx="1.5"/><rect x="10" y="10" width="5" height="5" rx="1.5"/></svg></button>
-            <button class="seg-btn" title="List View"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 3h12v2H2zm0 4h12v2H2zm0 4h12v2H2z"/></svg></button>
+            <button class="seg-btn active" id="cadence-view-btn-grid" onclick="setCadenceViewMode('grid')" title="Icons View (Cmd+1)"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="5" height="5" rx="1.5"/><rect x="10" y="1" width="5" height="5" rx="1.5"/><rect x="1" y="10" width="5" height="5" rx="1.5"/><rect x="10" y="10" width="5" height="5" rx="1.5"/></svg></button>
+            <button class="seg-btn" id="cadence-view-btn-list" onclick="setCadenceViewMode('list')" title="List View (Cmd+2)"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 3h12v2H2zm0 4h12v2H2zm0 4h12v2H2z"/></svg></button>
           </div>
         </div>
 
         <div class="toolbar-search">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
-          <input type="text" placeholder="Search Cadence">
+          <input type="text" id="cadence-search-input" placeholder="Search Cadence" oninput="filterCadenceFiles(this.value)">
         </div>
       </div>
 
@@ -285,6 +548,10 @@
           <div class="sidebar-row" id="sb-row-disk" onclick="switchCadenceFolder('disk')">
             <svg class="sb-icon" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="4" width="20" height="12" rx="2"/><circle cx="12" cy="19" r="1"/></svg>
             <span>Toccata Core</span>
+          </div>
+          <div class="sidebar-row" id="sb-row-trash" onclick="switchCadenceFolder('trash')">
+            <svg class="sb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            <span>Trash</span>
           </div>
         </aside>
 
@@ -492,20 +759,36 @@
             </div>
           </div>
         </div>
+
+        <!-- Folder 5: Trash Bin View -->
+        <div class="finder-list-view hidden" id="cadence-view-trash">
+          <div class="trash-header-bar" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--glass-border); margin-bottom: 6px;">
+            <span style="font-size: 12px; color: var(--text-secondary);">Items moved to the Trash can be restored or permanently erased.</span>
+            <button class="btn btn-secondary" onclick="emptyTrashBin()" style="padding: 4px 12px; font-size: 11px;">Empty Trash...</button>
+          </div>
+          <div id="trash-items-container">
+            <div class="file-row" onclick="selectFile(this, 'Old-PulseAudio-Config.bak', 'System Backup File', '18 KB')">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#8e8e93" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              <span style="font-weight: 600;">Old-PulseAudio-Config.bak</span>
+              <span style="color: var(--text-secondary);">Replaced by PipeWire</span>
+              <span style="color: var(--text-secondary);">18 KB</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="finder-pathbar">
-        <span>📁 Toccata Core</span>
+        <span style="cursor: pointer;" onclick="switchCadenceFolder('disk')" title="Open Toccata Core">📁 Toccata Core</span>
         <span>&rsaquo;</span>
-        <span>Users</span>
+        <span style="cursor: pointer;" onclick="switchCadenceFolder('docs')" title="Open Users/Documents">Users</span>
         <span>&rsaquo;</span>
-        <span>toccata</span>
+        <span style="cursor: pointer;" onclick="switchCadenceFolder('apps')" title="Open Home Applications">toccata</span>
         <span>&rsaquo;</span>
-        <span id="finder-current-path" style="font-weight: 600; color: var(--text-primary);">Applications</span>
+        <span id="finder-current-path" style="font-weight: 600; color: var(--text-primary); cursor: pointer;">Applications</span>
       </div>
 
       <footer class="finder-statusbar">
-        <span>10 items &bull; 418.5 GB available on Toccata Core</span>
+        <span id="finder-statusbar-text">10 items &bull; 418.5 GB available on Toccata Core</span>
       </footer>
 
       <!-- Window Resizer Handles -->
@@ -885,28 +1168,35 @@ Every administrative task is accessible visually:
                   <div class="row-title">Wi-Fi Status</div>
                   <div class="row-desc">Always show in top menu bar</div>
                 </div>
-                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+                <label class="switch"><input type="checkbox" checked onchange="toggleMenuBarItem('menubar-wifi-item', this.checked, 'Wi-Fi icon')"><span class="slider round"></span></label>
               </div>
               <div class="settings-row">
                 <div>
                   <div class="row-title">Bluetooth Quick Toggle</div>
                   <div class="row-desc">Show when active or connected</div>
                 </div>
-                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+                <label class="switch"><input type="checkbox" checked onchange="toggleMenuBarItem('menubar-bt-item', this.checked, 'Bluetooth icon')"><span class="slider round"></span></label>
               </div>
               <div class="settings-row">
                 <div>
-                  <div class="row-title">Sound &amp; Volume Slider</div>
+                  <div class="row-title">Sound &amp; Volume Icon</div>
                   <div class="row-desc">Always show in menu bar</div>
                 </div>
-                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+                <label class="switch"><input type="checkbox" checked onchange="toggleMenuBarItem('menubar-sound-item', this.checked, 'Sound icon')"><span class="slider round"></span></label>
               </div>
               <div class="settings-row">
                 <div>
                   <div class="row-title">Battery Percentage</div>
                   <div class="row-desc">Show battery status and remaining charge percentage</div>
                 </div>
-                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+                <label class="switch"><input type="checkbox" checked onchange="toggleMenuBarItem('menubar-battery-pct', this.checked, 'Battery percentage')"><span class="slider round"></span></label>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">GNOME Activities &amp; Workspaces Pill</div>
+                  <div class="row-desc">Show interactive workspace dots in the center of the top bar</div>
+                </div>
+                <label class="switch"><input type="checkbox" checked onchange="toggleMenuBarItem('gnome-activities-pill', this.checked, 'Activities pill')"><span class="slider round"></span></label>
               </div>
             </div>
           </div>
@@ -914,14 +1204,14 @@ Every administrative task is accessible visually:
           <!-- Tab 6: Desktop & Dock -->
           <div id="settings-tab-desktopdock" class="hidden">
             <h3>Desktop &amp; Dock</h3>
-            <p class="settings-desc">Configure dock magnification, desktop layout preset, screen position, and window minimization.</p>
+            <p class="settings-desc">Configure dock magnification, Zorin / pearOS / GNOME desktop layout preset, screen position, and window minimization.</p>
 
             <!-- Zorin-Style Adaptive Desktop Layout Switcher -->
             <div class="settings-group-card">
               <div class="settings-row" style="padding: 14px 16px 8px;">
                 <div>
-                  <div class="row-title">Desktop Layout (Adaptive Ergonomics)</div>
-                  <div class="row-desc">Switch seamlessly between macOS dock and Windows taskbar layouts</div>
+                  <div class="row-title">Zorin Appearance &amp; pearOS Desktop Layouts</div>
+                  <div class="row-desc">Switch seamlessly between macOS Sequoia, pearOS NiceC0re, Windows 11, and GNOME 47 workflows</div>
                 </div>
               </div>
               <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 0 16px 16px;">
@@ -939,14 +1229,14 @@ Every administrative task is accessible visually:
                     <div class="lp-dock" style="background: rgba(255,255,255,0.7);"></div>
                   </div>
                   <div class="lp-title">pearOS NiceC0re</div>
-                  <div class="lp-sub">Cupertino &bull; Sound Chime</div>
+                  <div class="lp-sub">Cupertino &bull; Launchpad</div>
                 </div>
                 <div class="layout-preset-card" id="layout-card-win11" onclick="setDesktopLayout('win11')">
                   <div class="layout-preview-box win11-preview">
                     <div class="lp-bottombar-center"></div>
                   </div>
                   <div class="lp-title">Windows 11 (Zorin)</div>
-                  <div class="lp-sub">Centered Taskbar &bull; Start</div>
+                  <div class="lp-sub">Taskbar &bull; Zorin Start</div>
                 </div>
                 <div class="layout-preset-card" id="layout-card-gnome" onclick="setDesktopLayout('gnome')">
                   <div class="layout-preview-box" style="background: #1e1e24; position: relative;">
@@ -954,7 +1244,7 @@ Every administrative task is accessible visually:
                     <div style="position: absolute; left: 4px; top: 18px; bottom: 6px; width: 6px; background: rgba(255,255,255,0.3); border-radius: 3px;"></div>
                   </div>
                   <div class="lp-title">GNOME 47 / Zorin</div>
-                  <div class="lp-sub">Left Dash &bull; Overview</div>
+                  <div class="lp-sub">Left Dash &bull; Workspaces</div>
                 </div>
               </div>
             </div>
@@ -963,12 +1253,12 @@ Every administrative task is accessible visually:
               <div class="settings-row">
                 <div>
                   <div class="row-title">Dock Icon Size</div>
-                  <div class="row-desc">Default squircle size: 52px</div>
+                  <div class="row-desc" id="dock-size-desc">Default squircle size: 52px</div>
                 </div>
                 <div class="segmented-control">
-                  <button class="seg-btn" onclick="triggerNotification('Dock: Small 42px')">Small</button>
-                  <button class="seg-btn active" onclick="triggerNotification('Dock: Medium 52px')">Medium</button>
-                  <button class="seg-btn" onclick="triggerNotification('Dock: Large 64px')">Large</button>
+                  <button class="seg-btn" onclick="setDockSize('small', this)">Small</button>
+                  <button class="seg-btn active" onclick="setDockSize('medium', this)">Medium</button>
+                  <button class="seg-btn" onclick="setDockSize('large', this)">Large</button>
                 </div>
               </div>
               <div class="settings-row">
@@ -976,7 +1266,7 @@ Every administrative task is accessible visually:
                   <div class="row-title">Parabolic Fisheye Magnification</div>
                   <div class="row-desc">Continuous 120Hz icon zoom on cursor proximity</div>
                 </div>
-                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+                <label class="switch"><input type="checkbox" checked onchange="toggleDockMagnification(this.checked)"><span class="slider round"></span></label>
               </div>
               <div class="settings-row">
                 <div>
@@ -984,9 +1274,9 @@ Every administrative task is accessible visually:
                   <div class="row-desc">Placement of floating frosted dock</div>
                 </div>
                 <div class="segmented-control">
-                  <button class="seg-btn" onclick="triggerNotification('Dock: Position Left')">Left</button>
-                  <button class="seg-btn active" onclick="triggerNotification('Dock: Position Bottom')">Bottom</button>
-                  <button class="seg-btn" onclick="triggerNotification('Dock: Position Right')">Right</button>
+                  <button class="seg-btn" id="dock-pos-left" onclick="setDockPosition('left', this)">Left</button>
+                  <button class="seg-btn active" id="dock-pos-bottom" onclick="setDockPosition('bottom', this)">Bottom</button>
+                  <button class="seg-btn" id="dock-pos-right" onclick="setDockPosition('right', this)">Right</button>
                 </div>
               </div>
               <div class="settings-row">
@@ -995,8 +1285,8 @@ Every administrative task is accessible visually:
                   <div class="row-desc">Animation curve when sending windows to the dock</div>
                 </div>
                 <div class="segmented-control">
-                  <button class="seg-btn active" onclick="triggerNotification('Minimization: Genie Curved Effect')">Genie</button>
-                  <button class="seg-btn" onclick="triggerNotification('Minimization: Linear Scale Effect')">Scale</button>
+                  <button class="seg-btn active" onclick="setMinimizeEffect('genie', this)">Genie</button>
+                  <button class="seg-btn" onclick="setMinimizeEffect('scale', this)">Scale</button>
                 </div>
               </div>
               <div class="settings-row">
@@ -1004,7 +1294,7 @@ Every administrative task is accessible visually:
                   <div class="row-title">Automatically Hide and Show the Dock</div>
                   <div class="row-desc">Dock auto-reveals on screen edge hover</div>
                 </div>
-                <label class="switch"><input type="checkbox"><span class="slider round"></span></label>
+                <label class="switch"><input type="checkbox" id="dock-autohide-toggle" onchange="toggleDockAutohide(this.checked)"><span class="slider round"></span></label>
               </div>
             </div>
           </div>
@@ -1050,17 +1340,17 @@ Every administrative task is accessible visually:
           <!-- Tab 8: Displays & Retina -->
           <div id="settings-tab-displays" class="hidden">
             <h3>Displays &amp; Retina</h3>
-            <p class="settings-desc">Manage resolutions, ProMotion refresh rates, True Tone, and color profiles.</p>
+            <p class="settings-desc">Manage resolutions, ProMotion refresh rates, True Tone / Night Light, and color profiles.</p>
             <div class="settings-group-card">
               <div class="settings-row">
                 <div>
                   <div class="row-title">Retina Resolution</div>
-                  <div class="row-desc">3840 &times; 2160 (HiDPI 200% Crisp Scaling)</div>
+                  <div class="row-desc" id="display-res-desc">3840 &times; 2160 (HiDPI 200% Crisp Scaling)</div>
                 </div>
                 <div class="segmented-control">
-                  <button class="seg-btn" onclick="triggerNotification('Resolution: Scaled 2560x1440')">Scaled</button>
-                  <button class="seg-btn active" onclick="triggerNotification('Resolution: 4K Retina 3840x2160')">4K Retina</button>
-                  <button class="seg-btn" onclick="triggerNotification('Resolution: Native 4096x2304')">More Space</button>
+                  <button class="seg-btn" onclick="setDisplayResolution('scaled', this)">Scaled</button>
+                  <button class="seg-btn active" onclick="setDisplayResolution('4k', this)">4K Retina</button>
+                  <button class="seg-btn" onclick="setDisplayResolution('morespace', this)">More Space</button>
                 </div>
               </div>
               <div class="settings-row">
@@ -1069,17 +1359,24 @@ Every administrative task is accessible visually:
                   <div class="row-desc">Adaptive hardware V-Sync synchronization</div>
                 </div>
                 <div class="segmented-control">
-                  <button class="seg-btn" onclick="triggerNotification('Refresh Rate: 60Hz')">60Hz</button>
-                  <button class="seg-btn active" onclick="triggerNotification('Refresh Rate: 120Hz ProMotion')">120Hz</button>
-                  <button class="seg-btn" onclick="triggerNotification('Refresh Rate: 144Hz Turbo')">144Hz</button>
+                  <button class="seg-btn" onclick="setRefreshRate('60Hz', this)">60Hz</button>
+                  <button class="seg-btn active" onclick="setRefreshRate('120Hz', this)">120Hz</button>
+                  <button class="seg-btn" onclick="setRefreshRate('144Hz', this)">144Hz</button>
                 </div>
               </div>
               <div class="settings-row">
                 <div>
-                  <div class="row-title">True Tone</div>
-                  <div class="row-desc">Automatically adapt display colors to ambient lighting</div>
+                  <div class="row-title">True Tone / GNOME Night Light</div>
+                  <div class="row-desc">Automatically adapt display color temperature to ambient lighting</div>
                 </div>
-                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+                <label class="switch"><input type="checkbox" onchange="toggleTrueTone(this.checked)"><span class="slider round"></span></label>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Display Brightness</div>
+                  <div class="row-desc">Hardware backlight luminance</div>
+                </div>
+                <input type="range" min="35" max="100" value="100" oninput="setDisplayBrightness(this.value)" style="width: 150px; accent-color: var(--accent-color);">
               </div>
               <div class="settings-row">
                 <div>
@@ -1105,13 +1402,20 @@ Every administrative task is accessible visually:
               </div>
               <div class="settings-row">
                 <div>
-                  <div class="row-title">Output Destination</div>
-                  <div class="row-desc">Default system audio sink device</div>
+                  <div class="row-title">Master Output Volume</div>
+                  <div class="row-desc" id="settings-volume-label">70% Studio Gain</div>
                 </div>
-                <div style="display: flex; gap: 6px;">
-                  <button class="btn btn-secondary active" style="font-size: 11px; padding: 4px 8px;">🔊 Internal</button>
-                  <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;">🎧 AirPods</button>
-                  <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;">🎛️ DAC</button>
+                <input type="range" min="0" max="100" value="70" id="settings-volume-slider" oninput="setMasterVolume(this.value)" style="width: 150px; accent-color: var(--accent-color);">
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="row-title">Output Destination</div>
+                  <div class="row-desc" id="settings-audio-sink-desc">Default system audio sink device: Internal Speakers</div>
+                </div>
+                <div style="display: flex; gap: 6px;" id="settings-audio-output-group">
+                  <button class="btn btn-secondary active" style="font-size: 11px; padding: 4px 8px;" onclick="setSettingsAudioOutput(this, 'Built-in High-Excursion Speakers')">🔊 Internal</button>
+                  <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="setSettingsAudioOutput(this, 'AirPods Pro (Spatial Audio)')">🎧 AirPods</button>
+                  <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="setSettingsAudioOutput(this, 'Studio USB DAC (96kHz / 24-bit)')">🎛️ DAC</button>
                 </div>
               </div>
               <div class="settings-row">
@@ -1151,7 +1455,7 @@ Every administrative task is accessible visually:
                   <div class="row-title">Low Power Mode</div>
                   <div class="row-desc">Lowers background CPU/GPU clocks to maximize battery runtime</div>
                 </div>
-                <label class="switch"><input type="checkbox" onchange="triggerNotification(this.checked ? 'Low Power Mode enabled' : 'Low Power Mode off')"><span class="slider round"></span></label>
+                <label class="switch"><input type="checkbox" onchange="toggleLowPowerMode(this.checked)"><span class="slider round"></span></label>
               </div>
               <div class="settings-row">
                 <div>
@@ -1159,10 +1463,10 @@ Every administrative task is accessible visually:
                   <div class="row-desc">Sleep display to prevent OLED retention and save battery</div>
                 </div>
                 <div class="segmented-control">
-                  <button class="seg-btn" onclick="triggerNotification('Display sleep: 5 min')">5m</button>
-                  <button class="seg-btn active" onclick="triggerNotification('Display sleep: 15 min')">15m</button>
-                  <button class="seg-btn" onclick="triggerNotification('Display sleep: 30 min')">30m</button>
-                  <button class="seg-btn" onclick="triggerNotification('Display sleep: Never')">Never</button>
+                  <button class="seg-btn" onclick="activateSegmentBtn(this); triggerNotification('Display sleep: 5 min')">5m</button>
+                  <button class="seg-btn active" onclick="activateSegmentBtn(this); triggerNotification('Display sleep: 15 min')">15m</button>
+                  <button class="seg-btn" onclick="activateSegmentBtn(this); triggerNotification('Display sleep: 30 min')">30m</button>
+                  <button class="seg-btn" onclick="activateSegmentBtn(this); triggerNotification('Display sleep: Never')">Never</button>
                 </div>
               </div>
             </div>
@@ -1176,7 +1480,7 @@ Every administrative task is accessible visually:
               <div class="settings-row">
                 <div>
                   <div class="row-title">Toccata Operating System</div>
-                  <div class="row-desc">Version 1.0.4 "Sonata" (x86_64-toccata-linux)</div>
+                  <div class="row-desc">Version 1.0.4 "Sonata" (x86_64-toccata-linux &bull; pearOS / Zorin / GNOME 47 Hybrid)</div>
                 </div>
                 <span class="status-text" style="color: #34c759; font-weight: 700;">Up to date</span>
               </div>
@@ -1199,7 +1503,7 @@ Every administrative task is accessible visually:
                   <div class="row-title">NVMe Storage Breakdown</div>
                   <div class="row-desc">418.5 GB Available of 1.0 TB &bull; Btrfs Zstd-15 Compressed</div>
                 </div>
-                <span style="font-size: 12px; font-weight: 600;">58% Used</span>
+                <button class="btn btn-secondary" style="font-size: 11px; padding: 3px 10px;" onclick="openWindow('win-cadence'); switchCadenceFolder('disk');">Storage Details</button>
               </div>
             </div>
           </div>
@@ -1209,15 +1513,15 @@ Every administrative task is accessible visually:
             <h3>Time Capsule Snapshots</h3>
             <p class="settings-desc">Instantaneous Btrfs copy-on-write system rollbacks (zero storage penalty).</p>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-              <span>14 Snapshots Available</span>
-              <button class="btn btn-primary" onclick="playHarmonicChime([261.63, 329.63, 392, 523.25]); triggerNotification('Created Snapshot: #15 (Pre-update backup)')">+ Create Snapshot</button>
+              <span id="snapshot-count-label">14 Snapshots Available</span>
+              <button class="btn btn-primary" onclick="createBtrfsSnapshot()">+ Create Snapshot</button>
             </div>
             <div class="process-table-container">
               <table class="process-table">
                 <thead>
                   <tr><th>Snapshot</th><th>Created</th><th>Size</th><th>Action</th></tr>
                 </thead>
-                <tbody>
+                <tbody id="snapshots-table-body">
                   <tr><td>Snapshot #14 (Clean Desktop State)</td><td>Today, 1:45 AM</td><td>12 MB</td><td><button class="btn btn-secondary" style="padding: 2px 8px; font-size: 11px;" onclick="triggerNotification('Rolled back to Snapshot #14 in 0.04s!')">Restore</button></td></tr>
                   <tr><td>Snapshot #13 (App Installation Checkpoint)</td><td>Yesterday</td><td>48 MB</td><td><button class="btn btn-secondary" style="padding: 2px 8px; font-size: 11px;" onclick="triggerNotification('Rolled back to Snapshot #13 in 0.05s!')">Restore</button></td></tr>
                   <tr><td>Snapshot #12 (Base System Genesis)</td><td>Oct 28</td><td>0 MB</td><td><button class="btn btn-secondary" style="padding: 2px 8px; font-size: 11px;" onclick="triggerNotification('Rolled back to Snapshot #12 in 0.04s!')">Restore</button></td></tr>
@@ -1250,7 +1554,7 @@ Every administrative task is accessible visually:
                   <div class="row-title">Application Gatekeeper</div>
                   <div class="row-desc">Verify checksum signatures and permissions on third-party bundles</div>
                 </div>
-                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+                <label class="switch"><input type="checkbox" checked onchange="triggerNotification(this.checked ? 'Gatekeeper verification enabled' : 'Gatekeeper relaxed for unsigned bundles')"><span class="slider round"></span></label>
               </div>
             </div>
           </div>
@@ -1258,7 +1562,7 @@ Every administrative task is accessible visually:
           <!-- Tab 14: Windows Compatibility Subsystem -->
           <div id="settings-tab-windowscompat" class="hidden">
             <h3>Windows Subsystem &amp; Proton</h3>
-            <p class="settings-desc">Proton / Wine-GE containerization, DirectX Vulkan translation, and CMD command shims.</p>
+            <p class="settings-desc">Zorin Windows App Support: Proton / Wine-GE containerization, DirectX Vulkan translation, and CMD shims.</p>
             <div class="settings-group-card">
               <div class="settings-row">
                 <div>
@@ -1272,21 +1576,21 @@ Every administrative task is accessible visually:
                   <div class="row-title">DirectX to Vulkan Translation (DXVK 2.4)</div>
                   <div class="row-desc">High-performance graphics layer for Windows executables</div>
                 </div>
-                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+                <label class="switch"><input type="checkbox" checked onchange="triggerNotification(this.checked ? 'DXVK 2.4 Vulkan acceleration enabled' : 'DXVK disabled (OpenGL fallback)')"><span class="slider round"></span></label>
               </div>
               <div class="settings-row">
                 <div>
                   <div class="row-title">Windows Command Shims in Shell</div>
                   <div class="row-desc">Enables <code>ipconfig</code>, <code>dir</code>, <code>cls</code>, <code>taskmgr</code>, <code>winget</code> natively</div>
                 </div>
-                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+                <label class="switch"><input type="checkbox" checked onchange="triggerNotification(this.checked ? 'Windows CLI command shims enabled' : 'Windows CLI shims disabled')"><span class="slider round"></span></label>
               </div>
               <div class="settings-row">
                 <div>
                   <div class="row-title">Automount Windows Partitions (C: / D:)</div>
                   <div class="row-desc">Automatically mounts NTFS / exFAT drives as native desktop volumes</div>
                 </div>
-                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+                <label class="switch"><input type="checkbox" checked onchange="triggerNotification(this.checked ? 'NTFS/exFAT automount active' : 'Automount disabled')"><span class="slider round"></span></label>
               </div>
             </div>
           </div>
@@ -1426,38 +1730,232 @@ Every administrative task is accessible visually:
     </div>
 
     <!-- ====================================================================
-         WINDOW 5: ZERO-TERMINAL APP INSTALLER DIALOG
+         WINDOW 5: GALLERY (pearOS / Zorin Software Store & Proton Hub)
          ==================================================================== -->
-    <div class="window glass-panel hidden" id="win-installer" style="top: 160px; left: 320px; width: 520px; height: 350px;">
+    <div class="window glass-panel hidden" id="win-installer" style="top: 80px; left: 200px; width: 780px; height: 520px;">
       <div class="window-titlebar">
         <div class="traffic-lights">
           <button class="tl-btn tl-close" onclick="closeWindow('win-installer')"></button>
           <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-installer')"></button>
           <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-installer')"></button>
         </div>
-        <div class="window-title"><span class="proxy-icon">🛍️</span>App Installer &mdash; Ableton Live.app</div>
-        <div class="titlebar-placeholder"></div>
-      </div>
-      <div class="window-body installer-body">
-        <div class="installer-header">
-          <div class="mac-app-icon icon-gallery" style="width: 58px; height: 58px;">
-            <div class="gallery-prism"></div>
-          </div>
-          <div>
-            <div class="installer-app-name">Ableton Live 12.app</div>
-            <div class="installer-app-sub">Version 12.1 &bull; Universal Toccata Bundle</div>
-          </div>
+        <div class="window-title"><span class="proxy-icon">🛍️</span>Gallery &mdash; Software Center (Native, Flatpak &amp; Proton)</div>
+        <div class="toolbar-search" style="width: 190px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
+          <input type="text" placeholder="Search Store..." oninput="filterStoreApps(this.value)">
         </div>
-        <p class="installer-desc">
-          Ready to install into your <strong>/Applications</strong> directory. No terminal or packaging commands required.
-        </p>
-        <div class="installer-actions">
-          <button class="btn btn-secondary" onclick="closeWindow('win-installer')">Cancel</button>
-          <button class="btn btn-secondary" onclick="playHarmonicChime([330]); triggerNotification('Running sandbox session...')">Run Once</button>
-          <button class="btn btn-primary" onclick="playHarmonicChime([440, 554, 659, 880]); triggerNotification('Ableton Live installed to /Applications!')">Install to Applications</button>
+      </div>
+      <div class="window-body finder-body" style="height: calc(100% - 42px);">
+        <aside class="finder-sidebar" style="width: 175px;">
+          <div class="sidebar-category">Store Categories</div>
+          <div class="sidebar-row active" id="store-cat-all" onclick="switchStoreCategory('all', this)"><span>🌟</span><span>Discover All</span></div>
+          <div class="sidebar-row" id="store-cat-audio" onclick="switchStoreCategory('audio', this)"><span>🎛️</span><span>Audio &amp; Studio</span></div>
+          <div class="sidebar-row" id="store-cat-dev" onclick="switchStoreCategory('dev', this)"><span>💻</span><span>Development</span></div>
+          <div class="sidebar-row" id="store-cat-proton" onclick="switchStoreCategory('proton', this)"><span>🪟</span><span>Windows / Proton</span></div>
+          <div class="sidebar-row" id="store-cat-installed" onclick="switchStoreCategory('installed', this)"><span>✅</span><span>Installed</span></div>
+        </aside>
+        <div style="flex: 1; padding: 18px; overflow-y: auto;" id="store-main-content">
+          <!-- Hero Banner -->
+          <div class="store-hero-banner" style="background: linear-gradient(135deg, #1d4ed8 0%, #7e22ce 100%); border-radius: 14px; padding: 18px 22px; color: white; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.85; font-weight: 700;">Featured Pro Bundle</div>
+              <div style="font-size: 20px; font-weight: 800; margin: 4px 0;">Ableton Live 12 Suite</div>
+              <div style="font-size: 12px; opacity: 0.9;">PipeWire 0.7ms Ultra-Low Latency ASIO Bridge &bull; Universal Bundle</div>
+            </div>
+            <button class="btn btn-primary" style="background: white; color: #1d4ed8; font-weight: 700; padding: 7px 16px;" onclick="installStoreApp(this, 'Ableton Live 12', 'audio')">Get / Install</button>
+          </div>
+
+          <!-- App Store Cards Grid -->
+          <div id="store-apps-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+            <div class="store-app-card" data-category="audio" data-name="Ableton Live 12 DAW Music">
+              <div class="store-app-icon" style="background: linear-gradient(135deg, #ff2d55, #ff9500);">🎹</div>
+              <div style="flex: 1;">
+                <div style="font-weight: 700; font-size: 13px;">Ableton Live 12</div>
+                <div style="font-size: 11px; color: var(--text-secondary);">Digital Audio Workstation &bull; PipeWire Native</div>
+              </div>
+              <button class="btn btn-primary store-install-btn" onclick="installStoreApp(this, 'Ableton Live 12', 'win-sonata')">Install</button>
+            </div>
+
+            <div class="store-app-card" data-category="dev" data-name="Visual Studio Code VSCode IDE">
+              <div class="store-app-icon" style="background: linear-gradient(135deg, #007aff, #00c6ff);">💻</div>
+              <div style="flex: 1;">
+                <div style="font-weight: 700; font-size: 13px;">VS Code (Sovereign Build)</div>
+                <div style="font-size: 11px; color: var(--text-secondary);">Zero-Telemetry Code Editor &bull; Native Wayland</div>
+              </div>
+              <button class="btn btn-primary store-install-btn" onclick="installStoreApp(this, 'VS Code', 'win-scribe')">Install</button>
+            </div>
+
+            <div class="store-app-card" data-category="audio" data-name="Blender 4.2 3D Cycles">
+              <div class="store-app-icon" style="background: linear-gradient(135deg, #ff9500, #ea580c);">🧊</div>
+              <div style="flex: 1;">
+                <div style="font-weight: 700; font-size: 13px;">Blender 4.2 LTS</div>
+                <div style="font-size: 11px; color: var(--text-secondary);">3D Creation Suite &bull; Vulkan HipRT</div>
+              </div>
+              <button class="btn btn-primary store-install-btn" onclick="installStoreApp(this, 'Blender 4.2', 'win-prism')">Install</button>
+            </div>
+
+            <div class="store-app-card" data-category="proton" data-name="Steam Proton Gaming Windows">
+              <div class="store-app-icon" style="background: linear-gradient(135deg, #1e293b, #3b82f6);">🎮</div>
+              <div style="flex: 1;">
+                <div style="font-weight: 700; font-size: 13px;">Steam + Proton GE 9</div>
+                <div style="font-size: 11px; color: var(--text-secondary);">Windows Gaming &amp; DXVK 2.4 Runtime</div>
+              </div>
+              <button class="btn btn-primary store-install-btn" onclick="installStoreApp(this, 'Steam + Proton GE', 'win-tempo')">Install</button>
+            </div>
+
+            <div class="store-app-card" data-category="proton" data-name="FL Studio 24 Windows EXE">
+              <div class="store-app-icon" style="background: linear-gradient(135deg, #f97316, #eab308);">🍓</div>
+              <div style="flex: 1;">
+                <div style="font-weight: 700; font-size: 13px;">FL Studio 24 (.exe)</div>
+                <div style="font-size: 11px; color: var(--text-secondary);">Zorin Windows App Support &bull; Wine-ASIO</div>
+              </div>
+              <button class="btn btn-primary store-install-btn" onclick="installStoreApp(this, 'FL Studio 24', 'win-sonata')">Install</button>
+            </div>
+
+            <div class="store-app-card" data-category="dev" data-name="Docker & Podman Containers">
+              <div class="store-app-icon" style="background: linear-gradient(135deg, #0284c7, #38bdf8);">🐳</div>
+              <div style="flex: 1;">
+                <div style="font-weight: 700; font-size: 13px;">Podman Desktop</div>
+                <div style="font-size: 11px; color: var(--text-secondary);">Rootless OCI Containers &amp; Kubernetes</div>
+              </div>
+              <button class="btn btn-primary store-install-btn" onclick="installStoreApp(this, 'Podman Desktop', 'win-console')">Install</button>
+            </div>
+
+            <div class="store-app-card" data-category="installed" data-name="Sonata Acoustic Player Installed">
+              <div class="store-app-icon" style="background: linear-gradient(135deg, #ff2d55, #fa114f);">🎵</div>
+              <div style="flex: 1;">
+                <div style="font-weight: 700; font-size: 13px;">Sonata Acoustic Engine</div>
+                <div style="font-size: 11px; color: var(--text-secondary);">Pre-installed Core App &bull; v1.0.4</div>
+              </div>
+              <button class="btn btn-secondary" onclick="openWindow('win-sonata')">Open</button>
+            </div>
+
+            <div class="store-app-card" data-category="installed" data-name="Horizon Web Browser Installed">
+              <div class="store-app-icon" style="background: linear-gradient(135deg, #00c6ff, #0072ff);">🧭</div>
+              <div style="flex: 1;">
+                <div style="font-weight: 700; font-size: 13px;">Horizon Web Browser</div>
+                <div style="font-size: 11px; color: var(--text-secondary);">Pre-installed Core App &bull; v1.0.4</div>
+              </div>
+              <button class="btn btn-secondary" onclick="openWindow('win-horizon')">Open</button>
+            </div>
+          </div>
         </div>
       </div>
       <!-- Window Resizer Handles -->
+      <div class="window-resizer window-resizer-r"></div>
+      <div class="window-resizer window-resizer-b"></div>
+      <div class="window-resizer window-resizer-rb" title="Drag to Resize"></div>
+    </div>
+
+    <!-- ====================================================================
+         WINDOW 5B: MESSAGES (pearOS / Cupertino Unified Messaging)
+         ==================================================================== -->
+    <div class="window glass-panel hidden" id="win-messages" style="top: 95px; left: 250px; width: 680px; height: 460px;">
+      <div class="window-titlebar">
+        <div class="traffic-lights">
+          <button class="tl-btn tl-close" onclick="closeWindow('win-messages')"></button>
+          <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-messages')"></button>
+          <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-messages')"></button>
+        </div>
+        <div class="window-title"><span class="proxy-icon">💬</span>Messages &mdash; Toccata Encrypted Bridge</div>
+        <div class="titlebar-placeholder"></div>
+      </div>
+      <div class="window-body finder-body" style="height: calc(100% - 42px);">
+        <aside class="finder-sidebar" style="width: 210px;">
+          <div class="sidebar-category">Pinned Threads</div>
+          <div class="sidebar-row active" id="msg-thread-btn-0" onclick="selectMessageThread(0, this)">
+            <span>🟢</span>
+            <div style="overflow: hidden;">
+              <div style="font-weight: 700; font-size: 12px;">Alex (Studio Engineer)</div>
+              <div style="font-size: 10px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">PipeWire latency is 0.6ms!</div>
+            </div>
+          </div>
+          <div class="sidebar-row" id="msg-thread-btn-1" onclick="selectMessageThread(1, this)">
+            <span>🟣</span>
+            <div style="overflow: hidden;">
+              <div style="font-weight: 700; font-size: 12px;">Zorin &amp; pearOS Core Team</div>
+              <div style="font-size: 10px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">GNOME 47 workspaces ready</div>
+            </div>
+          </div>
+          <div class="sidebar-row" id="msg-thread-btn-2" onclick="selectMessageThread(2, this)">
+            <span>🔵</span>
+            <div style="overflow: hidden;">
+              <div style="font-weight: 700; font-size: 12px;">Maestro AI Assistant</div>
+              <div style="font-size: 10px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Ask me any system command</div>
+            </div>
+          </div>
+        </aside>
+        <div style="flex: 1; display: flex; flex-direction: column; height: 100%;">
+          <div id="messages-chat-header" style="padding: 10px 16px; border-bottom: 1px solid var(--glass-border); font-weight: 700; font-size: 13px;">
+            To: <span id="messages-recipient-name" style="color: var(--accent-color);">Alex (Studio Engineer)</span>
+          </div>
+          <div id="messages-chat-history" style="flex: 1; padding: 14px 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+          </div>
+          <div style="padding: 10px 14px; border-top: 1px solid var(--glass-border); display: flex; gap: 8px;">
+            <input type="text" id="messages-input-box" placeholder="iMessage / Encrypted Matrix..." onkeydown="if(event.key==='Enter') sendChatMessage()" style="flex: 1; background: rgba(0,0,0,0.12); border: 1px solid var(--glass-border); border-radius: 18px; padding: 7px 14px; font-size: 12px; color: var(--text-primary); outline: none;">
+            <button class="btn btn-primary" onclick="sendChatMessage()" style="border-radius: 18px; padding: 6px 14px;">Send ↑</button>
+          </div>
+        </div>
+      </div>
+      <div class="window-resizer window-resizer-r"></div>
+      <div class="window-resizer window-resizer-b"></div>
+      <div class="window-resizer window-resizer-rb" title="Drag to Resize"></div>
+    </div>
+
+    <!-- ====================================================================
+         WINDOW 5C: MAIL (pearOS / GNOME Geary Unified Mail Client)
+         ==================================================================== -->
+    <div class="window glass-panel hidden" id="win-mail" style="top: 105px; left: 220px; width: 760px; height: 480px;">
+      <div class="window-titlebar">
+        <div class="traffic-lights">
+          <button class="tl-btn tl-close" onclick="closeWindow('win-mail')"></button>
+          <button class="tl-btn tl-minimize" onclick="minimizeWindow('win-mail')"></button>
+          <button class="tl-btn tl-maximize" onclick="maximizeWindow('win-mail')"></button>
+        </div>
+        <div class="window-title"><span class="proxy-icon">✉️</span>Mail &mdash; All Inboxes (3 Messages)</div>
+        <button class="btn btn-primary" onclick="promptComposeMail()" style="padding: 3px 10px; font-size: 11px;">+ Compose</button>
+      </div>
+      <div class="window-body finder-body" style="height: calc(100% - 42px);">
+        <aside class="finder-sidebar" style="width: 230px;" id="mail-inbox-list">
+          <div class="sidebar-category">Inbox</div>
+          <div class="sidebar-row active" onclick="selectMailItem(0, this)">
+            <div>
+              <div style="font-weight: 700; font-size: 12px;">Toccata OS Architecture</div>
+              <div style="font-size: 10px; color: var(--text-secondary);">Welcome to pearOS + Zorin + GNOME 47</div>
+            </div>
+          </div>
+          <div class="sidebar-row" onclick="selectMailItem(1, this)">
+            <div>
+              <div style="font-weight: 700; font-size: 12px;">PipeWire Studio Team</div>
+              <div style="font-size: 10px; color: var(--text-secondary);">0.667ms Bit-Perfect Audio Verified</div>
+            </div>
+          </div>
+          <div class="sidebar-row" onclick="selectMailItem(2, this)">
+            <div>
+              <div style="font-weight: 700; font-size: 12px;">GitHub &amp; Vercel CI/CD</div>
+              <div style="font-size: 10px; color: var(--text-secondary);">Production deployment live on main</div>
+            </div>
+          </div>
+        </aside>
+        <div style="flex: 1; padding: 18px 22px; overflow-y: auto; display: flex; flex-direction: column;" id="mail-reader-pane">
+          <div style="border-bottom: 1px solid var(--glass-border); padding-bottom: 12px; margin-bottom: 14px;">
+            <div id="mail-subject" style="font-size: 17px; font-weight: 800; margin-bottom: 4px;">Welcome to Toccata OS (pearOS + Zorin + GNOME 47)</div>
+            <div id="mail-from" style="font-size: 12px; color: var(--text-secondary);">From: core@toccata.os &bull; Today, 1:45 AM</div>
+          </div>
+          <div id="mail-body" style="font-size: 13px; line-height: 1.6; flex: 1;">
+            <p>Welcome to <strong>Toccata OS</strong>! Your desktop environment combines the finest workflows of <strong>pearOS NiceC0re</strong>, <strong>Zorin OS 18</strong>, and <strong>GNOME 47</strong>:</p>
+            <ul style="margin: 10px 0 10px 20px;">
+              <li>Switch instantly between <strong>macOS Sequoia</strong>, <strong>pearOS</strong>, <strong>Windows 11 (Zorin Start Menu)</strong>, and <strong>GNOME 47</strong> in System Settings &rarr; Desktop &amp; Dock.</li>
+              <li>Drag any window to the left, right, or top screen edge to trigger <strong>Zorin / GNOME Window Tiling</strong>.</li>
+              <li>Click <strong>Launchpad</strong> or <strong>Activities</strong> to switch between Virtual Workspaces 1, 2, and 3.</li>
+            </ul>
+          </div>
+          <div style="border-top: 1px solid var(--glass-border); padding-top: 12px; display: flex; gap: 8px;">
+            <input type="text" id="mail-quick-reply" placeholder="Write a quick reply..." style="flex: 1; background: rgba(0,0,0,0.1); border: 1px solid var(--glass-border); border-radius: 8px; padding: 6px 12px; font-size: 12px; color: var(--text-primary); outline: none;">
+            <button class="btn btn-primary" onclick="sendQuickMailReply()">Reply</button>
+          </div>
+        </div>
+      </div>
       <div class="window-resizer window-resizer-r"></div>
       <div class="window-resizer window-resizer-b"></div>
       <div class="window-resizer window-resizer-rb" title="Drag to Resize"></div>
@@ -1797,6 +2295,23 @@ Type 'help' to view available commands.</div>
          ==================================================================== -->
     <footer id="dock-container">
       <div id="dock" class="glass-panel">
+        <!-- 0. Zorin Start Button (Shown in Windows 11 / Zorin Taskbar Mode) -->
+        <div class="dock-item zorin-start-dock-btn hidden" id="zorin-start-btn" data-app="Zorin Start" onclick="playHarmonicChime([440, 659.25]); toggleZorinStartMenu()">
+          <svg viewBox="0 0 100 100" class="mac-dock-svg">
+            <defs>
+              <linearGradient id="zorin-hex" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#00b0ff"/>
+                <stop offset="100%" stop-color="#0066ff"/>
+              </linearGradient>
+            </defs>
+            <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="url(#zorin-hex)"/>
+            <polygon points="30,28 70,28 58,44 22,44" fill="#ffffff"/>
+            <polygon points="78,56 42,56 30,72 70,72" fill="#ffffff"/>
+            <polygon points="24,50 76,50 68,53 32,53" fill="rgba(255,255,255,0.85)"/>
+          </svg>
+          <span class="dock-tooltip">Zorin Start Menu</span>
+        </div>
+
         <!-- 1. Finder (Cadence) -->
         <div class="dock-item" data-app="Finder" onclick="playHarmonicChime([440]); openWindow('win-cadence')">
           <svg viewBox="0 0 100 100" class="mac-dock-svg">
@@ -1821,8 +2336,8 @@ Type 'help' to view available commands.</div>
           <span class="dock-tooltip">Finder</span>
         </div>
 
-        <!-- 2. Launchpad -->
-        <div class="dock-item" data-app="Launchpad" onclick="playHarmonicChime([523.25]); toggleSpotlight();">
+        <!-- 2. Launchpad / GNOME Activities -->
+        <div class="dock-item" data-app="Launchpad" onclick="playHarmonicChime([523.25]); toggleLaunchpad();">
           <svg viewBox="0 0 100 100" class="mac-dock-svg">
             <defs>
               <linearGradient id="lp-bg" x1="0" y1="0" x2="0" y2="1">
@@ -1842,7 +2357,7 @@ Type 'help' to view available commands.</div>
             <rect x="43" y="64" width="14" height="14" rx="4" fill="#ff2d55"/>
             <rect x="64" y="64" width="14" height="14" rx="4" fill="#30d158"/>
           </svg>
-          <span class="dock-tooltip">Launchpad</span>
+          <span class="dock-tooltip">Launchpad &amp; Workspaces</span>
         </div>
 
         <!-- 3. Safari (Horizon) -->
@@ -1872,7 +2387,7 @@ Type 'help' to view available commands.</div>
         </div>
 
         <!-- 4. Messages -->
-        <div class="dock-item" data-app="Messages" onclick="playHarmonicChime([739.99]); triggerNotification('Messages: No unread chats')">
+        <div class="dock-item" data-app="Messages" onclick="playHarmonicChime([739.99]); openWindow('win-messages')">
           <svg viewBox="0 0 100 100" class="mac-dock-svg">
             <defs>
               <linearGradient id="msg-bg" x1="0" y1="0" x2="0" y2="1">
@@ -1883,11 +2398,12 @@ Type 'help' to view available commands.</div>
             <rect x="4" y="4" width="92" height="92" rx="21" ry="21" fill="url(#msg-bg)"/>
             <path d="M22 46 C22 32 35 22 50 22 C65 22 78 32 78 46 C78 60 65 70 50 70 C44 70 38 68 34 65 L22 72 L25 61 C23 57 22 51 22 46 Z" fill="#ffffff"/>
           </svg>
+          <div class="dock-dot hidden" id="dot-messages"></div>
           <span class="dock-tooltip">Messages</span>
         </div>
 
         <!-- 5. Mail -->
-        <div class="dock-item" data-app="Mail" onclick="playHarmonicChime([830.61]); triggerNotification('Mail: All inboxes updated')">
+        <div class="dock-item" data-app="Mail" onclick="playHarmonicChime([830.61]); openWindow('win-mail')">
           <svg viewBox="0 0 100 100" class="mac-dock-svg">
             <defs>
               <linearGradient id="mail-bg" x1="0" y1="0" x2="0" y2="1">
@@ -1902,6 +2418,7 @@ Type 'help' to view available commands.</div>
               <circle cx="32" cy="22" r="5" fill="#ff3b30"/>
             </g>
           </svg>
+          <div class="dock-dot hidden" id="dot-mail"></div>
           <span class="dock-tooltip">Mail</span>
         </div>
 
@@ -2062,7 +2579,7 @@ Type 'help' to view available commands.</div>
         <div class="dock-divider"></div>
 
         <!-- 13. Trash -->
-        <div class="dock-item" data-app="Trash" onclick="playHarmonicChime([220]); triggerNotification('Trash is empty')">
+        <div class="dock-item" data-app="Trash" onclick="playHarmonicChime([220]); openWindow('win-cadence'); switchCadenceFolder('trash');">
           <svg viewBox="0 0 100 100" class="mac-dock-svg">
             <defs>
               <linearGradient id="trash-metal" x1="0" y1="0" x2="1" y2="0">

@@ -3010,3 +3010,452 @@ body.layout-gnome .dock-item:hover {
   transform: scale(1.15) translateX(6px) !important;
 }
 
+/* ==========================================================================
+   7. PEAROS / ZORIN / GNOME 47 WORKFLOW OVERHAUL STYLES
+   ========================================================================== */
+
+/* GNOME 47 Center Workspace / Activities Pill in Top Bar */
+.gnome-top-center-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.14s ease;
+  user-select: none;
+}
+
+.gnome-top-center-pill:hover {
+  background: rgba(255, 255, 255, 0.26);
+}
+
+.ws-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.35;
+  transition: width 0.2s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
+}
+
+.ws-dot.active {
+  width: 18px;
+  opacity: 1;
+}
+
+.gnome-activities-label {
+  font-size: 11px;
+  font-weight: 700;
+  margin-left: 3px;
+  letter-spacing: 0.2px;
+}
+
+/* Window Edge Snapping Preview Zone (Zorin / GNOME Tiling) */
+#snap-preview-overlay {
+  position: fixed;
+  z-index: 88000;
+  background: rgba(0, 122, 255, 0.22);
+  border: 2px solid rgba(0, 122, 255, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 14px;
+  pointer-events: none;
+  transition: all 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 12px 36px rgba(0, 122, 255, 0.25);
+}
+
+/* Full-Screen pearOS Launchpad & GNOME 47 Workspaces Overview */
+#launchpad-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 92000;
+  background: rgba(14, 16, 24, 0.62);
+  backdrop-filter: blur(36px) saturate(180%);
+  -webkit-backdrop-filter: blur(36px) saturate(180%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 40px 100px;
+  animation: fadeInOverview 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes fadeInOverview {
+  from { opacity: 0; transform: scale(1.03); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.launchpad-container {
+  width: 100%;
+  max-width: 960px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.workspaces-strip {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  width: 100%;
+}
+
+.workspace-pill {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px 8px 8px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.workspace-pill:hover {
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateY(-2px);
+}
+
+.workspace-pill.active {
+  background: rgba(0, 122, 255, 0.28);
+  border-color: #007aff;
+  box-shadow: 0 8px 24px rgba(0, 122, 255, 0.35);
+}
+
+.ws-preview {
+  width: 68px;
+  height: 42px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-size: cover;
+  background-position: center;
+}
+
+.ws-bg-1 { background: linear-gradient(135deg, #38bdf8, #818cf8, #f472b6); }
+.ws-bg-2 { background: linear-gradient(135deg, #fb7185, #f59e0b, #6366f1); }
+.ws-bg-3 { background: linear-gradient(135deg, #10b981, #0ea5e9, #1e293b); }
+
+.ws-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.ws-title {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ws-sub {
+  font-size: 10px;
+  opacity: 0.75;
+}
+
+.launchpad-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 360px;
+  padding: 9px 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+.launchpad-search-bar input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-size: 13px;
+  width: 100%;
+}
+
+.launchpad-search-bar input::placeholder {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.launchpad-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 24px 18px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.launchpad-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.launchpad-item:hover {
+  transform: scale(1.1);
+}
+
+.lp-icon-box {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+}
+
+/* Zorin OS Start Menu (Windows 11 / Zorin Layout) */
+#zorin-start-menu {
+  position: fixed;
+  bottom: 84px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 540px;
+  height: 440px;
+  z-index: 94000;
+  border-radius: 18px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+
+.zorin-start-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.14);
+  border: 1px solid var(--glass-border);
+}
+
+.zorin-start-search input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-size: 13px;
+  width: 100%;
+}
+
+.zorin-start-body {
+  display: flex;
+  gap: 14px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.zorin-start-left {
+  flex: 1.25;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-right: 6px;
+  border-right: 1px solid var(--glass-border);
+}
+
+.zorin-app-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.zorin-app-row:hover {
+  background: var(--accent-color);
+  color: #ffffff;
+}
+
+.zorin-start-right {
+  flex: 0.95;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.zorin-user-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  margin-bottom: 4px;
+}
+
+.zorin-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #007aff, #af52de);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.zorin-place-item {
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.zorin-place-item:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.zorin-power-row {
+  margin-top: auto;
+  display: flex;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--glass-border);
+}
+
+/* Dock Dynamic Size, Position & Autohide Variants */
+body.dock-size-small .dock-item {
+  width: 40px !important;
+  height: 40px !important;
+}
+body.dock-size-small #dock {
+  height: 54px !important;
+}
+
+body.dock-size-large .dock-item {
+  width: 60px !important;
+  height: 60px !important;
+}
+body.dock-size-large #dock {
+  height: 76px !important;
+}
+
+body.dock-pos-left #dock {
+  left: 12px !important;
+  right: auto !important;
+  top: 50% !important;
+  bottom: auto !important;
+  transform: translateY(-50%) !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 12px 6px !important;
+}
+body.dock-pos-left #dock-container {
+  flex-direction: column !important;
+  height: auto !important;
+}
+body.dock-pos-left .dock-divider {
+  width: 32px !important;
+  height: 1px !important;
+  margin: 4px 0 !important;
+}
+
+body.dock-pos-right #dock {
+  right: 12px !important;
+  left: auto !important;
+  top: 50% !important;
+  bottom: auto !important;
+  transform: translateY(-50%) !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 12px 6px !important;
+}
+body.dock-pos-right #dock-container {
+  flex-direction: column !important;
+  height: auto !important;
+}
+body.dock-pos-right .dock-divider {
+  width: 32px !important;
+  height: 1px !important;
+  margin: 4px 0 !important;
+}
+
+body.dock-autohide #dock {
+  transform: translateX(-50%) translateY(72px);
+  opacity: 0.15;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+}
+body.dock-autohide #dock:hover {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* True Tone / GNOME Night Light Filter */
+body.true-tone-active #desktop {
+  filter: sepia(14%) saturate(108%) brightness(var(--screen-brightness, 1));
+}
+#desktop {
+  filter: brightness(var(--screen-brightness, 1));
+  transition: filter 0.2s ease;
+}
+
+/* Software Store Cards (Gallery.app) */
+.store-app-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
+  transition: transform 0.14s ease, border-color 0.14s ease;
+}
+.store-app-card:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent-color);
+}
+.store-app-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: white;
+  flex-shrink: 0;
+}
+.chat-bubble {
+  max-width: 78%;
+  padding: 8px 13px;
+  border-radius: 16px;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+.chat-bubble.incoming {
+  align-self: flex-start;
+  background: rgba(142, 142, 147, 0.22);
+  color: var(--text-primary);
+  border-bottom-left-radius: 4px;
+}
+.chat-bubble.outgoing {
+  align-self: flex-end;
+  background: var(--accent-color);
+  color: #ffffff;
+  border-bottom-right-radius: 4px;
+}
+
+

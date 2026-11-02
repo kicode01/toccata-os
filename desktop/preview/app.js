@@ -122,6 +122,8 @@
   const windowDockMap = {
     'win-cadence': document.querySelector('.dock-item[data-app="Finder"]'),
     'win-horizon': document.querySelector('.dock-item[data-app="Safari"]'),
+    'win-messages': document.querySelector('.dock-item[data-app="Messages"]'),
+    'win-mail': document.querySelector('.dock-item[data-app="Mail"]'),
     'win-scribe': document.querySelector('.dock-item[data-app="Notes"]'),
     'win-sonata': document.querySelector('.dock-item[data-app="Music"]'),
     'win-tempo': document.querySelector('.dock-item[data-app="Activity Monitor"]'),
@@ -136,6 +138,8 @@
   const windowDotMap = {
     'win-cadence': document.getElementById('dot-cadence'),
     'win-horizon': document.getElementById('dot-horizon'),
+    'win-messages': document.getElementById('dot-messages'),
+    'win-mail': document.getElementById('dot-mail'),
     'win-scribe': document.getElementById('dot-scribe'),
     'win-sonata': document.getElementById('dot-sonata'),
     'win-tempo': document.getElementById('dot-tempo'),
@@ -408,6 +412,72 @@
     resizeRafId = null;
   }
 
+  let pendingSnapZone = null; // 'left', 'right', 'max', or null
+  const snapPreviewEl = document.getElementById('snap-preview-overlay');
+
+  function updateSnapPreview(clientX, clientY) {
+    if (!snapPreviewEl) return;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    if (clientX <= 22) {
+      pendingSnapZone = 'left';
+      snapPreviewEl.style.top = '34px';
+      snapPreviewEl.style.left = '6px';
+      snapPreviewEl.style.width = `${Math.floor(vw / 2) - 10}px`;
+      snapPreviewEl.style.height = `${vh - 116}px`;
+      snapPreviewEl.classList.remove('hidden');
+    } else if (clientX >= vw - 22) {
+      pendingSnapZone = 'right';
+      snapPreviewEl.style.top = '34px';
+      snapPreviewEl.style.left = `${Math.floor(vw / 2) + 4}px`;
+      snapPreviewEl.style.width = `${Math.floor(vw / 2) - 10}px`;
+      snapPreviewEl.style.height = `${vh - 116}px`;
+      snapPreviewEl.classList.remove('hidden');
+    } else if (clientY <= 32) {
+      pendingSnapZone = 'max';
+      snapPreviewEl.style.top = '32px';
+      snapPreviewEl.style.left = '6px';
+      snapPreviewEl.style.width = `${vw - 12}px`;
+      snapPreviewEl.style.height = `${vh - 112}px`;
+      snapPreviewEl.classList.remove('hidden');
+    } else {
+      pendingSnapZone = null;
+      snapPreviewEl.classList.add('hidden');
+    }
+  }
+
+  function applyWindowSnap(win, zone) {
+    if (!win || !zone) return;
+    if (!win.dataset.origWidth) {
+      win.dataset.origTop = win.style.top || `${win.offsetTop}px`;
+      win.dataset.origLeft = win.style.left || `${win.offsetLeft}px`;
+      win.dataset.origWidth = win.style.width || `${win.offsetWidth}px`;
+      win.dataset.origHeight = win.style.height || `${win.offsetHeight}px`;
+    }
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    win.style.transition = 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)';
+    if (zone === 'left') {
+      win.style.top = '34px';
+      win.style.left = '6px';
+      win.style.width = `${Math.floor(vw / 2) - 9}px`;
+      win.style.height = `${vh - 116}px`;
+      win.dataset.maximized = 'false';
+      triggerNotification('Window tiled to Left Half');
+    } else if (zone === 'right') {
+      win.style.top = '34px';
+      win.style.left = `${Math.floor(vw / 2) + 3}px`;
+      win.style.width = `${Math.floor(vw / 2) - 9}px`;
+      win.style.height = `${vh - 116}px`;
+      win.dataset.maximized = 'false';
+      triggerNotification('Window tiled to Right Half');
+    } else if (zone === 'max') {
+      maximizeWindow(win.id);
+    }
+    playHarmonicChime([523.25, 659.25], 0.16);
+    setTimeout(() => { win.style.transition = ''; }, 240);
+  }
+
   // Single global pointermove & pointerup listener for the entire desktop
   window.addEventListener('pointermove', (e) => {
     if (activeDragWin) {
@@ -419,6 +489,8 @@
 
       dragCurX = dragInitLeft + dx;
       dragCurY = Math.max(28, dragInitTop + dy); // Clamp below top bar
+
+      updateSnapPreview(e.clientX, e.clientY);
 
       if (!dragRafId) {
         dragRafId = requestAnimationFrame(updateDragFrame);
@@ -450,6 +522,13 @@
       if (dragRafId) {
         cancelAnimationFrame(dragRafId);
         dragRafId = null;
+      }
+
+      if (pendingSnapZone) {
+        const zone = pendingSnapZone;
+        pendingSnapZone = null;
+        snapPreviewEl?.classList.add('hidden');
+        applyWindowSnap(win, zone);
       }
 
       win.style.transition = 'transform 0.24s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
@@ -532,6 +611,7 @@
   const dockItems = Array.from(document.querySelectorAll('.dock-item'));
   let cachedItemMetrics = [];
   let dockRafId = null;
+  let dockMagnificationEnabled = true;
 
   function cacheDockMetrics() {
     cachedItemMetrics = dockItems.map(item => {
@@ -544,6 +624,7 @@
   dock?.addEventListener('mouseenter', cacheDockMetrics, { passive: true });
 
   dock?.addEventListener('mousemove', (e) => {
+    if (!dockMagnificationEnabled) return;
     if (dockRafId) return;
 
     dockRafId = requestAnimationFrame(() => {
@@ -1010,13 +1091,20 @@
     triggerNotification(bubble?.classList.contains('active') ? 'Bluetooth: Connected to AirPods Pro' : 'Bluetooth: Standby');
   });
 
-  // Control Center Sliders
+  // Control Center Sliders (Live Display Brightness & Sound Volume)
   document.querySelectorAll('.slider-pill').forEach(pill => {
     pill.addEventListener('click', (e) => {
       const rect = pill.getBoundingClientRect();
       const pct = Math.max(10, Math.min(100, Math.round(((e.clientX - rect.left) / rect.width) * 100)));
       const fill = pill.querySelector('.slider-track-fill');
-      if (fill) fill.style.width = `${pct}%`;
+      if (fill) {
+        fill.style.width = `${pct}%`;
+        if (fill.id === 'display-track-fill') {
+          setDisplayBrightness(Math.max(40, pct));
+        } else if (fill.id === 'sound-track-fill') {
+          setMasterVolume(pct);
+        }
+      }
       playHarmonicChime([320 + pct * 5]);
     });
   });
@@ -1029,21 +1117,26 @@
     document.querySelectorAll('.layout-preset-card').forEach(c => c.classList.remove('active'));
 
     document.getElementById(`layout-card-${layout}`)?.classList.add('active');
+    const zorinBtn = document.getElementById('zorin-start-btn');
 
     if (layout === 'win11') {
       document.body.classList.add('layout-win11');
-      triggerNotification('Layout: Windows 11 Modern (Zorin Taskbar) active');
+      zorinBtn?.classList.remove('hidden');
+      triggerNotification('Layout: Windows 11 Modern (Zorin Taskbar & Start Menu) active');
       playHarmonicChime([440, 554.37], 0.2);
     } else if (layout === 'win10') {
       document.body.classList.add('layout-win10');
+      zorinBtn?.classList.remove('hidden');
       triggerNotification('Layout: Windows 10 Classic (Zorin Legacy) active');
       playHarmonicChime([392, 523.25], 0.2);
     } else if (layout === 'gnome') {
       document.body.classList.add('layout-gnome');
+      zorinBtn?.classList.add('hidden');
       triggerNotification('Layout: GNOME 47 / Zorin Overview active');
       playHarmonicChime([330, 440, 554.37], 0.22);
     } else if (layout === 'pearos') {
       document.body.classList.add('layout-pearos', 'layout-macos');
+      zorinBtn?.classList.add('hidden');
       triggerNotification('Layout: pearOS NiceC0re Cupertino active');
       try {
         const audio = new Audio('sounds/boot-sound.wav');
@@ -1054,9 +1147,12 @@
       }
     } else {
       document.body.classList.add('layout-macos');
+      zorinBtn?.classList.add('hidden');
       triggerNotification('Layout: macOS Sequoia Floating Dock active');
       playHarmonicChime([523.25, 659.25, 783.99], 0.25);
     }
+    try { localStorage.setItem('toccata_layout', layout); } catch (_) {}
+    setTimeout(cacheDockMetrics, 150);
   }
   window.setDesktopLayout = setDesktopLayout;
 
@@ -1181,23 +1277,43 @@
   }
   window.selectFile = selectFile;
 
-  function switchCadenceFolder(folderId) {
+  let cadenceHistory = ['apps'];
+  let cadenceHistoryIdx = 0;
+  let currentCadenceFolder = 'apps';
+
+  function updateCadenceNavButtons() {
+    const backBtn = document.getElementById('cadence-back-btn');
+    const fwdBtn = document.getElementById('cadence-fwd-btn');
+    if (backBtn) backBtn.disabled = cadenceHistoryIdx <= 0;
+    if (fwdBtn) fwdBtn.disabled = cadenceHistoryIdx >= cadenceHistory.length - 1;
+  }
+
+  function switchCadenceFolder(folderId, pushHistory = true) {
     const folders = {
       'apps': { view: 'cadence-view-apps', title: 'Cadence — Applications', status: '10 items • 418.5 GB available on Toccata Core', path: 'Applications' },
       'docs': { view: 'cadence-view-docs', title: 'Cadence — Documents', status: '4 items • 418.5 GB available on Toccata Core', path: 'Documents' },
       'downloads': { view: 'cadence-view-downloads', title: 'Cadence — Downloads', status: '3 items • 418.5 GB available on Toccata Core', path: 'Downloads' },
-      'disk': { view: 'cadence-view-disk', title: 'Cadence — Toccata Core (NVMe Storage)', status: '1.0 TB Total • 418.5 GB Available • Btrfs Compressed', path: 'Toccata Core' }
+      'disk': { view: 'cadence-view-disk', title: 'Cadence — Toccata Core (NVMe Storage)', status: '1.0 TB Total • 418.5 GB Available • Btrfs Compressed', path: 'Toccata Core' },
+      'trash': { view: 'cadence-view-trash', title: 'Cadence — Trash', status: 'Trash • 418.5 GB available on Toccata Core', path: 'Trash' }
     };
 
     const target = folders[folderId];
     if (!target) return;
 
+    currentCadenceFolder = folderId;
+    if (pushHistory && cadenceHistory[cadenceHistoryIdx] !== folderId) {
+      cadenceHistory = cadenceHistory.slice(0, cadenceHistoryIdx + 1);
+      cadenceHistory.push(folderId);
+      cadenceHistoryIdx = cadenceHistory.length - 1;
+    }
+    updateCadenceNavButtons();
+
     // Update active sidebar row
-    document.querySelectorAll('.finder-sidebar .sidebar-row').forEach(row => row.classList.remove('active'));
+    document.querySelectorAll('#win-cadence .finder-sidebar .sidebar-row').forEach(row => row.classList.remove('active'));
     document.getElementById(`sb-row-${folderId}`)?.classList.add('active');
 
     // Toggle view containers
-    ['apps', 'docs', 'downloads', 'disk'].forEach(f => {
+    ['apps', 'docs', 'downloads', 'disk', 'trash'].forEach(f => {
       const el = document.getElementById(folders[f].view);
       if (el) {
         if (f === folderId) {
@@ -1211,7 +1327,7 @@
     const titleEl = document.getElementById('cadence-toolbar-title');
     if (titleEl) titleEl.innerHTML = `<span class="proxy-icon">📂</span>${target.title}`;
 
-    const statusEl = document.querySelector('.finder-statusbar span');
+    const statusEl = document.getElementById('finder-statusbar-text') || document.querySelector('.finder-statusbar span');
     if (statusEl) statusEl.textContent = target.status;
 
     const pathEl = document.getElementById('finder-current-path');
@@ -1220,6 +1336,112 @@
     playHarmonicChime([523.25], 0.15);
   }
   window.switchCadenceFolder = switchCadenceFolder;
+
+  function cadenceGoBack() {
+    if (cadenceHistoryIdx > 0) {
+      cadenceHistoryIdx--;
+      switchCadenceFolder(cadenceHistory[cadenceHistoryIdx], false);
+    }
+  }
+  window.cadenceGoBack = cadenceGoBack;
+
+  function cadenceGoForward() {
+    if (cadenceHistoryIdx < cadenceHistory.length - 1) {
+      cadenceHistoryIdx++;
+      switchCadenceFolder(cadenceHistory[cadenceHistoryIdx], false);
+    }
+  }
+  window.cadenceGoForward = cadenceGoForward;
+
+  function setCadenceViewMode(mode) {
+    document.getElementById('cadence-view-btn-grid')?.classList.toggle('active', mode === 'grid');
+    document.getElementById('cadence-view-btn-list')?.classList.toggle('active', mode === 'list');
+    const appsView = document.getElementById('cadence-view-apps');
+    if (appsView && currentCadenceFolder === 'apps') {
+      if (mode === 'list') {
+        appsView.style.display = 'flex';
+        appsView.style.flexDirection = 'column';
+        appsView.style.gap = '6px';
+        appsView.querySelectorAll('.app-card').forEach(c => {
+          c.style.flexDirection = 'row';
+          c.style.justifyContent = 'flex-start';
+          c.style.padding = '8px 14px';
+          c.style.gap = '12px';
+        });
+      } else {
+        appsView.style.display = '';
+        appsView.style.flexDirection = '';
+        appsView.style.gap = '';
+        appsView.querySelectorAll('.app-card').forEach(c => {
+          c.style.flexDirection = '';
+          c.style.justifyContent = '';
+          c.style.padding = '';
+          c.style.gap = '';
+        });
+      }
+    }
+    triggerNotification(`Cadence: Switched to ${mode === 'grid' ? 'Icons Grid' : 'List'} View`);
+    playHarmonicChime([523.25], 0.1);
+  }
+  window.setCadenceViewMode = setCadenceViewMode;
+
+  function filterCadenceFiles(query) {
+    const q = (query || '').toLowerCase().trim();
+    document.querySelectorAll('#win-cadence .app-card, #win-cadence .file-row').forEach(item => {
+      const txt = item.textContent.toLowerCase();
+      item.style.display = (!q || txt.includes(q)) ? '' : 'none';
+    });
+  }
+  window.filterCadenceFiles = filterCadenceFiles;
+
+  let newFolderCounter = 1;
+  function createNewCadenceFolder() {
+    openWindow('win-cadence');
+    if (currentCadenceFolder === 'disk' || currentCadenceFolder === 'apps') {
+      switchCadenceFolder('docs');
+    }
+    const container = document.getElementById(`cadence-view-${currentCadenceFolder}`) || document.getElementById('cadence-view-docs');
+    if (!container) return;
+    const folderName = `Untitled Folder ${newFolderCounter++}`;
+    const row = document.createElement('div');
+    row.className = 'file-row selected';
+    row.onclick = function () { selectFile(this, folderName, 'Folder', '0 KB'); };
+    row.innerHTML = `
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="#007aff"><path d="M10 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V8a2 2 0 00-2-2h-8l-2-2z"/></svg>
+      <span style="font-weight: 600;">${folderName}</span>
+      <span style="color: var(--text-secondary);">Just now</span>
+      <span style="color: var(--text-secondary);">Folder</span>
+    `;
+    container.prepend(row);
+    selectFile(row, folderName, 'Folder', '0 KB');
+    triggerNotification(`Created "${folderName}"`);
+    playHarmonicChime([523.25, 659.25], 0.18);
+  }
+  window.createNewCadenceFolder = createNewCadenceFolder;
+
+  function moveSelectedToTrash() {
+    const selectedEl = document.querySelector('#win-cadence .file-row.selected');
+    const trashList = document.getElementById('trash-items-container');
+    if (selectedEl && trashList) {
+      selectedEl.classList.remove('selected');
+      trashList.prepend(selectedEl);
+      triggerNotification(`Moved "${currentSelectedFile.name}" to Trash`);
+      playHarmonicChime([330, 261.63], 0.2);
+    } else {
+      triggerNotification('Select a document or file in Cadence first to move to Trash');
+    }
+  }
+  window.moveSelectedToTrash = moveSelectedToTrash;
+
+  function emptyTrashBin() {
+    const trashList = document.getElementById('trash-items-container');
+    if (trashList) {
+      trashList.innerHTML = `<div style="padding: 28px; text-align: center; color: var(--text-secondary); font-size: 13px;">Trash is empty</div>`;
+    }
+    playHarmonicChime([440, 330, 220], 0.25);
+    triggerNotification('Trash permanently emptied');
+  }
+  window.emptyTrashBin = emptyTrashBin;
 
   let extractedArchives = {};
   function extractArchive(el, archiveName) {
@@ -2502,6 +2724,643 @@ Or search packages in Gallery.app.`;
     triggerNotification('Focus Timer reset to 25:00');
   }
   window.resetPomodoro = resetPomodoro;
+
+  // ==========================================================================
+  // 19. GLOBAL TOP MENU BAR DROPDOWNS & WINDOW TILING COMMANDS
+  // ==========================================================================
+  function closeAllTopBarDropdowns() {
+    document.querySelectorAll('.topbar-sub-dropdown').forEach(el => el.classList.add('hidden'));
+  }
+  window.closeAllTopBarDropdowns = closeAllTopBarDropdowns;
+
+  function toggleTopBarDropdown(menuId) {
+    if (menuId === 'app') {
+      toggleToccataMenu();
+      closeAllTopBarDropdowns();
+      return;
+    }
+    closeToccataMenu();
+    const target = document.getElementById(`topbar-dropdown-${menuId}`);
+    if (!target) return;
+    const wasHidden = target.classList.contains('hidden');
+    closeAllTopBarDropdowns();
+    if (wasHidden) {
+      target.classList.remove('hidden');
+      playHarmonicChime([523.25], 0.1);
+    }
+  }
+  window.toggleTopBarDropdown = toggleTopBarDropdown;
+
+  document.addEventListener('pointerdown', (e) => {
+    if (!e.target.closest('.top-menu-trigger') && !e.target.closest('.topbar-sub-dropdown')) {
+      closeAllTopBarDropdowns();
+    }
+  });
+
+  function closeFocusedWindow() {
+    const w = getActiveWindow();
+    if (w) closeWindow(w.id);
+  }
+  window.closeFocusedWindow = closeFocusedWindow;
+
+  function minimizeFocusedWindow() {
+    const w = getActiveWindow();
+    if (w) minimizeWindow(w.id);
+  }
+  window.minimizeFocusedWindow = minimizeFocusedWindow;
+
+  function maximizeFocusedWindow() {
+    const w = getActiveWindow();
+    if (w) maximizeWindow(w.id);
+  }
+  window.maximizeFocusedWindow = maximizeFocusedWindow;
+
+  function snapFocusedWindow(side) {
+    const w = getActiveWindow();
+    if (w) applyWindowSnap(w, side);
+  }
+  window.snapFocusedWindow = snapFocusedWindow;
+
+  function centerFocusedWindow() {
+    const w = getActiveWindow();
+    if (!w) return;
+    w.style.transition = 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)';
+    w.dataset.maximized = 'false';
+    const width = parseInt(w.dataset.origWidth, 10) || 760;
+    const height = parseInt(w.dataset.origHeight, 10) || 500;
+    w.style.width = `${width}px`;
+    w.style.height = `${height}px`;
+    w.style.left = `${Math.max(20, Math.floor((window.innerWidth - width) / 2))}px`;
+    w.style.top = `${Math.max(40, Math.floor((window.innerHeight - height) / 2) - 20)}px`;
+    triggerNotification('Window centered on screen');
+    setTimeout(() => { w.style.transition = ''; }, 240);
+  }
+  window.centerFocusedWindow = centerFocusedWindow;
+
+  function bringAllWindowsToFront() {
+    document.querySelectorAll('.window').forEach(w => {
+      if (w.dataset.minimized === 'true') {
+        openWindow(w.id);
+      }
+    });
+    triggerNotification('All open windows brought to front');
+  }
+  window.bringAllWindowsToFront = bringAllWindowsToFront;
+
+  function copyCurrentSelection() {
+    const sel = window.getSelection()?.toString();
+    if (sel && navigator.clipboard) {
+      navigator.clipboard.writeText(sel).catch(() => {});
+      triggerNotification('Copied selection to clipboard');
+    } else {
+      triggerNotification('Clipboard: Ready');
+    }
+  }
+  window.copyCurrentSelection = copyCurrentSelection;
+
+  function pasteToFocusedInput() {
+    triggerNotification('Paste triggered');
+  }
+  window.pasteToFocusedInput = pasteToFocusedInput;
+
+  function selectAllInActiveApp() {
+    const w = getActiveWindow();
+    if (w && w.id === 'win-scribe') {
+      const inp = document.getElementById('scribe-input');
+      if (inp) { inp.focus(); inp.select(); }
+    }
+    triggerNotification('Selected all content in active window');
+  }
+  window.selectAllInActiveApp = selectAllInActiveApp;
+
+  function toggleTheme() {
+    const isLight = document.body.classList.contains('light-mode');
+    setTheme(isLight ? 'dark' : 'light');
+  }
+  window.toggleTheme = toggleTheme;
+
+  function createNewScribeDoc() {
+    const inp = document.getElementById('scribe-input');
+    if (inp) {
+      inp.value = `# Untitled Note — ${new Date().toLocaleTimeString()}\n\nWrite markdown or code here...\n`;
+      if (typeof updateScribeStats === 'function') updateScribeStats();
+      inp.focus();
+    }
+    triggerNotification('Scribe: Created new Markdown document');
+  }
+  window.createNewScribeDoc = createNewScribeDoc;
+
+  function executeCommand(cmd) {
+    const input = document.getElementById('term-input');
+    if (input) {
+      input.value = cmd;
+      handleTerminalKey({ key: 'Enter', preventDefault: () => {} });
+    }
+  }
+  window.executeCommand = executeCommand;
+
+  // ==========================================================================
+  // 20. PEAROS LAUNCHPAD & GNOME 47 VIRTUAL WORKSPACES ENGINE
+  // ==========================================================================
+  let currentWorkspace = 1;
+  const workspaceWindowPresets = {
+    1: ['win-cadence', 'win-horizon'],
+    2: ['win-sonata', 'win-prism'],
+    3: ['win-console', 'win-scribe', 'win-tempo']
+  };
+
+  function toggleLaunchpad() {
+    const lp = document.getElementById('launchpad-overlay');
+    if (!lp) return;
+    const isHidden = lp.classList.contains('hidden');
+    if (isHidden) {
+      lp.classList.remove('hidden');
+      const search = document.getElementById('launchpad-search-input');
+      if (search) {
+        search.value = '';
+        filterLaunchpadApps('');
+        setTimeout(() => search.focus(), 60);
+      }
+      playHarmonicChime([523.25, 659.25, 783.99], 0.22);
+    } else {
+      closeLaunchpad();
+    }
+  }
+  window.toggleLaunchpad = toggleLaunchpad;
+
+  function closeLaunchpad() {
+    document.getElementById('launchpad-overlay')?.classList.add('hidden');
+  }
+  window.closeLaunchpad = closeLaunchpad;
+
+  function filterLaunchpadApps(query) {
+    const q = (query || '').toLowerCase().trim();
+    document.querySelectorAll('#launchpad-app-grid .launchpad-item').forEach(item => {
+      const name = (item.dataset.name || item.textContent || '').toLowerCase();
+      item.style.display = (!q || name.includes(q)) ? 'flex' : 'none';
+    });
+  }
+  window.filterLaunchpadApps = filterLaunchpadApps;
+
+  function switchWorkspace(wsNum) {
+    currentWorkspace = wsNum;
+    [1, 2, 3].forEach(n => {
+      document.getElementById(`ws-pill-${n}`)?.classList.toggle('active', n === wsNum);
+      document.getElementById(`top-ws-dot-${n}`)?.classList.toggle('active', n === wsNum);
+    });
+
+    // Smooth workspace transition: show preset windows for the chosen workspace
+    const targetWins = workspaceWindowPresets[wsNum] || ['win-cadence'];
+    document.querySelectorAll('.window').forEach(w => {
+      if (!targetWins.includes(w.id) && !w.classList.contains('hidden')) {
+        w.classList.add('hidden');
+      }
+    });
+    targetWins.forEach(id => openWindow(id));
+
+    closeLaunchpad();
+    playHarmonicChime([440, 554.37, 659.25], 0.22);
+    const wsNames = { 1: 'Workspace 1 (Main Desktop)', 2: 'Workspace 2 (Creative & Audio)', 3: 'Workspace 3 (Dev & Terminal)' };
+    triggerNotification(`Switched to ${wsNames[wsNum]}`);
+  }
+  window.switchWorkspace = switchWorkspace;
+
+  // ==========================================================================
+  // 21. ZORIN OS START MENU & DESKTOP RIGHT-CLICK CONTEXT MENU
+  // ==========================================================================
+  function toggleZorinStartMenu() {
+    const menu = document.getElementById('zorin-start-menu');
+    if (!menu) return;
+    menu.classList.toggle('hidden');
+  }
+  window.toggleZorinStartMenu = toggleZorinStartMenu;
+
+  function closeZorinStartMenu() {
+    document.getElementById('zorin-start-menu')?.classList.add('hidden');
+  }
+  window.closeZorinStartMenu = closeZorinStartMenu;
+
+  function filterZorinStartApps(query) {
+    const q = (query || '').toLowerCase().trim();
+    document.querySelectorAll('#zorin-start-app-list .zorin-app-row').forEach(row => {
+      const txt = row.textContent.toLowerCase();
+      row.style.display = (!q || txt.includes(q)) ? 'flex' : 'none';
+    });
+  }
+  window.filterZorinStartApps = filterZorinStartApps;
+
+  document.addEventListener('pointerdown', (e) => {
+    const zMenu = document.getElementById('zorin-start-menu');
+    if (zMenu && !zMenu.classList.contains('hidden') && !e.target.closest('#zorin-start-menu') && !e.target.closest('#zorin-start-btn')) {
+      closeZorinStartMenu();
+    }
+    const ctxMenu = document.getElementById('desktop-context-menu');
+    if (ctxMenu && !ctxMenu.classList.contains('hidden') && !e.target.closest('#desktop-context-menu')) {
+      closeDesktopContextMenu();
+    }
+  });
+
+  const desktopEl = document.getElementById('desktop');
+  const contextMenuEl = document.getElementById('desktop-context-menu');
+
+  desktopEl?.addEventListener('contextmenu', (e) => {
+    if (e.target.closest('.window') || e.target.closest('#menu-bar') || e.target.closest('#dock')) return;
+    e.preventDefault();
+    if (!contextMenuEl) return;
+    const x = Math.min(e.clientX, window.innerWidth - 240);
+    const y = Math.min(e.clientY, window.innerHeight - 280);
+    contextMenuEl.style.left = `${x}px`;
+    contextMenuEl.style.top = `${y}px`;
+    contextMenuEl.classList.remove('hidden');
+    playHarmonicChime([523.25], 0.08);
+  });
+
+  function closeDesktopContextMenu() {
+    contextMenuEl?.classList.add('hidden');
+  }
+  window.closeDesktopContextMenu = closeDesktopContextMenu;
+
+  function cleanUpDesktopIcons() {
+    triggerNotification('Desktop icons aligned to Retina grid');
+    playHarmonicChime([523.25, 659.25], 0.15);
+  }
+  window.cleanUpDesktopIcons = cleanUpDesktopIcons;
+
+  // ==========================================================================
+  // 22. SYSTEM SETTINGS INTERACTIVE CONTROLLERS (All 14 Tabs 100% Live)
+  // ==========================================================================
+  function activateSegmentBtn(btnEl) {
+    if (!btnEl || !btnEl.parentElement) return;
+    btnEl.parentElement.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+    btnEl.classList.add('active');
+    playHarmonicChime([523.25], 0.1);
+  }
+  window.activateSegmentBtn = activateSegmentBtn;
+
+  function toggleMenuBarItem(elementId, visible, label) {
+    const el = document.getElementById(elementId);
+    if (el) {
+      el.style.display = visible ? '' : 'none';
+    }
+    triggerNotification(`${label} ${visible ? 'shown in' : 'hidden from'} Menu Bar`);
+    playHarmonicChime([480], 0.1);
+  }
+  window.toggleMenuBarItem = toggleMenuBarItem;
+
+  function setDockSize(size, btnEl) {
+    activateSegmentBtn(btnEl);
+    document.body.classList.remove('dock-size-small', 'dock-size-large');
+    const desc = document.getElementById('dock-size-desc');
+    if (size === 'small') {
+      document.body.classList.add('dock-size-small');
+      if (desc) desc.textContent = 'Compact squircle size: 40px';
+      triggerNotification('Dock Size: Small (40px)');
+    } else if (size === 'large') {
+      document.body.classList.add('dock-size-large');
+      if (desc) desc.textContent = 'Expanded squircle size: 60px';
+      triggerNotification('Dock Size: Large (60px)');
+    } else {
+      if (desc) desc.textContent = 'Default squircle size: 52px';
+      triggerNotification('Dock Size: Medium (52px)');
+    }
+    setTimeout(cacheDockMetrics, 120);
+  }
+  window.setDockSize = setDockSize;
+
+  function toggleDockMagnification(enabled) {
+    dockMagnificationEnabled = enabled;
+    triggerNotification(enabled ? 'Dock Fisheye Magnification Enabled' : 'Dock Magnification Disabled');
+    playHarmonicChime([523.25], 0.1);
+  }
+  window.toggleDockMagnification = toggleDockMagnification;
+
+  function setDockPosition(pos, btnEl) {
+    activateSegmentBtn(btnEl);
+    document.body.classList.remove('dock-pos-left', 'dock-pos-right');
+    if (pos === 'left') {
+      document.body.classList.add('dock-pos-left');
+      triggerNotification('Dock Position: Left Screen Edge');
+    } else if (pos === 'right') {
+      document.body.classList.add('dock-pos-right');
+      triggerNotification('Dock Position: Right Screen Edge');
+    } else {
+      triggerNotification('Dock Position: Bottom Floating Pill');
+    }
+    setTimeout(cacheDockMetrics, 150);
+  }
+  window.setDockPosition = setDockPosition;
+
+  function setMinimizeEffect(effect, btnEl) {
+    activateSegmentBtn(btnEl);
+    triggerNotification(`Minimize Effect: ${effect === 'genie' ? 'Genie Curved Animation' : 'Linear Scale Animation'}`);
+  }
+  window.setMinimizeEffect = setMinimizeEffect;
+
+  function toggleDockAutohide(enabled) {
+    document.body.classList.toggle('dock-autohide', enabled);
+    triggerNotification(enabled ? 'Dock Auto-Hide Enabled (Hover bottom edge to reveal)' : 'Dock Always Visible');
+    playHarmonicChime([440], 0.12);
+  }
+  window.toggleDockAutohide = toggleDockAutohide;
+
+  function setDisplayResolution(mode, btnEl) {
+    activateSegmentBtn(btnEl);
+    const desc = document.getElementById('display-res-desc');
+    if (mode === 'scaled') {
+      if (desc) desc.textContent = '2560 × 1440 (Larger Text • 125% UI Scale)';
+      triggerNotification('Resolution: 2560×1440 HiDPI Scaled');
+    } else if (mode === 'morespace') {
+      if (desc) desc.textContent = '4096 × 2304 (More Space • Native Studio Canvas)';
+      triggerNotification('Resolution: 4096×2304 More Space');
+    } else {
+      if (desc) desc.textContent = '3840 × 2160 (HiDPI 200% Crisp Scaling)';
+      triggerNotification('Resolution: 3840×2160 4K Retina');
+    }
+  }
+  window.setDisplayResolution = setDisplayResolution;
+
+  function setRefreshRate(hz, btnEl) {
+    activateSegmentBtn(btnEl);
+    triggerNotification(`Display Refresh Rate locked to ${hz} V-Sync`);
+  }
+  window.setRefreshRate = setRefreshRate;
+
+  function toggleTrueTone(enabled) {
+    document.body.classList.toggle('true-tone-active', enabled);
+    triggerNotification(enabled ? 'True Tone / Night Light Warmth Active' : 'True Tone Disabled (Standard D65)');
+    playHarmonicChime([523.25], 0.12);
+  }
+  window.toggleTrueTone = toggleTrueTone;
+
+  function setDisplayBrightness(val) {
+    const pct = Math.max(35, Math.min(100, Number(val) || 100));
+    document.documentElement.style.setProperty('--screen-brightness', (pct / 100).toFixed(2));
+    const fill = document.getElementById('display-track-fill');
+    if (fill) fill.style.width = `${pct}%`;
+  }
+  window.setDisplayBrightness = setDisplayBrightness;
+
+  function setMasterVolume(val) {
+    const pct = Math.max(0, Math.min(100, Number(val) || 0));
+    if (masterGain && audioCtx) {
+      masterGain.gain.setValueAtTime((pct / 100) * 0.14, audioCtx.currentTime);
+    }
+    const fill = document.getElementById('sound-track-fill');
+    if (fill) fill.style.width = `${pct}%`;
+    const lbl = document.getElementById('settings-volume-label');
+    if (lbl) lbl.textContent = `${pct}% Studio Gain`;
+    const slider = document.getElementById('settings-volume-slider');
+    if (slider && Number(slider.value) !== pct) slider.value = pct;
+  }
+  window.setMasterVolume = setMasterVolume;
+
+  function setSettingsAudioOutput(btnEl, sinkName) {
+    if (btnEl && btnEl.parentElement) {
+      btnEl.parentElement.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+    }
+    const desc = document.getElementById('settings-audio-sink-desc');
+    if (desc) desc.textContent = `Default system audio sink device: ${sinkName}`;
+    triggerNotification(`PipeWire Output routed to ${sinkName}`);
+    playHarmonicChime([523.25, 659.25], 0.15);
+  }
+  window.setSettingsAudioOutput = setSettingsAudioOutput;
+
+  function toggleLowPowerMode(enabled) {
+    const pctEl = document.getElementById('menubar-battery-pct');
+    if (pctEl) pctEl.style.color = enabled ? '#ffcc00' : '';
+    triggerNotification(enabled ? 'Low Power Mode Enabled (Energy Saver active)' : 'Low Power Mode Disabled');
+    playHarmonicChime([440], 0.12);
+  }
+  window.toggleLowPowerMode = toggleLowPowerMode;
+
+  let snapshotCounter = 15;
+  function createBtrfsSnapshot() {
+    const tbody = document.getElementById('snapshots-table-body');
+    const countLabel = document.getElementById('snapshot-count-label');
+    const id = snapshotCounter++;
+    if (tbody) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>Snapshot #${id} (Live User Checkpoint)</td>
+        <td>Just now</td>
+        <td>4 MB</td>
+        <td><button class="btn btn-secondary" style="padding: 2px 8px; font-size: 11px;" onclick="triggerNotification('Rolled back to Snapshot #${id} in 0.04s!')">Restore</button></td>
+      `;
+      tbody.prepend(tr);
+    }
+    if (countLabel) {
+      countLabel.textContent = `${id} Snapshots Available`;
+    }
+    playHarmonicChime([261.63, 329.63, 392, 523.25], 0.25);
+    triggerNotification(`Created Btrfs Snapshot #${id} in 0.02s`);
+  }
+  window.createBtrfsSnapshot = createBtrfsSnapshot;
+
+  // ==========================================================================
+  // 23. GALLERY SOFTWARE STORE, MESSAGES.APP & MAIL.APP CONTROLLERS
+  // ==========================================================================
+  function switchStoreCategory(cat, rowEl) {
+    document.querySelectorAll('#win-installer .finder-sidebar .sidebar-row').forEach(r => r.classList.remove('active'));
+    rowEl?.classList.add('active');
+    document.querySelectorAll('#store-apps-grid .store-app-card').forEach(card => {
+      const c = card.dataset.category;
+      card.style.display = (cat === 'all' || c === cat) ? 'flex' : 'none';
+    });
+    playHarmonicChime([523.25], 0.1);
+  }
+  window.switchStoreCategory = switchStoreCategory;
+
+  function filterStoreApps(query) {
+    const q = (query || '').toLowerCase().trim();
+    document.querySelectorAll('#store-apps-grid .store-app-card').forEach(card => {
+      const txt = (card.dataset.name || card.textContent || '').toLowerCase();
+      card.style.display = (!q || txt.includes(q)) ? 'flex' : 'none';
+    });
+  }
+  window.filterStoreApps = filterStoreApps;
+
+  function installStoreApp(btnEl, appName, targetWindow) {
+    if (!btnEl) return;
+    if (btnEl.dataset.installed === 'true') {
+      if (targetWindow && targetWindow.startsWith('win-')) openWindow(targetWindow);
+      return;
+    }
+    btnEl.disabled = true;
+    btnEl.textContent = 'Installing...';
+    playHarmonicChime([440, 554.37], 0.18);
+
+    setTimeout(() => {
+      btnEl.disabled = false;
+      btnEl.dataset.installed = 'true';
+      btnEl.textContent = 'Open';
+      btnEl.className = 'btn btn-secondary';
+      const card = btnEl.closest('.store-app-card');
+      if (card) card.dataset.category = 'installed';
+
+      // Also add to Finder Applications if not already there
+      const appsGrid = document.getElementById('cadence-view-apps');
+      if (appsGrid && !appsGrid.querySelector(`[data-installed-app="${appName}"]`)) {
+        const div = document.createElement('div');
+        div.className = 'app-card';
+        div.dataset.installedApp = appName;
+        div.onclick = function () { selectFile(this, `${appName}.app`, 'Installed Store Application', '128 MB'); };
+        div.ondblclick = function () {
+          if (targetWindow && targetWindow.startsWith('win-')) openWindow(targetWindow);
+          else triggerNotification(`Launched ${appName}`);
+        };
+        div.innerHTML = `
+          <div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#007aff,#5856d6);display:flex;align-items:center;justify-content:center;font-size:24px;color:white;">✨</div>
+          <span class="app-title">${appName}.app</span>
+        `;
+        appsGrid.appendChild(div);
+      }
+
+      playHarmonicChime([523.25, 659.25, 783.99, 1046.5], 0.3);
+      triggerNotification(`${appName} installed to /Applications!`);
+    }, 900);
+  }
+  window.installStoreApp = installStoreApp;
+
+  // --- Messages.app ---
+  const messageThreads = [
+    {
+      name: 'Alex (Studio Engineer)',
+      messages: [
+        { from: 'incoming', text: 'Hey! Have you tested the new PipeWire 0.6ms buffer in Sonata?' },
+        { from: 'outgoing', text: 'Yes! Zero audio dropouts even with 120Hz window dragging.' },
+        { from: 'incoming', text: 'PipeWire latency is 0.6ms! Way cleaner than Windows WASAPI.' }
+      ]
+    },
+    {
+      name: 'Zorin & pearOS Core Team',
+      messages: [
+        { from: 'incoming', text: 'We just merged the pearOS Launchpad + Zorin Taskbar layout switcher.' },
+        { from: 'incoming', text: 'GNOME 47 workspaces ready — try clicking Activities in the top bar!' }
+      ]
+    },
+    {
+      name: 'Maestro AI Assistant',
+      messages: [
+        { from: 'incoming', text: 'Hello! I am Maestro, your local zero-telemetry Toccata assistant. Ask me anything!' }
+      ]
+    }
+  ];
+  let activeThreadIdx = 0;
+
+  function renderMessageThread() {
+    const thread = messageThreads[activeThreadIdx];
+    const headerEl = document.getElementById('messages-recipient-name');
+    const historyEl = document.getElementById('messages-chat-history');
+    if (headerEl && thread) headerEl.textContent = thread.name;
+    if (historyEl && thread) {
+      historyEl.innerHTML = thread.messages.map(m => `
+        <div class="chat-bubble ${m.from}">${escapeHtml(m.text)}</div>
+      `).join('');
+      historyEl.scrollTop = historyEl.scrollHeight;
+    }
+  }
+
+  function selectMessageThread(idx, rowEl) {
+    activeThreadIdx = idx;
+    document.querySelectorAll('#win-messages .finder-sidebar .sidebar-row').forEach(r => r.classList.remove('active'));
+    rowEl?.classList.add('active');
+    renderMessageThread();
+    playHarmonicChime([523.25], 0.1);
+  }
+  window.selectMessageThread = selectMessageThread;
+
+  function sendChatMessage() {
+    const input = document.getElementById('messages-input-box');
+    if (!input) return;
+    const txt = input.value.trim();
+    if (!txt) return;
+    input.value = '';
+    messageThreads[activeThreadIdx].messages.push({ from: 'outgoing', text: txt });
+    renderMessageThread();
+    playHarmonicChime([587.33, 783.99], 0.15);
+
+    setTimeout(() => {
+      const replies = [
+        'Sounds awesome! Everything is running at 120Hz.',
+        'Got it! Synced across your local Btrfs volume.',
+        'Maestro: Command verified with zero telemetry.'
+      ];
+      messageThreads[activeThreadIdx].messages.push({
+        from: 'incoming',
+        text: replies[activeThreadIdx % replies.length]
+      });
+      renderMessageThread();
+      playHarmonicChime([523.25], 0.12);
+    }, 650);
+  }
+  window.sendChatMessage = sendChatMessage;
+
+  renderMessageThread();
+
+  // --- Mail.app ---
+  const mailItems = [
+    {
+      subject: 'Welcome to Toccata OS (pearOS + Zorin + GNOME 47)',
+      from: 'From: core@toccata.os • Today, 1:45 AM',
+      body: `<p>Welcome to <strong>Toccata OS</strong>! Your desktop environment combines the finest workflows of <strong>pearOS NiceC0re</strong>, <strong>Zorin OS 18</strong>, and <strong>GNOME 47</strong>:</p>
+             <ul style="margin: 10px 0 10px 20px;">
+               <li>Switch instantly between <strong>macOS Sequoia</strong>, <strong>pearOS</strong>, <strong>Windows 11 (Zorin Start Menu)</strong>, and <strong>GNOME 47</strong> in System Settings &rarr; Desktop &amp; Dock.</li>
+               <li>Drag any window to the left, right, or top screen edge to trigger <strong>Zorin / GNOME Window Tiling</strong>.</li>
+               <li>Click <strong>Launchpad</strong> or <strong>Activities</strong> to switch between Virtual Workspaces 1, 2, and 3.</li>
+             </ul>`
+    },
+    {
+      subject: '0.667ms Bit-Perfect Audio Verified on PipeWire',
+      from: 'From: studio@pipewire.io • Yesterday, 8:15 PM',
+      body: `<p>Your hardware audio sink is locked at <strong>64 frames / 96,000 Hz</strong> with zero resampling jitter.</p>
+             <p style="margin-top:8px;">Open <strong>Sonata.app</strong> or <strong>System Settings &rarr; Sound</strong> to switch between Internal Speakers, AirPods Pro, and Studio USB DAC.</p>`
+    },
+    {
+      subject: 'Production Deployment Live on toccataos.vercel.app',
+      from: 'From: ci-cd@vercel.com • Yesterday, 4:30 PM',
+      body: `<p>Your repository <code>kicode01/toccata-os</code> is connected to automatic production deployments and 1:1 QEMU VM live-sync.</p>`
+    }
+  ];
+
+  function selectMailItem(idx, rowEl) {
+    document.querySelectorAll('#mail-inbox-list .sidebar-row').forEach(r => r.classList.remove('active'));
+    rowEl?.classList.add('active');
+    const item = mailItems[idx];
+    if (!item) return;
+    const subj = document.getElementById('mail-subject');
+    const from = document.getElementById('mail-from');
+    const body = document.getElementById('mail-body');
+    if (subj) subj.textContent = item.subject;
+    if (from) from.textContent = item.from;
+    if (body) body.innerHTML = item.body;
+    playHarmonicChime([523.25], 0.1);
+  }
+  window.selectMailItem = selectMailItem;
+
+  function promptComposeMail() {
+    const replyInput = document.getElementById('mail-quick-reply');
+    if (replyInput) replyInput.focus();
+    triggerNotification('Mail: Ready to compose message below');
+  }
+  window.promptComposeMail = promptComposeMail;
+
+  function sendQuickMailReply() {
+    const replyInput = document.getElementById('mail-quick-reply');
+    if (!replyInput || !replyInput.value.trim()) {
+      triggerNotification('Write a reply message first');
+      return;
+    }
+    const txt = replyInput.value.trim();
+    replyInput.value = '';
+    const body = document.getElementById('mail-body');
+    if (body) {
+      body.innerHTML += `<div style="margin-top:14px;padding:10px 14px;border-radius:10px;background:rgba(0,122,255,0.14);border-left:3px solid var(--accent-color);"><strong>You replied:</strong><br>${escapeHtml(txt)}</div>`;
+    }
+    playHarmonicChime([523.25, 659.25, 783.99], 0.2);
+    triggerNotification('Mail reply sent via encrypted bridge');
+  }
+  window.sendQuickMailReply = sendQuickMailReply;
 
   // Initial focus
   bringToFront(document.getElementById('win-cadence'));
