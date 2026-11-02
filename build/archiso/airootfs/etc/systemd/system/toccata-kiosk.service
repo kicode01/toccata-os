@@ -13,11 +13,10 @@ RuntimeDirectoryMode=0700
 Environment=XDG_RUNTIME_DIR=/run/toccata
 Environment=XDG_SESSION_TYPE=wayland
 Environment=XDG_CURRENT_DESKTOP=Toccata
-Environment=WLR_BACKENDS=drm
+Environment=WLR_BACKENDS=drm,libinput
 Environment=LIBSEAT_BACKEND=seatd
 Environment=WLR_RENDERER_ALLOW_SOFTWARE=1
-Environment=WLR_RENDERER=gles2
-Environment=WLR_LIBINPUT_NO_DEVICES=1
+Environment=WLR_RENDERER=pixman
 Environment=WLR_NO_HARDWARE_CURSORS=1
 ExecStart=/usr/local/bin/toccata-kiosk-session
 Restart=always

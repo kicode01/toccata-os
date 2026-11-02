@@ -75,8 +75,8 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 mkdir -p "$WORK_DIR" "$OUT_DIR" "$FINAL_OUT_DIR"
-rm -rf "$BUILD_PROFILE"
-mkdir -p "$BUILD_PROFILE"
+rm -rf "$BUILD_PROFILE" "$WORK_DIR" "$OUT_DIR"/toccata-os-*.iso
+mkdir -p "$BUILD_PROFILE" "$WORK_DIR" "$OUT_DIR"
 
 echo "[1/3] Staging build profile to fast ext4 storage ($BUILD_PROFILE)..."
 cp -a "$PROFILE_DIR"/* "$BUILD_PROFILE"/

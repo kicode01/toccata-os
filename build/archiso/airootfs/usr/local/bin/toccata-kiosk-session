@@ -7,15 +7,16 @@ echo "[*] Initializing Toccata Kiosk Session..."
 
 # Do NOT export WAYLAND_DISPLAY before Cage initializes (otherwise wlroots attempts nested wayland connection)
 unset WAYLAND_DISPLAY
+unset WLR_LIBINPUT_NO_DEVICES
+unset WLR_DRM_NO_ATOMIC
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/toccata}"
 export XDG_CURRENT_DESKTOP="Toccata"
 export MOZ_ENABLE_WAYLAND=1
 export QT_QPA_PLATFORM=wayland
-export WLR_BACKENDS="drm"
+export WLR_BACKENDS="drm,libinput"
 export LIBSEAT_BACKEND="seatd"
 export WLR_RENDERER_ALLOW_SOFTWARE=1
-export WLR_RENDERER="gles2"
-export WLR_LIBINPUT_NO_DEVICES=1
+export WLR_RENDERER="pixman"
 export WLR_NO_HARDWARE_CURSORS=1
 
 # Ensure runtime directory exists
@@ -47,24 +48,19 @@ if [ -f /usr/share/sounds/boot-sound.wav ]; then
     pw-play /usr/share/sounds/boot-sound.wav 2>/dev/null &
 fi
 
-echo "[*] Launching Cage Wayland compositor with Chromium Kiosk on DRM..."
+echo "[*] Launching Cage Wayland compositor with Chromium Kiosk on DRM + libinput..."
 
-# Launch Cage Wayland compositor with Chromium Ozone full-screen kiosk
+# Launch Cage Wayland compositor with Xwayland MIT-SHM software rasterizer (zero GPU flicker, full-screen pixman damage)
 exec cage -d -s -- chromium \
     --kiosk \
-    --ozone-platform=wayland \
-    --enable-features=UseOzonePlatform,OverlayScrollbar \
-    --ignore-gpu-blocklist \
-    --enable-gpu-rasterization \
-    --enable-zero-copy \
-    --disable-gpu-watchdog \
-    --disable-gpu-sandbox \
+    --ozone-platform=x11 \
+    --disable-gpu \
+    --disable-gpu-compositing \
     --disable-dev-shm-usage \
     --no-first-run \
     --no-default-browser-check \
     --password-store=basic \
     --disable-translate \
-    --disable-features=Translate \
     --autoplay-policy=no-user-gesture-required \
     --disable-infobars \
     --disable-session-crashed-bubble \

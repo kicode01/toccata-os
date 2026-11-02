@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ==============================================================================
 # TOCCATA OS - Hardware-Accelerated QEMU Live VM Launcher
-# Uses KVM vCPU acceleration + Direct3D 12 VirtIO GPU via WSLg
+# Uses KVM vCPU acceleration + Standard Bochs DRM + USB Tablet 1:1 Pointer
 # ==============================================================================
 
 set -euo pipefail
@@ -47,7 +47,7 @@ echo "==========================================================================
 echo "   Starting Real OS Virtual Machine: $TITLE"
 echo "   Image: $ISO"
 echo "   Specs: $RAM MB RAM • $CORES vCPUs (KVM Hardware Accelerated)"
-echo "   Audio: PipeWire/PulseServer Bridge  •  Display: VirtIO Direct3D 12"
+echo "   Audio: PipeWire/PulseServer Bridge  •  Input: 1:1 USB Tablet + VirtIO Keyboard"
 echo "==============================================================================="
 
 KVM_FLAG=""
@@ -67,8 +67,11 @@ exec qemu-system-x86_64 \
     -smp "$CORES" \
     -cdrom "$ISO" \
     -boot d \
-    -vga qxl \
-    -display gtk \
+    -vga std \
+    -usb \
+    -device usb-tablet \
+    -device virtio-keyboard-pci \
+    -display gtk,grab-on-hover=on,zoom-to-fit=on \
     -device intel-hda \
     -device hda-duplex \
     -net nic,model=virtio \

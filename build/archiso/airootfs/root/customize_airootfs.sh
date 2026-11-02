@@ -34,3 +34,8 @@ chown -R toccata:toccata /home/toccata
 chmod 755 /home/toccata
 chmod 755 /usr/local/bin/*
 chmod +x /usr/local/share/toccata/toccata-bridge/server.py 2>/dev/null || true
+if [ -f /etc/sudoers.d/toccata ]; then
+    chown 0:0 /etc/sudoers.d/toccata
+    chmod 440 /etc/sudoers.d/toccata
+fi
+fc-cache -rf 2>/dev/null || true

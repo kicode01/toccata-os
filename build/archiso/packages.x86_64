@@ -72,7 +72,6 @@ archinstall
 # 8. Typography & Assets (Inter Display + Apple Standard)
 inter-font
 ttf-jetbrains-mono
-noto-fonts
 noto-fonts-emoji
 ttf-dejavu
 
