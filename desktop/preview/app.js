@@ -3416,17 +3416,17 @@ Or search packages in Gallery.app.`;
     playHarmonicChime([330, 440, 554.37, 659.25, 880], 0.5);
     bootSplashTimer = setTimeout(() => {
       dismissBootSplash();
-    }, 2200);
+    }, 3400);
   }
   window.replayBootSplash = replayBootSplash;
 
-  // Auto-dismiss initial welcome boot splash after assembly sequence finishes
+  // Auto-dismiss initial welcome boot splash after volumetric god-ray sweep finishes
   bootSplashTimer = setTimeout(() => {
     const splash = document.getElementById('toccata-boot-splash');
     if (splash && !splash.classList.contains('boot-dismissed')) {
       splash.classList.add('boot-dismissed');
     }
-  }, 2150);
+  }, 3350);
 
   // ==========================================================================
   // LIVE-SYNC HOT RELOAD (1:1 Instant Updates inside Native Linux Kiosk / VM)
