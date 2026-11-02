@@ -3392,6 +3392,43 @@ Or search packages in Gallery.app.`;
   bringToFront(document.getElementById('win-cadence'));
 
   // ==========================================================================
+  // TOCCATA OS ANIMATED WELCOME / BOOT SPLASH CONTROLLER
+  // ==========================================================================
+  let bootSplashTimer = null;
+
+  function dismissBootSplash() {
+    const splash = document.getElementById('toccata-boot-splash');
+    if (!splash || splash.classList.contains('boot-dismissed')) return;
+    if (bootSplashTimer) clearTimeout(bootSplashTimer);
+    playHarmonicChime([440, 554.37, 659.25, 880], 0.45);
+    splash.classList.add('boot-dismissed');
+  }
+  window.dismissBootSplash = dismissBootSplash;
+
+  function replayBootSplash() {
+    const splash = document.getElementById('toccata-boot-splash');
+    if (!splash) return;
+    if (bootSplashTimer) clearTimeout(bootSplashTimer);
+    splash.classList.remove('boot-dismissed');
+    // Force reflow to restart all SVG & progress bar animations cleanly
+    const clone = splash.cloneNode(true);
+    splash.parentNode.replaceChild(clone, splash);
+    playHarmonicChime([330, 440, 554.37, 659.25, 880], 0.5);
+    bootSplashTimer = setTimeout(() => {
+      dismissBootSplash();
+    }, 2200);
+  }
+  window.replayBootSplash = replayBootSplash;
+
+  // Auto-dismiss initial welcome boot splash after assembly sequence finishes
+  bootSplashTimer = setTimeout(() => {
+    const splash = document.getElementById('toccata-boot-splash');
+    if (splash && !splash.classList.contains('boot-dismissed')) {
+      splash.classList.add('boot-dismissed');
+    }
+  }, 2150);
+
+  // ==========================================================================
   // LIVE-SYNC HOT RELOAD (1:1 Instant Updates inside Native Linux Kiosk / VM)
   // ==========================================================================
   if (IS_NATIVE_KIOSK) {
