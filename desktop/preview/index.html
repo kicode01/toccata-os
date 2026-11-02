@@ -805,7 +805,7 @@
     <!-- ====================================================================
          WINDOW 2: SCRIBE (Prose & Code Canvas)
          ==================================================================== -->
-    <div class="window glass-panel hidden" id="win-scribe" style="top: 80px; left: calc(50% - 370px); width: 740px; height: 510px;">
+    <div class="window glass-panel hidden" id="win-scribe" style="top: 72px; left: calc(50% - 430px); width: 860px; height: 530px;">
       <div class="window-titlebar">
         <div class="traffic-lights">
           <button class="tl-btn tl-close" onclick="closeWindow('win-scribe')"></button>
@@ -830,6 +830,7 @@
           <span class="tb-divider"></span>
           <span class="tb-font-picker">JetBrains Mono &bull; 14pt</span>
           <span class="tb-tag">Autosaved to Core</span>
+          <button class="btn btn-secondary" onclick="exportScribeDocument()" title="Export Markdown File" style="font-size: 11px; padding: 2px 8px; margin-left: 6px;">Export .md</button>
         </div>
 
         <div class="scribe-split-container">
@@ -2026,6 +2027,21 @@ Every administrative task is accessible visually:
           <button class="toolbar-icon-btn" onclick="changeSonataTrack(-1)" title="Previous Movement"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
           <button class="play-round-btn" id="sonata-play-btn" onclick="toggleSonataPlayback()"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align: middle;"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
           <button class="toolbar-icon-btn" onclick="changeSonataTrack(1)" title="Next Movement"><svg viewBox="0 0 24 24" fill="currentColor"><path d="m6 18 8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+          <button class="toolbar-icon-btn" onclick="toggleSonataEqualizer()" id="sonata-eq-btn" title="5-Band Graphic Equalizer" style="font-size: 11px; font-weight: 700; width: 34px; height: 30px; margin-left: 8px;">EQ</button>
+        </div>
+
+        <div class="sonata-eq-drawer hidden" id="sonata-eq-drawer">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text-secondary);">5-Band Parametric Graphic EQ (PipeWire DSP)</span>
+            <button class="btn btn-secondary" onclick="resetSonataEq()" style="padding:2px 8px;font-size:10px;">Reset Flat</button>
+          </div>
+          <div class="eq-sliders-row">
+            <div class="eq-band-col"><span>+12</span><input type="range" min="-12" max="12" value="0" step="0.5" oninput="setSonataEqGain(0, this.value)"><span>60Hz</span></div>
+            <div class="eq-band-col"><span>+12</span><input type="range" min="-12" max="12" value="0" step="0.5" oninput="setSonataEqGain(1, this.value)"><span>250Hz</span></div>
+            <div class="eq-band-col"><span>+12</span><input type="range" min="-12" max="12" value="0" step="0.5" oninput="setSonataEqGain(2, this.value)"><span>1kHz</span></div>
+            <div class="eq-band-col"><span>+12</span><input type="range" min="-12" max="12" value="0" step="0.5" oninput="setSonataEqGain(3, this.value)"><span>4kHz</span></div>
+            <div class="eq-band-col"><span>+12</span><input type="range" min="-12" max="12" value="0" step="0.5" oninput="setSonataEqGain(4, this.value)"><span>12kHz</span></div>
+          </div>
         </div>
 
         <div class="pipewire-output-box">
@@ -2079,8 +2095,9 @@ Every administrative task is accessible visually:
           </div>
 
           <div style="display: flex; gap: 8px;">
+            <button class="toolbar-icon-btn" onclick="toggleWebInspector()" title="Web Inspector (Elements &amp; Console)"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></button>
             <button class="toolbar-icon-btn" onclick="triggerNotification('Bookmark saved to Horizon Favorites')" title="Add Bookmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m19 21-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
-            <button class="toolbar-icon-btn" onclick="triggerNotification('Private Tab created')" title="New Tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14m-7-7h14"/></svg></button>
+            <button class="toolbar-icon-btn" onclick="createNewHorizonTab()" title="New Tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14m-7-7h14"/></svg></button>
           </div>
         </div>
 
@@ -2161,7 +2178,10 @@ Type 'help' to view available commands.</div>
           <button class="tl-btn tl-maximize" disabled title="Zoom Disabled" style="opacity: 0.35; cursor: default;"></button>
         </div>
         <div class="window-title"><span class="proxy-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><circle cx="8" cy="11" r="1" fill="currentColor"/><circle cx="12" cy="11" r="1" fill="currentColor"/><circle cx="16" cy="11" r="1" fill="currentColor"/><circle cx="8" cy="15" r="1" fill="currentColor"/><circle cx="12" cy="15" r="1" fill="currentColor"/><circle cx="16" cy="15" r="1" fill="currentColor"/><circle cx="8" cy="19" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/><circle cx="16" cy="19" r="1" fill="currentColor"/></svg></span>Calculator</div>
-        <div class="titlebar-placeholder"></div>
+        <div style="display: flex; gap: 4px; align-items: center;">
+          <button class="toolbar-icon-btn" onclick="toggleCalcSciMode()" id="calc-sci-toggle" title="Scientific Functions" style="font-size: 10px; font-weight: 700; width: 24px; height: 24px;">fx</button>
+          <button class="toolbar-icon-btn" onclick="toggleCalcHistory()" title="Calculation Paper Tape" style="width: 24px; height: 24px;"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></button>
+        </div>
       </div>
 
       <div class="window-body calc-body">
@@ -2170,30 +2190,51 @@ Type 'help' to view available commands.</div>
           <div class="calc-screen-main" id="calc-main-display">0</div>
         </div>
 
-        <div class="calc-keypad">
-          <button class="calc-key calc-key-fn" onclick="calcAction('clear')">AC</button>
-          <button class="calc-key calc-key-fn" onclick="calcAction('invert')">&plusmn;</button>
-          <button class="calc-key calc-key-fn" onclick="calcAction('percent')">%</button>
-          <button class="calc-key calc-key-op" onclick="calcAction('op', '/')">&divide;</button>
+        <div style="display: flex;">
+          <!-- Scientific Keypad Extension (hidden by default) -->
+          <div class="calc-sci-grid hidden" id="calc-sci-grid">
+            <button class="calc-key calc-key-fn" onclick="calcAction('fn', 'sin')">sin</button>
+            <button class="calc-key calc-key-fn" onclick="calcAction('fn', 'cos')">cos</button>
+            <button class="calc-key calc-key-fn" onclick="calcAction('fn', 'tan')">tan</button>
+            <button class="calc-key calc-key-fn" onclick="calcAction('fn', 'sqrt')">&radic;</button>
+            <button class="calc-key calc-key-fn" onclick="calcAction('fn', 'sqr')">x&sup2;</button>
+            <button class="calc-key calc-key-fn" onclick="calcAction('fn', 'ln')">ln</button>
+            <button class="calc-key calc-key-fn" onclick="calcAction('fn', 'pi')">&pi;</button>
+            <button class="calc-key calc-key-fn" onclick="calcAction('fn', 'e')">e</button>
+            <button class="calc-key calc-key-fn" onclick="calcAction('fn', 'pow')">x&#696;</button>
+          </div>
 
-          <button class="calc-key calc-key-num" onclick="calcAction('num', '7')">7</button>
-          <button class="calc-key calc-key-num" onclick="calcAction('num', '8')">8</button>
-          <button class="calc-key calc-key-num" onclick="calcAction('num', '9')">9</button>
-          <button class="calc-key calc-key-op" onclick="calcAction('op', '*')">&times;</button>
+          <div class="calc-keypad" style="flex: 1;">
+            <button class="calc-key calc-key-fn" onclick="calcAction('clear')">AC</button>
+            <button class="calc-key calc-key-fn" onclick="calcAction('invert')">&plusmn;</button>
+            <button class="calc-key calc-key-fn" onclick="calcAction('percent')">%</button>
+            <button class="calc-key calc-key-op" onclick="calcAction('op', '/')">&divide;</button>
 
-          <button class="calc-key calc-key-num" onclick="calcAction('num', '4')">4</button>
-          <button class="calc-key calc-key-num" onclick="calcAction('num', '5')">5</button>
-          <button class="calc-key calc-key-num" onclick="calcAction('num', '6')">6</button>
-          <button class="calc-key calc-key-op" onclick="calcAction('op', '-')">&minus;</button>
+            <button class="calc-key calc-key-num" onclick="calcAction('num', '7')">7</button>
+            <button class="calc-key calc-key-num" onclick="calcAction('num', '8')">8</button>
+            <button class="calc-key calc-key-num" onclick="calcAction('num', '9')">9</button>
+            <button class="calc-key calc-key-op" onclick="calcAction('op', '*')">&times;</button>
 
-          <button class="calc-key calc-key-num" onclick="calcAction('num', '1')">1</button>
-          <button class="calc-key calc-key-num" onclick="calcAction('num', '2')">2</button>
-          <button class="calc-key calc-key-num" onclick="calcAction('num', '3')">3</button>
-          <button class="calc-key calc-key-op" onclick="calcAction('op', '+')">+</button>
+            <button class="calc-key calc-key-num" onclick="calcAction('num', '4')">4</button>
+            <button class="calc-key calc-key-num" onclick="calcAction('num', '5')">5</button>
+            <button class="calc-key calc-key-num" onclick="calcAction('num', '6')">6</button>
+            <button class="calc-key calc-key-op" onclick="calcAction('op', '-')">&minus;</button>
 
-          <button class="calc-key calc-key-num" style="grid-column: span 2;" onclick="calcAction('num', '0')">0</button>
-          <button class="calc-key calc-key-num" onclick="calcAction('dot')">.</button>
-          <button class="calc-key calc-key-op" onclick="calcAction('equals')">=</button>
+            <button class="calc-key calc-key-num" onclick="calcAction('num', '1')">1</button>
+            <button class="calc-key calc-key-num" onclick="calcAction('num', '2')">2</button>
+            <button class="calc-key calc-key-num" onclick="calcAction('num', '3')">3</button>
+            <button class="calc-key calc-key-op" onclick="calcAction('op', '+')">+</button>
+
+            <button class="calc-key calc-key-num" style="grid-column: span 2;" onclick="calcAction('num', '0')">0</button>
+            <button class="calc-key calc-key-num" onclick="calcAction('dot')">.</button>
+            <button class="calc-key calc-key-op" onclick="calcAction('equals')">=</button>
+          </div>
+
+          <!-- Slide-out Paper Tape Drawer (alongside keypad) -->
+          <div class="calc-tape-drawer hidden" id="calc-tape-drawer" style="width: 150px; position: static; height: 260px; border-left: 1px solid var(--glass-border); border-top: none; margin-left: 8px; border-radius: 8px;">
+            <div style="font-weight: 700; font-size: 11px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 8px;">History Tape</div>
+            <div style="font-size: 11px; color: var(--text-secondary); opacity: 0.7;">No recent calculations</div>
+          </div>
         </div>
       </div>
       <!-- Window Resizer Handles -->
@@ -2231,6 +2272,16 @@ Type 'help' to view available commands.</div>
           </div>
 
           <button class="btn btn-secondary" onclick="togglePrismExif()" style="font-size: 11px; padding: 3px 10px;">EXIF Info</button>
+          <button class="btn btn-primary" onclick="setPrismAsWallpaper()" style="font-size: 11px; padding: 3px 12px; margin-left: 6px;">Set as Wallpaper</button>
+        </div>
+
+        <!-- Real-time Adjustments Bar -->
+        <div class="prism-adjustments-bar" id="prism-adjustments-bar">
+          <div class="prism-slider-group"><span>Exp</span><input type="range" id="prism-slider-exp" min="50" max="150" value="100" oninput="updatePrismAdjustments()"></div>
+          <div class="prism-slider-group"><span>Contrast</span><input type="range" id="prism-slider-con" min="50" max="150" value="100" oninput="updatePrismAdjustments()"></div>
+          <div class="prism-slider-group"><span>Sat</span><input type="range" id="prism-slider-sat" min="0" max="200" value="100" oninput="updatePrismAdjustments()"></div>
+          <div class="prism-slider-group"><span>Blur</span><input type="range" id="prism-slider-blur" min="0" max="8" value="0" step="0.5" oninput="updatePrismAdjustments()"></div>
+          <button class="btn btn-secondary" onclick="resetPrismAdjustments()" style="font-size: 10px; padding: 2px 8px; margin-left: auto;">Reset</button>
         </div>
 
         <div class="prism-canvas-area">
@@ -2245,6 +2296,13 @@ Type 'help' to view available commands.</div>
             <span>10-bit HDR</span>
             <span>120Hz ProMotion</span>
           </div>
+        </div>
+
+        <!-- Filmstrip Photo Library -->
+        <div class="prism-filmstrip" id="prism-filmstrip">
+          <div class="prism-thumb active" onclick="setPrismActivePhoto(0)" style="background: radial-gradient(circle at 30% 30%, #38bdf8 0%, #007aff 40%, #af52de 85%, #ff2d55 100%);" title="Sonata Dynamic Topography"></div>
+          <div class="prism-thumb" onclick="setPrismActivePhoto(1)" style="background: radial-gradient(circle at 70% 30%, #1e1b4b 0%, #0f172a 60%, #000000 100%);" title="Deep Space Nebula HDR"></div>
+          <div class="prism-thumb" onclick="setPrismActivePhoto(2)" style="background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 50%, #3b82f6 100%);" title="Acoustic Wave Resonance"></div>
         </div>
       </div>
 
@@ -2273,6 +2331,11 @@ Type 'help' to view available commands.</div>
           <div class="pomodoro-box">
             <span style="font-weight: 700; font-size: 12px; color: var(--text-secondary);">FOCUS SESSION</span>
             <div class="pomodoro-digits" id="pomo-display">25:00</div>
+            <div style="display: flex; gap: 6px; margin-bottom: 2px;">
+              <button class="btn btn-secondary" onclick="setPomoDuration(25)" style="padding: 2px 6px; font-size: 10px;">25m</button>
+              <button class="btn btn-secondary" onclick="setPomoDuration(5)" style="padding: 2px 6px; font-size: 10px;">5m</button>
+              <button class="btn btn-secondary" onclick="setPomoDuration(15)" style="padding: 2px 6px; font-size: 10px;">15m</button>
+            </div>
             <div style="display: flex; gap: 8px;">
               <button class="btn btn-primary" id="pomo-toggle-btn" onclick="togglePomodoro()" style="padding: 4px 14px; font-size: 12px;">Start</button>
               <button class="btn btn-secondary" onclick="resetPomodoro()" style="padding: 4px 10px; font-size: 12px;">Reset</button>
@@ -2298,7 +2361,8 @@ Type 'help' to view available commands.</div>
         <main class="chronicle-main">
           <div class="cal-month-header">
             <span style="font-size: 18px; font-weight: 800;" id="cal-month-title">November 2026</span>
-            <div style="display: flex; gap: 6px;">
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <button class="btn btn-primary" onclick="promptAddCalEvent()" style="padding: 3px 10px; font-size: 11px; margin-right: 6px;">+ Add Event</button>
               <button class="toolbar-icon-btn" onclick="changeCalMonth(-1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg></button>
               <button class="toolbar-icon-btn" onclick="changeCalMonth(1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></button>
             </div>
@@ -2702,5 +2766,6 @@ Type 'help' to view available commands.</div>
   </div>
 
   <script src="app.js"></script>
+  <script src="app_suite.js"></script>
 </body>
 </html>

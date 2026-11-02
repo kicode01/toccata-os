@@ -427,12 +427,30 @@ body {
   max-height: calc(100vh - 100px);
 }
 
-.calc-window {
+.calc-window:not(.scientific-mode):not(.with-tape) {
   width: 280px !important;
   min-width: 260px !important;
   max-width: 320px !important;
   min-height: 390px !important;
   max-height: 480px !important;
+}
+
+.calc-window.scientific-mode:not(.with-tape) {
+  width: 460px !important;
+  min-width: 440px !important;
+  max-width: 500px !important;
+}
+
+.calc-window.with-tape:not(.scientific-mode) {
+  width: 440px !important;
+  min-width: 420px !important;
+  max-width: 480px !important;
+}
+
+.calc-window.scientific-mode.with-tape {
+  width: 600px !important;
+  min-width: 580px !important;
+  max-width: 660px !important;
 }
 
 /* Universal .window-body Contract (Universal flex-1 container for all applications) */
@@ -2719,12 +2737,30 @@ body.light-mode .slider-leading-icon {
 }
 
 /* 3. SOLFEGE CALCULATOR (Apple Compact Glass Precision) */
-.calc-window {
+.calc-window:not(.scientific-mode):not(.with-tape) {
   width: 280px !important;
   min-width: 260px !important;
   max-width: 320px !important;
   min-height: 390px !important;
   max-height: 480px !important;
+}
+
+.calc-window.scientific-mode:not(.with-tape) {
+  width: 460px !important;
+  min-width: 440px !important;
+  max-width: 500px !important;
+}
+
+.calc-window.with-tape:not(.scientific-mode) {
+  width: 440px !important;
+  min-width: 420px !important;
+  max-width: 480px !important;
+}
+
+.calc-window.scientific-mode.with-tape {
+  width: 600px !important;
+  min-width: 580px !important;
+  max-width: 660px !important;
 }
 
 .calc-body {
@@ -3814,6 +3850,215 @@ body.true-tone-active #desktop {
     animation: none !important;
   }
 }
+
+/* ==========================================================================
+   SOVEREIGN APPLICATION SUITE ENHANCEMENTS
+   Rich Interactive Desktop UI for all 12 Native Applications
+   ========================================================================== */
+
+/* 1. Universal Glass Modal Backdrops */
+.toccata-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 99000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.16s ease;
+}
+
+.toccata-modal-sheet {
+  background: var(--glass-bg);
+  backdrop-filter: blur(35px);
+  -webkit-backdrop-filter: blur(35px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+  border-radius: 16px;
+  overflow: hidden;
+  animation: sheetPop 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes sheetPop {
+  0% { transform: scale(0.94); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* 2. Cadence File Context Menu */
+.file-context-menu {
+  position: fixed;
+  z-index: 99999;
+  background: var(--menu-bg);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  padding: 6px;
+  min-width: 175px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.file-context-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.file-context-menu-item:hover {
+  background: var(--accent-color);
+  color: #ffffff;
+}
+
+.file-context-menu-divider {
+  height: 1px;
+  background: var(--glass-border);
+  margin: 4px 0;
+}
+
+/* 3. Solfege Calculator Tape Drawer & Scientific Mode */
+.calc-tape-drawer {
+  position: absolute;
+  top: 38px;
+  right: 0;
+  width: 180px;
+  bottom: 0;
+  background: rgba(18, 18, 22, 0.94);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-left: 1px solid var(--glass-border);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  z-index: 20;
+  box-shadow: -8px 0 24px rgba(0,0,0,0.4);
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.calc-tape-drawer.hidden {
+  display: none !important;
+}
+
+.calc-window.scientific-mode {
+  width: 460px !important;
+}
+
+.calc-sci-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-right: 8px;
+  padding-right: 8px;
+  border-right: 1px solid var(--glass-border);
+}
+
+/* 4. Sonata Graphic Equalizer */
+.sonata-eq-drawer {
+  background: rgba(0, 0, 0, 0.22);
+  border-top: 1px solid var(--glass-border);
+  padding: 12px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: fadeIn 0.18s ease;
+}
+
+.eq-sliders-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.eq-band-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+
+.eq-band-col input[type="range"] {
+  writing-mode: vertical-lr;
+  direction: rtl;
+  width: 16px;
+  height: 76px;
+  accent-color: var(--accent-color);
+  cursor: pointer;
+}
+
+/* 5. Prism Photo Filmstrip & Adjustments */
+.prism-filmstrip {
+  display: flex;
+  gap: 10px;
+  padding: 8px 16px;
+  background: rgba(0, 0, 0, 0.28);
+  border-top: 1px solid var(--glass-border);
+  overflow-x: auto;
+  align-items: center;
+}
+
+.prism-thumb {
+  width: 64px;
+  height: 44px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.15s ease;
+  overflow: hidden;
+  flex-shrink: 0;
+  background-size: cover;
+  background-position: center;
+}
+
+.prism-thumb.active {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.prism-adjustments-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 16px;
+  background: rgba(0, 0, 0, 0.18);
+  border-top: 1px solid var(--glass-border);
+  font-size: 11px;
+}
+
+.prism-slider-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+}
+
+.prism-slider-group input[type="range"] {
+  width: 68px;
+  accent-color: var(--accent-color);
+}
+
+/* 6. Chronicle Calendar Selection */
+.cal-day-cell.selected {
+  background: var(--accent-color) !important;
+  color: #ffffff !important;
+  font-weight: 700;
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
 
 
 
