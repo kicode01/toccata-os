@@ -120,16 +120,16 @@
   const activeAppTitle = document.getElementById('active-app-title');
 
   const windowDockMap = {
-    'win-cadence': document.querySelector('.dock-item[data-app="Cadence"]'),
-    'win-horizon': document.querySelector('.dock-item[data-app="Horizon"]'),
-    'win-scribe': document.querySelector('.dock-item[data-app="Scribe"]'),
-    'win-sonata': document.querySelector('.dock-item[data-app="Sonata"]'),
-    'win-tempo': document.querySelector('.dock-item[data-app="Tempo"]'),
-    'win-console': document.querySelector('.dock-item[data-app="Console"]'),
+    'win-cadence': document.querySelector('.dock-item[data-app="Finder"]'),
+    'win-horizon': document.querySelector('.dock-item[data-app="Safari"]'),
+    'win-scribe': document.querySelector('.dock-item[data-app="Notes"]'),
+    'win-sonata': document.querySelector('.dock-item[data-app="Music"]'),
+    'win-tempo': document.querySelector('.dock-item[data-app="Activity Monitor"]'),
+    'win-console': document.querySelector('.dock-item[data-app="Terminal"]'),
     'win-calc': document.querySelector('.dock-item[data-app="Calculator"]'),
     'win-prism': document.querySelector('.dock-item[data-app="Prism"]'),
     'win-chronicle': document.querySelector('.dock-item[data-app="Chronicle"]'),
-    'win-installer': document.querySelector('.dock-item[data-app="Gallery"]'),
+    'win-installer': document.querySelector('.dock-item[data-app="App Store"]'),
     'win-settings': document.querySelector('.dock-item[data-app="System Settings"]')
   };
 
@@ -162,17 +162,22 @@
     }
     windowEl.classList.add('active-window');
 
-    const titleEl = windowEl.querySelector('.window-title');
+    const titleEl = windowEl.querySelector('.window-title, .toolbar-title');
     if (titleEl && activeAppTitle) {
-      const rawTitle = titleEl.textContent;
-      activeAppTitle.textContent = rawTitle.includes('—') ? rawTitle.split('—')[0].trim() : rawTitle.trim();
+      const clone = titleEl.cloneNode(true);
+      clone.querySelectorAll('.proxy-icon, svg').forEach(el => el.remove());
+      const rawTitle = (clone.textContent || '').replace(/^[^\wA-Za-z]+/, '').trim();
+      const appName = rawTitle.includes('—') ? rawTitle.split('—')[0].trim() : rawTitle.trim();
+      if (appName) {
+        activeAppTitle.textContent = appName === 'Cadence' ? 'Finder' : appName;
+      }
     }
   }
   window.bringToFront = bringToFront;
 
   function triggerDockBounce(dockItem) {
     if (!dockItem) return;
-    const icon = dockItem.querySelector('.mac-app-icon');
+    const icon = dockItem.querySelector('.mac-dock-svg, .mac-app-icon');
     if (!icon) return;
     icon.classList.remove('dock-bounce-icon');
     void icon.offsetWidth; // Force reflow to immediately restart animation
@@ -285,7 +290,7 @@
         visibleWindows.sort((a, b) => (parseInt(b.style.zIndex, 10) || 0) - (parseInt(a.style.zIndex, 10) || 0));
         bringToFront(visibleWindows[0]);
       } else if (activeAppTitle) {
-        activeAppTitle.textContent = 'Cadence';
+        activeAppTitle.textContent = 'Finder';
       }
     }, 180);
   }
@@ -328,7 +333,7 @@
         visibleWindows.sort((a, b) => (parseInt(b.style.zIndex, 10) || 0) - (parseInt(a.style.zIndex, 10) || 0));
         bringToFront(visibleWindows[0]);
       } else if (activeAppTitle) {
-        activeAppTitle.textContent = 'Cadence';
+        activeAppTitle.textContent = 'Finder';
       }
     }, 300);
   }
@@ -577,8 +582,13 @@
   // ==========================================================================
   document.addEventListener('pointerdown', (e) => {
     if (!touchRippleEnabled) return;
-    // Don't spawn on window titlebars during drag start or resizers
-    if (e.target.closest('.window-titlebar') || e.target.closest('.window-resizer')) return;
+    // Don't spawn on top menu bar, dock, window titlebars, or resizers
+    if (
+      e.target.closest('#menu-bar') ||
+      e.target.closest('#dock') ||
+      e.target.closest('.window-titlebar') ||
+      e.target.closest('.window-resizer')
+    ) return;
 
     const ripple = document.createElement('div');
     ripple.className = 'acoustic-touch-ripple';
@@ -979,6 +989,13 @@
     controlCenter?.classList.toggle('hidden', !isControlCenterOpen);
   });
 
+  document.addEventListener('pointerdown', (e) => {
+    if (isControlCenterOpen && !e.target.closest('#control-center-btn') && !e.target.closest('#control-center')) {
+      isControlCenterOpen = false;
+      controlCenter?.classList.add('hidden');
+    }
+  });
+
   document.getElementById('wifi-toggle')?.addEventListener('click', function () {
     const bubble = this.querySelector('.cc-icon-bubble');
     bubble?.classList.toggle('active');
@@ -1047,7 +1064,8 @@
   // 11. THEME & ACCENT SYSTEM
   // ==========================================================================
   function setTheme(theme) {
-    document.body.className = theme === 'light' ? 'light-mode' : 'dark-mode';
+    document.body.classList.remove('light-mode', 'dark-mode');
+    document.body.classList.add(theme === 'light' ? 'light-mode' : 'dark-mode');
     document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('active'));
     if (theme === 'light') {
       document.querySelector('.light-theme-preview')?.classList.add('active');
@@ -1153,6 +1171,11 @@
       actionText,
       actionApp
     };
+
+    const statusEl = document.querySelector('.finder-statusbar span');
+    if (statusEl) {
+      statusEl.textContent = `"${name}" selected (${size || 'Application'}) • 418.5 GB available on Toccata Core`;
+    }
 
     playHarmonicChime([480], 0.12);
   }
