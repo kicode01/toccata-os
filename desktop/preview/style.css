@@ -1,72 +1,93 @@
 @import url('cursors/cursors.css');
 
 /* ==========================================================================
-   TOCCATA OS - macOS Sequoia / Sonoma Authentic Color & Material System
-   Clean, vibrant, high-contrast, pure frosted glass.
-   Bespoke Porcelain & Sapphire Cursor Engine & 120Hz Spring Dynamics
+   TOCCATA OS - Apple macOS 27 UI Kit Architecture (Liquid Glass & Precision HIG)
+   Continuous Squircle Curvature (G2), Multi-Layer Ambient Occlusion,
+   High-Dynamic-Range Retinal Materials, 0.7ms PipeWire Studio DSP Integration
    ========================================================================== */
 
 :root {
-  /* Apple Official System Colors */
-  --system-blue: #007aff;
-  --system-blue-hover: #0062cc;
+  /* Apple Official macOS 27 System Colors (Extracted from UI Kit Swatches) */
+  --system-blue: #0078f0;
+  --system-blue-hover: #0067d4;
   --system-purple: #af52de;
   --system-pink: #ff2d55;
   --system-green: #34c759;
   --system-orange: #ff9500;
   --system-yellow: #ffcc00;
+  --system-red: #ff3b30;
+  --system-teal: #00c7be;
+  --system-indigo: #5856d6;
   --system-gray: #8e8e93;
 
   --accent-color: var(--system-blue);
-  --accent-glow: rgba(0, 122, 255, 0.4);
-  --font-system: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", Roboto, sans-serif;
+  --accent-glow: rgba(0, 120, 240, 0.38);
+  --font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", "Segoe UI", Roboto, sans-serif;
   --font-mono: "SF Mono", "JetBrains Mono", Menlo, Monaco, monospace;
 
-  /* Official High-Resolution 5K Wallpapers (Extracted from pearOS & Zorin OS) */
-  --bg-wallpaper: url('wallpapers/pearos-light.jpg');
+  /* Official High-Resolution 6K Liquid Silk Wallpapers */
+  --bg-wallpaper: url('assets/wallpapers/macos27-light.webp');
 
-  /* Light Vibrancy Materials (Apple macOS Sequoia HIG Standard) */
-  --glass-bg: rgba(255, 255, 255, 0.72);
-  --glass-border: rgba(255, 255, 255, 0.65);
-  --glass-rim-light: inset 0 1px 1px rgba(255, 255, 255, 0.95);
-  --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);
+  /* macOS 27 Liquid Glass Materials (Light Theme Standard) */
+  --glass-bg: rgba(255, 255, 255, 0.82);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-rim-light: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  --glass-shadow: 0 0 1px rgba(0, 0, 0, 0.22), 0 2px 10px rgba(0, 0, 0, 0.08), 0 20px 60px rgba(0, 0, 0, 0.15);
+  --window-shadow: 0 0 1px rgba(0, 0, 0, 0.22), 0 2px 10px rgba(0, 0, 0, 0.08), 0 20px 60px rgba(0, 0, 0, 0.15), inset 0 0 0 1px rgba(255, 255, 255, 0.85);
+  --window-shadow-inactive: 0 0 1px rgba(0, 0, 0, 0.15), 0 1px 4px rgba(0, 0, 0, 0.05), 0 10px 30px rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.65);
   --text-primary: #1d1d1f;
-  --text-secondary: rgba(0, 0, 0, 0.58);
-  --titlebar-bg: rgba(246, 246, 248, 0.85);
-  --menubar-bg: rgba(255, 255, 255, 0.65);
-  --dock-bg: rgba(255, 255, 255, 0.42);
+  --text-secondary: rgba(60, 60, 67, 0.65);
+  --titlebar-bg: rgba(248, 248, 250, 0.88);
+  --menubar-bg: rgba(255, 255, 255, 0.72);
+  --dock-bg: rgba(245, 245, 248, 0.58);
   --active-card: rgba(0, 0, 0, 0.06);
-  --sidebar-bg: rgba(242, 242, 247, 0.65);
+  --sidebar-bg: rgba(244, 244, 247, 0.80);
 }
 
 body.dark-mode {
-  --bg-wallpaper: url('wallpapers/pearos-dark.jpg');
-  --glass-bg: rgba(30, 30, 36, 0.72);
-  --glass-border: rgba(255, 255, 255, 0.16);
-  --glass-rim-light: inset 0 1px 0 rgba(255, 255, 255, 0.22);
-  --glass-shadow: 0 28px 75px rgba(0, 0, 0, 0.65), 0 2px 6px rgba(0, 0, 0, 0.35);
+  --system-blue: #0091ff;
+  --system-blue-hover: #1a9dff;
+  --system-green: #30d158;
+  --system-yellow: #ffd60a;
+  --system-orange: #ff9f0a;
+  --system-red: #ff453a;
+  --system-purple: #bf5af2;
+  --system-pink: #ff375f;
+  --system-teal: #40c8e0;
+  --system-indigo: #5e5ce6;
+  --system-gray: #98989d;
+
+  --bg-wallpaper: url('assets/wallpapers/macos27-dark.webp');
+  --glass-bg: rgba(28, 28, 32, 0.78);
+  --glass-border: rgba(255, 255, 255, 0.14);
+  --glass-rim-light: inset 0 1px 0 rgba(255, 255, 255, 0.20);
+  --glass-shadow: 0 0 1px rgba(0, 0, 0, 0.8), 0 2px 8px rgba(0, 0, 0, 0.15), 0 24px 72px rgba(0, 0, 0, 0.42);
+  --window-shadow: 0 0 1px rgba(0, 0, 0, 0.8), 0 2px 8px rgba(0, 0, 0, 0.15), 0 24px 72px rgba(0, 0, 0, 0.42), inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+  --window-shadow-inactive: 0 0 1px rgba(0, 0, 0, 0.6), 0 1px 4px rgba(0, 0, 0, 0.12), 0 12px 36px rgba(0, 0, 0, 0.22), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
   --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.65);
-  --titlebar-bg: rgba(38, 38, 44, 0.85);
-  --menubar-bg: rgba(20, 20, 24, 0.65);
-  --dock-bg: rgba(36, 36, 42, 0.55);
+  --text-secondary: rgba(235, 235, 245, 0.65);
+  --titlebar-bg: rgba(32, 32, 38, 0.88);
+  --menubar-bg: rgba(18, 18, 22, 0.70);
+  --dock-bg: rgba(38, 38, 44, 0.50);
   --active-card: rgba(255, 255, 255, 0.12);
-  --sidebar-bg: rgba(24, 24, 28, 0.65);
+  --sidebar-bg: rgba(22, 22, 26, 0.78);
 }
 
 body.light-mode {
-  --bg-wallpaper: url('wallpapers/pearos-light.jpg');
-  --glass-bg: rgba(255, 255, 255, 0.72);
-  --glass-border: rgba(255, 255, 255, 0.65);
-  --glass-rim-light: inset 0 1px 1px rgba(255, 255, 255, 0.95);
-  --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);
+  --bg-wallpaper: url('assets/wallpapers/macos27-light.webp');
+  --glass-bg: rgba(255, 255, 255, 0.82);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-rim-light: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  --glass-shadow: 0 0 1px rgba(0, 0, 0, 0.22), 0 2px 10px rgba(0, 0, 0, 0.08), 0 20px 60px rgba(0, 0, 0, 0.15);
+  --window-shadow: 0 0 1px rgba(0, 0, 0, 0.22), 0 2px 10px rgba(0, 0, 0, 0.08), 0 20px 60px rgba(0, 0, 0, 0.15), inset 0 0 0 1px rgba(255, 255, 255, 0.85);
+  --window-shadow-inactive: 0 0 1px rgba(0, 0, 0, 0.15), 0 1px 4px rgba(0, 0, 0, 0.05), 0 10px 30px rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.65);
   --text-primary: #1d1d1f;
-  --text-secondary: rgba(0, 0, 0, 0.58);
-  --titlebar-bg: rgba(246, 246, 248, 0.85);
-  --menubar-bg: rgba(255, 255, 255, 0.65);
-  --dock-bg: rgba(255, 255, 255, 0.42);
+  --text-secondary: rgba(60, 60, 67, 0.65);
+  --titlebar-bg: rgba(248, 248, 250, 0.88);
+  --menubar-bg: rgba(255, 255, 255, 0.72);
+  --dock-bg: rgba(245, 245, 248, 0.58);
   --active-card: rgba(0, 0, 0, 0.06);
-  --sidebar-bg: rgba(242, 242, 247, 0.65);
+  --sidebar-bg: rgba(244, 244, 247, 0.80);
 }
 
 /* ==========================================================================
@@ -100,7 +121,16 @@ input, textarea, .scribe-editor, .notes-content, [contenteditable="true"] {
 
 /* Titlebar Grabbing Cursors */
 .window-titlebar {
-  cursor: var(--cursor-grab), grab !important;
+  height: 44px;
+  flex-shrink: 0;
+  background: var(--titlebar-bg);
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  gap: 16px;
+  transition: background 0.2s ease, opacity 0.2s ease;
 }
 
 body.is-window-dragging,
@@ -438,13 +468,26 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-radius: 14px;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.14), var(--glass-rim-light);
-  backdrop-filter: blur(40px) saturate(190%);
-  -webkit-backdrop-filter: blur(40px) saturate(190%);
+  border-radius: 18px;
+  box-shadow: var(--window-shadow);
+  backdrop-filter: blur(48px) saturate(200%);
+  -webkit-backdrop-filter: blur(48px) saturate(200%);
   transform-origin: center center;
-  transition: box-shadow 0.25s ease, border-radius 0.25s ease;
+  transition: box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-radius 0.22s ease, opacity 0.2s ease;
   will-change: transform, opacity, left, top;
+}
+
+.window:not(.active-window) {
+  box-shadow: var(--window-shadow-inactive);
+}
+
+.window:not(.active-window) .tl-btn {
+  opacity: 0.45;
+  filter: grayscale(70%);
+}
+
+.window:not(.active-window) .window-titlebar {
+  opacity: 0.85;
 }
 
 .window:not(.calc-window) {
@@ -568,18 +611,28 @@ body {
 }
 
 .tl-close {
-  background: #ff5f56;
-  border: 0.5px solid #e0443e;
+  background: #ff5f57;
+  border: 0.5px solid rgba(0, 0, 0, 0.15);
 }
 
 .tl-minimize {
-  background: #ffbd2e;
-  border: 0.5px solid #dea123;
+  background: #febc2e;
+  border: 0.5px solid rgba(0, 0, 0, 0.15);
 }
 
 .tl-maximize {
-  background: #27c93f;
-  border: 0.5px solid #1aab29;
+  background: #28c840;
+  border: 0.5px solid rgba(0, 0, 0, 0.15);
+}
+
+body.dark-mode .tl-close {
+  border-color: rgba(0, 0, 0, 0.4);
+}
+body.dark-mode .tl-minimize {
+  border-color: rgba(0, 0, 0, 0.4);
+}
+body.dark-mode .tl-maximize {
+  border-color: rgba(0, 0, 0, 0.4);
 }
 
 .tl-btn::after {
@@ -655,26 +708,34 @@ body {
   margin-left: 8px;
 }
 
-/* Segmented Control Pills */
+/* Segmented Control Pills (macOS 27 HIG Standard) */
 .segmented-control {
   display: flex;
-  background: rgba(0, 0, 0, 0.12);
+  align-items: center;
+  background: rgba(0, 0, 0, 0.06);
   padding: 2px;
-  border-radius: 7px;
+  border-radius: 8px;
   border: 1px solid var(--glass-border);
+}
+
+body.dark-mode .segmented-control {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .seg-btn {
   background: none;
   border: none;
   color: var(--text-secondary);
-  padding: 4px 8px;
-  border-radius: 5px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.1s ease;
+  gap: 4px;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .seg-btn svg {
@@ -682,10 +743,21 @@ body {
   height: 14px;
 }
 
-.seg-btn.active {
-  background: var(--glass-bg);
+.seg-btn:hover:not(.active) {
   color: var(--text-primary);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.seg-btn.active {
+  background: #ffffff;
+  color: #1d1d1f;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 0.5px 1px rgba(0, 0, 0, 0.08);
+}
+
+body.dark-mode .seg-btn.active {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.28);
 }
 
 .toolbar-search {

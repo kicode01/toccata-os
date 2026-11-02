@@ -1376,8 +1376,18 @@ Every administrative task is accessible visually:
           <!-- Tab 7: Wallpaper -->
           <div id="settings-tab-wallpaper" class="hidden">
             <h3>Wallpaper</h3>
-            <p class="settings-desc">Select high-dynamic-range desktop artwork extracted directly from macOS Sequoia, pearOS NiceC0re, and Zorin OS 18.1.</p>
+            <p class="settings-desc">Select high-dynamic-range desktop artwork extracted directly from the Apple macOS 27 UI Kit, macOS Sequoia, pearOS NiceC0re, and Zorin OS 18.1.</p>
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px;">
+              <div class="wallpaper-card" style="background: rgba(0,0,0,0.06); border: 2px solid var(--accent-color); border-radius: 12px; padding: 10px; cursor: pointer;" onclick="setWallpaper('url(\'assets/wallpapers/macos27-light.webp\')', 'macOS 27 Silk Sculpture', this)">
+                <div style="height: 80px; border-radius: 8px; background: url('assets/wallpapers/macos27-light.webp') center/cover; margin-bottom: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);"></div>
+                <div style="font-weight: 700; font-size: 12px;">macOS 27 Silk</div>
+                <div class="wallpaper-status" style="color: var(--accent-color); font-size: 11px;">Active &bull; 6K Liquid Retina</div>
+              </div>
+              <div class="wallpaper-card" style="background: rgba(0,0,0,0.06); border: 1px solid var(--glass-border); border-radius: 12px; padding: 10px; cursor: pointer;" onclick="setWallpaper('url(\'assets/wallpapers/macos27-dark.webp\')', 'macOS 27 Obsidian Dark', this)">
+                <div style="height: 80px; border-radius: 8px; background: url('assets/wallpapers/macos27-dark.webp') center/cover; margin-bottom: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);"></div>
+                <div style="font-weight: 700; font-size: 12px;">macOS 27 Obsidian</div>
+                <div class="wallpaper-status" style="color: var(--text-secondary); font-size: 11px;">6K Deep Velvet HDR</div>
+              </div>
               <div class="wallpaper-card" style="background: rgba(0,0,0,0.06); border: 2px solid var(--accent-color); border-radius: 12px; padding: 10px; cursor: pointer;" onclick="setWallpaper('url(\'wallpapers/sequoia-light.svg\')', 'macOS Sequoia Light', this)">
                 <div style="height: 80px; border-radius: 8px; background: url('wallpapers/sequoia-light.svg') center/cover; margin-bottom: 8px;"></div>
                 <div style="font-weight: 700; font-size: 12px;">Sequoia Light</div>
