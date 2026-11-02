@@ -53,12 +53,21 @@ class ToccataBridgeHandler(SimpleHTTPRequestHandler):
 
         # 1. Bridge Status API
         if path == "/api/status":
+            latest_mtime = 0.0
+            try:
+                for fname in ("index.html", "style.css", "app.js"):
+                    fpath = os.path.join(BASE_DIR, fname)
+                    if os.path.exists(fpath):
+                        latest_mtime = max(latest_mtime, os.path.getmtime(fpath))
+            except Exception:
+                pass
             return self._send_json({
                 "status": "online",
                 "os": "Toccata OS 1.0 (Virtuosic Edition)",
                 "kernel": os.uname().release if hasattr(os, "uname") else "Linux",
                 "hostname": os.uname().nodename if hasattr(os, "uname") else "toccata",
-                "uptime": time.time() - BOOT_TIME
+                "uptime": time.time() - BOOT_TIME,
+                "assets_mtime": latest_mtime
             })
 
         # 2. Live System Metrics API (for Tempo / Topbar)

@@ -2482,4 +2482,28 @@ Or search packages in Gallery.app.`;
 
   // Initial focus
   bringToFront(document.getElementById('win-cadence'));
+
+  // ==========================================================================
+  // LIVE-SYNC HOT RELOAD (1:1 Instant Updates inside Native Linux Kiosk / VM)
+  // ==========================================================================
+  if (IS_NATIVE_KIOSK) {
+    let knownAssetsMtime = null;
+    setInterval(async () => {
+      try {
+        const res = await fetch('/api/status', { cache: 'no-store' });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.assets_mtime) {
+          if (knownAssetsMtime === null) {
+            knownAssetsMtime = data.assets_mtime;
+          } else if (data.assets_mtime !== knownAssetsMtime) {
+            knownAssetsMtime = data.assets_mtime;
+            window.location.reload();
+          }
+        }
+      } catch (e) {
+        // Ignore transient network errors
+      }
+    }, 1200);
+  }
 })();

@@ -48,7 +48,13 @@ echo "   Starting Real OS Virtual Machine: $TITLE"
 echo "   Image: $ISO"
 echo "   Specs: $RAM MB RAM • $CORES vCPUs (KVM Hardware Accelerated)"
 echo "   Audio: PipeWire/PulseServer Bridge  •  Input: 1:1 USB Tablet + VirtIO Keyboard"
+echo "   Live Sync: Auto-syncing desktop/preview/* -> VM every 1s (Zero ISO Rebuild!)"
 echo "==============================================================================="
+
+# Background live-sync watcher: pushes any edits in desktop/preview/ straight into the running VM
+python3 "$SCRIPT_DIR/live-sync-vm.py" "$ROOT_DIR/desktop/preview" >/dev/null 2>&1 &
+SYNC_PID=$!
+trap "kill $SYNC_PID 2>/dev/null || true" EXIT
 
 KVM_FLAG=""
 if [ -c /dev/kvm ]; then
@@ -60,7 +66,7 @@ if [ -f /usr/share/edk2/x64/OVMF.4m.fd ]; then
     BIOS_FLAG="-bios /usr/share/edk2/x64/OVMF.4m.fd"
 fi
 
-exec qemu-system-x86_64 \
+qemu-system-x86_64 \
     $KVM_FLAG \
     $BIOS_FLAG \
     -m "$RAM" \
@@ -75,5 +81,5 @@ exec qemu-system-x86_64 \
     -device intel-hda \
     -device hda-duplex \
     -net nic,model=virtio \
-    -net user \
+    -net user,hostfwd=tcp:127.0.0.1:5050-:5000 \
     -name "$TITLE"
