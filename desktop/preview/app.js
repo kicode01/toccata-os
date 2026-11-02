@@ -3395,38 +3395,61 @@ Or search packages in Gallery.app.`;
   // TOCCATA OS ANIMATED WELCOME / BOOT SPLASH CONTROLLER
   // ==========================================================================
   let bootSplashTimer = null;
+  let bootSplashCleanupTimer = null;
 
   function dismissBootSplash() {
     const splash = document.getElementById('toccata-boot-splash');
     if (!splash || splash.classList.contains('boot-dismissed')) return;
-    if (bootSplashTimer) clearTimeout(bootSplashTimer);
-    playHarmonicChime([440, 554.37, 659.25, 880], 0.45);
+    if (bootSplashTimer) {
+      clearTimeout(bootSplashTimer);
+      bootSplashTimer = null;
+    }
+    // Pentatonic chord: F3, A3, C#4, E4, A4 (330Hz root)
+    playHarmonicChime([330, 440, 554.37, 659.25, 880], 0.45);
     splash.classList.add('boot-dismissed');
+
+    // Teardown GPU compositor layer after CSS opacity fade (0.6s) completes
+    if (bootSplashCleanupTimer) clearTimeout(bootSplashCleanupTimer);
+    bootSplashCleanupTimer = setTimeout(() => {
+      splash.style.display = 'none';
+    }, 650);
   }
   window.dismissBootSplash = dismissBootSplash;
 
   function replayBootSplash() {
     const splash = document.getElementById('toccata-boot-splash');
     if (!splash) return;
-    if (bootSplashTimer) clearTimeout(bootSplashTimer);
+    if (bootSplashTimer) {
+      clearTimeout(bootSplashTimer);
+      bootSplashTimer = null;
+    }
+    if (bootSplashCleanupTimer) {
+      clearTimeout(bootSplashCleanupTimer);
+      bootSplashCleanupTimer = null;
+    }
+    splash.style.display = 'flex';
     splash.classList.remove('boot-dismissed');
-    // Force reflow to restart all SVG & progress bar animations cleanly
-    const clone = splash.cloneNode(true);
-    splash.parentNode.replaceChild(clone, splash);
+
+    // Cleanly re-trigger keyframe animations without destructive DOM replacement
+    const animatedElements = splash.querySelectorAll('.boot-seed-pill, .boot-svg-emblem, .boot-part-bar, .boot-part-fork, .boot-volumetric-stack, .boot-echo');
+    animatedElements.forEach(el => {
+      el.style.animation = 'none';
+      void el.offsetWidth;
+      el.style.animation = '';
+    });
+
     playHarmonicChime([330, 440, 554.37, 659.25, 880], 0.5);
-    bootSplashTimer = setTimeout(() => {
-      dismissBootSplash();
-    }, 3400);
+    bootSplashTimer = setTimeout(dismissBootSplash, 3350);
   }
   window.replayBootSplash = replayBootSplash;
 
-  // Auto-dismiss initial welcome boot splash after volumetric god-ray sweep finishes
-  bootSplashTimer = setTimeout(() => {
-    const splash = document.getElementById('toccata-boot-splash');
-    if (splash && !splash.classList.contains('boot-dismissed')) {
-      splash.classList.add('boot-dismissed');
-    }
-  }, 3350);
+  // Startup chord on initial boot (silently handled if autoplay policy awaits user gesture)
+  try {
+    playHarmonicChime([330, 440, 554.37, 659.25, 880], 0.45);
+  } catch (e) {}
+
+  // Auto-dismiss initial welcome boot splash after volumetric sweep finishes
+  bootSplashTimer = setTimeout(dismissBootSplash, 3350);
 
   // ==========================================================================
   // LIVE-SYNC HOT RELOAD (1:1 Instant Updates inside Native Linux Kiosk / VM)
