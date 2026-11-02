@@ -190,12 +190,6 @@
           </svg>
         </div>
 
-        <!-- pearOS Dynamic Island Notch -->
-        <div id="pearos-dynamic-island" onclick="toggleDynamicIsland()" title="pearOS Dynamic Island Notch">
-          <span style="width: 8px; height: 8px; border-radius: 50%; background: #34c759;" id="island-dot"></span>
-          <span id="island-label">Toccata 120Hz</span>
-        </div>
-
         <!-- Apple Intelligence Siri Orb -->
         <div class="menu-item status-icon-item" onclick="playHarmonicChime([523.25, 659.25, 783.99]); toggleLaunchpad();" title="Launchpad &amp; GNOME Workspaces Overview">
           <svg viewBox="0 0 24 24" width="16" height="16">
@@ -1270,7 +1264,7 @@ Every administrative task is accessible visually:
                   <div class="row-title">GNOME Activities &amp; Workspaces Pill</div>
                   <div class="row-desc">Show interactive workspace dots in the center of the top bar</div>
                 </div>
-                <label class="switch"><input type="checkbox" checked onchange="toggleMenuBarItem('gnome-activities-pill', this.checked, 'Activities pill')"><span class="slider round"></span></label>
+                <label class="switch"><input type="checkbox" onchange="toggleMenuBarItem('gnome-activities-pill', this.checked, 'Activities pill')"><span class="slider round"></span></label>
               </div>
             </div>
           </div>
