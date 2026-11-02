@@ -908,7 +908,33 @@
       return;
     }
 
-    // Cmd + W: Close Active Window
+    // Ctrl + Shift + Shortcuts (Go Menu & System Actions)
+    if (isCmd && e.shiftKey) {
+      const k = e.key.toUpperCase();
+      if (k === 'A') { e.preventDefault(); openWindow('win-cadence'); switchCadenceFolder('apps'); return; }
+      if (k === 'O') { e.preventDefault(); openWindow('win-cadence'); switchCadenceFolder('docs'); return; }
+      if (k === 'C') { e.preventDefault(); openWindow('win-cadence'); switchCadenceFolder('disk'); return; }
+      if (k === 'T') { e.preventDefault(); openWindow('win-cadence'); switchCadenceFolder('trash'); return; }
+      if (k === 'U') { e.preventDefault(); openWindow('win-console'); return; }
+      if (k === 'N') { e.preventDefault(); createNewCadenceFolder(); return; }
+      if (k === 'D') { e.preventDefault(); toggleTheme(); return; }
+    }
+
+    if (isCmd && !e.shiftKey && !isEditable) {
+      const k = e.key.toUpperCase();
+      if (k === 'J') { e.preventDefault(); openWindow('win-cadence'); switchCadenceFolder('downloads'); return; }
+      if (k === '1') { e.preventDefault(); openWindow('win-cadence'); setCadenceViewMode('grid'); return; }
+      if (k === '2') { e.preventDefault(); openWindow('win-cadence'); setCadenceViewMode('list'); return; }
+      if (k === 'F') { e.preventDefault(); toggleSpotlight(); return; }
+    }
+
+    if (e.code === 'Delete' && !isEditable) {
+      e.preventDefault();
+      moveSelectedToTrash();
+      return;
+    }
+
+    // Ctrl + W / Alt + F4: Close Active Window
     if (isCmd && (e.key === 'w' || e.key === 'W')) {
       e.preventDefault();
       const active = getActiveWindow();
