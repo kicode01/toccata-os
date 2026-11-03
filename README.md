@@ -13,10 +13,14 @@
                                                   \____/          
 ```
 
-[![Release](https://img.shields.io/badge/Release-v1.0--Virtuosic-00d2ff?style=for-the-badge)](https://github.com/kicode01/toccata-os)
+[![Status](https://img.shields.io/badge/Status-Under%20Active%20Development-ff9500?style=for-the-badge&logo=git)](https://github.com/kicode01/toccata-os)
+[![Stage](https://img.shields.io/badge/Stage-Work%20In%20Progress%20(WIP)-yellow?style=for-the-badge)](https://github.com/kicode01/toccata-os)
 [![Base](https://img.shields.io/badge/Base-Arch%20Linux%20Rolling-1793d1?style=for-the-badge&logo=archlinux)](https://archlinux.org)
 [![Desktop](https://img.shields.io/badge/Desktop-GNOME%2047%20%2B%20Mutter-4a154b?style=for-the-badge&logo=gnome)](https://www.gnome.org)
 [![Audio](https://img.shields.io/badge/Audio-PipeWire%200.7ms%20Pro-e91e63?style=for-the-badge)](https://pipewire.org)
+
+> [!NOTE]
+> 🚧 **Active Development Notice**: Toccata OS is currently under active development (Work In Progress). Core system components, native macOS-class application bundles, desktop compositor integrations, and visual polish are actively being developed, reverse-engineered, and refined.
 
 ---
 
